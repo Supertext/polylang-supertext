@@ -1,0 +1,1 @@
+Supertext Plugin for Polylang
