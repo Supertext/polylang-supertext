@@ -8,8 +8,13 @@ Version: 1.0
 Author URI: http://www.comotive.ch
 */
 
+define('SUPERTEXT_POLYLANG_BASE_PATH', __DIR__);
+define('SUPERTEXT_POLYLANG_VIEW_PATH', __DIR__ . '/views/');
+define('SUPERTEXT_POLYLANG_RESOURCE_URL', plugin_dir_url(__FILE__) . 'resources');
+
 // Autoload loading namespaced classes
-require_once __DIR__ . '/autoload.php';
+require_once SUPERTEXT_POLYLANG_BASE_PATH . '/autoload.php';
+
 
 // Load Comotive helper- and Supertext implementation namepsace
 foreach (array('Comotive', 'Supertext') as $namespace) {

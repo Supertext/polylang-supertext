@@ -2,6 +2,9 @@
 
 namespace Supertext\Polylang;
 
+use Supertext\Polylang\Api\Library;
+use Supertext\Polylang\Backend\Menu;
+
 /**
  * Core Class that initializes the plugins features
  * @package Supertext\Polylang
@@ -9,15 +12,52 @@ namespace Supertext\Polylang;
  */
 class Core
 {
+  /**
+   * @var Core the current plugin instance
+   */
+  protected static $instance = NULL;
+  /**
+   * @var Library the library of global functions
+   */
+  protected $library = NULL;
+  /**
+   * @var Menu the backend menu handler
+   */
+  protected $menu = NULL;
 
+  /**
+   * Creates the instance and saves reference
+   */
   public function __construct()
   {
+    self::$instance = $this;
+  }
 
+  /**
+   * @return Core return the core instance
+   */
+  public static function getInstance()
+  {
+    return self::$instance;
   }
 
   public function load()
   {
+    // Load needed subcomponents
+    if (is_admin()) {
+      $this->menu = new Menu();
+    }
 
+    // Always loaded components
+    $this->library = new Library();
+  }
+
+  /**
+   * @return Library the library class
+   */
+  public function getLibrary()
+  {
+    return $this->library;
   }
 
   /**

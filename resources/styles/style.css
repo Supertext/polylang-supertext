@@ -1,0 +1,15 @@
+.frmServiceSupertextConfig {
+  width: 830px;
+}
+
+.frmServiceSupertextConfig select {
+  width: 180px;
+}
+
+.postbox_admin h3 {
+  padding: 3px;
+}
+
+.postbox_admin img {
+  cursor: pointer;
+}

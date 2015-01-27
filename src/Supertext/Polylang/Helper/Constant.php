@@ -10,8 +10,31 @@ namespace Supertext\Polylang\Helper;
 class Constant
 {
   /**
-   * @var string the API base url
+   * @var string the used API base url
    */
-  const API_URL = 'https://dev.supertext.ch/api/v1/';
-  //const API_URL = 'https://www.supertext.ch/api/v1/';
+  const API_URL = self::DEV_API;
+  /**
+   * @var string development api endpoints
+   */
+  const DEV_API = 'https://dev.supertext.ch/api/v1/';
+  /**
+   * @var string live api endpoints
+   */
+  const LIVE_API = 'https://www.supertext.ch/api/v1/';
+  /**
+   * @var string the settings option
+   */
+  const SETTINGS_OPTION = 'polylang_supertext_settings';
+  /**
+   * @var string name of the subsetting for user mapping
+   */
+  const SETTING_USER_MAP = 'userMap';
+  /**
+   * @var string name of the subsetting for language mapping
+   */
+  const SETTING_LANGUAGE_MAP = 'languageMap';
+  /**
+   * @var string name of the subsetting for language mapping
+   */
+  const SETTING_WORKING = 'isWorking';
 }
