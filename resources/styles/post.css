@@ -1,0 +1,46 @@
+.multilang-tax-table {
+  width:99%;
+}
+.multilang-tax-table-add {
+  margin-left:20px;
+  width:95%
+}
+.multilang-tax-table td {
+  padding: 1px 0px 5px 1px !important;
+}
+.multilang-tax-table-add td {
+  padding: 1px 0px 5px 1px !important;
+}
+#wp-admin-bar-top-secondary {
+  float:right;
+}
+.tbl_align_top tr {
+  vertical-align: top;
+}
+.div_tb_wrap_translation {
+  padding: 10px;
+}
+#div_translation_price table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  cursor: pointer
+}
+.div_translation_price_loading {
+  margin-left: 20px;
+  font-style: italic;
+  color: #555;
+}
+.input-disabled {
+  background-color: #f1f1f1!important;
+  color: #666 !important;
+  cursor: default !important;
+}
+.input-only-read {
+  background-color: #f6f6f6!important;
+  color: #333 !important;
+  cursor: default !important;
+}
+.tinyMce-only-read {
+  height: 338px;
+  overflow-y: scroll;
+}
+.ab-column>ul>li>input[type="checkbox"]:checked+ul { display: none !important; }

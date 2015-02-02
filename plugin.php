@@ -8,6 +8,7 @@ Version: 1.0
 Author URI: http://www.comotive.ch
 */
 
+define('SUPERTEXT_PLUGIN_REVISION', 1);
 define('SUPERTEXT_POLYLANG_BASE_PATH', __DIR__);
 define('SUPERTEXT_POLYLANG_VIEW_PATH', __DIR__ . '/views/');
 define('SUPERTEXT_POLYLANG_RESOURCE_URL', plugin_dir_url(__FILE__) . 'resources');

@@ -4,6 +4,7 @@ namespace Supertext\Polylang;
 
 use Supertext\Polylang\Api\Library;
 use Supertext\Polylang\Backend\Menu;
+use Supertext\Polylang\Backend\Translation;
 
 /**
  * Core Class that initializes the plugins features
@@ -46,6 +47,7 @@ class Core
     // Load needed subcomponents
     if (is_admin()) {
       $this->menu = new Menu();
+      $this->translation = new Translation();
     }
 
     // Always loaded components

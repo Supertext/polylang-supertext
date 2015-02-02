@@ -12,12 +12,9 @@ jQuery(document).ready(function() {
 function Remove_StField(nId)
 {
   jQuery('#trSupertext_' + nId).remove();
-  
-  // falls die letzte Row gelöscht wurde, direkt eine neue erstellen
   if (jQuery('#tblStFields tr').length < 4) {
     Add_StField(0);
   } else {
-    // letzter Button sichtbar machen
     jQuery('#tblStFields tr:last input[type="button"]').toggle(true);
   }
 }
@@ -56,10 +53,10 @@ function Add_StField(nId)
 				<input type="text" name="fieldStApi[]" id="field_intern_' + nNewId + '" value="" style="width: 200px"> \
 			</td> \
 			<td> \
-					<img src="' + sFilePath + '/images/delete.png" alt="Benutzer entfernen" title="Benutzer entfernen" onclick="javascript: Remove_StField(' + nNewId + ');"> \
+					<img src="' + sFilePath + '/images/delete.png" alt="Benutzer entfernen" title="' + Supertext.i18n.deleteUser + '" onclick="javascript: Remove_StField(' + nNewId + ');"> \
 			</td> \
-			\<td> \
-					<input class="button button-highlighted" type="button" name="buAddField_' + nNewId + '" id="buAddField_' + nNewId + '" value="Benutzer hinzufügen" onclick="javascript: Add_StField(' + nNewId + ');"> \
+			<td> \
+					<input class="button button-highlighted" type="button" name="buAddField_' + nNewId + '" id="buAddField_' + nNewId + '" value="' + Supertext.i18n.addNewUser + '" onclick="javascript: Add_StField(' + nNewId + ');"> \
 			</td> \
 		</tr> \
   ');

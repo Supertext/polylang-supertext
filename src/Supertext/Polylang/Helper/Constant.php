@@ -37,4 +37,8 @@ class Constant
    * @var string name of the subsetting for language mapping
    */
   const SETTING_WORKING = 'isWorking';
+  /**
+   * @var string the default supertext api user
+   */
+  const DEFAULT_API_USER = 'public_user';
 }

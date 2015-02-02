@@ -23,4 +23,17 @@ class Multilang
 
     return array();
   }
+
+  /**
+   * @param int $postId the post id
+   * @return string language of the post or false if not found
+   */
+  public static function getPostLanguage($postId)
+  {
+    if (function_exists('pll_get_post_language')) {
+      return pll_get_post_language($postId);
+    }
+
+    return false;
+  }
 } 

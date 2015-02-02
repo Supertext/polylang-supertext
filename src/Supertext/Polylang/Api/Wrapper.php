@@ -58,7 +58,7 @@ class Wrapper
    * @param string $currency
    * @return Wrapper
    */
-  public static function getInstance($user = 'public_user', $apikey = '', $currency = 'eur')
+  public static function getInstance($user = Constant::DEFAULT_API_USER, $apikey = '', $currency = 'eur')
   {
     // Open connection for every user
     if (self::$apiConnections[$user] === null) {
