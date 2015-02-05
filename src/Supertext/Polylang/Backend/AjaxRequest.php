@@ -3,6 +3,7 @@
 namespace Supertext\Polylang\Backend;
 
 use Comotive\Util\String;
+use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Core;
 
 /**
@@ -21,8 +22,24 @@ class AjaxRequest
    */
   public static function createOrder(&$output, &$state, &$optional, &$info = '')
   {
-    // TODO direct API call
-    $order = call_user_func(get_main_feature_implementation('post_translation'), self::getTranslationOptions());
+    // Call the API for prices
+    $options = self::getTranslationOptions();
+    $library = Core::getInstance()->getLibrary();
+    $data = $library->getTranslationData($options['post_id'], $options['pattern']);
+    $post = get_post($options['post_id']);
+    $wrapper = $library->getUserWrapper();
+
+    // Create the order
+    $order = $wrapper->createOrder(
+      $options['source_lang'],
+      $options['target_lang'],
+      get_bloginfo('name') . ' - ' . $post->post_title,
+      $options['product_id'],
+      $data,
+      SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php',
+      $post->ID . '-' . md5(Wrapper::REFERENCE_HASH . $post->ID),
+      $options['additional_information']
+    );
 
     if (!empty($order->Deadline)) {
       $state = 'success';
@@ -49,21 +66,19 @@ class AjaxRequest
    */
   public static function getOffer(&$output, &$state, &$optional)
   {
-    $optional['req_count'] = $_POST['req_count'];
+    $optional['requestCounter'] = $_POST['requestCounter'];
 
-    // TODO direct api call
+    // Call the API for prices
     $options = self::getTranslationOptions();
-    $data = OfferBox::getTranslatableFields($options['post_id']);
-    $wrapper = Core::getInstance()->getLibrary()->getUserWrapper();
+    $library = Core::getInstance()->getLibrary();
+    $data = $library->getTranslationData($options['post_id'], $options['pattern']);
+    $wrapper = $library->getUserWrapper();
     // Call for prices
     $pricing = $wrapper->getQuote(
       $options['source_lang'],
       $options['target_lang'],
       $data
     );
-
-    var_dump($pricing);
-    exit;
 
     // output html zusammen stellen
     $foundPrice = false;
@@ -97,7 +112,7 @@ class AjaxRequest
 
     if ($foundPrice) {
       $output = '
-      <table border="0" cellpadding="2" cellspacing="0">
+      <table border="0" cellpadding="2" cellspacing="0" width="100%">
         <thead>
           <tr>
             <td width="20px">&nbsp;</td>

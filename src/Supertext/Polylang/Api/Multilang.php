@@ -36,4 +36,16 @@ class Multilang
 
     return false;
   }
+
+  /**
+   * @param int $postId the post in for example german
+   * @param $language the language of the translation you want (i.e. en)
+   * @return int|null post id or null if not found
+   */
+  public static function getPostInLanguage($postId, $language)
+  {
+    if (function_exists('pll_get_post')) {
+      return pll_get_post($postId, $language);
+    }
+  }
 } 

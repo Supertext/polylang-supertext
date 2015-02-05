@@ -25,6 +25,10 @@ class Core
    * @var Menu the backend menu handler
    */
   protected $menu = NULL;
+  /**
+   * @var Translation the translation library
+   */
+  protected $translation = NULL;
 
   /**
    * Creates the instance and saves reference
@@ -60,6 +64,14 @@ class Core
   public function getLibrary()
   {
     return $this->library;
+  }
+
+  /**
+   * @return Translation the translation object
+   */
+  public function getTranslation()
+  {
+    return $this->translation;
   }
 
   /**

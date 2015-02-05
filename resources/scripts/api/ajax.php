@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/wp-admin/admin.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/wp-admin/admin.php';
 
 use Supertext\Polylang\Backend\AjaxRequest;
 
@@ -14,7 +14,7 @@ switch ($_GET['action']) {
   case 'getOffer':
     AjaxRequest::getOffer($output, $state, $optional);
     break;
-  case 'make_order':
+  case 'createOrder':
     AjaxRequest::createOrder($output, $state, $optional, $info);
     break;
   default:

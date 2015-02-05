@@ -49,6 +49,12 @@ Supertext.Polylang = {
 			Supertext.Polylang.injectOfferLinks();
 		}
 
+		// Auto save a newly done translation by "pressing save"
+		var translationParam = location.search.split('translation-service=')[1];
+		if (typeof(translationParam) != 'undefined' && translationParam == 1) {
+			Supertext.Polylang.autoSavePost();
+		}
+
 		// Lock the post if it is in translation
 		window.setTimeout(function() {
 			Supertext.Polylang.disableTranslatingPost();
@@ -66,7 +72,29 @@ Supertext.Polylang = {
 		// Register to reload offer on checkbox click
 		jQuery('.chkTranslationOptions').change(function() {
 			Supertext.Polylang.getOffer();
-		})
+		});
+
+		// Create order on form submit
+		jQuery('#frm_Translation_Options').submit(function() {
+			var form = jQuery(this);
+			var postId = form.data('post-id');
+			var successUrl = jQuery('#successUrlMakeOrder').val();
+			return Supertext.Polylang.createOrder(postId, successUrl);
+		});
+	},
+
+	/**
+	 * Automatically saves a post on load. Used for the newly created translated page
+	 */
+	autoSavePost : function()
+	{
+		// Tell the user something happens
+		jQuery('body').css('cursor', 'progress');
+		// After two seconds, auto save
+		setTimeout(function() {
+			jQuery('#save-action input[type=submit]').trigger('click');
+			jQuery('body').css('cursor', 'default');
+		}, 2000);
 	},
 
 	/**
@@ -112,8 +140,8 @@ Supertext.Polylang = {
 	{
 		// Set all default fields to readonly
 		jQuery('#post input, #post select, #post textarea').each(function() {
-			// If the value contains "[in Translation...]", lock fields
-			if (jQuery(this).val() == '[in Translation...]') {
+			// If the value contains the in translation text, lock fields
+			if (jQuery(this).val() == Supertext.i18n.inTranslationText) {
 				jQuery(this).attr('readonly', 'readonly');
 				jQuery(this).addClass('input-disabled');
 				post_is_in_translation = true;
@@ -132,7 +160,7 @@ Supertext.Polylang = {
 			jQuery('#content-html, #content-tmce').hide();
 			// Print informational text
 			jQuery('#wp-content-editor-container').html(
-				'<div style="margin:10px;">[in Translation...]</div>' +
+				'<div style="margin:10px;">' + Supertext.i18n.inTranslationText + '</div>' +
 				jQuery('#wp-content-editor-container').html()
 			);
 
@@ -148,7 +176,7 @@ Supertext.Polylang = {
 	translationEnabledOnElement : function(element)
 	{
 		if (element.length > 0) {
-			if (element.val().trim() == '[in Translation...]' || element.val().trim() == '<p>[in Translation...]</p>') {
+			if (element.val().trim() == Supertext.i18n.inTranslationText || element.val().trim() == '<p>' + Supertext.i18n.inTranslationText + '</p>') {
 				Supertext.Polylang.inTranslation = true;
 				return true;
 			}
@@ -163,8 +191,8 @@ Supertext.Polylang = {
 	{
 		// var arr_ele_name, att_id, post_type;
 		jQuery("#media-items input, #media-items select, #media-items textarea").each(function() {
-			// Steht im Value "[in Translation...]" -> Feld Sperren
-			if (jQuery(this).val() == "[in Translation...]") {
+			// if the value is the translation text, lock field
+			if (jQuery(this).val() == Supertext.i18n.inTranslationText) {
 				jQuery(this).attr("readonly", "readonly");
 				jQuery(this).addClass("input-disabled");
 				post_is_in_translation = true;
@@ -213,14 +241,14 @@ Supertext.Polylang = {
 		var postId = Supertext.Polylang.translatedPostId;
 		var postData = jQuery('#frm_Translation_Options').serialize()
 			+ '&post_id=' + postId
-			+ '&req_count=' + Supertext.Polylang.requestCounter;
+			+ '&requestCounter=' + Supertext.Polylang.requestCounter;
 
 		jQuery.post(
 			Supertext.Polylang.ajaxUrl + '?action=getOffer',
 			postData,
 			function(data) {
-				// handle only newest request (req_count)
-				if (data.body.optional.req_count == Supertext.Polylang.requestCounter) {
+				// handle only newest request
+				if (data.body.optional.requestCounter == Supertext.Polylang.requestCounter) {
 					switch (data.head.status) {
 						case 'success':
 							jQuery('#div_translation_price').html(data.body.html);
@@ -237,6 +265,101 @@ Supertext.Polylang = {
 				}
 			}
 		);
+	},
+
+	/**
+	 * Create an actual translation order for supertext
+	 * @param postId the post id (original)
+	 * @param successUrl the success url to post to
+	 * @returns bool false (always, to prevent native submit)
+	 */
+	createOrder : function (postId, successUrl)
+	{
+  	// wird nur einmal ausgelöst
+		if (!Supertext.Polylang.createOrderRunning) {
+			Supertext.Polylang.createOrderRunning = true;
+
+			// Oppan hadorn style
+			var deadline = jQuery('input:radio:checked[name=rad_translation_type]').parent().next().next().html().trim();
+			var price = jQuery('input:radio:checked[name=rad_translation_type]').parent().next().next().next().html().trim();
+			var confirmedOrder = confirm(Supertext.Polylang.getOfferConfirmMessage(deadline, price, 'CHF'));
+
+			// If the user confirmed, actually create the order
+			if (confirmedOrder) {
+				jQuery('#frm_Translation_Options').hide();
+				// Hide review state, if available
+				if (!jQuery('#warning_not_review_state').length == 0) {
+					jQuery('#warning_not_review_state').hide();
+				}
+				jQuery('#div_waiting_while_loading').show();
+
+				var offerForm = jQuery('#frm_Translation_Options');
+				var postData = offerForm.serialize() + '&post_id=' + postId;
+
+				// Post to API Endpoint and create order
+				jQuery.post(
+					Supertext.Polylang.ajaxUrl + '?action=createOrder',
+					postData,
+					function(data) {
+						jQuery('#div_waiting_while_loading').hide();
+						switch (data.head.status) {
+							case 'success':
+								Supertext.Polylang.createOrderRunning = false;
+
+								// Copy form to parent
+								parent.jQuery('body').append(offerForm.clone());
+								offerForm = parent.jQuery('#frm_Translation_Options');
+
+								// POST to success page that will create the empty post and connect it
+								offerForm.attr('action', successUrl);
+								// Remove submit validation and send
+								offerForm.attr('onsubmit', '');
+								offerForm.submit();
+
+								// Also, close thickbox (but the form response will anyway)
+								self.parent.tb_remove();
+
+								break;
+							default: // error
+								jQuery('#div_tb_wrap_translation').html(
+									'<h2>' + Supertext.i18n.generalError + '</h2>' +
+									Supertext.i18n.translationOrderError
+								);
+								break;
+						}
+					},
+					'json'
+				);
+			} else {
+				Supertext.Polylang.createOrderRunning = false;
+			}
+		}
+
+		// disable native form submit
+		return false;
+	},
+
+	/**
+	 * Create the internationalized and parametrized confirm message for ordering
+	 * @param deadline deadline date / time
+	 * @param price the price
+	 * @param currency the currency
+	 */
+	getOfferConfirmMessage : function(deadline, price, currency)
+	{
+		// First, create the templated message
+		var message = '' +
+			Supertext.i18n.offerConfirm_Price + '\n' +
+      Supertext.i18n.offerConfirm_Binding + '\n\n' +
+      Supertext.i18n.offerConfirm_EmailInfo + '\n\n' +
+      Supertext.i18n.offerConfirm_Confirm;
+
+		// Replace all vars
+		message = message.replace('{deadline}', deadline);
+		message = message.replace('{price}', price);
+		message = message.replace('{currency}', currency);
+
+		return message;
 	},
 
 	/**
@@ -292,95 +415,3 @@ Supertext.Polylang = {
 jQuery(function() {
 	Supertext.Polylang.initialize();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * TODO
- * TO BE REFACTORED
- */
-
-
-
-function make_order(post_id, success_url) {
-   // wird nur einmal ausgelöst
-  if (!is_running_make_order) {
-    is_running_make_order = true;
-
-    /*
-    deadline_date = parent.jQuery('#TB_iframeContent').contents().find('input:radio:checked[name=rad_translation_type]').parent().next().next().html().trim();
-    price_val = parent.jQuery('#TB_iframeContent').contents().find('input:radio:checked[name=rad_translation_type]').parent().next().next().next().html().trim();
-    */
-    deadline_date = jQuery('input:radio:checked[name=rad_translation_type]').parent().next().next().html().trim();
-    price_val = jQuery('input:radio:checked[name=rad_translation_type]').parent().next().next().next().html().trim();
-    Check = confirm('\
-Sie bestellen eine Übersetzung bis zum ' + deadline_date + ' Uhr zum Preis von CHF ' + price_val + '.\n\
-Diese Übersetzungsbeauftragung ist verbindlich.\n\
-\n\
-Sie werden per E-Mail informiert, sobald die Übersetzung abgeschlossen wurde.\n\
-\n\
-Bitte bestätigen Sie die Bestellung mit "OK".'
-  );
-    if (Check) {
-      jQuery('#frm_Translation_Options').hide();
-      // falls review noch angezeigt wird -> ausblenden
-      if (!jQuery('#warning_not_review_state').length == 0) {
-        jQuery('#warning_not_review_state').hide();
-      }
-      jQuery('#div_waiting_while_loading').show();
-
-      obj_form = jQuery('#frm_Translation_Options');
-      post_data = obj_form.serialize()+'&post_id='+post_id;
-
-      jQuery.post(
-        '/wp-content/plugins/blogwerk/services/Supertext/ajax_handler.php?action=make_order',
-        post_data,
-        function(data) {
-          jQuery('#div_waiting_while_loading').hide();
-          switch (data.head.status) {
-            case 'success':
-              is_running_make_order = false;
-
-              // das Formular in das parent kopieren
-              parent.jQuery('body').append(obj_form.clone());
-              obj_form = parent.jQuery('#frm_Translation_Options');
-
-              // statt die Seite weiter zuleiten, daten mit posten -> um options zu behalten und neue Seite korrekt zu erstellen
-              obj_form.attr('action', success_url);
-              // submit entfernen
-              obj_form.attr('onsubmit', '');
-              // form endlich posten
-              obj_form.submit();
-
-              // Fenster schliessen
-              self.parent.tb_remove();
-
-              break;
-            default: // error
-              jQuery('#div_tb_wrap_translation').html('<h2>Tut uns Leid</h2>Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie uns via <a href="mailto:support@blogwerk.com">support@blogwerk.com</a>.');
-              break;
-          }
-        },
-        'json'
-      );
-    }
-    else {
-      is_running_make_order = false;
-    }
-  }
-  else {
-    // alert('instance is already running');
-  }
-  // disable form submit
-  return false;
-}

@@ -100,4 +100,42 @@ class Library
       $credentials['stApi']
     );
   }
+
+  /**
+   * @param int $postId the post id to get data for
+   * @param array $pattern translation pattern
+   * @return array translation data
+   */
+  public function getTranslationData($postId, $pattern)
+  {
+    $post = get_post($postId);
+    $result = array();
+
+    if ($pattern['post_title'] == true) {
+      $result['post']['post_title'] = $post->post_title;
+    }
+    if ($pattern['post_content'] == true) {
+      $result['post']['post_content'] = $post->post_content;
+    }
+    if ($pattern['post_excerpt'] == true) {
+      $result['post']['post_excerpt'] = $post->post_excerpt;
+    }
+
+    // Gallery
+    if ($pattern['post_image'] == true) {
+      $attachments = get_children(array('post_parent' => $postId, 'post_type' => 'attachment', 'orderby' => 'menu_order ASC, ID', 'order' => 'DESC'));
+      foreach ($attachments as $gallery_post) {
+        $array_name = 'gallery_image_' . $gallery_post->ID;
+        $result[$array_name]['post_title'] = $gallery_post->post_title;
+        $result[$array_name]['post_content'] = $gallery_post->post_content;
+        $result[$array_name]['post_excerpt'] = $gallery_post->post_excerpt;
+        $result[$array_name]['image_alt'] = get_post_meta($gallery_post->ID, '_wp_attachment_image_alt', true);
+      }
+    }
+
+    // Let developers add their own fields
+    $result = apply_filters('translation_data_for_post', $result, $postId);
+
+    return $result;
+  }
 } 

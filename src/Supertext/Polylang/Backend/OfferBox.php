@@ -1,6 +1,7 @@
 <?php
 
 namespace Supertext\Polylang\Backend;
+
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Core;
 
@@ -11,10 +12,6 @@ use Supertext\Polylang\Core;
  */
 class OfferBox
 {
-  /** TODO will be obsolete
-   * @var null
-   */
-  protected $translation_service = null;
   /**
    * @var int the post being translated
    */
@@ -31,10 +28,6 @@ class OfferBox
    * @var string the target language
    */
   protected $targetLang = '';
-  /** TODO might be obsolete
-   * @var int translation id
-   */
-  protected $trid = 0;
 
   /**
    * Gather various meta information for the upcoming offer
@@ -69,6 +62,15 @@ class OfferBox
       ';
     }
 
+    // Create the success url that will create a new post to be translated
+    // This will trigger polylang to setup to post, "translation-service=1" triggers creation of article automatically
+    $successUrl = 'post-new.php' .
+      '?post_type=' . $this->post->post_type .
+      '&source=' . $this->sourceLang .
+      '&new_lang=' . $this->targetLang .
+      '&from_post=' . $this->postId .
+      '&translation-service=1';
+
     // Print the actual form
     echo '
       <link rel="stylesheet" href="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/post.css?v=' . SUPERTEXT_PLUGIN_REVISION . '" />
@@ -81,7 +83,6 @@ class OfferBox
         });
       </script>
 
-
       <div id="div_tb_wrap_translation" class="div_tb_wrap_translation">
         ' . $output . '
         <br>
@@ -93,7 +94,8 @@ class OfferBox
             </i>
             <img src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif" title="' . __('Wird geladen', 'polylang-supertext') . '">
           </div>
-          <form name="frm_Translation_Options" id="frm_Translation_Options" method="post" onsubmit="return make_order(' . $this->postId . ', \'post-new.php?post_type=' . $this->post->post_type . '&trid=' . $this->trid . '&lang=' . $this->targetLang . '&org_post=' . $this->postId . '&translation_service=on\');">
+          <form name="frm_Translation_Options" id="frm_Translation_Options" method="post" data-post-id="' . $this->postId . '">
+            <input type="hidden" id="successUrlMakeOrder" value="' . $successUrl . '" />
             <h3>' . __('Übersetzung', 'polylang-supertext') . '</h3>
             ' . sprintf(
                   __('Der Artikel soll von <b>%s</b> in <b>%s</b> übersetzt werden.'),
@@ -126,6 +128,9 @@ class OfferBox
         </div>
       </div>
     ';
+
+    // Add JS string translations
+    Core::getInstance()->getTranslation()->addTranslations();
   }
 
   /**

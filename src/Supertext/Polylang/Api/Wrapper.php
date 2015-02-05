@@ -32,11 +32,15 @@ class Wrapper
   /**
    * @var string the communication language
    */
-  protected $communicationLang = 'en';
+  protected $communicationLang = 'de-DE';
   /**
    * @var array Open api connections per user
    */
   static private $apiConnections = array();
+  /**
+   * @var string a reference hash to obfuscate post id info in callback
+   */
+  const REFERENCE_HASH = '0b7ff2942c3377be90f46673dc197bee';
 
   /**
    * @param string $user the supertext user name
@@ -49,7 +53,7 @@ class Wrapper
     $this->apikey = $apikey;
     $this->currency = strtolower($currency);
     $this->library = Core::getInstance()->getLibrary();
-    $this->communicationLang = substr(WPLANG, 0, 2);
+    $this->communicationLang = str_replace('_', '-', get_bloginfo('language'));
   }
 
   /**
@@ -73,9 +77,7 @@ class Wrapper
    */
   public function getLanguageMapping($lang)
   {
-    $httpResult = $this->postRequest(
-      'translation/LanguageMapping/' . $lang . '?communicationlang=' . $this->communicationLang
-    );
+    $httpResult = $this->postRequest('translation/LanguageMapping/' . $lang);
     $json = json_decode($httpResult);
     $result = array();
     if (!empty($json->Languages)) {
@@ -108,11 +110,7 @@ class Wrapper
       'TargetLang' => $this->library->mapLanguage($target)
     );
 
-    $httpresult = $this->postRequest(
-      'translation/quote?communicationlang=' . $this->communicationLang,
-      json_encode($json),
-      true
-    );
+    $httpresult = $this->postRequest('translation/quote', json_encode($json), true);
     $json = json_decode($httpresult);
     $result = array();
 
@@ -127,10 +125,12 @@ class Wrapper
         }
       }
     } else {
+      // Provide user message
       echo '
-      <div id="message" class="updated fade"><p>
-        <b>Fehler</b> bei der Verbindung zu Supertext: Die Preise können nicht angezeigt werden.
-      </p></div>';
+        <div id="message" class="updated fade">
+          <p>' . __('Fehler bei der Verbindung zu Supertext: Die Preise können nicht angezeigt werden.', 'polylang-supertext') . '</p>
+        </div>
+      ';
     }
 
     return $result;
@@ -165,12 +165,7 @@ class Wrapper
       'Groups' => $this->buildSupertextData($data)
     );
 
-    $httpResult = $this->postRequest(
-      'translation/order?communicationlang=' . $this->communicationLang,
-      json_encode($json),
-      true
-    );
-
+    $httpResult = $this->postRequest('translation/order', json_encode($json), true);
     $json = json_decode($httpResult);
 
     // If json is not valid, return the result as debug info
@@ -197,7 +192,8 @@ class Wrapper
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_USERAGENT, 'WordPress-Polylang-Plugin/HTTP');
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-      "Content-Type: application/json; charset=UTF-8"
+      'Content-Type: application/json; charset=UTF-8',
+      'Accept-Language: ' . $this->communicationLang
     ));
 
     if ($data != '') {
