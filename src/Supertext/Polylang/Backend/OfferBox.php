@@ -246,7 +246,7 @@ class OfferBox
   protected function getTranslationApiHtml()
   {
     // search translation feature and use first result
-    if (!Core::getInstance()->getLibrary()->isworking()) {
+    if (!Core::getInstance()->getLibrary()->isWorking()) {
       return __('Es wurde kein Übersetzungs-Dienst eingerichtet', 'polylang-supertext');
     }
 

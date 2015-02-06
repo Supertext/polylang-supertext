@@ -45,7 +45,7 @@ Supertext.Polylang = {
 	 */
 	initialize : function()
 	{
-		if (jQuery('#post-translations').length == 1) {
+		if (jQuery('#post-translations').length == 1 && Supertext.Polylang.isWorking()) {
 			Supertext.Polylang.injectOfferLinks();
 		}
 
@@ -84,12 +84,26 @@ Supertext.Polylang = {
 	},
 
 	/**
+	 * Tells if the plugin is working (Configuration and if user has rights)
+	 * @returns true, if the plugin is working by config/userconfig
+	 */
+	isWorking : function()
+	{
+		return (jQuery('#supertextPolylangWorking').val() == 1);
+	},
+
+	/**
 	 * Automatically saves a post on load. Used for the newly created translated page
 	 */
 	autoSavePost : function()
 	{
 		// Tell the user something happens
 		jQuery('body').css('cursor', 'progress');
+		// Show an info to the user
+		var element = jQuery('#poststuff');
+		element.css('display', 'none');
+		element.after('<div class="updated"><p>' + Supertext.i18n.translationCreation + '</p></div>');
+
 		// After two seconds, auto save
 		setTimeout(function() {
 			jQuery('#save-action input[type=submit]').trigger('click');
@@ -395,7 +409,7 @@ Supertext.Polylang = {
 			if (mce.isDirty())
 				bUnsaved = true;
 		} else {
-			if (fullscreen && fullscreen.settings.visible) {
+			if (typeof(fullscreen) !== 'undefined' && fullscreen.settings.visible) {
 				title = jQuery('#wp-fullscreen-title').val();
 				content = jQuery("#wp_mce_fullscreen").val();
 			} else {
@@ -403,8 +417,10 @@ Supertext.Polylang = {
 				content = jQuery('#post #content').val();
 			}
 
-			if (( title || content ) && title + content != autosaveLast) {
-				bUnsaved = true;
+			if (typeof(autosaveLast) !== 'undefined') {
+				if ((title || content) && title + content != autosaveLast) {
+					bUnsaved = true;
+				}
 			}
 		}
 		return bUnsaved;

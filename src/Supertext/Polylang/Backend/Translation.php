@@ -1,6 +1,8 @@
 <?php
 
 namespace Supertext\Polylang\Backend;
+use Supertext\Polylang\Core;
+use Supertext\Polylang\Helper\Constant;
 
 /**
  * Serves as a helper for the translation inject to the user
@@ -21,6 +23,7 @@ class Translation
     add_action('admin_init', array($this, 'addBackendAssets'));
     add_action('current_screen', array($this, 'addScreenbasedAssets'));
     add_action('admin_footer', array($this, 'addTranslations'));
+    add_action('admin_footer', array($this, 'printWorkingState'));
     add_action('media_upload_gallery', array($this, 'disableGalleryInputs'));
 
     // Only autosave translation if necessary
@@ -139,6 +142,7 @@ class Translation
           addNewUser : "' . esc_js(__('Benutzer hinzufügen', 'polylang-supertext')) . '",
           inTranslationText : "' . esc_js(self::IN_TRANSLATION_TEXT) . '",
           deleteUser : "' . esc_js(__('Benutzer entfernen', 'polylang-supertext')) . '",
+          translationCreation : "' . esc_js(__('Die Übersetzung wird initialisiert, bitte warten.', 'polylang-supertext')) . '",
           generalError : "' . esc_js(__('Es ist ein Fehler aufgetreten.', 'polylang-supertext')) . '",
           offerTranslation : "' . esc_js(__('Übersetzung beauftragen', 'polylang-supertext')) . '",
           translationOrderError : "' . esc_js(__('Der Auftrag konnte nicht an Supertext gesendet werden. Bitte versuchen Sie es erneut.', 'polylang-supertext')) . '",
@@ -151,6 +155,32 @@ class Translation
         };
       </script>
     ';
+  }
+
+  /**
+   * Print a working state hidden field
+   */
+  public function printWorkingState()
+  {
+    $working = 1;
+    $library = Core::getInstance()->getLibrary();
+
+    // See if the plugin is generally working
+    if (!$library->isWorking()) {
+      $working = 0;
+    }
+
+    // See if the user has credentials
+    $userId = get_current_user_id();
+    $cred = $library->getUserCredentials($userId);
+
+    // Check credentials and api key
+    if (strlen($cred['stUser']) == 0 || strlen($cred['stApi']) == 0 || $cred['stUser'] == Constant::DEFAULT_API_USER) {
+      $working = 0;
+    }
+
+    // Print the field
+    echo '<input type="hidden" id="supertextPolylangWorking" value="' . $working . '" />';
   }
 
   /**

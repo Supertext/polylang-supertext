@@ -86,7 +86,7 @@ class AjaxRequest
 
     foreach ($pricing as $title => $item) {
       $idWithType = str_replace(':', '_', $title);
-      // Could remove the onclick easily. Will be fixed/refactored in next release. Works but is semi-geil.
+      // Couldn't remove the onclick easily. Will be fixed/refactored in next release. Works but is semi-geil.
       $output .= '
         <tr onclick="jQuery(\'#rad_translation_type_' . $idWithType . '\').attr(\'checked\', \'checked\');">
           <td>

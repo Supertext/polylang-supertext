@@ -31,7 +31,7 @@ class Library
    * @param int $userId wordpress user
    * @return array user configuration for supertext api calls
    */
-  protected function getUserCredentials($userId)
+  public function getUserCredentials($userId)
   {
     $options = $this->getSettingOption();
     $userMap = $options[Constant::SETTING_USER_MAP];
@@ -72,7 +72,7 @@ class Library
   /**
    * @return bool true if workingly configured
    */
-  public function isworking()
+  public function isWorking()
   {
     $options = $this->getSettingOption();
     return ($options[Constant::SETTING_WORKING] == 1);
