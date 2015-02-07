@@ -85,12 +85,15 @@ class AjaxRequest
     $checked = ' checked';
 
     foreach ($pricing as $title => $item) {
+      if (stristr($title, ':') === false) {
+        continue;
+      }
       $idWithType = str_replace(':', '_', $title);
       // Couldn't remove the onclick easily. Will be fixed/refactored in next release. Works but is semi-geil.
       $output .= '
         <tr onclick="jQuery(\'#rad_translation_type_' . $idWithType . '\').attr(\'checked\', \'checked\');">
           <td>
-            <input type="radio" name="rad_translation_type" id="rad_translation_type_' . $idWithType . '" value="' . $title . '"' . $checked . '>
+            <input type="radio" data-currency="' . $pricing['currency'] . '" name="rad_translation_type" id="rad_translation_type_' . $idWithType . '" value="' . $title . '"' . $checked . '>
           </td>
           <td>
             ' . $item['name'] . '
@@ -99,7 +102,7 @@ class AjaxRequest
             ' . date_i18n('D, d. F H:i', strtotime($item['date'])) . '
           </td>
           <td align="right" class="ti_price">
-            ' . String::numberFormat($item['price'], 2) . '
+            ' . $pricing['currency'] . ' ' . String::numberFormat($item['price'], 2) . '
           </td>
         </tr>
       ';
@@ -118,7 +121,7 @@ class AjaxRequest
             <td width="20px">&nbsp;</td>
             <td width="200px"><strong>' . __('Dauer',' polylang-supertext') . '</strong></td>
             <td width="170px" align="right"><strong>' . __('Übersetzung erfolgt bis',' polylang-supertext') . '</strong></td>
-            <td width="120px" align="right"><strong>' . __('Preis (in CHF)',' polylang-supertext') . '</strong></td>
+            <td width="120px" align="right"><strong>' . __('Preis',' polylang-supertext') . '</strong></td>
           </tr>
         </thead>
         <tbody>

@@ -148,7 +148,7 @@ class Translation
           translationOrderError : "' . esc_js(__('Der Auftrag konnte nicht an Supertext gesendet werden. Bitte versuchen Sie es erneut.', 'polylang-supertext')) . '",
           confirmUnsavedArticle : "' . esc_js(__('Der Artikel wurde nicht gespeichert.\nFalls du mit der Übersetzung fortfährst, werden deine Änderungen verworfen.', 'polylang-supertext')) . '",
           alertUntranslatable : "' . esc_js(__('Der Artikel kann nicht übersetzt werden, da dieser selbst noch übersetzt wird.\nBitte verwende den Original Artikel zur Übersetzung.', 'polylang-supertext')) . '",
-          offerConfirm_Price : "' . esc_js(__('Sie bestellen eine Übersetzung bis zum {deadline} Uhr, zum Preis von {currency} {price}.', 'polylang-supertext')) . '",
+          offerConfirm_Price : "' . esc_js(__('Sie bestellen eine Übersetzung bis zum {deadline} Uhr, zum Preis von {price}.', 'polylang-supertext')) . '",
           offerConfirm_Binding : "' . esc_js(__('Diese Übersetzungsbeauftragung ist verbindlich.', 'polylang-supertext')) . '",
           offerConfirm_EmailInfo : "' . esc_js(__('Sie werden per E-Mail informiert, sobald die Übersetzung abgeschlossen wurde.', 'polylang-supertext')) . '",
           offerConfirm_Confirm : "' . esc_js(__('Bitte bestätigen Sie die Bestellung.', 'polylang-supertext')) . '"

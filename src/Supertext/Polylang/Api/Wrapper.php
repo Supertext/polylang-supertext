@@ -119,11 +119,16 @@ class Wrapper
         foreach ($o->DeliveryOptions as $do) {
           $result[$o->OrderTypeId . ':' . $do->DeliveryId] = array(
             'name' => $o->Name . ' in ' . $do->Name,
+            'currency' => $o->Currency,
             'price' => $do->Price,
             'date' => $do->DeliveryDate
           );
         }
       }
+
+      // Also add the currency and name
+      $result['currency'] = $json->Currency;
+      $result['currencyName'] = $json->CurrencySymbol;
     } else {
       // Provide user message
       echo '

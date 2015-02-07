@@ -294,9 +294,10 @@ Supertext.Polylang = {
 			Supertext.Polylang.createOrderRunning = true;
 
 			// Oppan hadorn style
-			var deadline = jQuery('input:radio:checked[name=rad_translation_type]').parent().next().next().html().trim();
-			var price = jQuery('input:radio:checked[name=rad_translation_type]').parent().next().next().next().html().trim();
-			var confirmedOrder = confirm(Supertext.Polylang.getOfferConfirmMessage(deadline, price, 'CHF'));
+			var radio = jQuery('input:radio:checked[name=rad_translation_type]');
+			var deadline = radio.parent().next().next().html().trim();
+			var price = radio.parent().next().next().next().html().trim();
+			var confirmedOrder = confirm(Supertext.Polylang.getOfferConfirmMessage(deadline, price));
 
 			// If the user confirmed, actually create the order
 			if (confirmedOrder) {
@@ -359,7 +360,7 @@ Supertext.Polylang = {
 	 * @param price the price
 	 * @param currency the currency
 	 */
-	getOfferConfirmMessage : function(deadline, price, currency)
+	getOfferConfirmMessage : function(deadline, price)
 	{
 		// First, create the templated message
 		var message = '' +
@@ -371,7 +372,6 @@ Supertext.Polylang = {
 		// Replace all vars
 		message = message.replace('{deadline}', deadline);
 		message = message.replace('{price}', price);
-		message = message.replace('{currency}', currency);
 
 		return message;
 	},
