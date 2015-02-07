@@ -8,7 +8,7 @@ use Supertext\Polylang\Api\Multilang;
 // Get json request body
 $response = array('message' => 'unknown error');
 $requestBody = file_get_contents('php://input');
-$json = json_decode($request_body);
+$json = json_decode($requestBody);
 
 $refData = explode('-', $json->ReferenceData, 2);
 $postId = $refData[0];
