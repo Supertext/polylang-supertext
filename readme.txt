@@ -7,6 +7,7 @@ Tested up to: 4.1
 
 Translate pages, posts with the supertext translation service. Works with polylang.
 
+
 == Description ==
 
 This plugin can only be used with polylang. It allows the user to send a certain post or page to
@@ -16,6 +17,7 @@ in your WordPress installation. It works for every post type that is translatabl
 You can let supertext translate content, title, excerpt and image captions at this moment.
 Just choose to "get translation offer" instead of creating the new page with polylang. See the offers,
 choose one and you'll be notified once your translated page or post has been inserted to your website.
+
 
 == Installation ==
 
