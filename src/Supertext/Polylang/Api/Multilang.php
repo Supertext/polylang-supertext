@@ -39,7 +39,7 @@ class Multilang
 
   /**
    * @param int $postId the post in for example german
-   * @param $language the language of the translation you want (i.e. en)
+   * @param string $language the language of the translation you want (i.e. en)
    * @return int|null post id or null if not found
    */
   public static function getPostInLanguage($postId, $language)
