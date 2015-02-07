@@ -30,6 +30,9 @@ class Translation
     if ($_GET['translation-service'] == 1) {
       add_filter('default_title', array($this, 'filterTranslatingPost'), 10, 2);
     }
+
+    // Load translations
+    load_plugin_textdomain('polylang-supertext', false, 'polylang-supertext/resources/languages');
   }
 
   /**
