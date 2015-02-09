@@ -14,17 +14,6 @@ $refData = explode('-', $json->ReferenceData, 2);
 $postId = $refData[0];
 $secureToken = $refData[1];
 
-// Debug info
-$message = '
- ' . json_encode($_REQUEST) . '
- ' . json_encode($requestBody) . '
- ' . json_encode($refData) . '
-';
-
-mail('michael@comotive.ch', 'Polylang-Supertext: Debug Callback info', $message);
-
-
-
 // check md5 Secure String
 if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
   global $Blogwerk_Multilang;
