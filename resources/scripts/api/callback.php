@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/wp-admin/admin.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/wp-load.php';
 
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Api\Multilang;
