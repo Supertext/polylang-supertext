@@ -142,6 +142,7 @@ class Translation
     echo '
       <script type="text/javascript">
         Supertext.i18n = {
+          resourceUrl : "' . get_bloginfo('wpurl') . '",
           addNewUser : "' . esc_js(__('Benutzer hinzufügen', 'polylang-supertext')) . '",
           inTranslationText : "' . esc_js(self::IN_TRANSLATION_TEXT) . '",
           deleteUser : "' . esc_js(__('Benutzer entfernen', 'polylang-supertext')) . '",

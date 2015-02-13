@@ -35,7 +35,7 @@ Supertext.Polylang = {
 	rowTemplate : '\
 		<tr>\
 		  <td>&nbsp;</td>\
-		  <td><img src="/wp-content/plugins/polylang-supertext/resources/images/arrow-right.png" style="width:16px; padding-left:5px;"/></td>\
+		  <td><img src="' + Supertext.i18n.resourceUrl + '/wp-content/plugins/polylang-supertext/resources/images/arrow-right.png" style="width:16px; padding-left:5px;"/></td>\
 		  <td colspan="2"><a href="{translationLink}">&nbsp;' + Supertext.i18n.offerTranslation + '</a></td>\
 		</tr>\
   ',
@@ -143,7 +143,7 @@ Supertext.Polylang = {
 		languageId = languageId.replace('tr_lang_', '');
 		// Create params, link and call with a check function
 		var params = '?postId=' + postId + '&targetLang=' + languageId + '&height=800&width=630&TB_iframe=true'
-		var tbLink = Supertext.Polylang.offerUrl + params;
+		var tbLink = Supertext.i18n.resourceUrl + Supertext.Polylang.offerUrl + params;
 		return 'javascript:Supertext.Polylang.checkBeforeTranslating(\'' + tbLink + '\');';
 	},
 
@@ -177,8 +177,6 @@ Supertext.Polylang = {
 				'<div style="margin:10px;">' + Supertext.i18n.inTranslationText + '</div>' +
 				jQuery('#wp-content-editor-container').html()
 			);
-
-			// TODO remove other forms, if needed
 		}
 	},
 
@@ -256,9 +254,8 @@ Supertext.Polylang = {
 		var postData = jQuery('#frm_Translation_Options').serialize()
 			+ '&post_id=' + postId
 			+ '&requestCounter=' + Supertext.Polylang.requestCounter;
-
 		jQuery.post(
-			Supertext.Polylang.ajaxUrl + '?action=getOffer',
+			Supertext.i18n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=getOffer',
 			postData,
 			function(data) {
 				// handle only newest request
@@ -313,7 +310,7 @@ Supertext.Polylang = {
 
 				// Post to API Endpoint and create order
 				jQuery.post(
-					Supertext.Polylang.ajaxUrl + '?action=createOrder',
+					Supertext.i18n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=createOrder',
 					postData,
 					function(data) {
 						jQuery('#div_waiting_while_loading').hide();
