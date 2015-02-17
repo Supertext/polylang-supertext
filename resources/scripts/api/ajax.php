@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/wp-admin/admin.php';
+require_once '../../../../../../wp-admin/admin.php';
 
 use Supertext\Polylang\Backend\AjaxRequest;
 
