@@ -1,9 +1,8 @@
 === Plugin Name ===
-Contributors: comotive
-Donate link: http://www.comotive.ch/
-Tags: internationalization, polylang, translation, service
+Contributors: comotive, supertext
+Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 4.1
-Tested up to: 4.1
+Tested up to: 4.2.3
 
 Translate pages, posts with the supertext translation service. Works with polylang.
 
