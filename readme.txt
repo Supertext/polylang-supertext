@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Polylang-Supertext ===
 Contributors: comotive, supertext
 Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 4.1
