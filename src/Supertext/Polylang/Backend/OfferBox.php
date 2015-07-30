@@ -158,28 +158,28 @@ class OfferBox
     $result = array();
 
     $result[] = array(
-      'title' => 'Titel',
+      'title' => __('Title', 'polylang-supertext'),
       'name' => 'to_post_title',
       'default' => true
     );
 
     $result[] = array(
-      'title' => 'Text',
+      'title' => __('Content', 'polylang-supertext'),
       'name' => 'to_post_content',
       'default' => true
     );
 
     $result[] = array(
-      'title' => 'Auszug',
+      'title' => __('Excerpt', 'polylang-supertext'),
       'name' => 'to_post_excerpt',
       'default' => true
     );
 
     // Texts for images
     $result[] = array(
-      'title' => 'Bildertexte',
+      'title' => __('Image captions', 'polylang-supertext'),
       'name' => 'to_post_image',
-      'default' => false
+      'default' => true
     );
 
     // Let developers add their own translatable items
