@@ -36,9 +36,11 @@ class Library
     $options = $this->getSettingOption();
     $userMap = $options[Constant::SETTING_USER_MAP];
 
-    foreach ($userMap as $config) {
-      if ($config['wpUser'] == $userId) {
-        return $config;
+    if (is_array($userMap)) {
+      foreach ($userMap as $config) {
+        if ($config['wpUser'] == $userId) {
+          return $config;
+        }
       }
     }
 

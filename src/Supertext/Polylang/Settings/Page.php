@@ -40,12 +40,13 @@ class Page extends AbstractPage
 
   /**
    * Add js/css resources needed on this page
+   * I know this is crap, will be fixed in near future
    */
   protected function addResources()
   {
     return '
-      <link rel="stylesheet" href="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/style.css" />
-      <script type="text/javascript" src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js"></script>
+      <link rel="stylesheet" href="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/style.css?v=' . SUPERTEXT_PLUGIN_REVISION . '" />
+      <script type="text/javascript" src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js?v=' . SUPERTEXT_PLUGIN_REVISION . '"></script>
     ';
   }
 

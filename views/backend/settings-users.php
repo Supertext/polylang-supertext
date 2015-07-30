@@ -48,7 +48,7 @@ $selectTemplate = '' .
         <tr>
           <td><strong>Wordpress <?php _e('User', 'polylang-supertext'); ?></strong></td>
           <td><strong>Supertext <?php _e('User', 'polylang-supertext'); ?></strong></td>
-          <td colspan="3"><strong><?php _e('API-Key', 'polylang-supertext'); ?></strong></td>
+          <td colspan="2"><strong><?php _e('API-Key', 'polylang-supertext'); ?></strong></td>
         </tr>
       </thead>
       <tbody>
@@ -74,7 +74,6 @@ $addUser = __('Add user', 'polylang-supertext');
 
 foreach ($userMap as $userConfig) {
   $index++;
-  $sStyle_Display = 'display: none;';
   $selectedWpUsers .= intval($userConfig['wpUser']) . ', ';
 
   echo '
@@ -91,9 +90,6 @@ foreach ($userMap as $userConfig) {
       <td>
         <img src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/delete.png" alt="" title="' . $deleteUser . '" onclick="javascript: Remove_StField(' . $index . ');">
       </td>
-      <td>
-        <input class="button button-highlighted" style="' . $sStyle_Display . '" type="button" name="buAddField_' . $index . '" id="buAddField_' . $index . '" value="' . $addUser . '" onclick="javascript: Add_StField(' . $i . ');">
-      </td>
     </tr>
   ';
 }
@@ -101,6 +97,8 @@ foreach ($userMap as $userConfig) {
 echo '
       </tbody>
       </table>
+      <br />
+      <input class="button button-highlighted" type="button" name="buAddField_' . $index . '" id="buAddField_' . $index . '" value="' . $addUser . '" onclick="javascript: Add_StField(' . $i . ');">
     </div>
   </div>';
 
