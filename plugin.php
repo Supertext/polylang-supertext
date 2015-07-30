@@ -4,18 +4,17 @@ Plugin Name: Supertext API for Polylang
 Plugin URI: http://www.comotive.ch
 Description: This plugins allows translation of posts and pages with the Supertext API
 Author: comotive GmbH
-Version: 1.0
+Version: 1.1
 Author URI: http://www.comotive.ch
 */
 
-define('SUPERTEXT_PLUGIN_REVISION', 3);
+define('SUPERTEXT_PLUGIN_REVISION', 4);
 define('SUPERTEXT_POLYLANG_BASE_PATH', __DIR__);
 define('SUPERTEXT_POLYLANG_VIEW_PATH', __DIR__ . '/views/');
 define('SUPERTEXT_POLYLANG_RESOURCE_URL', plugin_dir_url(__FILE__) . 'resources');
 
 // Autoload loading namespaced classes
 require_once SUPERTEXT_POLYLANG_BASE_PATH . '/autoload.php';
-
 
 // Load Comotive helper- and Supertext implementation namepsace
 foreach (array('Comotive', 'Supertext') as $namespace) {

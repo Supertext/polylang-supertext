@@ -20,7 +20,7 @@ class Page extends AbstractPage
     // Display the page with typical entry infos
     echo '
       <div class="wrap">
-        <h2>' . __('Einstellungen › Supertext API', 'polylang-supertext') . '</h2>
+        <h2>' . __('Settings › Supertext API', 'polylang-supertext') . '</h2>
         ' . $this->addResources() . '
         ' . $this->showSystemMessage() . '
         <form method="post" action="' . get_admin_url() . 'options-general.php?page=' . $_GET['page'] . '">
@@ -32,7 +32,7 @@ class Page extends AbstractPage
 
     // Close the form
     echo '
-        <p><input type="submit" class="button button-primary" name="saveStPlSettings" value="' . __('Einstellungen speichern', 'polylang-supertext') . '" /></p>
+        <p><input type="submit" class="button button-primary" name="saveStPlSettings" value="' . __('Save settings', 'polylang-supertext') . '" /></p>
       </form>
     </div>
     ';
@@ -57,7 +57,7 @@ class Page extends AbstractPage
     if ($_REQUEST['message'] == 'saved') {
       return '
         <div id="message" class="updated fade">
-          <p>' . __('Einstellungen gespeichert', 'polylang-supertext') . '</p>
+          <p>' . __('Settings saved', 'polylang-supertext') . '</p>
         </div>
       ';
     }

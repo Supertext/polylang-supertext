@@ -27,7 +27,7 @@ class Menu
     $settingsPage = new Page();
 
     add_options_page(
-      __('Supertext API - Einstellungen', 'polylang-supertext'),
+      __('Supertext API - Settings', 'polylang-supertext'),
       __('Supertext API', 'polylang-supertext'),
       'administrator',
       'supertext-polylang-settings',

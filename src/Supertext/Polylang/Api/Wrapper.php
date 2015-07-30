@@ -133,7 +133,7 @@ class Wrapper
       // Provide user message
       echo '
         <div id="message" class="updated fade">
-          <p>' . __('Fehler bei der Verbindung zu Supertext: Die Preise können nicht angezeigt werden.', 'polylang-supertext') . '</p>
+          <p>' . __('Error while communicating with Supertext. We couldn\'t find any offers. Please try again later.', 'polylang-supertext') . '</p>
         </div>
       ';
     }

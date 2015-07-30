@@ -41,14 +41,14 @@ $selectTemplate = '' .
       <thead>
         <tr>
           <td colspan="5">
-            <?php _e('Bitte geben Sie für jeden Benutzer den API-Key von Supertext ein.', 'polylang-supertext'); ?><br>
-            <?php _e('Nur hier erfasste Benutzer können Artikel übersetzen lassen.', 'polylang-supertext'); ?><br><br>
+            <?php _e('Please fill in a supertext API key for every WordPress user.', 'polylang-supertext'); ?><br>
+            <?php _e('Only configured users can make use of the translation features.', 'polylang-supertext'); ?><br><br>
           </td>
         </tr>
         <tr>
-          <td><strong>Wordpress <?php _e('Benutzer', 'polylang-supertext'); ?></strong></td>
-          <td><strong>Supertext <?php _e('Benutzer', 'polylang-supertext'); ?></strong></td>
-          <td colspan="3"><strong>API Key</strong></td>
+          <td><strong>Wordpress <?php _e('User', 'polylang-supertext'); ?></strong></td>
+          <td><strong>Supertext <?php _e('User', 'polylang-supertext'); ?></strong></td>
+          <td colspan="3"><strong><?php _e('API-Key', 'polylang-supertext'); ?></strong></td>
         </tr>
       </thead>
       <tbody>
@@ -68,8 +68,8 @@ if (count($userMap) == 0) {
 // Select correct dropdown value for WP User
 $index = 0;
 $selectedWpUsers = '';
-$deleteUser = __('Benutzer entfernen', 'polylang-supertext');
-$addUser = __('Benutzer hinzufügen', 'polylang-supertext');
+$deleteUser = __('Delete user', 'polylang-supertext');
+$addUser = __('Add user', 'polylang-supertext');
 
 
 foreach ($userMap as $userConfig) {

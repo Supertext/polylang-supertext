@@ -37,5 +37,10 @@ A valid supertext customer account per WordPress user and the corresponding API 
 
 == Changelog ==
 
+= 1.1 =
+* Switched to english, changed german translation
+* Minor text and UI fixes
+* Various small UI improvements
+
 = 1.0 =
 * Initial, german only version of the plugin

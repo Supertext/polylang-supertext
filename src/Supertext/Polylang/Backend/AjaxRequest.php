@@ -47,9 +47,9 @@ class AjaxRequest
         <br><br>
         <div class="updated fade">
           <p>
-            ' . __('Die Bestellung wurde erfolgreich abgeschlossen.', 'polylang-supertext') . '
+            ' . __('The order has been placed successfully.', 'polylang-supertext') . '
             ' . sprintf(
-                  __('Der Text wird bis am %s Uhr übersetzt.', 'polylang-supertext'),
+                  __('The article will be translated until %s.', 'polylang-supertext'),
                   date_i18n('D, d. F H:i', strtotime($order->Deadline))
             ) . '
           </p>
@@ -119,9 +119,9 @@ class AjaxRequest
         <thead>
           <tr>
             <td width="20px">&nbsp;</td>
-            <td width="200px"><strong>' . __('Dauer',' polylang-supertext') . '</strong></td>
-            <td width="170px" align="right"><strong>' . __('Übersetzung erfolgt bis',' polylang-supertext') . '</strong></td>
-            <td width="120px" align="right"><strong>' . __('Preis',' polylang-supertext') . '</strong></td>
+            <td width="200px"><strong>' . __('Duration',' polylang-supertext') . '</strong></td>
+            <td width="170px" align="right"><strong>' . __('Translation until',' polylang-supertext') . '</strong></td>
+            <td width="120px" align="right"><strong>' . __('Price',' polylang-supertext') . '</strong></td>
           </tr>
         </thead>
         <tbody>
@@ -130,7 +130,7 @@ class AjaxRequest
       </table>';
       $state = 'success';
     } else {
-      $output = __('Für diese Übersetzung sind keine Angebote vorhanden.',' polylang-supertext');
+      $output = __('There are no offers for this translation.',' polylang-supertext');
       $state = 'no_data';
     }
   }

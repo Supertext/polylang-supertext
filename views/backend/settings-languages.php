@@ -45,7 +45,7 @@ if (strlen($languageDropdown) > 0) {
   echo '
     <div class="postbox postbox_admin">
       <div class="inside">
-        <h3>' . __('Sprachen einstellen', 'polylang-supertext') . '</h3>
+        <h3>' . __('Language settings', 'polylang-supertext') . '</h3>
         <table border="0" cellpadding="0" margin="0">
           <tr>
             <td width="200"><b>Polylang</b></td>
@@ -58,5 +58,5 @@ if (strlen($languageDropdown) > 0) {
   ';
 } else {
   // Error if no languages are configured
-  echo  __('Bitte konfigurieren Sie erst die Sprachen in Polylang.', 'polylang-supertext');
+  echo  __('Please configure the languages within the polylang plugin.', 'polylang-supertext');
 }
