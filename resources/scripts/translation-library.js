@@ -28,6 +28,10 @@ Supertext.Polylang = {
 	 * Set by the offerbox window
 	 */
 	translatedPostId : 0,
+	/**
+	 * This can be set to true in order to see a confirmation before purchasing
+	 */
+	NEED_CONFIRMATION : false,
 
 	/**
 	 * Template for rows between translations
@@ -294,10 +298,15 @@ Supertext.Polylang = {
 			var radio = jQuery('input:radio:checked[name=rad_translation_type]');
 			var deadline = radio.parent().next().next().html().trim();
 			var price = radio.parent().next().next().next().html().trim();
-			var confirmedOrder = confirm(Supertext.Polylang.getOfferConfirmMessage(deadline, price));
+
+			// is there a need to confirm?
+			var hasConfirmed = true;
+			if (Supertext.Polylang.NEED_CONFIRMATION) {
+				hasConfirmed = confirm(Supertext.Polylang.getOfferConfirmMessage(deadline, price))
+			}
 
 			// If the user confirmed, actually create the order
-			if (confirmedOrder) {
+			if (hasConfirmed) {
 				jQuery('#frm_Translation_Options').hide();
 				// Hide review state, if available
 				if (!jQuery('#warning_not_review_state').length == 0) {
