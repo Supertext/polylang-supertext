@@ -97,7 +97,7 @@ class OfferBox
             <input type="hidden" id="successUrlMakeOrder" value="' . $successUrl . '" />
             <h3>' . __('Translation', 'polylang-supertext') . '</h3>
             ' . sprintf(
-                  __('The article will be translated from <b>%s</b> to <b>%s</b>.'),
+                  __('The article will be translated from <b>%s</b> to <b>%s</b>.', 'polylang-supertext'),
                   $this->getLanguageName($this->sourceLang),
                   $this->getLanguageName($this->targetLang)
                 ) . '
