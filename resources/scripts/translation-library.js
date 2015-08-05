@@ -108,11 +108,11 @@ Supertext.Polylang = {
 		element.css('display', 'none');
 		element.after('<div class="updated"><p>' + Supertext.i18n.translationCreation + '</p></div>');
 
-		// After two seconds, auto save
+		// After a second, auto save to permanently save the post to be translated
 		setTimeout(function() {
 			jQuery('#save-action input[type=submit]').trigger('click');
 			jQuery('body').css('cursor', 'default');
-		}, 2000);
+		}, 1000);
 	},
 
 	/**
