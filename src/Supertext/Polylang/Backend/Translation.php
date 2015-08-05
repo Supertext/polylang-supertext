@@ -33,6 +33,7 @@ class Translation
 
     // Load translations
     load_plugin_textdomain('polylang-supertext', false, 'polylang-supertext/resources/languages');
+    load_plugin_textdomain('polylang-supertext-langs', false, 'polylang-supertext/resources/languages');
   }
 
   /**

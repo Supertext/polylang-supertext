@@ -47,7 +47,6 @@ class OfferBox
   {
     // Info of translation service
     $output = $this->getTranslationApiHtml();
-    $languages = Multilang::getLanguages();
 
     // Inform the user over a draft that might not be finished
     if ($this->post->post_status == 'draft') {
@@ -99,8 +98,8 @@ class OfferBox
             <h3>' . __('Translation', 'polylang-supertext') . '</h3>
             ' . sprintf(
                   __('The article will be translated from <b>%s</b> to <b>%s</b>.'),
-                  $this->getLanguageName($languages, $this->sourceLang),
-                  $this->getLanguageName($languages, $this->targetLang)
+                  $this->getLanguageName($this->sourceLang),
+                  $this->getLanguageName($this->targetLang)
                 ) . '
             <input type="hidden" name="source_lang" id="source_lang" value="' . $this->sourceLang . '">
             <input type="hidden" name="target_lang" id="target_lang" value="' . $this->targetLang . '">
@@ -134,19 +133,14 @@ class OfferBox
   }
 
   /**
-   * @param \PLL_Language[] $languages polylang languages
    * @param string $key slug to search
    * @return string name of the $key language
    */
-  protected function getLanguageName($languages, $key)
+  protected function getLanguageName($key)
   {
-    foreach ($languages as $language) {
-      if ($language->slug == $key) {
-        return $language->name;
-      }
-    }
-
-    return __('Unknown language', 'polylang-supertext');
+    // Get the supertext key
+    $stKey = Core::getInstance()->getLibrary()->mapLanguage($key);
+    return __($stKey, 'polylang-supertext-langs');
   }
 
   /**
