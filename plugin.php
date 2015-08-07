@@ -4,7 +4,7 @@ Plugin Name: Supertext API for Polylang
 Plugin URI: http://www.comotive.ch
 Description: This plugins allows translation of posts and pages with the Supertext API
 Author: comotive GmbH
-Version: 1.1
+Version: 1.2
 Author URI: http://www.comotive.ch
 */
 
