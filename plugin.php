@@ -6,6 +6,7 @@ Description: This plugins allows translation of posts and pages with the Superte
 Author: comotive GmbH, Supertext AG
 Version: 1.2
 Author URI: http://www.supertext.ch
+License: GPLv2 or later
 */
 
 define('SUPERTEXT_PLUGIN_REVISION', 4);
