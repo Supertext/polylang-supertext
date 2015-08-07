@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Supertext API for Polylang
-Plugin URI: http://www.comotive.ch
+Plugin URI: http://www.supertext.ch
 Description: This plugins allows translation of posts and pages with the Supertext API
-Author: comotive GmbH
+Author: comotive GmbH, Supertext AG
 Version: 1.2
-Author URI: http://www.comotive.ch
+Author URI: http://www.supertext.ch
 */
 
 define('SUPERTEXT_PLUGIN_REVISION', 4);
