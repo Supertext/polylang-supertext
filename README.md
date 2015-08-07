@@ -1,15 +1,6 @@
 # Polylang Supertext
-Contributors: msebel, comotive, supertext
-Tags: internationalization, polylang, translation, service, supertext
-Requires at least: 3.8
-Tested up to: 4.2.3
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Translate pages, posts with the supertext translation service. Works with polylang.
-
-
-# Description
+## Description
 
 This plugin can only be used with polylang. It allows the user to send a certain post or page to
 the supertext translation service. After translation, the page or post is automatically translated
@@ -20,7 +11,7 @@ Just choose to "get translation offer" instead of creating the new page with pol
 choose one and you'll be notified once your translated page or post has been inserted to your website.
 
 
-# Installation
+## Installation
 
 This section describes how to install the plugin and get it working.
 
@@ -30,7 +21,7 @@ This section describes how to install the plugin and get it working.
 4. Go to a page/post you would like to be translated by supertext
 5. Place an offer, accept it and wait until supertext has automatically translated your page/post
 
-# Frequently Asked Questions
+## Frequently Asked Questions
 
 What do I need to use this plugin?
 
