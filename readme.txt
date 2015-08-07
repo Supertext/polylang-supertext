@@ -40,6 +40,13 @@ Get the API key on the Settings page: [https://www.supertext.ch/customer/account
 
 == Changelog ==
 
+= 1.2 =
+* Better user information when the translation is created
+* Logging all communication with Supertext and display it in the article sidebar
+* Always show a translation status and order number in "to be translated" articles
+* Detailed and translated language information on offer page
+* Removed order confirm question
+
 = 1.1 =
 * Switched to english, changed german translation
 * Minor text and UI fixes
