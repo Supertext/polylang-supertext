@@ -325,20 +325,25 @@ Supertext.Polylang = {
 						jQuery('#div_waiting_while_loading').hide();
 						switch (data.head.status) {
 							case 'success':
+								// Show info to user
+								jQuery('#div_tb_wrap_translation').append(data.body.html);
 								Supertext.Polylang.createOrderRunning = false;
 
-								// Copy form to parent
-								parent.jQuery('body').append(offerForm.clone());
-								offerForm = parent.jQuery('#frm_Translation_Options');
+								// do the rest in a few seconds
+								setTimeout(function() {
+									// Copy form to parent
+									parent.jQuery('body').append(offerForm.clone());
+									offerForm = parent.jQuery('#frm_Translation_Options');
 
-								// POST to success page that will create the empty post and connect it
-								offerForm.attr('action', successUrl);
-								// Remove submit validation and send
-								offerForm.attr('onsubmit', '');
-								offerForm.submit();
+									// POST to success page that will create the empty post and connect it
+									offerForm.attr('action', successUrl);
+									// Remove submit validation and send
+									offerForm.attr('onsubmit', '');
+									offerForm.submit();
 
-								// Also, close thickbox (but the form response will anyway)
-								self.parent.tb_remove();
+									// Also, close thickbox (but the form response will anyway)
+									self.parent.tb_remove();
+								}, 3000);
 
 								break;
 							default: // error

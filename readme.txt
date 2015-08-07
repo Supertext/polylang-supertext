@@ -1,8 +1,10 @@
 === Polylang-Supertext ===
-Contributors: comotive, supertext
+Contributors: msebel, comotive, supertext
 Tags: internationalization, polylang, translation, service, supertext
-Requires at least: 4.1
+Requires at least: 3.8
 Tested up to: 4.2.3
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Translate pages, posts with the supertext translation service. Works with polylang.
 

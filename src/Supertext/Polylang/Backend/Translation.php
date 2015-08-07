@@ -1,6 +1,8 @@
 <?php
 
 namespace Supertext\Polylang\Backend;
+use Comotive\Helper\Metabox;
+use Comotive\Util\Date;
 use Supertext\Polylang\Core;
 use Supertext\Polylang\Helper\Constant;
 
@@ -21,10 +23,12 @@ class Translation
   public function __construct()
   {
     add_action('admin_init', array($this, 'addBackendAssets'));
+    add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('current_screen', array($this, 'addScreenbasedAssets'));
     add_action('admin_footer', array($this, 'addTranslations'));
     add_action('admin_footer', array($this, 'printWorkingState'));
     add_action('media_upload_gallery', array($this, 'disableGalleryInputs'));
+    add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
 
     // Only autosave translation if necessary
     if ($_GET['translation-service'] == 1) {
@@ -90,9 +94,31 @@ class Translation
     // Save the changed post
     // A JS listeing to translation-service=1 will automatically save the new translation
     wp_update_post($post);
+    Core::getInstance()->getLog()->addEntry($post->ID, __('The translatable article has been created.', 'polylang-supertext'));
 
     // Return the same untouched title, if nothing should happen
     return $post->post_title;
+  }
+
+  /**
+   * Show information about the article translation, if given
+   */
+  public function showInTranslationMessage()
+  {
+    if (isset($_GET['post']) && isset($_GET['action'])) {
+      $translatedPost = get_post($_GET['post']);
+      $orderIdList = get_post_meta($translatedPost->ID, Log::META_ORDER_ID, true);
+      $orderId = end($orderIdList);
+
+      // Show info if there is an order and the article is not translated yet
+      if (intval($orderId) > 0 && $translatedPost->post_title == self::IN_TRANSLATION_TEXT) {
+        echo '
+          <div class="updated">
+            <p>' .  sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
+          </div>
+        ';
+      }
+    }
   }
 
   /**
@@ -186,6 +212,35 @@ class Translation
 
     // Print the field
     echo '<input type="hidden" id="supertextPolylangWorking" value="' . $working . '" />';
+  }
+
+  /**
+   * Show supertext log information, if there are entries for the current post
+   */
+  public function addLogInfoMetabox()
+  {
+    $postId = intval($_GET['post']);
+    $logEntries = Core::getInstance()->getLog()->getLogEntries($postId);
+
+    // Show info if valid post and there are entries
+    if ($postId > 0 && count($logEntries) > 0) {
+      // Reverse entries, so that the newest is on top
+      $logEntries = array_reverse($logEntries);
+      // Create an html element to display the entries
+      $html = '';
+      foreach ($logEntries as $entry) {
+        $datetime = '
+          ' . Date::getTime(Date::EU_DATE, $entry['datetime']) . ',
+          ' . Date::getTime(Date::EU_TIME, $entry['datetime']) . '
+        ';
+        $html .= '<p><strong>' . $datetime . '</strong>: ' . $entry['message'] . '</p>';
+      }
+
+      $helper = Metabox::get('post');
+      // Add a new metabox to show log entries
+      $helper->addMetabox(Log::META_LOG, __('Supertext Plugin Log', 'polylang-supertext'), 'side', 'low');
+      $helper->addHtml('info', Log::META_LOG, $html);
+    }
   }
 
   /**

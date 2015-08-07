@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
 "POT-Creation-Date: 2015-02-07 09:16+0100\n"
-"PO-Revision-Date: 2015-07-30 16:50+0100\n"
+"PO-Revision-Date: 2015-08-07 11:01+0100\n"
 "Last-Translator: \n"
 "Language-Team: comotive GmbH <it@comotive.ch>\n"
 "Language: en_US\n"
@@ -167,7 +167,9 @@ msgstr "The order is being sent. One moment, please."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:93
 msgid "As soon as the order is placed, you will be automatically redirected."
-msgstr "As soon as the order is placed, you will be automatically redirected."
+msgstr ""
+"As soon as the order is placed, you will be automatically redirected. Please "
+"don't close this window yet."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:95
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:116
@@ -238,3 +240,50 @@ msgstr "Excerpt"
 
 msgid "Image captions"
 msgstr "Image captions"
+
+msgid "translation saved successfully"
+msgstr "Translation from Supertext successfully imported."
+
+msgid "error: can only import into draft article"
+msgstr "Error: Translation import only possible to drafted articles."
+
+msgid "error: wrong language or translation post has been deleted"
+msgstr ""
+"Error: Translation from Supertext has the wrong language or the translated "
+"post has been deleted."
+
+msgid "error: method not allowed"
+msgstr "Error while importing the translation from Supertext."
+
+msgid "The translatable article has been created."
+msgstr "The translatable article has been created."
+
+msgid "Error: Could not create an order with Supertext."
+msgstr "Error: Could not create an order with Supertext."
+
+msgid ""
+"Order for article translation to %s successfully placed. Your order number "
+"is %s."
+msgstr ""
+"Order for article translation to %s successfully placed. Your order number "
+"is %s."
+
+msgid "Your order number is %s."
+msgstr "Your order number is %s."
+
+msgid ""
+"The article was sent to Supertext and is now being translated. Your order "
+"number is %s."
+msgstr ""
+"The article was sent to Supertext and is now being translated. Your order "
+"number is %s."
+
+msgid ""
+"One moment, the window closes itself in a few seconds and finishes the "
+"order. Don't close the window yet."
+msgstr ""
+"One moment, the window closes itself in a few seconds and finishes the "
+"order. Don't close the window yet."
+
+msgid "Supertext Plugin Log"
+msgstr "Supertext Plugin Log"

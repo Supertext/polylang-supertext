@@ -28,6 +28,7 @@ class AjaxRequest
     $data = $library->getTranslationData($options['post_id'], $options['pattern']);
     $post = get_post($options['post_id']);
     $wrapper = $library->getUserWrapper();
+    $log = Core::getInstance()->getLog();
 
     // Create the order
     $order = $wrapper->createOrder(
@@ -41,21 +42,45 @@ class AjaxRequest
       $options['additional_information']
     );
 
-    if (!empty($order->Deadline)) {
+    if (!empty($order->Deadline) && !empty($order->Id)) {
       $state = 'success';
       $output = '
-        <br><br>
-        <div class="updated fade">
-          <p>
-            ' . __('The order has been placed successfully.', 'polylang-supertext') . '
-            ' . sprintf(
-                  __('The article will be translated until %s.', 'polylang-supertext'),
-                  date_i18n('D, d. F H:i', strtotime($order->Deadline))
-            ) . '
-          </p>
-        </div>
+        <br>
+        <p>
+          ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
+          ' . sprintf(__('Your order number is %s.', 'polylang-supertext'), $order->Id) . '<br />
+          ' . sprintf(
+                __('The article will be translated until %s.', 'polylang-supertext'),
+                date_i18n('D, d. F H:i', strtotime($order->Deadline))
+          ) . '
+        </p>
+        <p>' . __('One moment, the window closes itself in a few seconds and finishes the order. Don\'t close the window yet.', 'polylang-supertext') . '</p>
       ';
+
+      // Log the success and the order id
+      $message = sprintf(
+        __('Order for article translation to %s successfully placed. Your order number is %s.', 'polylang-supertext'),
+        self::getLanguageName($options['target_lang']),
+        $order->Id
+      );
+      $log->addEntry($post->ID, $message);
+      $log->addOrderId($post->ID, $order->Id);
+
+    } else {
+      // Error, couldn't create a correct order
+      $log->addEntry($post->ID, __('Error: Could not create an order with Supertext.', 'polylang-supertext'));
     }
+  }
+
+  /**
+   * @param string $key slug to search
+   * @return string name of the $key language
+   */
+  public static function getLanguageName($key)
+  {
+    // Get the supertext key
+    $stKey = Core::getInstance()->getLibrary()->mapLanguage($key);
+    return __($stKey, 'polylang-supertext-langs');
   }
 
   /**

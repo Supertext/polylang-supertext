@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
 "POT-Creation-Date: 2015-02-07 09:16+0100\n"
-"PO-Revision-Date: 2015-07-30 16:50+0100\n"
+"PO-Revision-Date: 2015-08-07 11:00+0100\n"
 "Last-Translator: \n"
 "Language-Team: comotive GmbH <it@comotive.ch>\n"
 "Language: de_DE\n"
@@ -170,8 +170,8 @@ msgstr "Die Bestellung wird ausgelöst. Einen Moment bitte."
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:93
 msgid "As soon as the order is placed, you will be automatically redirected."
 msgstr ""
-"Sobald die Bestellung erfolgreich abgeschlossen ist, wirst du automatisch "
-"weitergeleitet."
+"Sobald die Bestellung erfolgreich abgeschlossen ist, werden Sie automatisch "
+"weitergeleitet. Bitte schliessen Sie dieses Fenster noch nicht."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:95
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:116
@@ -242,3 +242,50 @@ msgstr "Auszug"
 
 msgid "Image captions"
 msgstr "Bildertexte"
+
+msgid "translation saved successfully"
+msgstr "Übersetzung von Supertext swurde erfolgreich importiert."
+
+msgid "error: can only import into draft article"
+msgstr "Fehler: Übersetzungs-Import ist nur bei Entwurfs-Artikel möglich."
+
+msgid "error: wrong language or translation post has been deleted"
+msgstr ""
+"Fehler: Übersetzung von Supertext hat die falsche Sprache, oder der zu "
+"übersetzende Artikel wurde gelöscht."
+
+msgid "error: method not allowed"
+msgstr "Fehler beim Importieren der Übersetzung von Supertext."
+
+msgid "The translatable article has been created."
+msgstr "Der zu Übersetzende Artikel wurde erstellt."
+
+msgid "Error: Could not create an order with Supertext."
+msgstr "Fehler: Konnte keine Bestellung bei Supertext erstellen."
+
+msgid ""
+"Order for article translation to %s successfully placed. Your order number "
+"is %s."
+msgstr ""
+"Bestellung für Artikel-Übersetzung nach %s erfolgreich. Ihre Bestellnummer "
+"lautet %s."
+
+msgid "Your order number is %s."
+msgstr "Ihre Bestellnummer lautet %s."
+
+msgid ""
+"The article was sent to Supertext and is now being translated. Your order "
+"number is %s."
+msgstr ""
+"Ihr Artikel wurde an Supertext gesendet und wird Übersetzt. Ihre "
+"Bestellnummer lautet %s."
+
+msgid ""
+"One moment, the window closes itself in a few seconds and finishes the "
+"order. Don't close the window yet."
+msgstr ""
+"Einen Moment noch, das Fenster schliesst sich automatisch und erledigt dann "
+"den Rest. Bitte schliesse das Fenster noch nicht."
+
+msgid "Supertext Plugin Log"
+msgstr "Supertext Plugin Log"

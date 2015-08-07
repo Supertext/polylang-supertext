@@ -4,6 +4,7 @@ namespace Supertext\Polylang;
 
 use Supertext\Polylang\Api\Library;
 use Supertext\Polylang\Backend\Menu;
+use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
 
 /**
@@ -25,6 +26,10 @@ class Core
    * @var Menu the backend menu handler
    */
   protected $menu = NULL;
+  /**
+   * @var Log the backend menu handler
+   */
+  protected $log = NULL;
   /**
    * @var Translation the translation library
    */
@@ -51,6 +56,7 @@ class Core
     // Load needed subcomponents
     if (is_admin()) {
       $this->menu = new Menu();
+      $this->log = new Log();
       $this->translation = new Translation();
     }
 
@@ -72,6 +78,18 @@ class Core
   public function getTranslation()
   {
     return $this->translation;
+  }
+
+  /**
+   * @return Log the logger, might be instantiated only if needed
+   */
+  public function getLog()
+  {
+    if ($this->log === NULL) {
+      $this->log = new Log();
+    }
+
+    return $this->log;
   }
 
   /**

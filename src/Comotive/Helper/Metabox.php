@@ -3,8 +3,8 @@
 namespace Comotive\Helper;
 
 use wpdb;
-use LBWP\Util\String;
-use LBWP\Util\Date;
+use Comotive\Util\String;
+use Comotive\Util\Date;
 
 /**
  * This helper can be instantiated to add one or more metaboxes to a posttype,

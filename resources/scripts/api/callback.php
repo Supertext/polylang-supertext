@@ -2,6 +2,7 @@
 
 require_once '../../../../../../wp-load.php';
 
+use Supertext\Polylang\Core;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Api\Multilang;
 
@@ -16,7 +17,6 @@ $secureToken = $refData[1];
 
 // check md5 Secure String
 if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
-  global $Blogwerk_Multilang;
 
   // Yes a valid confirmation -> load post object
   $targetLang = substr($json->TargetLang, 0, 2);
@@ -93,15 +93,19 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
       // Now finally save that post and flush cache
       wp_update_post($post);
 
-      $response['message'] = 'translation saved successfully';
+      $response['message'] = __('translation saved successfully', 'polylang-supertext');
+      Core::getInstance()->getLog()->addEntry($translationPostId, $response['message']);
     } else {
-      $response['message'] = 'error: can only import into draft article';
+      $response['message'] = __('error: can only import into draft article', 'polylang-supertext');
+      Core::getInstance()->getLog()->addEntry($translationPostId, $response['message']);
     }
   } else {
-    $response['message'] = 'error: wrong language or translation post has been deleted';
+    $response['message'] = __('error: wrong language or translation post has been deleted', 'polylang-supertext');
+    Core::getInstance()->getLog()->addEntry($postId, $response['message']);
   }
 } else {
-  $response['message'] = 'error: method not allowed';
+  $response['message'] = __('error: method not allowed', 'polylang-supertext');
+  Core::getInstance()->getLog()->addEntry($postId, $response['message']);
 }
 
 // Print the response
