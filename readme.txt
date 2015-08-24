@@ -35,8 +35,8 @@ This section describes how to install the plugin and get it working.
 = What do I need to use this plugin? =
 
 A valid supertext customer account per WordPress user and the corresponding API key.
-You can signup on [https://www.supertext.ch/en/signup] if you don't already have a Supertext-Account.
-Get the API key on the Settings page: [https://www.supertext.ch/customer/accountsettings]
+You can signup on [Supertext](https://www.supertext.ch/en/signup) if you don't already have a Supertext-Account.
+Get the API key on the Settings page: [Account Settings](https://www.supertext.ch/customer/accountsettings)
 
 == Changelog ==
 
