@@ -105,59 +105,73 @@ class AjaxRequest
       $data
     );
 
-    // output html zusammen stellen
-    $foundPrice = false;
-    $checked = ' checked';
-
-    foreach ($pricing as $title => $item) {
-      if (stristr($title, ':') === false) {
-        continue;
-      }
-      $idWithType = str_replace(':', '_', $title);
-      // Couldn't remove the onclick easily. Will be fixed/refactored in next release. Works but is semi-geil.
-      $output .= '
-        <tr onclick="jQuery(\'#rad_translation_type_' . $idWithType . '\').attr(\'checked\', \'checked\');">
-          <td>
-            <input type="radio" data-currency="' . $pricing['currency'] . '" name="rad_translation_type" id="rad_translation_type_' . $idWithType . '" value="' . $title . '"' . $checked . '>
-          </td>
-          <td>
-            ' . $item['name'] . '
-          </td>
-          <td align="right" class="ti_deadline">
-            ' . date_i18n('D, d. F H:i', strtotime($item['date'])) . '
-          </td>
-          <td align="right" class="ti_price">
-            ' . $pricing['currency'] . ' ' . String::numberFormat($item['price'], 2) . '
-          </td>
-        </tr>
-      ';
-      // If found, set true and uncheck
-      if (!$foundPrice) {
-        $foundPrice = true;
-        $checked = '';
-      }
-    }
-
-    if ($foundPrice) {
-      $output = '
-      <table border="0" cellpadding="2" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <td width="20px">&nbsp;</td>
-            <td width="200px"><strong>' . __('Duration',' polylang-supertext') . '</strong></td>
-            <td width="170px" align="right"><strong>' . __('Translation until',' polylang-supertext') . '</strong></td>
-            <td width="120px" align="right"><strong>' . __('Price',' polylang-supertext') . '</strong></td>
-          </tr>
-        </thead>
-        <tbody>
-          ' . $output . '
-        </tbody>
-      </table>';
-      $state = 'success';
-    } else {
+    //Check if there are no offers
+    if (empty($pricing['options'])) {
       $output = __('There are no offers for this translation.',' polylang-supertext');
       $state = 'no_data';
+      return;
     }
+
+	// generate html output
+    $rows = '';
+    foreach ($pricing['options'] as $option) {
+      $itemsCount = count($option['items']);
+
+      $rows .= '<tr class="firstGroupRow">
+                    <td class="qualityGroupCell" rowspan="'.($itemsCount+1).'"><strong>'.$option['name'].'</strong></td>
+                    <td class="selectionCell">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>';
+
+      foreach($option['items'] as $groupRowNumber =>  $item){
+        $rowClass = '';
+
+        //if last row in group
+        if($groupRowNumber === $itemsCount - 1){
+          $rowClass = 'class="lastGroupRow"';
+        }
+
+        $radioInputId = $option['id'] . "_" . $item['id'];
+        $radioInputValue = $option['id'] . ":" . $item['id'];
+
+        $rows .= '
+          <tr '.$rowClass.'>
+            <td class="selectionCell">
+              <input type="radio" data-currency="' . $pricing['currency'] . '" name="rad_translation_type" id="rad_translation_type_' . $radioInputId . '" value="' . $radioInputValue . '">
+            </td>
+            <td>
+              <label for="rad_translation_type_' . $radioInputId . '">' . $item['name'] . '</label>
+            </td>
+            <td align="right" class="ti_deadline">
+              <label for="rad_translation_type_' . $radioInputId . '">' . date_i18n('D, d. F H:i', strtotime($item['date'])) . '</label>
+            </td>
+            <td align="right" class="ti_price">
+              <label for="rad_translation_type_' . $radioInputId . '">' . $pricing['currency'] . ' ' . String::numberFormat($item['price'], 2) . '</label>
+            </td>
+          </tr>
+        ';
+      }
+    }
+
+    $output .=
+        '<table border="0" cellpadding="2" cellspacing="0">
+            <thead>
+              <tr>
+                <td>&nbsp;</td>
+                <td class="selectionCell">&nbsp;</td>
+                <td><strong>' . __('Duration',' polylang-supertext') . '</strong></td>
+                <td align="right"><strong>' . __('Translation until',' polylang-supertext') . '</strong></td>
+                <td align="right"><strong>' . __('Price',' polylang-supertext') . '</strong></td>
+              </tr>
+            </thead>
+            <tbody>
+                '.$rows.'
+            </tbody>
+          </table>';
+
+    $state = 'success';
   }
 
   /**
