@@ -28,7 +28,8 @@
   padding: 2px 10px;
   display: block;
 }
-#div_translation_price table tbody tr:hover label {
+#div_translation_price table tbody tr:hover label,
+#div_translation_price table tbody tr:focus label{
   background-color: rgba(0, 0, 0, 0.08);
   cursor: pointer
 }
@@ -55,7 +56,7 @@
 }
 #div_translation_price table .selectionCell{
   margin:0;
-  padding:0;
+  padding-right: 2px;
   overflow: hidden;
 }
 .div_translation_price_loading {
