@@ -41,7 +41,11 @@ $selectTemplate = '' .
       <thead>
         <tr>
           <td colspan="5">
-            <?php _e('Please fill in a supertext API key for every WordPress user.', 'polylang-supertext'); ?><br>
+            <?php
+            $url = 'https://www.supertext.ch/de/signup';
+            echo sprintf( wp_kses( __("You need at least one Supertext Account. You can sign up <a href=\"%s\">here</a>.", 'polylang-supertext'), array(  'a' => array( 'href' => array() ) ) ), esc_url( $url ) );
+            ?><br><br>
+            <?php _e('Please fill in a Supertext API key for every WordPress user.', 'polylang-supertext'); ?><br>
             <?php _e('Only configured users can make use of the translation features.', 'polylang-supertext'); ?><br><br>
           </td>
         </tr>

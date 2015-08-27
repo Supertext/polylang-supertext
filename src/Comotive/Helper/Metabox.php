@@ -452,10 +452,10 @@ class Metabox
   {
     $args['title'] = $title;
     if (!isset($args['uploaderButtonText'])) {
-      $args['uploaderButtonText'] = __('Bild wählen');
+      $args['uploaderButtonText'] = __('Choose picture');
     }
     if (!isset($args['removeMediaText'])) {
-      $args['removeMediaText'] = __('Bild entfernen');
+      $args['removeMediaText'] = __('Remove picture');
     }
     if (!isset($args['mediaContainerCallback']) || !is_callable($args['mediaContainerCallback'])) {
       $args['mediaContainerCallback'] = array($this, 'mediaContainerCallback');

@@ -550,14 +550,14 @@ class String
 		if ($nLen1 > 0 && $nLen2 > 0) {
 			// Prüfen auf minimale Länge
 			if ($nLen1 < $nLength || $nLen2 < $nLength) {
-				$message =  __('Ihr Passwort muss mindestens '.$nLength.' Zeichen lang sein', $textdomain);
+				$message =  sprintf(__('Your password must be at least %s long', $textdomain), $nLength);
 			} else if ($sPwd1 !== $sPwd2) {
 				// Prüfen auf Gleichheit nicht OK, Fehler
-				$message = __('Die Passwörter stimmen nicht überein', $textdomain);
+				$message = __('The passwords do not match', $textdomain);
 			}
 		} else {
 			// Meldung, dass keine neuen Passwörter eingegeben wurden
-			$message = __('Sie haben kein Passwort eingegeben', $textdomain);
+			$message = __('Please enter a password', $textdomain);
 		}
 		// Fehler Array zurückgeben
 		return $message;

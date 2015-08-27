@@ -82,7 +82,7 @@ class WordPress
       'labels' => array(
         'name' => $plural,
         'singular_name' => $plural,
-        'add_new' =>  __('Erstellen'),
+        'add_new' =>  'Erstellen',
         'add_new_item' =>  'Neues ' . $singular . ' erfassen',
         'edit_item' =>  'Bearbeite ' . $singular,
         'new_item' =>  'Neues ' . $singular,

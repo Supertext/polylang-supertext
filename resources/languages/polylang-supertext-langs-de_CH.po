@@ -1,0 +1,192 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Supertext Polylang\n"
+"POT-Creation-Date: 2015-02-07 09:16+0100\n"
+"PO-Revision-Date: 2015-08-05 14:51+0100\n"
+"Last-Translator: \n"
+"Language-Team: comotive GmbH <it@comotive.ch>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n;_x\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "de-CH"
+msgstr "Deutsch (Schweiz)"
+
+msgid "en-US"
+msgstr "Englisch (USA)"
+
+msgid "fr-CH"
+msgstr "Französisch (Schweiz)"
+
+msgid "it-CH"
+msgstr "Italienisch (Schweiz)"
+
+msgid "sv"
+msgstr "Schwedisch"
+
+msgid "da"
+msgstr "Dänisch"
+
+msgid "no"
+msgstr "Norwegisch"
+
+msgid "es-ES"
+msgstr "Spanisch (Spanien)"
+
+msgid "pt-PT"
+msgstr "Portugiesisch (Portugal)"
+
+msgid "nl"
+msgstr "Niederländisch"
+
+msgid "zh"
+msgstr "Chinesisch"
+
+msgid "ru"
+msgstr "Russisch"
+
+msgid "de-DE"
+msgstr "Deutsch (Deutschland)"
+
+msgid "de-AT"
+msgstr "Deutsch (Österreich)"
+
+msgid "en-GB"
+msgstr "Englisch (Grossbritannien)"
+
+msgid "fr-FR"
+msgstr "Französisch (Frankreich)"
+
+msgid "it-IT"
+msgstr "Italienisch (Italien)"
+
+msgid "tr"
+msgstr "Türkisch"
+
+msgid "pl"
+msgstr "Polnisch"
+
+msgid "en_IE"
+msgstr "Englisch (Irland)"
+
+msgid "de"
+msgstr "Deutsch"
+
+msgid "fr"
+msgstr "Französisch"
+
+msgid "en"
+msgstr "Englisch"
+
+msgid "it"
+msgstr "Italienisch"
+
+msgid "nl-BE"
+msgstr "Flämisch"
+
+msgid "fr-BE"
+msgstr "Französisch (Belgien)"
+
+msgid "sq"
+msgstr "Albanisch"
+
+msgid "ar"
+msgstr "Arabisch"
+
+msgid "bs-BA"
+msgstr "Bosnisch"
+
+msgid "nb-NO"
+msgstr "Norwegisch"
+
+msgid "et"
+msgstr "Estnisch"
+
+msgid "fi"
+msgstr "Finnisch"
+
+msgid "el"
+msgstr "Griechisch"
+
+msgid "he"
+msgstr "Hebräisch"
+
+msgid "ja"
+msgstr "Japanisch"
+
+msgid "ko"
+msgstr "Koreanisch"
+
+msgid "hr"
+msgstr "Kroatisch"
+
+msgid "lv"
+msgstr "Lettisch"
+
+msgid "lt"
+msgstr "Litauisch"
+
+msgid "mk"
+msgstr "Mazedonisch"
+
+msgid "sr"
+msgstr "Serbisch"
+
+msgid "sk"
+msgstr "Slowakisch"
+
+msgid "sl"
+msgstr "Slowenisch"
+
+msgid "cs"
+msgstr "Tschechisch"
+
+msgid "th"
+msgstr "Thailändisch"
+
+msgid "hu"
+msgstr "Ungarisch"
+
+msgid "ro"
+msgstr "Rumänisch"
+
+msgid "es-LAm"
+msgstr "Spanisch (Südamerika)"
+
+msgid "pt-BR"
+msgstr "Portugiesisch (Brasilien)"
+
+msgid "rm-CH"
+msgstr "Rätoromanisch"
+
+msgid "es"
+msgstr "Spanisch"
+
+msgid "pt"
+msgstr "Portugiesisch"
+
+msgid "zh-CHS"
+msgstr "Chinesisch (Vereinfacht)"
+
+msgid "zh-CHT"
+msgstr "Chinesisch (Traditionell)"
+
+msgid "bg-BG"
+msgstr "Bulgarisch "
+
+msgid "ta-IN"
+msgstr "Tamil"
+
+msgid "ms-MY"
+msgstr "Bahasa Malaysia"
+
+msgid "hi-IN"
+msgstr "Hindi"
+
+msgid "la"
+msgstr "Latein"

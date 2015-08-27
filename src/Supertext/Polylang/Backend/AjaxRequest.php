@@ -161,9 +161,9 @@ class AjaxRequest
               <tr>
                 <td>&nbsp;</td>
                 <td class="selectionCell">&nbsp;</td>
-                <td><strong>' . __('Duration',' polylang-supertext') . '</strong></td>
-                <td align="right"><strong>' . __('Translation until',' polylang-supertext') . '</strong></td>
-                <td align="right"><strong>' . __('Price',' polylang-supertext') . '</strong></td>
+                <td><strong>' . __('Duration','polylang-supertext') . '</strong></td>
+                <td align="right"><strong>' . __('Translation until','polylang-supertext') . '</strong></td>
+                <td align="right"><strong>' . __('Price','polylang-supertext') . '</strong></td>
               </tr>
             </thead>
             <tbody>

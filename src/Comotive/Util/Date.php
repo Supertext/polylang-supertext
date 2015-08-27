@@ -319,7 +319,7 @@ class Date
 			self::EU_TIME,
 			$sSqlDate
 		);
-		$sClock = __('Uhr', 'lbwp');
+		$sClock = __("o'clock", 'lbwp');
 		// So zusammenführen
 		return($sDate.' / '.$sTime.' '.$sClock);
 	}
