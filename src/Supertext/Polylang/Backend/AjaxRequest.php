@@ -114,6 +114,7 @@ class AjaxRequest
 
 	// generate html output
     $rows = '';
+    $checked = 'checked="checked"';
     foreach ($pricing['options'] as $option) {
       $itemsCount = count($option['items']);
 
@@ -126,20 +127,13 @@ class AjaxRequest
                 </tr>';
 
       foreach($option['items'] as $groupRowNumber =>  $item){
-        $rowClass = '';
-
-        //if last row in group
-        if($groupRowNumber === $itemsCount - 1){
-          $rowClass = 'class="lastGroupRow"';
-        }
-
         $radioInputId = $option['id'] . "_" . $item['id'];
         $radioInputValue = $option['id'] . ":" . $item['id'];
 
         $rows .= '
-          <tr '.$rowClass.'>
+          <tr>
             <td class="selectionCell">
-              <input type="radio" data-currency="' . $pricing['currency'] . '" name="rad_translation_type" id="rad_translation_type_' . $radioInputId . '" value="' . $radioInputValue . '">
+              <input type="radio" data-currency="' . $pricing['currency'] . '" name="rad_translation_type" id="rad_translation_type_' . $radioInputId . '" value="' . $radioInputValue . '" '.$checked.'>
             </td>
             <td>
               <label for="rad_translation_type_' . $radioInputId . '">' . $item['name'] . '</label>
@@ -152,7 +146,11 @@ class AjaxRequest
             </td>
           </tr>
         ';
+
+        $checked = '';
       }
+
+      $rows .= '<tr class="lastGroupRow"></tr>';
     }
 
     $output .=
