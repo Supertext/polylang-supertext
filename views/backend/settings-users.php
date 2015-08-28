@@ -26,7 +26,7 @@ foreach ((array) $userList as $user) {
 // Generate select template
 $selectTemplate = '' .
   '<select name=\'selStWpUsers[]\' id=\'selStWpUsers\'>' .
-    '<option value=\'0\'>Benutzer wählen</option>' .
+    '<option value=\'0\'>'.__('Select user', 'polylang-supertext').'...</option>' .
     $userOptions .
   '</select>';
 

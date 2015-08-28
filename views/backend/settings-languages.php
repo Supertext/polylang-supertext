@@ -29,7 +29,7 @@ foreach (Multilang::getLanguages() as $language) {
   }
   $languageDropdown = '
     <select name="sel_st_language_' . $language->slug . '" id="sel_st_language_' . $language->slug . '">
-      <option value="">Bitte wählen</option>
+      <option value="">'.__('Please select', 'polylang-supertext').'...</option>
       ' . $languageDropdown . '
     </select>';
 
