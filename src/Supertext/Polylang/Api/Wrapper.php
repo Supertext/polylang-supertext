@@ -82,7 +82,7 @@ class Wrapper
     $result = array();
     if (!empty($json->Languages)) {
       foreach ($json->Languages as $entry) {
-        $result[(string)$entry->Iso] = (string)$entry->Name;
+        $result[(string)$entry->Code] = (string)$entry->Name;
       }
     } else {
       echo '
