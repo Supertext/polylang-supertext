@@ -12,11 +12,11 @@ class Constant
   /**
    * @var string the used API base url
    */
-  const API_URL = self::LIVE_API;
+  const API_URL = self::DEV_API;
   /**
    * @var string development api endpoints
    */
-  const DEV_API = 'https://dev.supertext.ch/api/v1/';
+  const DEV_API = 'https://192.168.0.6/Supertext/api/v1/';
   /**
    * @var string live api endpoints
    */
@@ -41,4 +41,12 @@ class Constant
    * @var string the default supertext api user
    */
   const DEFAULT_API_USER = 'public_user';
+  /**
+   * @var string the style handle
+   */
+  const STYLE_HANDLE = 'polylang_supertext_styles';
+  /**
+   * @var string the settings script handle
+   */
+  const SETTINGS_SCRIPT_HANDLE = 'polylang_supertext_settings_scripts';
 }

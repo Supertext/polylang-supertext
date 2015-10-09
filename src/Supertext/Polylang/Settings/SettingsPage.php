@@ -43,33 +43,22 @@ class SettingsPage extends AbstractPage
    */
   public function display()
   {
-    $currentTabId = $this->GetCurrentTabId();
+    $this->addResources();
 
-    if ($currentTabId === null) {
-      return;
-    }
+    $currentTabId = $this->GetCurrentTabId();
 
     // Display the page with typical entry infos
     echo '
       <div class="wrap">
         <h2>' . __('Settings › Supertext API', 'polylang-supertext') . '</h2>
-        ' . $this->addResources() . '
         ' . $this->showSystemMessage() . '
-        ' . $this->addTabs($currentTabId) . '
-        <form method="post" action="' . $this->getPageUrl($currentTabId) . '">
-    ';
+        ' . $this->addTabs($currentTabId);
 
-    // Include the views
-    foreach ($this->tabs[$currentTabId]['views'] as $view) {
-      $this->includeView($view, $this);
+    if ($currentTabId !== null) {
+      $this->addViews($currentTabId);
     }
 
-    // Close the form
-    echo '
-        <p><input type="submit" class="button button-primary" name="saveStPlSettings" value="' . __('Save settings', 'polylang-supertext') . '" /></p>
-      </form>
-    </div>
-    ';
+    echo '</div>';
   }
 
   /**
@@ -92,14 +81,11 @@ class SettingsPage extends AbstractPage
 
   /**
    * Add js/css resources needed on this page
-   * I know this is crap, will be fixed in near future
    */
   protected function addResources()
   {
-    return '
-      <link rel="stylesheet" href="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/style.css?v=' . SUPERTEXT_PLUGIN_REVISION . '" />
-      <script type="text/javascript" src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js?v=' . SUPERTEXT_PLUGIN_REVISION . '"></script>
-    ';
+    wp_enqueue_style(Constant::STYLE_HANDLE);
+    wp_enqueue_script(Constant::SETTINGS_SCRIPT_HANDLE);
   }
 
   /**
@@ -135,6 +121,24 @@ class SettingsPage extends AbstractPage
     $html .= '</h2>';
 
     return $html;
+  }
+
+  /**
+   * @param $currentTabId the current tab id
+   */
+  protected function addViews($currentTabId)
+  {
+    echo '
+        <form method="post" action="' . $this->getPageUrl($currentTabId) . '">';
+
+    // Include the views
+    foreach ($this->tabs[$currentTabId]['views'] as $view) {
+      $this->includeView($view, $this);
+    }
+
+    echo '
+        <p><input type="submit" class="button button-primary" name="saveStPlSettings" value="' . __('Save settings', 'polylang-supertext') . '" /></p>
+      </form>';
   }
 
   /**
