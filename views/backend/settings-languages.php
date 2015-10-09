@@ -1,6 +1,5 @@
 <?php
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Settings\Page;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Comotive\Util\ArrayManipulation;

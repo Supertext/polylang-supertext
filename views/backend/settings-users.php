@@ -1,6 +1,5 @@
 <?php
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Settings\Page;
 use Comotive\Util\ArrayManipulation;
 
 /** @var Page $context */

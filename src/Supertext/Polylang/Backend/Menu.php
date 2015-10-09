@@ -2,7 +2,7 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Supertext\Polylang\Settings\Page;
+use Supertext\Polylang\Settings\SettingsPage;
 
 /**
  * The menu handler
@@ -24,7 +24,7 @@ class Menu
    */
   public function addBackendMenus()
   {
-    $settingsPage = new Page();
+    $settingsPage = new SettingsPage();
 
     add_options_page(
       __('Supertext API - Settings', 'polylang-supertext'),
