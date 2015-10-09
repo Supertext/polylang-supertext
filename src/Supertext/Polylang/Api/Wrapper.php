@@ -65,7 +65,7 @@ class Wrapper
   public static function getInstance($user = Constant::DEFAULT_API_USER, $apikey = '', $currency = 'eur')
   {
     // Open connection for every user
-    if (self::$apiConnections[$user] === null) {
+    if (!isset(self::$apiConnections[$user])) {
       self::$apiConnections[$user] = new self($user, $apikey, $currency);
     }
     return self::$apiConnections[$user];
@@ -126,7 +126,6 @@ class Wrapper
           $deliveryOptions[] = array(
               'id' => $do->DeliveryId,
               'name' => $do->Name,
-              'currency'=> $o->Currency,
               'price' =>  $do->Price,
               'date' =>  $do->DeliveryDate);
         }

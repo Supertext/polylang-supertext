@@ -175,7 +175,7 @@ class AjaxRequest
   /**
    * @return array translation info
    */
-  protected function getTranslationOptions()
+  protected static function getTranslationOptions()
   {
     $options = array();
     foreach ($_POST as $field_name => $field_value) {

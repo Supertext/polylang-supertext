@@ -19,7 +19,7 @@ function Remove_StField(nId)
   }
 }
 
-function Add_StField(nId)
+function Add_StField()
 {
   // letzte ID holen
   var oLastRowId = jQuery('#tblStFields tr:last');

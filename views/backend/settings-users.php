@@ -102,7 +102,7 @@ echo '
       </tbody>
       </table>
       <br />
-      <input class="button button-highlighted" type="button" name="buAddField_' . $index . '" id="buAddField_' . $index . '" value="' . $addUser . '" onclick="javascript: Add_StField(' . $i . ');">
+      <input class="button button-highlighted" type="button" name="buAddField_' . $index . '" id="buAddField_' . $index . '" value="' . $addUser . '" onclick="javascript: Add_StField();">
     </div>
   </div>';
 

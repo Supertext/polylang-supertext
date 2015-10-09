@@ -55,7 +55,7 @@ class Page extends AbstractPage
    */
   protected function showSystemMessage()
   {
-    if ($_REQUEST['message'] == 'saved') {
+    if (isset($_REQUEST['message']) && $_REQUEST['message'] == 'saved') {
       return '
         <div id="message" class="updated fade">
           <p>' . __('Settings saved', 'polylang-supertext') . '</p>

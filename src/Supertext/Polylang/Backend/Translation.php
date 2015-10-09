@@ -31,7 +31,7 @@ class Translation
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
 
     // Only autosave translation if necessary
-    if ($_GET['translation-service'] == 1) {
+    if (isset($_GET['translation-service']) && $_GET['translation-service'] == 1) {
       add_filter('default_title', array($this, 'filterTranslatingPost'), 10, 2);
     }
 
