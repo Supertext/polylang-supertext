@@ -5,7 +5,7 @@ use Comotive\Util\ArrayManipulation;
 /** @var Page $context */
 $library = $context->getCore()->getLibrary();
 $options = $library->getSettingOption();
-$userMap = ArrayManipulation::forceArray($options[Constant::SETTING_USER_MAP]);
+$userMap = isset($options[Constant::SETTING_USER_MAP]) ? ArrayManipulation::forceArray($options[Constant::SETTING_USER_MAP]) : array();
 
 // Get all users
 $wpUsers = get_users();

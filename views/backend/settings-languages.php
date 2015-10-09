@@ -7,7 +7,7 @@ use Comotive\Util\ArrayManipulation;
 /** @var Page $context */
 $library = $context->getCore()->getLibrary();
 $options = $library->getSettingOption();
-$languageMap = ArrayManipulation::forceArray($options[Constant::SETTING_LANGUAGE_MAP]);
+$languageMap = isset($options[Constant::SETTING_LANGUAGE_MAP]) ? ArrayManipulation::forceArray($options[Constant::SETTING_LANGUAGE_MAP]) : array();
 
 // Laod Languages from Polylang to match with supertext api
 $htmlLanguageDropdown = '';
@@ -21,7 +21,7 @@ foreach (Multilang::getLanguages() as $language) {
   $languageDropdown = '';
   foreach ($stMapping as $languageCode => $languageName) {
     $selected = '';
-    if ($languageMap[$language->slug] == $languageCode) {
+    if (isset($languageMap[$language->slug]) && $languageMap[$language->slug] == $languageCode) {
       $selected = ' selected';
     }
     $languageDropdown .= '<option value="' . $languageCode . '"' . $selected . '>' . $languageName . '</option>';

@@ -34,7 +34,7 @@ class Library
   public function getUserCredentials($userId)
   {
     $options = $this->getSettingOption();
-    $userMap = $options[Constant::SETTING_USER_MAP];
+    $userMap = isset($options[Constant::SETTING_USER_MAP]) ? $options[Constant::SETTING_USER_MAP] : null;
 
     if (is_array($userMap)) {
       foreach ($userMap as $config) {
@@ -77,7 +77,7 @@ class Library
   public function isWorking()
   {
     $options = $this->getSettingOption();
-    return ($options[Constant::SETTING_WORKING] == 1);
+    return (isset($options[Constant::SETTING_WORKING]) && $options[Constant::SETTING_WORKING] == 1);
   }
 
   /**
