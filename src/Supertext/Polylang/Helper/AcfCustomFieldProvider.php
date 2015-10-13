@@ -39,11 +39,13 @@ class AcfCustomFieldProvider
     $group = array();
 
     foreach ($fields as $field) {
+      $metaKey = $metaKeyPrefix.$field['name'];
+
       $group[] = array(
         'id' => $field['key'],
         'label' => $field['label'],
-        'meta_key' => $metaKeyPrefix.$field['name'],
-        'fields' => isset($field['sub_fields']) ? $this->getFields($field['sub_fields'], $field['name'].'_\\d+_') : array()
+        'meta_key' => $metaKey,
+        'fields' => isset($field['sub_fields']) ? $this->getFields($field['sub_fields'], $metaKey.'_\\d+_') : array()
       );
     }
 
