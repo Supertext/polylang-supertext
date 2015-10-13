@@ -3,6 +3,7 @@
 namespace Supertext\Polylang\Settings;
 
 use Supertext\Polylang\Api\Multilang;
+use Supertext\Polylang\Helper\AcfCustomFieldProvider;
 use Supertext\Polylang\Helper\Constant;
 
 /**
@@ -13,6 +14,7 @@ use Supertext\Polylang\Helper\Constant;
 class SettingsPage extends AbstractPage
 {
   private $tabs = array();
+  private $customFieldsProviders = array();
 
   public function __construct()
   {
@@ -20,21 +22,28 @@ class SettingsPage extends AbstractPage
 
     //Tabs definitions
     $this->tabs = array(
-      'first' => array(
-        'name' => __("User and languages", 'polylang-supertext'),
+
+      'users' => array(
+        'name' => __("Users and languages", 'polylang-supertext'),
         'views' => array(
           'backend/settings-users',
           'backend/settings-languages'
         ),
         'saveFunction' => 'saveUserAndLanguageSettings'
       ),
-      'second' => array(
+
+      'customfields' => array(
         'name' => __("Custom Fields", 'polylang-supertext'),
         'views' => array(
           'backend/settings-custom-fields'
         ),
         'saveFunction' => 'saveCustomFieldsSettings'
       )
+
+    );
+
+    $this->customFieldsProviders = array(
+      new AcfCustomFieldProvider()
     );
   }
 
@@ -54,7 +63,7 @@ class SettingsPage extends AbstractPage
         ' . $this->showSystemMessage() . '
         ' . $this->addTabs($currentTabId);
 
-    if ($currentTabId !== null) {
+    if ($currentTabId != null) {
       $this->addViews($currentTabId);
     }
 
@@ -68,7 +77,7 @@ class SettingsPage extends AbstractPage
   {
     $currentTabId = $this->GetCurrentTabId();
 
-    if ($currentTabId === null || !isset($_POST['saveStPlSettings'])) {
+    if ($currentTabId == null || !isset($_POST['saveStPlSettings'])) {
       return;
     }
 
@@ -80,12 +89,32 @@ class SettingsPage extends AbstractPage
   }
 
   /**
+   * Gets all custom fields that can be used for translation
+   * @return array with all selectable custom fields
+   */
+  public function getCustomFields(){
+    $allFields = array();
+
+    foreach ($this->customFieldsProviders as $customFieldsProvider) {
+      $allFields[] = array(
+        'key' => $customFieldsProvider->getPluginName(),
+        'label' => $customFieldsProvider->getPluginName(),
+        'fields' => $customFieldsProvider->getHierarchicalCustomFieldList()
+      );
+    }
+
+    return $allFields;
+  }
+
+  /**
    * Add js/css resources needed on this page
    */
   protected function addResources()
   {
     wp_enqueue_style(Constant::STYLE_HANDLE);
+    wp_enqueue_style(Constant::JSTREE_STYLE_HANDLE);
     wp_enqueue_script(Constant::SETTINGS_SCRIPT_HANDLE);
+    wp_enqueue_script(Constant::JSTREE_SCRIPT_HANDLE);
   }
 
   /**
@@ -129,7 +158,7 @@ class SettingsPage extends AbstractPage
   protected function addViews($currentTabId)
   {
     echo '
-        <form method="post" action="' . $this->getPageUrl($currentTabId) . '">';
+        <form id="'.$currentTabId.'SettingsForm" method="post" action="' . $this->getPageUrl($currentTabId) . '">';
 
     // Include the views
     foreach ($this->tabs[$currentTabId]['views'] as $view) {
@@ -157,7 +186,7 @@ class SettingsPage extends AbstractPage
   {
     //Return default tab if none set
     if (empty($_GET['tab'])) {
-      return 'first';
+      return 'users';
     }
 
     $tabId = esc_attr($_GET['tab']);
@@ -213,6 +242,19 @@ class SettingsPage extends AbstractPage
    */
   protected function saveCustomFieldsSettings()
   {
+    $checkedCustomFieldKeys = explode(',', $_POST['checkedCustomFieldKeysInput']);
+    $translatableCustomFields = array();
 
+    foreach ($this->customFieldsProviders as $customFieldsProvider) {
+      $customFields = $customFieldsProvider->getFlatCustomFieldList();
+
+      foreach ($customFields as $customField) {
+        if(in_array($customField['key'], $checkedCustomFieldKeys) && isset($customField['matchingRule'])){
+          $translatableCustomFields[] = $customField;
+        }
+      }
+    }
+
+    $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, $translatableCustomFields);
   }
 } 

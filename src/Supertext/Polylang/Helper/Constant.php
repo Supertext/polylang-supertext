@@ -34,6 +34,10 @@ class Constant
    */
   const SETTING_LANGUAGE_MAP = 'languageMap';
   /**
+   * $var string name of the subsetting for custom field matching rules
+   */
+  const SETTING_CUSTOM_FIELDS = 'customFields';
+  /**
    * @var string name of the subsetting for language mapping
    */
   const SETTING_WORKING = 'isWorking';
@@ -46,7 +50,15 @@ class Constant
    */
   const STYLE_HANDLE = 'polylang_supertext_styles';
   /**
+   * @var string the jstree style handle
+   */
+  const JSTREE_STYLE_HANDLE = 'polylang_supertext_jstree_styles';
+  /**
    * @var string the settings script handle
    */
   const SETTINGS_SCRIPT_HANDLE = 'polylang_supertext_settings_scripts';
+  /**
+   * @var string the jstree script handle
+   */
+  const JSTREE_SCRIPT_HANDLE = 'polylang_supertext_jstree_scripts';
 }

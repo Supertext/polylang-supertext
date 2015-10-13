@@ -4,9 +4,48 @@
  * @author Michael Sebel <michael@comotive.ch> (refactoring)
  */
 
+Supertext = Supertext || {};
+
+Supertext.CustomFieldsSettings = function ($) {
+  var $customFieldsTree,
+      $checkedCustomFieldKeysInput;
+
+  function setCheckedCustomFields(){
+    var checkedNodes = $($customFieldsTree).jstree("get_checked", false);
+    $checkedCustomFieldKeysInput.val(checkedNodes.join(','));
+  }
+
+  return {
+    initialize: function(options){
+      options = options || {};
+
+      var preselectedNodeIds = options.preselectedNodeIds || [];
+
+      $customFieldsTree = $('#customFieldsTree');
+      $checkedCustomFieldKeysInput = $('#checkedCustomFieldKeysInput');
+
+      $customFieldsTree
+          .jstree({
+            'plugins':['checkbox'],
+            'checkbox':{
+              'keep_selected_style' : false
+            }
+          });
+      $customFieldsTree.jstree('open_all');
+      $customFieldsTree.jstree('select_node', preselectedNodeIds);
+
+      $('#customfieldsSettingsForm').submit(setCheckedCustomFields);
+    }
+  }
+}(jQuery);
+
 // Letzer Button sichtbar schalten
 jQuery(document).ready(function() {
   jQuery('#tblStFields tr:last input[type="button"]').toggle(true);
+
+  Supertext.CustomFieldsSettings.initialize({
+    preselectedNodeIds: savedCustomFieldKeys
+  });
 });
 
 function Remove_StField(nId)
