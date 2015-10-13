@@ -140,4 +140,47 @@ class Library
 
     return $result;
   }
+
+  public function getSelectableCustomFields($postId){
+    $postCustomFields = get_post_custom($postId);
+    $options = $this->getSettingOption();
+    $translatableCustomFields = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
+
+    $selectableCustomFields = array();
+
+    foreach ($postCustomFields as $key => $value) {
+      foreach ($translatableCustomFields as $translatableCustomField) {
+        if(preg_match('/^'.$translatableCustomField['meta_key'].'$/', $key)){
+          $selectableCustomFields[] = $translatableCustomField;
+        }
+      }
+    }
+
+    return $selectableCustomFields;
+  }
+
+  public function getCustomFieldsForTranslation($postId, $selectedCustomFieldIds = array()){
+    $postCustomFields = get_post_custom($postId);
+    $options = $this->getSettingOption();
+    $translatableCustomFields = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
+
+    $customFields = array();
+
+    foreach ($postCustomFields as $key => $value) {
+      foreach ($translatableCustomFields as $translatableCustomField) {
+        if(!in_array($translatableCustomField['id'], $selectedCustomFieldIds)){
+          continue;
+        }
+
+        if(preg_match('/^'.$translatableCustomField['meta_key'].'$/', $key)){
+          $customFields[] = array(
+            'key' => $key,
+            'value' => $value
+          );
+        }
+      }
+    }
+
+    return $customFields;
+  }
 } 
