@@ -6,9 +6,9 @@ function getTree($nodes){
   $nodeHtml = '<ul>';
 
   foreach($nodes as $node){
-    $key = $node['key'];
+    $id = $node['id'];
 
-    $nodeHtml .= '<li id="'.$key.'">';
+    $nodeHtml .= '<li id="'.$id.'">';
     $nodeHtml .= $node['label'];
 
     if(count($node['fields']) > 0){
@@ -30,11 +30,9 @@ $savedCustomFields = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? ArrayMan
 $customFields = $context->getCustomFields();
 $htmlTree = getTree($customFields);
 
-
-$savedCustomFieldKeys = array();
-
-foreach ($savedCustomFields as $translatableCustomField) {
-  $savedCustomFieldKeys[] = $translatableCustomField['key'];
+$savedCustomFieldIds = array();
+foreach ($savedCustomFields as $savedCustomField) {
+  $savedCustomFieldIds[] = $savedCustomField['id'];
 }
 
 ?>
@@ -42,8 +40,8 @@ foreach ($savedCustomFields as $translatableCustomField) {
 <div id="customFieldsTree">
   <?php echo $htmlTree; ?>
 </div>
-<input name="checkedCustomFieldKeysInput" id="checkedCustomFieldKeysInput" type="hidden" value="" />
+<input name="checkedCustomFieldIdsInput" id="checkedCustomFieldIdsInput" type="hidden" value="" />
 
 <script type="text/javascript">
-  var savedCustomFieldKeys = <?php echo json_encode($savedCustomFieldKeys); ?>
+  var savedCustomFieldIds = <?php echo json_encode($savedCustomFieldIds); ?>
 </script>

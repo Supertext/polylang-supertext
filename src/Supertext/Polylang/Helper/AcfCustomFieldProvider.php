@@ -23,15 +23,15 @@ class AcfCustomFieldProvider
       $fields = acf_get_fields($fieldGroup);
 
       $customFields[] = array(
-        'key' => $fieldGroup['key'],
+        'id' => $fieldGroup['key'],
         'label' => $fieldGroup['title']
       );
 
       while(($field = array_shift($fields))){
         $customFields[] = array(
-          'key' => $field['key'],
+          'id' => $field['key'],
           'label' => $field['label'],
-          'matchingRule' => '_{name}:'.$field['key']
+          'meta_key' => $field['name']
         );
 
         if(isset($field['sub_fields'])){
@@ -56,7 +56,7 @@ class AcfCustomFieldProvider
       $fields = acf_get_fields($fieldGroup);
 
       $customFields[] = array(
-        'key' => $fieldGroup['key'],
+        'id' => $fieldGroup['key'],
         'label' => $fieldGroup['title'],
         'fields' => $this->getFields($fields)
       );
@@ -65,15 +65,15 @@ class AcfCustomFieldProvider
     return $customFields;
   }
 
-  private function getFields($fields){
+  private function getFields($fields, $metaKeyPrefix = ''){
     $group = array();
 
     foreach ($fields as $field) {
       $group[] = array(
-        'key' => $field['key'],
+        'id' => $field['key'],
         'label' => $field['label'],
-        'matchingRule' => '_{name}:'.$field['key'],
-        'fields' => isset($field['sub_fields']) ? $this->getFields($field['sub_fields']) : array()
+        'meta_key' => $metaKeyPrefix.$field['name'],
+        'fields' => isset($field['sub_fields']) ? $this->getFields($field['sub_fields'], $field['name'].'_\\d+_') : array()
       );
     }
 

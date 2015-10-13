@@ -97,7 +97,7 @@ class SettingsPage extends AbstractPage
 
     foreach ($this->customFieldsProviders as $customFieldsProvider) {
       $allFields[] = array(
-        'key' => $customFieldsProvider->getPluginName(),
+        'id' => $customFieldsProvider->getPluginName(),
         'label' => $customFieldsProvider->getPluginName(),
         'fields' => $customFieldsProvider->getHierarchicalCustomFieldList()
       );
@@ -242,14 +242,14 @@ class SettingsPage extends AbstractPage
    */
   protected function saveCustomFieldsSettings()
   {
-    $checkedCustomFieldKeys = explode(',', $_POST['checkedCustomFieldKeysInput']);
+    $checkedCustomFieldIds = explode(',', $_POST['checkedCustomFieldIdsInput']);
     $translatableCustomFields = array();
 
     foreach ($this->customFieldsProviders as $customFieldsProvider) {
       $customFields = $customFieldsProvider->getFlatCustomFieldList();
 
       foreach ($customFields as $customField) {
-        if(in_array($customField['key'], $checkedCustomFieldKeys) && isset($customField['matchingRule'])){
+        if(in_array($customField['id'], $checkedCustomFieldIds) && isset($customField['meta_key'])){
           $translatableCustomFields[] = $customField;
         }
       }

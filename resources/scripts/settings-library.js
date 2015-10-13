@@ -8,11 +8,11 @@ Supertext = Supertext || {};
 
 Supertext.CustomFieldsSettings = function ($) {
   var $customFieldsTree,
-      $checkedCustomFieldKeysInput;
+      $checkedCustomFieldIdsInput;
 
   function setCheckedCustomFields(){
     var checkedNodes = $($customFieldsTree).jstree("get_checked", false);
-    $checkedCustomFieldKeysInput.val(checkedNodes.join(','));
+    $checkedCustomFieldIdsInput.val(checkedNodes.join(','));
   }
 
   return {
@@ -22,7 +22,7 @@ Supertext.CustomFieldsSettings = function ($) {
       var preselectedNodeIds = options.preselectedNodeIds || [];
 
       $customFieldsTree = $('#customFieldsTree');
-      $checkedCustomFieldKeysInput = $('#checkedCustomFieldKeysInput');
+      $checkedCustomFieldIdsInput = $('#checkedCustomFieldIdsInput');
 
       $customFieldsTree
           .jstree({
@@ -44,7 +44,7 @@ jQuery(document).ready(function() {
   jQuery('#tblStFields tr:last input[type="button"]').toggle(true);
 
   Supertext.CustomFieldsSettings.initialize({
-    preselectedNodeIds: savedCustomFieldKeys
+    preselectedNodeIds: savedCustomFieldIds
   });
 });
 
