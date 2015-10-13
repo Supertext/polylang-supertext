@@ -35,8 +35,8 @@ register_deactivation_hook(__FILE__, array('\Supertext\Polylang\Core','onDeactiv
 
 add_action('init', function(){
   wp_register_style( Supertext\Polylang\Helper\Constant::STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/style.css', array(), SUPERTEXT_PLUGIN_REVISION);
-  wp_register_style( Supertext\Polylang\Helper\Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/jstree/style.min.css', array(), SUPERTEXT_PLUGIN_REVISION);
+  wp_register_style( Supertext\Polylang\Helper\Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/themes/default-dark/style.min.css', array(), SUPERTEXT_PLUGIN_REVISION);
   wp_register_script( Supertext\Polylang\Helper\Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
-  wp_register_script( Supertext\Polylang\Helper\Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree.min.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
+  wp_register_script( Supertext\Polylang\Helper\Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree.min.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
 });
 
