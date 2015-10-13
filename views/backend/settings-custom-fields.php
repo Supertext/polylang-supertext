@@ -36,7 +36,9 @@ foreach ($savedCustomFields as $savedCustomField) {
 }
 
 ?>
-
+<p>
+  <?php _e('Please select the custom fields that can be used for translations.', 'polylang-supertext'); ?>
+</p>
 <div id="customFieldsTree">
   <?php echo $htmlTree; ?>
 </div>

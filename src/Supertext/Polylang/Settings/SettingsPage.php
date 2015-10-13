@@ -42,6 +42,7 @@ class SettingsPage extends AbstractPage
 
     );
 
+    //Add class to support custom fields of other plugins
     $this->customFieldsProviders = array(
       new AcfCustomFieldProvider()
     );
@@ -99,6 +100,7 @@ class SettingsPage extends AbstractPage
       $allFields[] = array(
         'id' => $customFieldsProvider->getPluginName(),
         'label' => $customFieldsProvider->getPluginName(),
+        'type' => 'plugin',
         'fields' => $customFieldsProvider->getCustomFields()
       );
     }

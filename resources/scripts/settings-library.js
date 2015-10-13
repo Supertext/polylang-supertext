@@ -8,15 +8,15 @@ Supertext = Supertext || {};
 
 Supertext.CustomFieldsSettings = function ($) {
   var $customFieldsTree,
-      $checkedCustomFieldIdsInput;
+    $checkedCustomFieldIdsInput;
 
-  function setCheckedCustomFields(){
-    var checkedNodes = $($customFieldsTree).jstree("get_checked", false);
+  function setCheckedCustomFields() {
+    var checkedNodes = $customFieldsTree.jstree("get_checked", false);
     $checkedCustomFieldIdsInput.val(checkedNodes.join(','));
   }
 
   return {
-    initialize: function(options){
+    initialize: function (options) {
       options = options || {};
 
       var preselectedNodeIds = options.preselectedNodeIds || [];
@@ -25,13 +25,18 @@ Supertext.CustomFieldsSettings = function ($) {
       $checkedCustomFieldIdsInput = $('#checkedCustomFieldIdsInput');
 
       $customFieldsTree
-          .jstree({
-            'plugins':['checkbox'],
-            'checkbox':{
-              'keep_selected_style' : false
+        .jstree({
+          'core': {
+            'themes': {
+              'name': 'default-dark'
             }
-          });
-      $customFieldsTree.jstree('open_all');
+          },
+          'plugins': ['checkbox'],
+          'checkbox': {
+            'keep_selected_style': false
+          }
+        });
+
       $customFieldsTree.jstree('select_node', preselectedNodeIds);
 
       $('#customfieldsSettingsForm').submit(setCheckedCustomFields);
@@ -40,7 +45,7 @@ Supertext.CustomFieldsSettings = function ($) {
 }(jQuery);
 
 // Letzer Button sichtbar schalten
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
   jQuery('#tblStFields tr:last input[type="button"]').toggle(true);
 
   Supertext.CustomFieldsSettings.initialize({
@@ -48,8 +53,7 @@ jQuery(document).ready(function() {
   });
 });
 
-function Remove_StField(nId)
-{
+function Remove_StField(nId) {
   jQuery('#trSupertext_' + nId).remove();
   if (jQuery('#tblStFields tr').length < 4) {
     Add_StField(0);
@@ -58,23 +62,22 @@ function Remove_StField(nId)
   }
 }
 
-function Add_StField()
-{
+function Add_StField() {
   // letzte ID holen
   var oLastRowId = jQuery('#tblStFields tr:last');
-  
+
   var nNewId = 1;
   try {
     oLastRowId = jQuery('#tblStFields tr:last');
     nNewId = parseFloat(oLastRowId.attr('id').split('_')[1]);
     nNewId = nNewId + 1;
   }
-  catch(err) {
+  catch (err) {
     nNewId = 1;
   }
-  
+
   var sFilePath = jQuery('#supertext_file_path').val();
-  
+
   jQuery('#tblStFields tr:last').after('\
 		<tr id="trSupertext_' + nNewId + '"> \
 			<td> \
@@ -93,8 +96,7 @@ function Add_StField()
   ');
 }
 
-function set_selects_indexes(arr_Indexs)
-{
+function set_selects_indexes(arr_Indexs) {
   var i = 0;
   jQuery('#frmSupertext select[name=selStWpUsers\\[\\]]').each(function () {
     jQuery(this).val(arr_Indexs[i]);

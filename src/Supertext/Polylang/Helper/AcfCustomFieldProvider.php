@@ -28,6 +28,7 @@ class AcfCustomFieldProvider
       $customFields[] = array(
         'id' => $fieldGroup['key'],
         'label' => $fieldGroup['title'],
+        'type' => 'group',
         'fields' => $this->getFields($fields)
       );
     }
@@ -44,6 +45,7 @@ class AcfCustomFieldProvider
       $group[] = array(
         'id' => $field['key'],
         'label' => $field['label'],
+        'type' => 'field',
         'meta_key' => $metaKey,
         'fields' => isset($field['sub_fields']) ? $this->getFields($field['sub_fields'], $metaKey.'_\\d+_') : array()
       );
