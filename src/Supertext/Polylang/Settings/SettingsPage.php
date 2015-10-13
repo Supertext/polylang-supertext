@@ -99,7 +99,7 @@ class SettingsPage extends AbstractPage
       $allFields[] = array(
         'id' => $customFieldsProvider->getPluginName(),
         'label' => $customFieldsProvider->getPluginName(),
-        'fields' => $customFieldsProvider->getHierarchicalCustomFieldList()
+        'fields' => $customFieldsProvider->getCustomFields()
       );
     }
 
@@ -246,11 +246,16 @@ class SettingsPage extends AbstractPage
     $translatableCustomFields = array();
 
     foreach ($this->customFieldsProviders as $customFieldsProvider) {
-      $customFields = $customFieldsProvider->getFlatCustomFieldList();
+      $customFields = $customFieldsProvider->getCustomFields();
+      $currentFields = $customFields;
 
-      foreach ($customFields as $customField) {
-        if(in_array($customField['id'], $checkedCustomFieldIds) && isset($customField['meta_key'])){
-          $translatableCustomFields[] = $customField;
+      while (($field = array_shift($currentFields))) {
+        if(in_array($field['id'], $checkedCustomFieldIds) && isset($field['meta_key'])){
+          $translatableCustomFields[] = $field;
+        }
+
+        if($field['fields'] > 0){
+          $currentFields = array_merge($currentFields, $field['fields']);
         }
       }
     }

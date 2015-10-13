@@ -14,40 +14,10 @@ class AcfCustomFieldProvider
     return self::PLUGIN_NAME;
   }
 
-  public function getFlatCustomFieldList()
-  {
-    $fieldGroups = acf_get_field_groups();
-    $customFields = array();
-
-    foreach ($fieldGroups as $fieldGroup) {
-      $fields = acf_get_fields($fieldGroup);
-
-      $customFields[] = array(
-        'id' => $fieldGroup['key'],
-        'label' => $fieldGroup['title']
-      );
-
-      while(($field = array_shift($fields))){
-        $customFields[] = array(
-          'id' => $field['key'],
-          'label' => $field['label'],
-          'meta_key' => $field['name']
-        );
-
-        if(isset($field['sub_fields'])){
-          $fields = array_merge($fields, $field['sub_fields']);
-        }
-      }
-    }
-
-    return $customFields;
-  }
-
   /**
-   * @param $fieldGroups
    * @return array
    */
-  public function getHierarchicalCustomFieldList()
+  public function getCustomFields()
   {
     $fieldGroups = acf_get_field_groups();
     $customFields = array();
