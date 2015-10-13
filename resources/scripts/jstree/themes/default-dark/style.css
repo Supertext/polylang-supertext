@@ -140,7 +140,6 @@
   color: black;
   white-space: nowrap;
   line-height: 2.4em;
-  text-shadow: 1px 1px 0 white;
   border-radius: 1px;
 }
 .vakata-context li > a:hover {
@@ -290,9 +289,9 @@
   transition: background-color 0.15s, box-shadow 0.15s;
 }
 .jstree-default-dark .jstree-hovered {
-  background: #555555;
+  background: #999;
   border-radius: 2px;
-  box-shadow: inset 0 0 1px #555555;
+  box-shadow: inset 0 0 1px #999;
 }
 .jstree-default-dark .jstree-clicked {
   background: #5fa2db;
@@ -335,13 +334,13 @@
   box-shadow: none;
 }
 .jstree-default-dark.jstree-checkbox-no-clicked .jstree-clicked.jstree-hovered {
-  background: #555555;
+  background: #999;
 }
 .jstree-default-dark.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked {
   background: transparent;
 }
 .jstree-default-dark.jstree-checkbox-no-clicked > .jstree-wholerow-ul .jstree-wholerow-clicked.jstree-wholerow-hovered {
-  background: #555555;
+  background: #999;
 }
 .jstree-default-dark > .jstree-striped {
   min-width: 100%;
@@ -360,7 +359,7 @@
   box-sizing: border-box;
 }
 .jstree-default-dark .jstree-wholerow-hovered {
-  background: #555555;
+  background: #999;
 }
 .jstree-default-dark .jstree-wholerow-clicked {
   background: #5fa2db;
@@ -891,7 +890,6 @@
     line-height: 40px;
     font-weight: bold;
     font-size: 1.1em;
-    text-shadow: 1px 1px white;
   }
   #jstree-dnd.jstree-dnd-responsive > i {
     background: transparent;
@@ -993,7 +991,6 @@
   .jstree-default-dark-responsive .jstree-anchor {
     font-weight: bold;
     font-size: 1.1em;
-    text-shadow: 1px 1px white;
   }
   .jstree-default-dark-responsive > .jstree-striped {
     background: transparent;
@@ -1060,15 +1057,16 @@
   }
 }
 .jstree-default-dark {
-  background: #333;
+  background: #e4e4e4;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .jstree-default-dark .jstree-anchor {
-  color: #999;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  color: #666;
 }
 .jstree-default-dark .jstree-clicked,
 .jstree-default-dark .jstree-checked {
-  color: white;
+  color: #000;
 }
 .jstree-default-dark .jstree-hovered {
   color: white;

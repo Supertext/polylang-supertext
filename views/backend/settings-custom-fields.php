@@ -7,8 +7,9 @@ function getTree($nodes){
 
   foreach($nodes as $node){
     $id = $node['id'];
+    $icon = $node['type'] === 'field' ? 'jstree-file' : 'jstree-folder';
 
-    $nodeHtml .= '<li id="'.$id.'">';
+    $nodeHtml .= '<li id="'.$id.'" data-jstree=\'{"icon":"'.$icon.'"}\'>';
     $nodeHtml .= $node['label'];
 
     if(count($node['fields']) > 0){
