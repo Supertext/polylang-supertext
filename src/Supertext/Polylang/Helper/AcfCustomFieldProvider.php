@@ -15,9 +15,9 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
   }
 
   /**
-   * @return array multidimensional list of custom fields data
+   * @return array multidimensional list of custom fields definitions
    */
-  public function getCustomFields()
+  public function getCustomFieldDefinitions()
   {
     $fieldGroups = acf_get_field_groups();
     $customFields = array();
@@ -29,7 +29,7 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
         'id' => $fieldGroup['key'],
         'label' => $fieldGroup['title'],
         'type' => 'group',
-        'fields' => $this->getFields($fields)
+        'field_definitions' => $this->getFieldDefinitions($fields)
       );
     }
 
@@ -41,7 +41,7 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
    * @param string $metaKeyPrefix a prefix for creating meta keys
    * @return array
    */
-  private function getFields($fields, $metaKeyPrefix = ''){
+  private function getFieldDefinitions($fields, $metaKeyPrefix = ''){
     $group = array();
 
     foreach ($fields as $field) {
@@ -52,7 +52,7 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
         'label' => $field['label'],
         'type' => 'field',
         'meta_key' => $metaKey,
-        'fields' => isset($field['sub_fields']) ? $this->getFields($field['sub_fields'], $metaKey.'_\\d+_') : array()
+        'field_definitions' => isset($field['sub_fields']) ? $this->getFieldDefinitions($field['sub_fields'], $metaKey.'_\\d+_') : array()
       );
     }
 

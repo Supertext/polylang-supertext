@@ -91,21 +91,21 @@ class SettingsPage extends AbstractPage
 
   /**
    * Gets all custom fields that can be used for translation
-   * @return array with all selectable custom fields
+   * @return array with all selectable custom fields definitions
    */
-  public function getCustomFields(){
-    $allFields = array();
+  public function getCustomFieldDefinitions(){
+    $allFieldDefinitions = array();
 
     foreach ($this->customFieldsProviders as $customFieldsProvider) {
-      $allFields[] = array(
+      $allFieldDefinitions[] = array(
         'id' => $customFieldsProvider->getPluginName(),
         'label' => $customFieldsProvider->getPluginName(),
         'type' => 'plugin',
-        'fields' => $customFieldsProvider->getCustomFields()
+        'field_definitions' => $customFieldsProvider->getCustomFieldDefinitions()
       );
     }
 
-    return $allFields;
+    return $allFieldDefinitions;
   }
 
   /**
@@ -245,23 +245,23 @@ class SettingsPage extends AbstractPage
   protected function saveCustomFieldsSettings()
   {
     $checkedCustomFieldIds = explode(',', $_POST['checkedCustomFieldIdsInput']);
-    $translatableCustomFields = array();
+    $fieldDefinitionsToSave = array();
 
     foreach ($this->customFieldsProviders as $customFieldsProvider) {
-      $customFields = $customFieldsProvider->getCustomFields();
-      $currentFields = $customFields;
+      $customFieldDefinitions = $customFieldsProvider->getCustomFieldDefinitions();
+      $currentFieldDefinitions = $customFieldDefinitions;
 
-      while (($field = array_shift($currentFields))) {
+      while (($field = array_shift($currentFieldDefinitions))) {
         if(in_array($field['id'], $checkedCustomFieldIds) && isset($field['meta_key'])){
-          $translatableCustomFields[] = $field;
+          $fieldDefinitionsToSave[] = $field;
         }
 
-        if($field['fields'] > 0){
-          $currentFields = array_merge($currentFields, $field['fields']);
+        if($field['field_definitions'] > 0){
+          $currentFieldDefinitions = array_merge($currentFieldDefinitions, $field['field_definitions']);
         }
       }
     }
 
-    $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, $translatableCustomFields);
+    $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, $fieldDefinitionsToSave);
   }
 } 

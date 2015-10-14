@@ -17,7 +17,7 @@ interface ICustomFieldProvider
   public function getPluginName();
 
   /**
-   * @return array multidimensional list of custom fields data
+   * @return array multidimensional list of custom fields defintions
    */
-  public function getCustomFields();
+  public function getCustomFieldDefinitions();
 }

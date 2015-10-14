@@ -145,22 +145,22 @@ class Library
    * @param $postId the id of the post to translate
    * @return array the list of custom fields definitions
    */
-  public function getSelectableCustomFields($postId){
+  public function getCustomFieldDefinitions($postId){
     $postCustomFields = get_post_custom($postId);
     $options = $this->getSettingOption();
-    $translatableCustomFields = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
+    $savedCustomFieldsDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
 
-    $selectableCustomFields = array();
+    $selectableCustomFieldDefinitions = array();
 
     foreach ($postCustomFields as $key => $value) {
-      foreach ($translatableCustomFields as $translatableCustomField) {
-        if(preg_match('/^'.$translatableCustomField['meta_key'].'$/', $key)){
-          $selectableCustomFields[] = $translatableCustomField;
+      foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
+        if(preg_match('/^'.$savedCustomFieldDefinition['meta_key'].'$/', $key)){
+          $selectableCustomFieldDefinitions[] = $savedCustomFieldDefinition;
         }
       }
     }
 
-    return $selectableCustomFields;
+    return $selectableCustomFieldDefinitions;
   }
 
   /**
@@ -171,20 +171,20 @@ class Library
   public function getCustomFieldsForTranslation($postId, $selectedCustomFieldIds = array()){
     $postCustomFields = get_post_custom($postId);
     $options = $this->getSettingOption();
-    $translatableCustomFields = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
+    $savedCustomFieldsDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
 
     $customFields = array();
 
-    foreach ($postCustomFields as $key => $value) {
-      foreach ($translatableCustomFields as $translatableCustomField) {
-        if(!in_array($translatableCustomField['id'], $selectedCustomFieldIds)){
+    foreach ($postCustomFields as $customFieldKey => $customFieldValue) {
+      foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
+        if(!in_array($savedCustomFieldDefinition['id'], $selectedCustomFieldIds)){
           continue;
         }
 
-        if(preg_match('/^'.$translatableCustomField['meta_key'].'$/', $key)){
+        if(preg_match('/^'.$savedCustomFieldDefinition['meta_key'].'$/', $customFieldKey)){
           $customFields[] = array(
-            'key' => $key,
-            'value' => $value
+            'key' => $customFieldKey,
+            'value' => $customFieldValue
           );
         }
       }

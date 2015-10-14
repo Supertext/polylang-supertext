@@ -12,8 +12,8 @@ function getTree($nodes){
     $nodeHtml .= '<li id="'.$id.'" data-jstree=\'{"icon":"'.$icon.'"}\'>';
     $nodeHtml .= $node['label'];
 
-    if(count($node['fields']) > 0){
-      $nodeHtml .= getTree($node['fields']);
+    if(count($node['field_definitions']) > 0){
+      $nodeHtml .= getTree($node['field_definitions']);
     }
 
     $nodeHtml .= '</li>';
@@ -27,13 +27,13 @@ function getTree($nodes){
 /** @var Page $context */
 $library = $context->getCore()->getLibrary();
 $options = $library->getSettingOption();
-$savedCustomFields = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_CUSTOM_FIELDS]) : array();
-$customFields = $context->getCustomFields();
-$htmlTree = getTree($customFields);
+$savedCustomFieldDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_CUSTOM_FIELDS]) : array();
+$customFieldDefinitions = $context->getCustomFieldDefinitions();
+$htmlTree = getTree($customFieldDefinitions);
 
 $savedCustomFieldIds = array();
-foreach ($savedCustomFields as $savedCustomField) {
-  $savedCustomFieldIds[] = $savedCustomField['id'];
+foreach ($savedCustomFieldDefinitions as $savedCustomFieldDefinition) {
+  $savedCustomFieldIds[] = $savedCustomFieldDefinition['id'];
 }
 
 ?>
