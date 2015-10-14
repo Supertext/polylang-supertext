@@ -6,7 +6,7 @@ namespace Supertext\Polylang\Helper;
  * The ACF Custom Field provider
  * @package Supertext\Polylang\Helper
  */
-class AcfCustomFieldProvider
+class AcfCustomFieldProvider implements ICustomFieldProvider
 {
   const PLUGIN_NAME = 'Advanced Custom Fields';
 
