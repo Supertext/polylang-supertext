@@ -15,7 +15,7 @@ class AcfCustomFieldProvider
   }
 
   /**
-   * @return array
+   * @return array multidimensional list of custom fields data
    */
   public function getCustomFields()
   {
@@ -36,6 +36,11 @@ class AcfCustomFieldProvider
     return $customFields;
   }
 
+  /**
+   * @param array $fields the acf fields to process
+   * @param string $metaKeyPrefix a prefix for creating meta keys
+   * @return array
+   */
   private function getFields($fields, $metaKeyPrefix = ''){
     $group = array();
 

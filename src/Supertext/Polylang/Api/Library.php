@@ -141,6 +141,10 @@ class Library
     return $result;
   }
 
+  /**
+   * @param $postId the id of the post to translate
+   * @return array the list of custom fields definitions
+   */
   public function getSelectableCustomFields($postId){
     $postCustomFields = get_post_custom($postId);
     $options = $this->getSettingOption();
@@ -159,6 +163,11 @@ class Library
     return $selectableCustomFields;
   }
 
+  /**
+   * @param $postId the id of the post to translate
+   * @param array $selectedCustomFieldIds the ids of the selected custom fields
+   * @return array the list of custom field keys and values
+   */
   public function getCustomFieldsForTranslation($postId, $selectedCustomFieldIds = array()){
     $postCustomFields = get_post_custom($postId);
     $options = $this->getSettingOption();
