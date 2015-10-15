@@ -46,5 +46,5 @@ foreach ($savedCustomFieldDefinitions as $savedCustomFieldDefinition) {
 <input name="checkedCustomFieldIdsInput" id="checkedCustomFieldIdsInput" type="hidden" value="" />
 
 <script type="text/javascript">
-  var savedCustomFieldIds = <?php echo json_encode($savedCustomFieldIds); ?>
+  var savedCustomFieldIds = <?php echo json_encode($savedCustomFieldIds); ?>;
 </script>

@@ -6,7 +6,48 @@
 
 Supertext = Supertext || {};
 
-Supertext.CustomFieldsSettings = function ($) {
+Supertext.Settings = {};
+
+Supertext.Settings.Users = (function ($) {
+  var $tableBody,
+      $rowTemplate;
+
+  function addUserField() {
+    var $newRow = $rowTemplate.clone();
+    $tableBody.append($newRow);
+  }
+
+  function removeUserField() {
+    $(this).parent('td').parent('tr').remove();
+
+    if($tableBody.find('tr').length === 0){
+      addUserField();
+    }
+  }
+
+  return {
+    initialize: function (options) {
+      options = options || {};
+
+      $tableBody = $("#tblStFields tbody")
+      $tableBody.find('tr .saved-user-id-hidden')
+      $tableBody.find('tr .remove-user-button').click(removeUserField);
+      //select users in wp dropdown
+      $tableBody.find('tr .saved-user-id-hidden').each(function(){
+        var $this = $(this);
+        $this.prev().val($this.val());
+      });
+
+      $rowTemplate = $('#tblStFields tr:last').clone();
+      $rowTemplate.find('input').val('');
+      $rowTemplate.find('.remove-user-button').click(removeUserField);
+
+      $('#btnAddUser').click(addUserField);
+    }
+  }
+})(jQuery);
+
+Supertext.Settings.CustomFields = (function ($) {
   var $customFieldsTree,
     $checkedCustomFieldIdsInput;
 
@@ -42,64 +83,39 @@ Supertext.CustomFieldsSettings = function ($) {
       $('#customfieldsSettingsForm').submit(setCheckedCustomFields);
     }
   }
-}(jQuery);
+})(jQuery);
 
-// Letzer Button sichtbar schalten
+Supertext.Settings.Shortcodes = (function ($) {
+
+  return {
+    initialize: function (options) {
+      options = options || {};
+
+    }
+  }
+})(jQuery);
+
+
 jQuery(document).ready(function () {
-  jQuery('#tblStFields tr:last input[type="button"]').toggle(true);
+  var queryString = window.location.search;
+  var tab = /tab=(.*?)(&|$|\s)/.exec(queryString);
+  var tabName = tab === null ? 'users' : tab[1];
 
-  Supertext.CustomFieldsSettings.initialize({
-    preselectedNodeIds: savedCustomFieldIds
-  });
+  switch(tabName){
+    case 'users':
+      Supertext.Settings.Users.initialize();
+      break;
+
+    case 'customfields':
+      Supertext.Settings.CustomFields.initialize(
+        {
+          preselectedNodeIds: savedCustomFieldIds
+        }
+      );
+      break;
+
+    case 'shortcodes':
+      Supertext.Settings.Shortcodes.initialize();
+      break;
+  }
 });
-
-function Remove_StField(nId) {
-  jQuery('#trSupertext_' + nId).remove();
-  if (jQuery('#tblStFields tr').length < 4) {
-    Add_StField(0);
-  } else {
-    jQuery('#tblStFields tr:last input[type="button"]').toggle(true);
-  }
-}
-
-function Add_StField() {
-  // letzte ID holen
-  var oLastRowId = jQuery('#tblStFields tr:last');
-
-  var nNewId = 1;
-  try {
-    oLastRowId = jQuery('#tblStFields tr:last');
-    nNewId = parseFloat(oLastRowId.attr('id').split('_')[1]);
-    nNewId = nNewId + 1;
-  }
-  catch (err) {
-    nNewId = 1;
-  }
-
-  var sFilePath = jQuery('#supertext_file_path').val();
-
-  jQuery('#tblStFields tr:last').after('\
-		<tr id="trSupertext_' + nNewId + '"> \
-			<td> \
-				' + jQuery('#supertext_select_user').val() + ' \
-			</td> \
-			<td> \
-				<input type="text" name="fieldStUser[]" id="field_intern_' + nNewId + '" value="" style="width: 200px"> \
-			</td> \
-			<td> \
-				<input type="text" name="fieldStApi[]" id="field_intern_' + nNewId + '" value="" style="width: 200px"> \
-			</td> \
-			<td> \
-					<img src="' + sFilePath + '/images/delete.png" alt="Benutzer entfernen" title="' + Supertext.i18n.deleteUser + '" onclick="javascript: Remove_StField(' + nNewId + ');"> \
-			</td> \
-		</tr> \
-  ');
-}
-
-function set_selects_indexes(arr_Indexs) {
-  var i = 0;
-  jQuery('#frmSupertext select[name=selStWpUsers\\[\\]]').each(function () {
-    jQuery(this).val(arr_Indexs[i]);
-    i++;
-  });
-}

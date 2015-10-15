@@ -38,6 +38,14 @@ class SettingsPage extends AbstractPage
           'backend/settings-custom-fields'
         ),
         'saveFunction' => 'saveCustomFieldsSettings'
+      ),
+
+      'shortcodes' => array(
+        'name' => __("Shortcodes", 'polylang-supertext'),
+        'views' => array(
+          'backend/settings-shortcodes'
+        ),
+        'saveFunction' => 'saveShortcodesSettings'
       )
 
     );
@@ -93,7 +101,8 @@ class SettingsPage extends AbstractPage
    * Gets all custom fields that can be used for translation
    * @return array with all selectable custom fields definitions
    */
-  public function getCustomFieldDefinitions(){
+  public function getCustomFieldDefinitions()
+  {
     $allFieldDefinitions = array();
 
     foreach ($this->customFieldsProviders as $customFieldsProvider) {
@@ -160,7 +169,7 @@ class SettingsPage extends AbstractPage
   protected function addViews($currentTabId)
   {
     echo '
-        <form id="'.$currentTabId.'SettingsForm" method="post" action="' . $this->getPageUrl($currentTabId) . '">';
+        <form id="' . $currentTabId . 'SettingsForm" method="post" action="' . $this->getPageUrl($currentTabId) . '">';
 
     // Include the views
     foreach ($this->tabs[$currentTabId]['views'] as $view) {
@@ -252,16 +261,21 @@ class SettingsPage extends AbstractPage
       $currentFieldDefinitions = $customFieldDefinitions;
 
       while (($field = array_shift($currentFieldDefinitions))) {
-        if(in_array($field['id'], $checkedCustomFieldIds) && isset($field['meta_key'])){
+        if (in_array($field['id'], $checkedCustomFieldIds) && isset($field['meta_key'])) {
           $fieldDefinitionsToSave[] = $field;
         }
 
-        if($field['field_definitions'] > 0){
+        if ($field['field_definitions'] > 0) {
           $currentFieldDefinitions = array_merge($currentFieldDefinitions, $field['field_definitions']);
         }
       }
     }
 
     $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, $fieldDefinitionsToSave);
+  }
+
+  protected function saveShortcodesSettings()
+  {
+
   }
 } 
