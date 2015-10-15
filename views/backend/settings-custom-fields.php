@@ -37,13 +37,18 @@ foreach ($savedCustomFieldDefinitions as $savedCustomFieldDefinition) {
 }
 
 ?>
-<p>
-  <?php _e('Please select the custom fields that can be used for translations.', 'polylang-supertext'); ?>
-</p>
-<div id="customFieldsTree">
-  <?php echo $htmlTree; ?>
+<div class="postbox postbox_admin">
+  <div class="inside">
+    <h3><?php _e('Translatable Custom Fields', 'polylang-supertext'); ?></h3>
+    <p>
+      <?php _e('Please select the custom fields that can be used for translations.', 'polylang-supertext'); ?>
+    </p>
+    <div id="customFieldsTree">
+      <?php echo $htmlTree; ?>
+    </div>
+    <input name="checkedCustomFieldIdsInput" id="checkedCustomFieldIdsInput" type="hidden" value="" />
+  </div>
 </div>
-<input name="checkedCustomFieldIdsInput" id="checkedCustomFieldIdsInput" type="hidden" value="" />
 
 <script type="text/javascript">
   var savedCustomFieldIds = <?php echo json_encode($savedCustomFieldIds); ?>;
