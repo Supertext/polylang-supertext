@@ -46,11 +46,15 @@ if (strlen($languageDropdown) > 0) {
       <div class="inside">
         <h3>' . __('Language settings', 'polylang-supertext') . '</h3>
         <table border="0" cellpadding="0" margin="0">
-          <tr>
-            <td width="200"><b>Polylang</b></td>
-            <td><b>Supertext</b></td>
+        <thead>
+        <tr>
+            <th width="200">Polylang</th>
+            <th>Supertext</th>
           </tr>
-          ' . $htmlLanguageDropdown . '
+        </thead>
+        <tbody>
+        ' . $htmlLanguageDropdown . '
+        </tbody>
       </table>
       </div>
     </div>

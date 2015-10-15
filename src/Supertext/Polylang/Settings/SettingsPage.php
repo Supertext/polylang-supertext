@@ -276,6 +276,17 @@ class SettingsPage extends AbstractPage
 
   protected function saveShortcodesSettings()
   {
+    $shortcodeToSave = array();
 
+    foreach ($_POST['shortcodes'] as $key => $shortcode) {
+      if(!isset($shortcode['selected']) || !$shortcode['selected']){
+        continue;
+      }
+
+      $shortcodeToSave[$key] = $shortcode['attributes'];
+
+    }
+
+    $this->library->saveSetting(Constant::SETTING_SHORTCODES, $shortcodeToSave);
   }
 } 

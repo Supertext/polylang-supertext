@@ -8,12 +8,14 @@ Supertext = Supertext || {};
 
 Supertext.Settings = {};
 
+//Users tab module
 Supertext.Settings.Users = (function ($) {
   var $tableBody,
       $rowTemplate;
 
   function addUserField() {
     var $newRow = $rowTemplate.clone();
+    $newRow.find('.remove-user-button').click(removeUserField);
     $tableBody.append($newRow);
   }
 
@@ -40,13 +42,13 @@ Supertext.Settings.Users = (function ($) {
 
       $rowTemplate = $('#tblStFields tr:last').clone();
       $rowTemplate.find('input').val('');
-      $rowTemplate.find('.remove-user-button').click(removeUserField);
 
       $('#btnAddUser').click(addUserField);
     }
   }
 })(jQuery);
 
+//Custom Fields tab module
 Supertext.Settings.CustomFields = (function ($) {
   var $customFieldsTree,
     $checkedCustomFieldIdsInput;
@@ -85,11 +87,20 @@ Supertext.Settings.CustomFields = (function ($) {
   }
 })(jQuery);
 
+//Shortcodes tab module
 Supertext.Settings.Shortcodes = (function ($) {
+
+  function onCheckboxChanged(){
+    $(this).parent('td').next().next().children('input').css('visibility', this.checked ? 'visible' : 'hidden');
+  }
 
   return {
     initialize: function (options) {
       options = options || {};
+
+      $('#tblShortcodes tbody input[type=checkbox]').on('change', onCheckboxChanged).each(function(){
+        onCheckboxChanged.call(this);
+      });
 
     }
   }
@@ -97,10 +108,12 @@ Supertext.Settings.Shortcodes = (function ($) {
 
 
 jQuery(document).ready(function () {
+  //get active tab
   var queryString = window.location.search;
   var tab = /tab=(.*?)(&|$|\s)/.exec(queryString);
   var tabName = tab === null ? 'users' : tab[1];
 
+  //initialize tab module
   switch(tabName){
     case 'users':
       Supertext.Settings.Users.initialize();

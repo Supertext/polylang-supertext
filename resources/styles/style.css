@@ -13,3 +13,29 @@
 .postbox_admin img {
   cursor: pointer;
 }
+
+.postbox table th{
+  text-align: left;
+  font-weight: bold;
+}
+
+.postbox table input, .postbox table select{
+  font-size: 13px;
+}
+
+#tblShortcodes .shortcode-attribute-input{
+  visibility: hidden;
+}
+
+#tblShortcodes td{
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#tblShortcodes td:first-child input{
+  margin:0;
+}
+
+#tblShortcodes td:last-child, #tblShortcodes th:last-child{
+  padding-left: 5px;
+}

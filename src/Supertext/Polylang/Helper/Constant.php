@@ -34,9 +34,13 @@ class Constant
    */
   const SETTING_LANGUAGE_MAP = 'languageMap';
   /**
-   * $var string name of the subsetting for custom field matching rules
+   * $var string name of the subsetting for custom field definitions
    */
   const SETTING_CUSTOM_FIELDS = 'customFields';
+  /**
+   * $var string name of the subsetting for shortcodes
+   */
+  const SETTING_SHORTCODES = 'shortcodes';
   /**
    * @var string name of the subsetting for language mapping
    */

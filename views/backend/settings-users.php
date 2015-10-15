@@ -48,9 +48,9 @@ $selectTemplate = '' .
     <table id="tblStFields">
       <thead>
         <tr>
-          <td><strong>Wordpress <?php _e('User', 'polylang-supertext'); ?></strong></td>
-          <td><strong>Supertext <?php _e('User', 'polylang-supertext'); ?></strong></td>
-          <td colspan="2"><strong><?php _e('API-Key', 'polylang-supertext'); ?></strong></td>
+          <th>Wordpress <?php _e('User', 'polylang-supertext'); ?></th>
+          <th>Supertext <?php _e('User', 'polylang-supertext'); ?></th>
+          <th colspan="2"><?php _e('API-Key', 'polylang-supertext'); ?></th>
         </tr>
       </thead>
       <tbody>
