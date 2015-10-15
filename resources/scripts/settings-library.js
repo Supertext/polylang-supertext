@@ -28,7 +28,7 @@ Supertext.CustomFieldsSettings = function ($) {
         .jstree({
           'core': {
             'themes': {
-              'name': 'default-dark'
+              'name': 'wordpress-dark'
             }
           },
           'plugins': ['checkbox'],
