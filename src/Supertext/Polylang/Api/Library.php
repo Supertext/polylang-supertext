@@ -135,6 +135,8 @@ class Library
       }
     }
 
+    $result = $this->replaceShortcodes($result);
+
     // Let developers add their own fields
     $result = apply_filters('translation_data_for_post', $result, $postId);
 
@@ -143,7 +145,7 @@ class Library
 
   /**
    * @param $postId the id of the post to translate
-   * @return array the list of custom fields definitions
+   * @return array the list of custom fields definitions (available for the post)
    */
   public function getCustomFieldDefinitions($postId){
     $postCustomFields = get_post_custom($postId);
@@ -165,7 +167,7 @@ class Library
 
   /**
    * @param $postId the id of the post to translate
-   * @param array $selectedCustomFieldIds the ids of the selected custom fields
+   * @param array $selectedCustomFieldIds the ids of the selected custom field definitions
    * @return array the list of custom field keys and values
    */
   public function getCustomFieldsForTranslation($postId, $selectedCustomFieldIds = array()){
@@ -191,5 +193,62 @@ class Library
     }
 
     return $customFields;
+  }
+
+  /**
+   * @param array $result post data to process
+   * @return array $result post data with replaced shortcodes
+   */
+  private function replaceShortcodes($result)
+  {
+    if(!isset($result['post']) || !isset($result['post']['post_content'])){
+      return $result;
+    }
+
+    $options = $this->getSettingOption();
+    $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
+    $regex = get_shortcode_regex();
+
+    $result['post']['post_content'] = preg_replace_callback( "/$regex/s", function($m) use ($savedShortcodes){
+      return $this->replaceShortcodeTag($m, $savedShortcodes);
+    }, $result['post']['post_content']);
+
+    return $result;
+  }
+
+  /**
+   * @param $m matches
+   * @param $savedShortcodes saved shortcodes
+   * @return string replacement string
+   */
+  private function replaceShortcodeTag($m, $savedShortcodes){
+    //return escaped shortcodes, do not replace
+    if ( $m[1] == '[' && $m[6] == ']') {
+      return substr($m[0], 1, -1);
+    }
+
+    //return not translatable shortcodes
+    if(!isset($savedShortcodes[$m[2]])){
+      return $m[0];
+    }
+
+    $tag = $m[2];
+    $attributes = shortcode_parse_atts( $m[3] );
+    $savedShortcodeAttributes = $savedShortcodes[$tag];
+
+    $translatableAttributeSpans = '';
+    $additionalAttributes = '';
+
+    foreach ($attributes as $name => $value) {
+      if(in_array($name, $savedShortcodeAttributes)){
+        $translatableAttributeSpans .= '<span name="'.$name.'">'.$value.'</span>';
+      }else{
+        $additionalAttributes .= $name.'="'.$value.'" ';
+      }
+    }
+
+    $htmlTag = '<p tag="'.$tag.'" '.$additionalAttributes.'>'.$translatableAttributeSpans.'</p>';
+
+    return $htmlTag;
   }
 } 

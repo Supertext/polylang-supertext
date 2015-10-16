@@ -23,7 +23,7 @@ $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipula
       <?php
       foreach ($shortcode_tags as $key => $function) {
         $checkboxId = 'chkbx'.$key;
-        $savedShortcodeAttributes = '';
+        $savedShortcodeAttributes = array();
         $checked = '';
 
         if(isset($savedShortcodes[$key])){
@@ -31,13 +31,18 @@ $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipula
           $checked = 'checked="checked"';
         }
 
-        ?>
+        $inputs = count($savedShortcodeAttributes) > 0 ? '' : '<input type="text" class="shortcode-attribute-input" name="shortcodes['.$key.'][attributes][]" value="" />';
+
+        foreach ($savedShortcodeAttributes as $savedShortcodeAttribute) {
+          $inputs .= '<input type="text" class="shortcode-attribute-input" name="shortcodes['.$key.'][attributes][]" value="'.$savedShortcodeAttribute.'" />';
+        }
+
+        echo '
         <tr>
-          <td><input type="checkbox" id="<?php echo $checkboxId; ?>" name="shortcodes[<?php echo $key; ?>][selected]" value="1" <?php echo $checked; ?> /></td>
-          <td><label for="<?php echo $checkboxId; ?>"><?php echo $key; ?></label></td>
-          <td><input type="text" class="shortcode-attribute-input" name="shortcodes[<?php echo $key; ?>][attributes]" value="<?php echo $savedShortcodeAttributes; ?>" /></td>
-        </tr>
-      <?php
+          <td><input type="checkbox" id="'.$checkboxId.'" name="shortcodes['.$key.'][selected]" value="1" '.$checked.' /></td>
+          <td><label for="'.$checkboxId.'">'.$key.'</label></td>
+          <td>'.$inputs.'</td>
+        </tr>';
       }
       ?>
       </tbody>
