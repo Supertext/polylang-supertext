@@ -270,12 +270,8 @@ class Library
    */
   private function replaceShortcode($m, $savedShortcodes){
     //return escaped shortcodes, do not replace
-    if ( $m[1] == '[' && $m[6] == ']') {
-      return substr($m[0], 1, -1);
-    }
-
     //return not translatable shortcodes
-    if(!isset($savedShortcodes[$m[2]])){
+    if(($m[1] == '[' && $m[6] == ']') || !isset($savedShortcodes[$m[2]])){
       return $m[0];
     }
 
