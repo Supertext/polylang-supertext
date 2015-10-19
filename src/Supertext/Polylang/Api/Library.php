@@ -11,6 +11,9 @@ use Supertext\Polylang\Helper\Constant;
  */
 class Library
 {
+  const SHORTCODE_TAG = 'div';
+  const SHORTCODE_TAG_CLASS = 'polylang-supertext-shortcode';
+
   /**
    * @param string $language polylang language code
    * @return string equivalent supertext language code
@@ -117,7 +120,7 @@ class Library
       $result['post']['post_title'] = $post->post_title;
     }
     if ($pattern['post_content'] == true) {
-      $result['post']['post_content'] = $post->post_content;
+      $result['post']['post_content'] =  $this->replaceShortcodesWithNodes($post->post_content);
     }
     if ($pattern['post_excerpt'] == true) {
       $result['post']['post_excerpt'] = $post->post_excerpt;
@@ -134,8 +137,6 @@ class Library
         $result[$array_name]['image_alt'] = get_post_meta($gallery_post->ID, '_wp_attachment_image_alt', true);
       }
     }
-
-    $result = $this->replaceShortcodes($result);
 
     // Let developers add their own fields
     $result = apply_filters('translation_data_for_post', $result, $postId);
@@ -196,32 +197,78 @@ class Library
   }
 
   /**
-   * @param array $result post data to process
-   * @return array $result post data with replaced shortcodes
+   * Puts the shortcode back in the content by replacing the shortcode html nodes
+   * @param string post content to process
+   * @return string post content with shortcodes
    */
-  private function replaceShortcodes($result)
+  public function putShortcodesBack($content)
   {
-    if(!isset($result['post']) || !isset($result['post']['post_content'])){
-      return $result;
+    $doc = new \DOMDocument();
+    $doc->loadHTML($content);
+    $newContent = $content;
+
+    $shortcodeNodes = $doc->getElementsByTagName(self::SHORTCODE_TAG);
+
+    foreach ($shortcodeNodes as $shortcodeNode) {
+      $nodeClass = $shortcodeNode->attributes->getNamedItem('class')->nodeValue;
+
+      if($nodeClass !== self::SHORTCODE_TAG_CLASS){
+        continue;
+      }
+
+      $attributes = '';
+      $textAttributeNodes = $shortcodeNode->getElementsByTagName('span');
+      $inputAttributeNodes = $shortcodeNode->getElementsByTagName('input');
+
+      foreach ($textAttributeNodes as $textAttributeNode) {
+        $attributeName = $textAttributeNode->attributes->getNamedItem('name')->nodeValue;
+        $attributeValue = $textAttributeNode->nodeValue;
+
+        $attributes .= $attributeName.'="'.$attributeValue.'" ';
+      }
+
+      foreach ($inputAttributeNodes as $inputAttributeNode) {
+        $attributeName = $inputAttributeNode->attributes->getNamedItem('name')->nodeValue;
+        $attributeValue = $inputAttributeNode->attributes->getNamedItem('value')->nodeValue;
+
+        $attributes .= $attributeName.'="'.$attributeValue.'" ';
+      }
+
+      $shortcodeName = $shortcodeNode->attributes->getNamedItem('name')->nodeValue;
+
+      $shortcode = '['.$shortcodeName.' '.trim($attributes).']';
+
+      $shortcodeNodePattern = '/'.$this->createShortcodeNode($shortcodeName, '(\s*((<span.*)|(<input.*))\s*)*', true).'/';
+
+      $newContent = preg_replace($shortcodeNodePattern, $shortcode, $newContent, 1);
     }
 
+    return $newContent;
+  }
+
+  /**
+   * Replaces the shortcodes with html nodes
+   * @param string post content to process
+   * @return string post content with replaced shortcodes
+   */
+  private function replaceShortcodesWithNodes($content)
+  {
     $options = $this->getSettingOption();
     $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
     $regex = get_shortcode_regex();
 
-    $result['post']['post_content'] = preg_replace_callback( "/$regex/s", function($m) use ($savedShortcodes){
-      return $this->replaceShortcodeTag($m, $savedShortcodes);
-    }, $result['post']['post_content']);
-
-    return $result;
+    return preg_replace_callback( "/$regex/s", function($m) use ($savedShortcodes){
+      return $this->replaceShortcode($m, $savedShortcodes);
+    }, $content);
   }
 
   /**
+   * Effectively replace one shortcode with a node
    * @param $m matches
    * @param $savedShortcodes saved shortcodes
    * @return string replacement string
    */
-  private function replaceShortcodeTag($m, $savedShortcodes){
+  private function replaceShortcode($m, $savedShortcodes){
     //return escaped shortcodes, do not replace
     if ( $m[1] == '[' && $m[6] == ']') {
       return substr($m[0], 1, -1);
@@ -236,19 +283,28 @@ class Library
     $attributes = shortcode_parse_atts( $m[3] );
     $savedShortcodeAttributes = $savedShortcodes[$tag];
 
-    $translatableAttributeSpans = '';
-    $additionalAttributes = '';
+    $attributeNodes = '';
 
     foreach ($attributes as $name => $value) {
       if(in_array($name, $savedShortcodeAttributes)){
-        $translatableAttributeSpans .= '<span name="'.$name.'">'.$value.'</span>';
+        $attributeNodes .= '<span name="'.$name.'">'.$value.'</span>';
       }else{
-        $additionalAttributes .= $name.'="'.$value.'" ';
+        $attributeNodes .= '<input type="hidden" name="'.$name.'" value="'.$value.'">';
       }
     }
 
-    $htmlTag = '<p tag="'.$tag.'" '.$additionalAttributes.'>'.$translatableAttributeSpans.'</p>';
+    return $this->createShortcodeNode($tag, $attributeNodes);
+  }
 
-    return $htmlTag;
+  /**
+   * Creates a html shortcode node
+   * @param $name name of the shortcode
+   * @param $value value
+   * @param bool $regex if is used within regex
+   * @return string the html node
+   */
+  private function createShortcodeNode($name, $value, $regex = false)
+  {
+      return '<'.self::SHORTCODE_TAG.' class="'.self::SHORTCODE_TAG_CLASS.'" name="'.$name.'">'.$value.'<'.($regex ? '\\' : '').'/'.self::SHORTCODE_TAG.'>';
   }
 } 

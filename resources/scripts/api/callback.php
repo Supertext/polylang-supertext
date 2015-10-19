@@ -49,7 +49,8 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
         switch ($translationGroup->GroupId) {
           case 'post':
             foreach ($translationGroup->Items as $translationItem) {
-              $post->{$translationItem->Id} = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+              $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+              $post->{$translationItem->Id} = Core::getInstance()->getLibrary()->putShortcodesBack($decodedContent);
             }
             break;
 
