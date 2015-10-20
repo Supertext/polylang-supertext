@@ -97,7 +97,13 @@ class Core
    */
   public static function onActivation()
   {
+    $library = new Library();
 
+    $options = $library->getSettingOption();
+
+    if(!isset($options[Helper\Constant::SETTING_SHORTCODES])){
+      $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, array('caption' => array()));
+    }
   }
 
   /**
