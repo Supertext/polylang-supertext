@@ -94,14 +94,52 @@ Supertext.Settings.Shortcodes = (function ($) {
     $(this).parent('td').next().next().children('input').css('visibility', this.checked ? 'visible' : 'hidden');
   }
 
+  function onTextInputChanged(){
+    var $this = $(this);
+
+    if($this.val() == '' && $this.parent().children().length > 2){
+      $this.remove();
+    }
+  }
+
+  function addAttributeInput(){
+    var $this = $(this);
+      $this
+        .prev()
+        .clone()
+        .val('')
+        .on('change', onTextInputChanged)
+        .insertBefore($this)
+        .show();
+  }
+
+  function removeEmptyAttributeInputs(){
+    $('#tblShortcodes tbody .shortcode-attribute-input').each(function(){
+      var $this = $(this);
+      if($this.val() == ''){
+        $this.attr('name', '');
+      }
+    });
+  }
+
   return {
     initialize: function (options) {
       options = options || {};
 
-      $('#tblShortcodes tbody input[type=checkbox]').on('change', onCheckboxChanged).each(function(){
-        onCheckboxChanged.call(this);
-      });
+      $('#tblShortcodes tbody .shortcode-select-input')
+        .on('change', onCheckboxChanged).each(function(){
+          onCheckboxChanged.call(this);
+        }
+      );
 
+     $('#tblShortcodes tbody .shortcode-attribute-input')
+        .on('change', onTextInputChanged);
+
+
+      $('#tblShortcodes tbody .shortcode-attribute-add-input')
+        .on('click', addAttributeInput);
+
+      $('#shortcodesSettingsForm').submit(removeEmptyAttributeInputs);
     }
   }
 })(jQuery);

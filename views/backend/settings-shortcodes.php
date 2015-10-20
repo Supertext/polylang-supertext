@@ -35,13 +35,14 @@ $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipula
 
         foreach ($savedShortcodeAttributes as $savedShortcodeAttribute) {
           $inputs .= '<input type="text" class="shortcode-attribute-input" name="shortcodes['.$key.'][attributes][]" value="'.$savedShortcodeAttribute.'" />';
+
         }
 
         echo '
         <tr>
-          <td><input type="checkbox" id="'.$checkboxId.'" name="shortcodes['.$key.'][selected]" value="1" '.$checked.' /></td>
+          <td><input type="checkbox" id="'.$checkboxId.'" class="shortcode-select-input" name="shortcodes['.$key.'][selected]" value="1" '.$checked.' /></td>
           <td><label for="'.$checkboxId.'">'.$key.'</label></td>
-          <td>'.$inputs.'</td>
+          <td>'.$inputs.'<input type="button" value="+" class="button button-highlighted shortcode-attribute-add-input" /></td>
         </tr>';
       }
       ?>

@@ -23,7 +23,7 @@
   font-size: 13px;
 }
 
-#tblShortcodes .shortcode-attribute-input{
+#tblShortcodes .shortcode-attribute-input, #tblShortcodes .shortcode-attribute-add-input{
   visibility: hidden;
 }
 
