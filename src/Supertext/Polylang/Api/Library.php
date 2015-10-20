@@ -223,8 +223,7 @@ class Library
   private function replaceShortcode($matches, $savedShortcodes)
   {
     //return escaped shortcodes, do not replace
-    //return not translatable shortcodes
-    if (($matches[1] == '[' && $matches[6] == ']') || !isset($savedShortcodes[$matches[2]])) {
+    if ($matches[1] == '[' && $matches[6] == ']') {
       return $matches[0];
     }
 
@@ -242,7 +241,7 @@ class Library
       }
     }
 
-    if (isset($matches[5])) {
+    if (!empty($matches[5])) {
       $attributeNodes .= '<div name="enclosed">' . $matches[5] . '</div>';
     }
 
