@@ -120,7 +120,7 @@ class Library
       $result['post']['post_title'] = $post->post_title;
     }
     if ($pattern['post_content'] == true) {
-      $result['post']['post_content'] =  $this->replaceShortcodesWithNodes($post->post_content);
+      $result['post']['post_content'] = $this->replaceShortcodesWithNodes($post->post_content);
     }
     if ($pattern['post_excerpt'] == true) {
       $result['post']['post_excerpt'] = $post->post_excerpt;
@@ -148,7 +148,8 @@ class Library
    * @param $postId the id of the post to translate
    * @return array the list of custom fields definitions (available for the post)
    */
-  public function getCustomFieldDefinitions($postId){
+  public function getCustomFieldDefinitions($postId)
+  {
     $postCustomFields = get_post_custom($postId);
     $options = $this->getSettingOption();
     $savedCustomFieldsDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
@@ -157,7 +158,7 @@ class Library
 
     foreach ($postCustomFields as $key => $value) {
       foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
-        if(preg_match('/^'.$savedCustomFieldDefinition['meta_key'].'$/', $key)){
+        if (preg_match('/^' . $savedCustomFieldDefinition['meta_key'] . '$/', $key)) {
           $selectableCustomFieldDefinitions[] = $savedCustomFieldDefinition;
         }
       }
@@ -171,7 +172,8 @@ class Library
    * @param array $selectedCustomFieldIds the ids of the selected custom field definitions
    * @return array the list of custom field keys and values
    */
-  public function getCustomFieldsForTranslation($postId, $selectedCustomFieldIds = array()){
+  public function getCustomFieldsForTranslation($postId, $selectedCustomFieldIds = array())
+  {
     $postCustomFields = get_post_custom($postId);
     $options = $this->getSettingOption();
     $savedCustomFieldsDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
@@ -180,11 +182,11 @@ class Library
 
     foreach ($postCustomFields as $customFieldKey => $customFieldValue) {
       foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
-        if(!in_array($savedCustomFieldDefinition['id'], $selectedCustomFieldIds)){
+        if (!in_array($savedCustomFieldDefinition['id'], $selectedCustomFieldIds)) {
           continue;
         }
 
-        if(preg_match('/^'.$savedCustomFieldDefinition['meta_key'].'$/', $customFieldKey)){
+        if (preg_match('/^' . $savedCustomFieldDefinition['meta_key'] . '$/', $customFieldKey)) {
           $customFields[] = array(
             'key' => $customFieldKey,
             'value' => $customFieldValue
@@ -194,56 +196,6 @@ class Library
     }
 
     return $customFields;
-  }
-
-  /**
-   * Puts the shortcode back in the content by replacing the shortcode html nodes
-   * @param string post content to process
-   * @return string post content with shortcodes
-   */
-  public function putShortcodesBack($content)
-  {
-    $doc = new \DOMDocument();
-    $doc->loadHTML($content);
-    $newContent = $content;
-
-    $shortcodeNodes = $doc->getElementsByTagName(self::SHORTCODE_TAG);
-
-    foreach ($shortcodeNodes as $shortcodeNode) {
-      $nodeClass = $shortcodeNode->attributes->getNamedItem('class')->nodeValue;
-
-      if($nodeClass !== self::SHORTCODE_TAG_CLASS){
-        continue;
-      }
-
-      $attributes = '';
-      $textAttributeNodes = $shortcodeNode->getElementsByTagName('span');
-      $inputAttributeNodes = $shortcodeNode->getElementsByTagName('input');
-
-      foreach ($textAttributeNodes as $textAttributeNode) {
-        $attributeName = $textAttributeNode->attributes->getNamedItem('name')->nodeValue;
-        $attributeValue = $textAttributeNode->nodeValue;
-
-        $attributes .= $attributeName.'="'.$attributeValue.'" ';
-      }
-
-      foreach ($inputAttributeNodes as $inputAttributeNode) {
-        $attributeName = $inputAttributeNode->attributes->getNamedItem('name')->nodeValue;
-        $attributeValue = $inputAttributeNode->attributes->getNamedItem('value')->nodeValue;
-
-        $attributes .= $attributeName.'="'.$attributeValue.'" ';
-      }
-
-      $shortcodeName = $shortcodeNode->attributes->getNamedItem('name')->nodeValue;
-
-      $shortcode = '['.$shortcodeName.' '.trim($attributes).']';
-
-      $shortcodeNodePattern = '/'.$this->createShortcodeNode($shortcodeName, '(\s*((<span.*)|(<input.*))\s*)*', true).'/';
-
-      $newContent = preg_replace($shortcodeNodePattern, $shortcode, $newContent, 1);
-    }
-
-    return $newContent;
   }
 
   /**
@@ -257,50 +209,124 @@ class Library
     $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
     $regex = get_shortcode_regex();
 
-    return preg_replace_callback( "/$regex/s", function($m) use ($savedShortcodes){
+    return preg_replace_callback("/$regex/s", function ($m) use ($savedShortcodes) {
       return $this->replaceShortcode($m, $savedShortcodes);
     }, $content);
   }
 
   /**
-   * Effectively replace one shortcode with a node
-   * @param $m matches
+   * Effectively replace one shortcode with a html node.
+   * @param $matches matches (0: match, 1, 6: escaping chars, 2: shortcode tag name, 3: attributes, 5: enclosed content/data)
    * @param $savedShortcodes saved shortcodes
    * @return string replacement string
    */
-  private function replaceShortcode($m, $savedShortcodes){
+  private function replaceShortcode($matches, $savedShortcodes)
+  {
     //return escaped shortcodes, do not replace
     //return not translatable shortcodes
-    if(($m[1] == '[' && $m[6] == ']') || !isset($savedShortcodes[$m[2]])){
-      return $m[0];
+    if (($matches[1] == '[' && $matches[6] == ']') || !isset($savedShortcodes[$matches[2]])) {
+      return $matches[0];
     }
 
-    $tag = $m[2];
-    $attributes = shortcode_parse_atts( $m[3] );
-    $savedShortcodeAttributes = $savedShortcodes[$tag];
+    $tagName = $matches[2];
+    $attributes = shortcode_parse_atts($matches[3]);
+    $translatableShortcodeAttributes = $savedShortcodes[$tagName];
 
     $attributeNodes = '';
 
     foreach ($attributes as $name => $value) {
-      if(in_array($name, $savedShortcodeAttributes)){
-        $attributeNodes .= '<span name="'.$name.'">'.$value.'</span>';
-      }else{
-        $attributeNodes .= '<input type="hidden" name="'.$name.'" value="'.$value.'">';
+      if (in_array($name, $translatableShortcodeAttributes)) {
+        $attributeNodes .= '<span name="' . $name . '">' . $value . '</span>';
+      } else {
+        $attributeNodes .= '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
       }
     }
 
-    return $this->createShortcodeNode($tag, $attributeNodes);
+    if (isset($matches[5])) {
+      $attributeNodes .= '<div name="enclosed">' . $matches[5] . '</div>';
+    }
+
+    return '<' . self::SHORTCODE_TAG . ' class="' . self::SHORTCODE_TAG_CLASS . '" name="' . $tagName . '">' . $attributeNodes . '</' . self::SHORTCODE_TAG . '>';
   }
 
   /**
-   * Creates a html shortcode node
-   * @param $name name of the shortcode
-   * @param $value value
-   * @param bool $regex if is used within regex
-   * @return string the html node
+   * Puts the shortcode back by replacing the shortcode html nodes
+   * @param string post content to process
+   * @return string post content with shortcodes
    */
-  private function createShortcodeNode($name, $value, $regex = false)
+  public function putShortcodesBack($content)
   {
-      return '<'.self::SHORTCODE_TAG.' class="'.self::SHORTCODE_TAG_CLASS.'" name="'.$name.'">'.$value.'<'.($regex ? '\\' : '').'/'.self::SHORTCODE_TAG.'>';
+    $doc = new \DOMDocument();
+    $doc->loadHTML($content);
+
+    $shortcodeNodes = $doc->getElementsByTagName(self::SHORTCODE_TAG);
+
+    for ($i = $shortcodeNodes->length - 1; $i >= 0; --$i) {
+      $shortcodeNode = $shortcodeNodes->item($i);
+
+      if (!$shortcodeNode->hasAttribute('class')
+        || $shortcodeNode->attributes->getNamedItem('class')->nodeValue !== self::SHORTCODE_TAG_CLASS
+      ) {
+        continue;
+      }
+
+      $shortcodeName = $shortcodeNode->attributes->getNamedItem('name')->nodeValue;
+
+      $enclosedData = '';
+      $enclosedDataNodes = $shortcodeNode->getElementsByTagName('div');
+
+      if ($enclosedDataNodes->length > 0) {
+        $enclosedDataNodeAsString = $doc->saveHTML($enclosedDataNodes->item(0));
+        $extractedContent = array();
+        if(preg_match('/<div[^>]*>(.*)<\/div>/s', $enclosedDataNodeAsString, $extractedContent)) {
+          $enclosedData =  $extractedContent[1].'[/' . $shortcodeName . ']' ;
+        }
+      }
+
+      $attributes = $this->getAttributesAsString($shortcodeNode);
+
+      $shortcode = '[' . $shortcodeName . ' ' . trim($attributes) . ']' . $enclosedData;
+
+      $shortcodeNode->parentNode->replaceChild($doc->createTextNode($shortcode), $shortcodeNode);
+    }
+
+    $newContent =  html_entity_decode($doc->saveHTML());
+
+    return $newContent;
+  }
+
+  /**
+   * Gets the string list of attributes ([attribute]=[value] [attribute]=[value] [attribute]=[value]...)
+   * @param $shortcodeNode
+   * @return string
+   */
+  private function getAttributesAsString($shortcodeNode)
+  {
+    $attributes = '';
+
+    $textAttributeNodes = $shortcodeNode->getElementsByTagName('span');
+    $inputAttributeNodes = $shortcodeNode->getElementsByTagName('input');
+
+    foreach ($textAttributeNodes as $textAttributeNode) {
+      if ($textAttributeNode->parentNode !== $shortcodeNode) {
+        continue;
+      }
+
+      $attributeName = $textAttributeNode->attributes->getNamedItem('name')->nodeValue;
+      $attributeValue = $textAttributeNode->nodeValue;
+      $attributes .= $attributeName . '="' . $attributeValue . '" ';
+    }
+
+    foreach ($inputAttributeNodes as $inputAttributeNode) {
+      if ($inputAttributeNode->parentNode !== $shortcodeNode) {
+        continue;
+      }
+
+      $attributeName = $inputAttributeNode->attributes->getNamedItem('name')->nodeValue;
+      $attributeValue = $inputAttributeNode->attributes->getNamedItem('value')->nodeValue;
+      $attributes .= $attributeName . '="' . $attributeValue . '" ';
+    }
+
+    return $attributes;
   }
 } 
