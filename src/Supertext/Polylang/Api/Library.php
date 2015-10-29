@@ -241,8 +241,10 @@ class Library
       }
     }
 
+    //Enclosed content can contain shortcodes as well
     if (!empty($matches[5])) {
-      $attributeNodes .= '<div name="enclosed">' . $matches[5] . '</div>';
+      $enclosedContent = $this->replaceShortcodesWithNodes($matches[5]);
+      $attributeNodes .= '<div name="enclosed">' . $enclosedContent . '</div>';
     }
 
     return '<' . self::SHORTCODE_TAG . ' class="' . self::SHORTCODE_TAG_CLASS . '" name="' . $tagName . '">' . $attributeNodes . '</' . self::SHORTCODE_TAG . '>';
@@ -271,20 +273,20 @@ class Library
 
       $shortcodeName = $shortcodeNode->attributes->getNamedItem('name')->nodeValue;
 
-      $enclosedData = '';
-      $enclosedDataNodes = $shortcodeNode->getElementsByTagName('div');
+      $enclosedContent = '';
+      $enclosedContentNodes = $shortcodeNode->getElementsByTagName('div');
 
-      if ($enclosedDataNodes->length > 0) {
-        $enclosedDataNodeAsString = $doc->saveHTML($enclosedDataNodes->item(0));
+      if ($enclosedContentNodes->length > 0) {
+        $enclosedContentNodeAsString = $doc->saveHTML($enclosedContentNodes->item(0));
         $extractedContent = array();
-        if(preg_match('/<div[^>]*>(.*)<\/div>/s', $enclosedDataNodeAsString, $extractedContent)) {
-          $enclosedData =  $extractedContent[1].'[/' . $shortcodeName . ']' ;
+        if(preg_match('/<div[^>]*>(.*)<\/div>/s', $enclosedContentNodeAsString, $extractedContent)) {
+          $enclosedContent =  $extractedContent[1].'[/' . $shortcodeName . ']' ;
         }
       }
 
       $attributes = $this->getAttributesAsString($shortcodeNode);
 
-      $shortcode = '[' . $shortcodeName . ' ' . trim($attributes) . ']' . $enclosedData;
+      $shortcode = '[' . $shortcodeName . ' ' . trim($attributes) . ']' . $enclosedContent;
 
       $shortcodeNode->parentNode->replaceChild($doc->createTextNode($shortcode), $shortcodeNode);
     }
