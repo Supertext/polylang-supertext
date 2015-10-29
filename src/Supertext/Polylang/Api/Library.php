@@ -257,6 +257,9 @@ class Library
    */
   public function putShortcodesBack($content)
   {
+    // TODO: changed all. DOMDocument not quite proper since it creates whole HTML document.
+    // Thus saveHTML contains more tags (html, body, ...) than wanted. Code not that easy to understand
+
     $doc = new \DOMDocument();
     $doc->loadHTML($content);
 
@@ -291,9 +294,12 @@ class Library
       $shortcodeNode->parentNode->replaceChild($doc->createTextNode($shortcode), $shortcodeNode);
     }
 
-    $newContent =  html_entity_decode($doc->saveHTML());
+    $newHtml =  $doc->saveHTML();
+    $newContent = '';
 
-    return $newContent;
+    preg_match('/<body[^>]*>(.*)<\/body>/s', $newHtml, $newContent);
+
+    return $newContent[1];
   }
 
   /**
