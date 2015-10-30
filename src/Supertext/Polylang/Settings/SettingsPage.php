@@ -279,11 +279,13 @@ class SettingsPage extends AbstractPage
     $shortcodeToSave = array();
 
     foreach ($_POST['shortcodes'] as $name => $shortcode) {
-      if(!isset($shortcode['selected']) || !$shortcode['selected']){
+      $attributes = $this->removeEmptyFields($shortcode['attributes']);
+
+      if(count($attributes) == 0){
         continue;
       }
 
-      $shortcodeToSave[$name] = $this->removeEmptyFields($shortcode['attributes']);
+      $shortcodeToSave[$name] = $attributes;
     }
 
     $this->library->saveSetting(Constant::SETTING_SHORTCODES, $shortcodeToSave);

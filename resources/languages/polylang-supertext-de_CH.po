@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2015-10-16 07:44+0100\n"
-"PO-Revision-Date: 2015-10-16 07:48+0100\n"
+"POT-Creation-Date: 2015-10-30 07:39+0100\n"
+"PO-Revision-Date: 2015-10-30 07:40+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_CH\n"
@@ -17,16 +17,17 @@ msgstr ""
 "polylang-supertext\n"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:14
-msgid "Translatable Shortcodes"
-msgstr "Übersetzbare Shortcodes"
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:44
+msgid "Shortcodes"
+msgstr "Shortcodes"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:18
 msgid "Shortcode"
 msgstr "Shortcode"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:19
-msgid "Attributes"
-msgstr "Attribute"
+msgid "Translatable attributes"
+msgstr "Übersetzbare Attribute"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-languages.php:31
 msgid "Please select"
@@ -94,21 +95,21 @@ msgstr "Benutzer entfernen"
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:96
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:97
 msgid "translation saved successfully"
 msgstr "Übersetzung von Supertext swurde erfolgreich importiert."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:99
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:100
 msgid "error: can only import into draft article"
 msgstr "Fehler: Übersetzungs-Import ist nur bei Entwurfs-Artikel möglich."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:103
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:104
 msgid "error: wrong language or translation post has been deleted"
 msgstr ""
 "Fehler: Übersetzung von Supertext hat die falsche Sprache, oder der zu "
 "übersetzende Artikel wurde gelöscht."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:107
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:108
 msgid "error: method not allowed"
 msgstr "Fehler beim Importieren der Übersetzung von Supertext."
 
@@ -144,10 +145,6 @@ msgstr "Benutzer und Sprachen"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:36
 msgid "Custom Fields"
 msgstr "Benutzerdefinierte Felder"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:44
-msgid "Shortcodes"
-msgstr "Shortcodes"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:71
 msgid "Settings › Supertext API"
@@ -371,6 +368,9 @@ msgstr "Übersetzung erfolgt bis"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:164
 msgid "Price"
 msgstr "Preis"
+
+#~ msgid "Attributes"
+#~ msgstr "Attribute"
 
 #~ msgid ""
 #~ "Error while communicating with Supertext. We couldn't find any offers. "

@@ -90,31 +90,33 @@ Supertext.Settings.CustomFields = (function ($) {
 //Shortcodes tab module
 Supertext.Settings.Shortcodes = (function ($) {
 
-  function onCheckboxChanged(){
-    $(this).parent('td').next().next().children('input').css('visibility', this.checked ? 'visible' : 'hidden');
-  }
-
-  function onTextInputChanged(){
-    var $this = $(this);
-
-    if($this.val() == '' && $this.parent().children().length > 2){
-      $this.remove();
-    }
-  }
-
   function addAttributeInput(){
     var $this = $(this);
-      $this
-        .prev()
-        .clone()
-        .val('')
-        .on('change', onTextInputChanged)
-        .insertBefore($this)
-        .show();
+    var attributeInputCopy = $this.prev().clone();
+
+    attributeInputCopy.children('input[type=text]').val('');
+
+    attributeInputCopy.children('.shortcode-attribute-remove-input')
+      .on('click', removeAttributeInput);
+
+    attributeInputCopy.insertBefore($this).show();
+  }
+
+  function removeAttributeInput(){
+    $(this).parent().remove();
+  }
+
+  function showNotEmptyAttributeInputs(){
+    $('#tblShortcodes tbody .shortcode-attribute-input input[type=text]').each(function(){
+      var $this = $(this);
+      if($this.val() != ''){
+        $this.parent().show();
+      }
+    });
   }
 
   function removeEmptyAttributeInputs(){
-    $('#tblShortcodes tbody .shortcode-attribute-input').each(function(){
+    $('#tblShortcodes tbody .shortcode-attribute-input input[type=text]').each(function(){
       var $this = $(this);
       if($this.val() == ''){
         $this.attr('name', '');
@@ -126,18 +128,13 @@ Supertext.Settings.Shortcodes = (function ($) {
     initialize: function (options) {
       options = options || {};
 
-      $('#tblShortcodes tbody .shortcode-select-input')
-        .on('change', onCheckboxChanged).each(function(){
-          onCheckboxChanged.call(this);
-        }
-      );
-
-     $('#tblShortcodes tbody .shortcode-attribute-input')
-        .on('change', onTextInputChanged);
-
+      showNotEmptyAttributeInputs();
 
       $('#tblShortcodes tbody .shortcode-attribute-add-input')
         .on('click', addAttributeInput);
+
+      $('#tblShortcodes tbody .shortcode-attribute-remove-input')
+        .on('click', removeAttributeInput);
 
       $('#shortcodesSettingsForm').submit(removeEmptyAttributeInputs);
     }

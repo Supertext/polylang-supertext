@@ -23,8 +23,14 @@
   font-size: 13px;
 }
 
-#tblShortcodes .shortcode-attribute-input, #tblShortcodes .shortcode-attribute-add-input{
-  visibility: hidden;
+#tblShortcodes .shortcode-attribute-input{
+  float:left;
+  display: none;
+  padding-right: 10px;
+}
+
+#tblShortcodes .shortcode-attribute-remove-input{
+  margin-left: -2px;
 }
 
 #tblShortcodes td{

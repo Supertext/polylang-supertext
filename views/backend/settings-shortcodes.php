@@ -8,15 +8,21 @@ $library = $context->getCore()->getLibrary();
 $options = $library->getSettingOption();
 $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipulation::forceArray($options[Constant::SETTING_SHORTCODES]) : array();
 
+function getAttributeInput($key, $value){
+  return '<div class="shortcode-attribute-input">
+           <input type="text" name="shortcodes['.$key.'][attributes][]" value="'.$value.'" /><input type="button" value="-" class="button button-highlighted shortcode-attribute-remove-input" />
+         </div>';
+}
+
 ?>
 <div class="postbox postbox_admin">
   <div class="inside">
-    <h3><?php _e('Translatable Shortcodes', 'polylang-supertext'); ?></h3>
+    <h3><?php _e('Shortcodes', 'polylang-supertext'); ?></h3>
     <table id="tblShortcodes">
       <thead>
       <tr>
-        <th colspan="2"><?php _e('Shortcode', 'polylang-supertext'); ?></th>
-        <th><?php _e('Attributes', 'polylang-supertext'); ?></th>
+        <th><?php _e('Shortcode', 'polylang-supertext'); ?></th>
+        <th><?php _e('Translatable attributes', 'polylang-supertext'); ?></th>
       </tr>
       </thead>
       <tbody>
@@ -31,16 +37,14 @@ $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipula
           $checked = 'checked="checked"';
         }
 
-        $inputs = count($savedShortcodeAttributes) > 0 ? '' : '<input type="text" class="shortcode-attribute-input" name="shortcodes['.$key.'][attributes][]" value="" />';
+        $inputs = getAttributeInput($key, '');
 
         foreach ($savedShortcodeAttributes as $savedShortcodeAttribute) {
-          $inputs .= '<input type="text" class="shortcode-attribute-input" name="shortcodes['.$key.'][attributes][]" value="'.$savedShortcodeAttribute.'" />';
-
+          $inputs .= getAttributeInput($key, $savedShortcodeAttribute);
         }
 
         echo '
         <tr>
-          <td><input type="checkbox" id="'.$checkboxId.'" class="shortcode-select-input" name="shortcodes['.$key.'][selected]" value="1" '.$checked.' /></td>
           <td><label for="'.$checkboxId.'">'.$key.'</label></td>
           <td>'.$inputs.'<input type="button" value="+" class="button button-highlighted shortcode-attribute-add-input" /></td>
         </tr>';
