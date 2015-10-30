@@ -337,7 +337,7 @@ class Library
     $functions = array_reverse(explode(',', $contentEncoding));
 
     foreach ($functions as $function) {
-      switch($function){
+      switch(trim($function)){
         case 'base64':
           $content = base64_decode($content);
           break;
@@ -358,7 +358,7 @@ class Library
     $functions = explode(',', $contentEncoding);
 
     foreach ($functions as $function) {
-      switch($function){
+      switch(trim($function)){
         case 'base64':
           $content = base64_encode($content);
           break;
