@@ -102,7 +102,7 @@ class Core
     $options = $library->getSettingOption();
 
     if(!isset($options[Helper\Constant::SETTING_SHORTCODES])){
-      $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, array('caption' => array()));
+      $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, array());
     }
   }
 

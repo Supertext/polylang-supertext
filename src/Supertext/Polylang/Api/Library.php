@@ -230,7 +230,7 @@ class Library
 
     $tagName = $matches[2];
     $attributes = shortcode_parse_atts($matches[3]);
-    $translatableShortcodeAttributes = $savedShortcodes[$tagName];
+    $translatableShortcodeAttributes = $savedShortcodes[$tagName]['attributes'];
 
     $attributeNodes = '';
 

@@ -22,6 +22,7 @@ function getAttributeInput($key, $value){
       <thead>
       <tr>
         <th><?php _e('Shortcode', 'polylang-supertext'); ?></th>
+        <th><?php _e('Enclosed content encoding', 'polylang-supertext'); ?></th>
         <th><?php _e('Translatable attributes', 'polylang-supertext'); ?></th>
       </tr>
       </thead>
@@ -29,24 +30,27 @@ function getAttributeInput($key, $value){
       <?php
       foreach ($shortcode_tags as $key => $function) {
         $checkboxId = 'chkbx'.$key;
+        $contentEncoding = '';
         $savedShortcodeAttributes = array();
         $checked = '';
 
         if(isset($savedShortcodes[$key])){
-          $savedShortcodeAttributes = $savedShortcodes[$key];
+          $savedShortcodeAttributes = $savedShortcodes[$key]['attributes'];
+          $contentEncoding = $savedShortcodes[$key]['content_encoding'];
           $checked = 'checked="checked"';
         }
 
-        $inputs = getAttributeInput($key, '');
+        $attributeInputs = getAttributeInput($key, '');
 
         foreach ($savedShortcodeAttributes as $savedShortcodeAttribute) {
-          $inputs .= getAttributeInput($key, $savedShortcodeAttribute);
+          $attributeInputs .= getAttributeInput($key, $savedShortcodeAttribute);
         }
 
         echo '
         <tr>
           <td><label for="'.$checkboxId.'">'.$key.'</label></td>
-          <td>'.$inputs.'<input type="button" value="+" class="button button-highlighted shortcode-attribute-add-input" /></td>
+          <td><input type="text" name="shortcodes['.$key.'][content_encoding]" value="'.$contentEncoding.'" /></td>
+          <td>'.$attributeInputs.'<input type="button" value="+" class="button button-highlighted shortcode-attribute-add-input" /></td>
         </tr>';
       }
       ?>
