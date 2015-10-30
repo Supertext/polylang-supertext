@@ -31,7 +31,8 @@ class SettingsPage extends AbstractPage
         ),
         'saveFunction' => 'saveUserAndLanguageSettings'
       ),
-
+      //Not available as long not implemented on order page
+      /*
       'customfields' => array(
         'name' => __("Custom Fields", 'polylang-supertext'),
         'views' => array(
@@ -39,7 +40,7 @@ class SettingsPage extends AbstractPage
         ),
         'saveFunction' => 'saveCustomFieldsSettings'
       ),
-
+      */
       'shortcodes' => array(
         'name' => __("Shortcodes", 'polylang-supertext'),
         'views' => array(
