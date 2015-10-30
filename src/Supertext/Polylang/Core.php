@@ -102,7 +102,12 @@ class Core
     $options = $library->getSettingOption();
 
     if(!isset($options[Helper\Constant::SETTING_SHORTCODES])){
-      $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, array());
+      $library->saveSetting(Helper\Constant::SETTING_SHORTCODES,
+        array(
+          'vc_raw_html' => array(
+            'content_encoding' => 'url,base64')
+        )
+      );
     }
   }
 

@@ -230,7 +230,8 @@ class Library
 
     $tagName = $matches[2];
     $attributes = shortcode_parse_atts($matches[3]);
-    $translatableShortcodeAttributes = $savedShortcodes[$tagName]['attributes'];
+    $savedShortcode = $savedShortcodes[$tagName];
+    $translatableShortcodeAttributes = $savedShortcode['attributes'];
 
     $attributeNodes = '';
 
@@ -244,7 +245,11 @@ class Library
 
     //Enclosed content can contain shortcodes as well
     if (!empty($matches[5])) {
-      $enclosedContent = $this->replaceShortcodes($matches[5]);
+      $content = $matches[5];
+      if(isset($savedShortcode['content_encoding'])){
+        $content = $this->decodeEnclosedContent($content, $savedShortcode['content_encoding']);
+      }
+      $enclosedContent = $this->replaceShortcodes($content);
       $attributeNodes .= '<div class="' . self::SHORTCODE_ENCLOSED_CONTENT_CLASS . '">' . $enclosedContent . '</div>';
     }
 
@@ -258,21 +263,25 @@ class Library
    */
   public function replaceShortcodeNodes($content)
   {
+    $options = $this->getSettingOption();
+    $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
+
     $doc = new \DOMDocument();
     $doc->loadHTML($content);
 
     $childNodes = $doc->getElementsByTagName('body')->item(0)->childNodes;
 
-    return $this->replaceShortcodeNodesRecursive($doc, $childNodes);
+    return $this->replaceShortcodeNodesRecursive($doc, $childNodes, $savedShortcodes);
   }
 
   /**
    * Parses the child nodes and returns the new content with replaced shortcode nodes
    * @param $doc the dom document
    * @param $childNodes the child nodes to process
+   * @param $savedShortcodes
    * @return string the new content
    */
-  private function replaceShortcodeNodesRecursive($doc, $childNodes)
+  private function replaceShortcodeNodesRecursive($doc, $childNodes, $savedShortcodes)
   {
     $newContent = '';
 
@@ -300,7 +309,12 @@ class Library
               $attributes .= $attributeName . '="' . $attributeValue . '" ';
               break;
             case 'div':
-              $enclosedContent = $this->replaceShortcodeNodesRecursive($doc, $shortcodeChildNode->childNodes);
+              $enclosedContent = $this->replaceShortcodeNodesRecursive($doc, $shortcodeChildNode->childNodes, $savedShortcodes);
+
+              if(isset($savedShortcodes[$shortcodeName]) && isset($savedShortcodes[$shortcodeName]['content_encoding'])){
+                $enclosedContent = $this->encodeEnclosedContent($enclosedContent, $savedShortcodes[$shortcodeName]['content_encoding']);
+              }
+
               break;
           }
         }
@@ -316,5 +330,41 @@ class Library
     }
 
     return $newContent;
+  }
+
+  private function decodeEnclosedContent($content, $contentEncoding)
+  {
+    $functions = array_reverse(explode(',', $contentEncoding));
+
+    foreach ($functions as $function) {
+      switch($function){
+        case 'base64':
+          $content = base64_decode($content);
+          break;
+        case 'url':
+          $content = urldecode($content);
+          break;
+      }
+    }
+
+    return $content;
+  }
+
+  private function encodeEnclosedContent($content, $contentEncoding)
+  {
+    $functions = explode(',', $contentEncoding);
+
+    foreach ($functions as $function) {
+      switch($function){
+        case 'base64':
+          $content = base64_encode($content);
+          break;
+        case 'url':
+          $content = urlencode($content);
+          break;
+      }
+    }
+
+    return $content;
   }
 } 
