@@ -105,7 +105,13 @@ class Core
       $library->saveSetting(Helper\Constant::SETTING_SHORTCODES,
         array(
           'vc_raw_html' => array(
-            'content_encoding' => 'url,base64')
+            'content_encoding' => 'url,base64',
+            'attributes' => array()
+          ),
+          'vc_custom_heading' => array(
+            'content_encoding' => null,
+            'attributes' => array('text')
+          )
         )
       );
     }

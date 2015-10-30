@@ -246,7 +246,7 @@ class Library
     //Enclosed content can contain shortcodes as well
     if (!empty($matches[5])) {
       $content = $matches[5];
-      if(isset($savedShortcode['content_encoding'])){
+      if(!empty($savedShortcode['content_encoding'])){
         $content = $this->decodeEnclosedContent($content, $savedShortcode['content_encoding']);
       }
       $enclosedContent = $this->replaceShortcodes($content);
@@ -311,7 +311,7 @@ class Library
             case 'div':
               $enclosedContent = $this->replaceShortcodeNodesRecursive($doc, $shortcodeChildNode->childNodes, $savedShortcodes);
 
-              if(isset($savedShortcodes[$shortcodeName]) && isset($savedShortcodes[$shortcodeName]['content_encoding'])){
+              if(isset($savedShortcodes[$shortcodeName]) && !empty($savedShortcodes[$shortcodeName]['content_encoding'])){
                 $enclosedContent = $this->encodeEnclosedContent($enclosedContent, $savedShortcodes[$shortcodeName]['content_encoding']);
               }
 
