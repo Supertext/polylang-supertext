@@ -344,6 +344,9 @@ class Library
         case 'url':
           $content = urldecode($content);
           break;
+        case 'rawurl':
+          $content = rawurldecode($content);
+          break;
       }
     }
 
@@ -361,6 +364,9 @@ class Library
           break;
         case 'url':
           $content = urlencode($content);
+          break;
+        case 'rawurl':
+          $content = rawurlencode($content);
           break;
       }
     }
