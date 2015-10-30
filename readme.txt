@@ -40,6 +40,11 @@ Get the API key on the Settings page: [Account Settings](https://www.supertext.c
 
 == Changelog ==
 
+= 1.3 =
+* Settings and support for Shortcodes
+* Text and UI changes
+* Various code improvements
+
 = 1.2 =
 * Better user information when the translation is created
 * Logging all communication with Supertext and display it in the article sidebar

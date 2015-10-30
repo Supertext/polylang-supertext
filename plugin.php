@@ -4,12 +4,12 @@ Plugin Name: Supertext API for Polylang
 Plugin URI: http://www.supertext.ch
 Description: This plugins allows translation of posts and pages with the Supertext API
 Author: comotive GmbH, Supertext AG
-Version: 1.2
+Version: 1.3
 Author URI: http://www.supertext.ch
 License: GPLv2 or later
 */
 
-define('SUPERTEXT_PLUGIN_REVISION', 4);
+define('SUPERTEXT_PLUGIN_REVISION', 5);
 define('SUPERTEXT_POLYLANG_BASE_PATH', __DIR__);
 define('SUPERTEXT_POLYLANG_VIEW_PATH', __DIR__ . '/views/');
 define('SUPERTEXT_POLYLANG_RESOURCE_URL', plugin_dir_url(__FILE__) . 'resources');
