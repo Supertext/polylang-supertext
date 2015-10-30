@@ -13,6 +13,7 @@ class Library
 {
   const SHORTCODE_TAG = 'div';
   const SHORTCODE_TAG_CLASS = 'polylang-supertext-shortcode';
+  const SHORTCODE_ENCLOSED_CONTENT_CLASS = 'polylang-supertext-shortcode-enclosed';
 
   /**
    * @param string $language polylang language code
@@ -120,7 +121,7 @@ class Library
       $result['post']['post_title'] = $post->post_title;
     }
     if ($pattern['post_content'] == true) {
-      $result['post']['post_content'] = $this->replaceShortcodesWithNodes($post->post_content);
+      $result['post']['post_content'] = $this->replaceShortcodes($post->post_content);
     }
     if ($pattern['post_excerpt'] == true) {
       $result['post']['post_excerpt'] = $post->post_excerpt;
@@ -203,7 +204,7 @@ class Library
    * @param string post content to process
    * @return string post content with replaced shortcodes
    */
-  private function replaceShortcodesWithNodes($content)
+  private function replaceShortcodes($content)
   {
     $options = $this->getSettingOption();
     $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
@@ -215,7 +216,7 @@ class Library
   }
 
   /**
-   * Effectively replace one shortcode with a html node.
+   * Effectively replaces one shortcode with a html node.
    * @param $matches matches (0: match, 1, 6: escaping chars, 2: shortcode tag name, 3: attributes, 5: enclosed content/data)
    * @param $savedShortcodes saved shortcodes
    * @return string replacement string
@@ -243,97 +244,77 @@ class Library
 
     //Enclosed content can contain shortcodes as well
     if (!empty($matches[5])) {
-      $enclosedContent = $this->replaceShortcodesWithNodes($matches[5]);
-      $attributeNodes .= '<div name="enclosed">' . $enclosedContent . '</div>';
+      $enclosedContent = $this->replaceShortcodes($matches[5]);
+      $attributeNodes .= '<div class="' . self::SHORTCODE_ENCLOSED_CONTENT_CLASS . '">' . $enclosedContent . '</div>';
     }
 
     return '<' . self::SHORTCODE_TAG . ' class="' . self::SHORTCODE_TAG_CLASS . '" name="' . $tagName . '">' . $attributeNodes . '</' . self::SHORTCODE_TAG . '>';
   }
 
   /**
-   * Puts the shortcode back by replacing the shortcode html nodes
+   * Replaces the shortcode html nodes with wordpress shortcodes
    * @param string post content to process
    * @return string post content with shortcodes
    */
-  public function putShortcodesBack($content)
+  public function replaceShortcodeNodes($content)
   {
-    // TODO: changed all. DOMDocument not quite proper since it creates whole HTML document.
-    // Thus saveHTML contains more tags (html, body, ...) than wanted. Code not that easy to understand
-
     $doc = new \DOMDocument();
     $doc->loadHTML($content);
 
-    $shortcodeNodes = $doc->getElementsByTagName(self::SHORTCODE_TAG);
+    $childNodes = $doc->getElementsByTagName('body')->item(0)->childNodes;
 
-    for ($i = $shortcodeNodes->length - 1; $i >= 0; --$i) {
-      $shortcodeNode = $shortcodeNodes->item($i);
-
-      if (!$shortcodeNode->hasAttribute('class')
-        || $shortcodeNode->attributes->getNamedItem('class')->nodeValue !== self::SHORTCODE_TAG_CLASS
-      ) {
-        continue;
-      }
-
-      $shortcodeName = $shortcodeNode->attributes->getNamedItem('name')->nodeValue;
-
-      $enclosedContent = '';
-      $enclosedContentNodes = $shortcodeNode->getElementsByTagName('div');
-
-      if ($enclosedContentNodes->length > 0) {
-        $enclosedContentNodeAsString = $doc->saveHTML($enclosedContentNodes->item(0));
-        $extractedContent = array();
-        if(preg_match('/<div[^>]*>(.*)<\/div>/s', $enclosedContentNodeAsString, $extractedContent)) {
-          $enclosedContent =  $extractedContent[1].'[/' . $shortcodeName . ']' ;
-        }
-      }
-
-      $attributes = $this->getAttributesAsString($shortcodeNode);
-
-      $shortcode = '[' . $shortcodeName . ' ' . trim($attributes) . ']' . $enclosedContent;
-
-      $shortcodeNode->parentNode->replaceChild($doc->createTextNode($shortcode), $shortcodeNode);
-    }
-
-    $newHtml =  $doc->saveHTML();
-    $newContent = '';
-
-    preg_match('/<body[^>]*>(.*)<\/body>/s', $newHtml, $newContent);
-
-    return $newContent[1];
+    return $this->replaceShortcodeNodesRecursive($doc, $childNodes);
   }
 
   /**
-   * Gets the string list of attributes ([attribute]=[value] [attribute]=[value] [attribute]=[value]...)
-   * @param $shortcodeNode
-   * @return string
+   * Parses the child nodes and returns the new content with replaced shortcode nodes
+   * @param $doc the dom document
+   * @param $childNodes the child nodes to process
+   * @return string the new content
    */
-  private function getAttributesAsString($shortcodeNode)
+  private function replaceShortcodeNodesRecursive($doc, $childNodes)
   {
-    $attributes = '';
+    $newContent = '';
 
-    $textAttributeNodes = $shortcodeNode->getElementsByTagName('span');
-    $inputAttributeNodes = $shortcodeNode->getElementsByTagName('input');
+    foreach ($childNodes as $childNode) {
 
-    foreach ($textAttributeNodes as $textAttributeNode) {
-      if ($textAttributeNode->parentNode !== $shortcodeNode) {
-        continue;
+      if($childNode->nodeType ===  XML_ELEMENT_NODE
+        && $childNode->nodeName === self::SHORTCODE_TAG
+        && $childNode->hasAttribute('class')
+        && $childNode->attributes->getNamedItem('class')->nodeValue === self::SHORTCODE_TAG_CLASS){
+
+        $shortcodeName = $childNode->attributes->getNamedItem('name')->nodeValue;
+        $attributes = '';
+        $enclosedContent = '';
+
+        foreach ($childNode->childNodes as $shortcodeChildNode) {
+          switch($shortcodeChildNode->nodeName){
+            case 'span':
+              $attributeName = $shortcodeChildNode->attributes->getNamedItem('name')->nodeValue;
+              $attributeValue = $shortcodeChildNode->nodeValue;
+              $attributes .= $attributeName . '="' . $attributeValue . '" ';
+              break;
+            case 'input':
+              $attributeName = $shortcodeChildNode->attributes->getNamedItem('name')->nodeValue;
+              $attributeValue = $shortcodeChildNode->attributes->getNamedItem('value')->nodeValue;
+              $attributes .= $attributeName . '="' . $attributeValue . '" ';
+              break;
+            case 'div':
+              $enclosedContent = $this->replaceShortcodeNodesRecursive($doc, $shortcodeChildNode->childNodes);
+              break;
+          }
+        }
+
+        $space = empty($attributes) ? '' : ' ';
+        $shortcodeStart = '[' . $shortcodeName . $space . trim($attributes) . ']';
+        $shortcodeEnd = empty($enclosedContent) ? '' : $enclosedContent .'[/' . $shortcodeName . ']';
+
+        $newContent .=  $shortcodeStart . $shortcodeEnd;
+      }else{
+        $newContent .= $doc->saveHTML($childNode);
       }
-
-      $attributeName = $textAttributeNode->attributes->getNamedItem('name')->nodeValue;
-      $attributeValue = $textAttributeNode->nodeValue;
-      $attributes .= $attributeName . '="' . $attributeValue . '" ';
     }
 
-    foreach ($inputAttributeNodes as $inputAttributeNode) {
-      if ($inputAttributeNode->parentNode !== $shortcodeNode) {
-        continue;
-      }
-
-      $attributeName = $inputAttributeNode->attributes->getNamedItem('name')->nodeValue;
-      $attributeValue = $inputAttributeNode->attributes->getNamedItem('value')->nodeValue;
-      $attributes .= $attributeName . '="' . $attributeValue . '" ';
-    }
-
-    return $attributes;
+    return $newContent;
   }
 } 
