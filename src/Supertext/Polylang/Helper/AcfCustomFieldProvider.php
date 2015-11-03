@@ -3,6 +3,7 @@
 namespace Supertext\Polylang\Helper;
 
 /**
+ * TODO @heinrich make this work without PRO
  * The ACF Custom Field provider
  * @package Supertext\Polylang\Helper
  */
@@ -10,7 +11,8 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
 {
   const PLUGIN_NAME = 'Advanced Custom Fields';
 
-  public function getPluginName(){
+  public function getPluginName()
+  {
     return self::PLUGIN_NAME;
   }
 
@@ -41,18 +43,19 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
    * @param string $metaKeyPrefix a prefix for creating meta keys
    * @return array
    */
-  private function getFieldDefinitions($fields, $metaKeyPrefix = ''){
+  private function getFieldDefinitions($fields, $metaKeyPrefix = '')
+  {
     $group = array();
 
     foreach ($fields as $field) {
-      $metaKey = $metaKeyPrefix.$field['name'];
+      $metaKey = $metaKeyPrefix . $field['name'];
 
       $group[] = array(
         'id' => $field['key'],
         'label' => $field['label'],
         'type' => 'field',
         'meta_key' => $metaKey,
-        'field_definitions' => isset($field['sub_fields']) ? $this->getFieldDefinitions($field['sub_fields'], $metaKey.'_\\d+_') : array()
+        'field_definitions' => isset($field['sub_fields']) ? $this->getFieldDefinitions($field['sub_fields'], $metaKey . '_\\d+_') : array()
       );
     }
 

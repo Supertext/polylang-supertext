@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
 "POT-Creation-Date: 2015-08-28 09:47+0100\n"
-"PO-Revision-Date: 2015-08-28 09:47+0100\n"
+"PO-Revision-Date: 2015-11-03 11:20+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: en_US\n"
@@ -335,6 +335,21 @@ msgstr "User"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:55
 msgid "API-Key"
 msgstr "API-Key"
+
+msgid "SEO optimized title"
+msgstr "SEO optimized title"
+
+msgid "SEO optimized description"
+msgstr "SEO optimized description"
+
+msgid "Focus keyword"
+msgstr "Focus keyword"
+
+msgid "Facebook title"
+msgstr "Facebook title"
+
+msgid "Facebook description"
+msgstr "Facebook description"
 
 #~ msgid "Unknown language"
 #~ msgstr "Unknown language"

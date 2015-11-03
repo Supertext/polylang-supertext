@@ -70,6 +70,15 @@ class WordPress
   }
 
   /**
+   * @param string $plugin plugin file path
+   * @return bool true if plugin is active
+   */
+  public static function isPluginActive($plugin)
+  {
+    return in_array($plugin, (array) get_option('active_plugins', array()));
+  }
+
+  /**
    * Registering a post type
    * @param string $type slug of the type
    * @param string $singular singular name
