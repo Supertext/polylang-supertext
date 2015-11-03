@@ -1,4 +1,4 @@
-# Polylang Supertext
+# Supertext WordPress Translation Plugin
 
 ## Description
 

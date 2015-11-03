@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Supertext API for Polylang
+Plugin Name: Supertext WordPress Translation Plugin
 Plugin URI: http://www.supertext.ch
-Description: This plugins allows translation of posts and pages with the Supertext API
+Description: This multilingual plugin allows you to order translations for your pages and posts using Supertexts professional translation services.
 Author: comotive GmbH, Supertext AG
 Version: 1.3
 Author URI: http://www.supertext.ch
