@@ -65,9 +65,8 @@ class SettingsPage extends AbstractPage
   {
     $this->customFieldsProviders = array();
 
-    // TODO @heinrich make this work without PRO, and remove the && check for pro plugin
     // Support for advanced custom fields pro
-    if (WordPress::isPluginActive('advanced-custom-fields/acf.php') && WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
+    if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php') ) {
       $this->customFieldsProviders[] = new AcfCustomFieldProvider();
     }
 

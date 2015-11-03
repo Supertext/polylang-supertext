@@ -3,7 +3,6 @@
 namespace Supertext\Polylang\Helper;
 
 /**
- * TODO @heinrich make this work without PRO
  * The ACF Custom Field provider
  * @package Supertext\Polylang\Helper
  */
@@ -21,14 +20,15 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
    */
   public function getCustomFieldDefinitions()
   {
-    $fieldGroups = acf_get_field_groups();
+    $fieldGroups = function_exists( 'acf_get_field_groups' ) ? acf_get_field_groups() : apply_filters( 'acf/get_field_groups', array() );
     $customFields = array();
 
     foreach ($fieldGroups as $fieldGroup) {
-      $fields = acf_get_fields($fieldGroup);
+      $fieldGroupId = isset($fieldGroup['ID']) ? $fieldGroup['ID'] : $fieldGroup['id'];
+      $fields = function_exists( 'acf_get_fields' ) ? acf_get_fields($fieldGroup) : apply_filters('acf/field_group/get_fields', array(), $fieldGroupId);
 
       $customFields[] = array(
-        'id' => $fieldGroup['key'],
+        'id' => 'group_'.$fieldGroupId,
         'label' => $fieldGroup['title'],
         'type' => 'group',
         'field_definitions' => $this->getFieldDefinitions($fields)
@@ -49,9 +49,10 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
 
     foreach ($fields as $field) {
       $metaKey = $metaKeyPrefix . $field['name'];
+      $fieldId = isset($field['ID']) ? $field['ID'] : $field['id'];
 
       $group[] = array(
-        'id' => $field['key'],
+        'id' => 'field_'.$fieldId,
         'label' => $field['label'],
         'type' => 'field',
         'meta_key' => $metaKey,
