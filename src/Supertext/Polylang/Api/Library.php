@@ -139,6 +139,13 @@ class Library
       }
     }
 
+    // Get the selected custom fields
+    foreach ($this->getCustomFieldDefinitions($postId) as $field) {
+      if (isset($pattern[$field['id']])) {
+        $result['meta'][$field['id']] = get_post_meta($postId, $field['meta_key'], true);
+      }
+    }
+
     // Let developers add their own fields
     $result = apply_filters('translation_data_for_post', $result, $postId);
 

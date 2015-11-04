@@ -53,6 +53,11 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
               $post->{$translationItem->Id} = Core::getInstance()->getLibrary()->replaceShortcodeNodes($decodedContent);
             }
             break;
+          case 'meta':
+            foreach ($translationGroup->Items as $translationItem) {
+              $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+              update_post_meta($post->ID, $translationItem->Id, $decodedContent);
+            }
 
           default:
             // Gallery images

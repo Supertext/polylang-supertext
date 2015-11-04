@@ -351,6 +351,9 @@ msgstr "Facebook title"
 msgid "Facebook description"
 msgstr "Facebook description"
 
+msgid "Custom fields to be translated"
+msgstr "Custom fields to be translated"
+
 #~ msgid "Unknown language"
 #~ msgstr "Unknown language"
 

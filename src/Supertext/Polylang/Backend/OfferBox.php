@@ -105,7 +105,9 @@ class OfferBox
             <input type="hidden" name="target_lang" id="target_lang" value="' . $this->targetLang . '">
             <br><br>
             <h3>' . __('Contents to be translated', 'polylang-supertext') . '</h3>
-            ' . $this->getCheckboxes() . '
+            ' . $this->getCheckboxes(self::getTranslatableFields($this->postId)) . '
+            <h3>' . __('Custom fields to be translated', 'polylang-supertext') . '</h3>
+            ' . $this->getCheckboxes(self::getTranslatableCustomFields($this->postId)) . '
             <br>
             <h3>' . __('Quality and deadline', 'polylang-supertext') . '</h3>
             ' . __('The following settings are available for the selected components of your article:', 'polylang-supertext') . '
@@ -183,15 +185,41 @@ class OfferBox
   }
 
   /**
+   * @param int $postId the post to be translated
+   * @return array list of translatable fields
+   */
+  public static function getTranslatableCustomFields($postId)
+  {
+    $result = array();
+
+    $fields = Core::getInstance()->getLibrary()->getCustomFieldDefinitions($postId);
+
+    // Create the field list to generate checkboxes
+    foreach ($fields as $field) {
+      $result[] = array(
+        'title' => $field['label'],
+        'name' => 'to_' . $field['id'],
+        'default' => true
+      );
+    }
+
+    // Let developers add their own translatable custom fields
+    $result = apply_filters('translation_custom_fields_for_post', $result, $postId);
+
+    return $result;
+  }
+
+  /**
    * Generate checkboxes for the user to select translation fields
+   * @param array $fields that are translateable
    * @return string html code for checkboxes
    */
-  protected function getCheckboxes()
+  protected function getCheckboxes($fields)
   {
     $return = '';
     // Go trough all possible fields
     $i = 0;
-    foreach (self::getTranslatableFields($this->postId) as $tick) {
+    foreach ($fields as $tick) {
       $i++;
       $checkName = $tick['name'];
 
