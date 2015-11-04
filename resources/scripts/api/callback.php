@@ -5,6 +5,7 @@ require_once '../../../../../../wp-load.php';
 use Supertext\Polylang\Core;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Api\Multilang;
+use Supertext\Polylang\Backend\Translation;
 
 // Get json request body
 $response = array('message' => 'unknown error');
@@ -27,7 +28,7 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
     // Get the translation post object
     $post = get_post($translationPostId);
     // check if correct language
-    if ($post->post_status == 'draft') {
+    if ($post->post_status == 'draft' || get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true) == 1) {
 
       // Load attachments to merge later
       $attachments = get_children(array(
@@ -58,6 +59,7 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
               $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
               update_post_meta($post->ID, $translationItem->Id, $decodedContent);
             }
+            break;
 
           default:
             // Gallery images
@@ -98,6 +100,8 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
 
       // Now finally save that post and flush cache
       wp_update_post($post);
+      // All good, remove translation flag
+      delete_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG);
 
       $response['message'] = __('translation saved successfully', 'polylang-supertext');
       Core::getInstance()->getLog()->addEntry($translationPostId, $response['message']);

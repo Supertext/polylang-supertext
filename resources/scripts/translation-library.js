@@ -125,8 +125,8 @@ Supertext.Polylang = {
 			var langInput = translationCell.find('input').first();
 			var languageRow = translationCell.parent();
 
-			// Provide link of not yet translated
-			if (langInput.val() == 0) {
+			// Provide link in any case now
+			if (true/*langInput.val() == 0*/) {
 				var template = Supertext.Polylang.rowTemplate;
 				var link = Supertext.Polylang.getTranslationLink(languageRow);
 				template = template.replace('{translationLink}', link);
@@ -169,13 +169,10 @@ Supertext.Polylang = {
 		// Kings discipline: disable the editor
 		if (Supertext.Polylang.translationEnabledOnElement(jQuery('#content'))) {
 			// Hide the editor
-			jQuery('#post-status-info').hide();
-			tinyMCE.execCommand("mceRemoveControl", true, 'content');
-			jQuery('#post-status-info').hide();
 			jQuery('#wp-content-editor-container').addClass('input-disabled')
 			jQuery('#content').hide();
-			// Alos, hide editor toggle
-			jQuery('#content-html, #content-tmce').hide();
+			// Also, hide editor toggle
+			jQuery('#post-status-info, #content-html, #content-tmce, .mce-tinymce').hide();
 			// Print informational text
 			jQuery('#wp-content-editor-container').html(
 				'<div style="margin:10px;">' + Supertext.i18n.inTranslationText + '</div>' +

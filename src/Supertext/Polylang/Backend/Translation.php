@@ -1,6 +1,7 @@
 <?php
 
 namespace Supertext\Polylang\Backend;
+
 use Comotive\Helper\Metabox;
 use Comotive\Util\Date;
 use Supertext\Polylang\Core;
@@ -18,6 +19,10 @@ class Translation
    */
   const IN_TRANSLATION_TEXT = '[in Translation...]';
   /**
+   * @var string the flag that sets a post in translation
+   */
+  const IN_TRANSLATION_FLAG = '_in_st_translation';
+  /**
    * Various filters to change and/or display things
    */
   public function __construct()
@@ -29,6 +34,11 @@ class Translation
     add_action('admin_footer', array($this, 'printWorkingState'));
     add_action('media_upload_gallery', array($this, 'disableGalleryInputs'));
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
+
+    // Only in admin, change a title to lock it, if in translation
+    if (is_admin()) {
+      add_filter('edit_form_top', array($this, 'changeToLockTitle'));
+    }
 
     // Only autosave translation if necessary
     if (isset($_GET['translation-service']) && $_GET['translation-service'] == 1) {
@@ -101,17 +111,32 @@ class Translation
   }
 
   /**
+   * @param \WP_Post $post
+   * @return \WP_Post changed object
+   */
+  public function changeToLockTitle($post)
+  {
+    if (get_post_meta($post->ID, self::IN_TRANSLATION_FLAG, true) == 1) {
+      $post->post_title = self::IN_TRANSLATION_TEXT;
+      $post->post_content = self::IN_TRANSLATION_TEXT;
+      $post->post_excerpt = self::IN_TRANSLATION_TEXT;
+    }
+
+    return $post;
+  }
+
+  /**
    * Show information about the article translation, if given
    */
   public function showInTranslationMessage()
   {
     if (isset($_GET['post']) && isset($_GET['action'])) {
-      $translatedPost = get_post($_GET['post']);
-      $orderIdList = get_post_meta($translatedPost->ID, Log::META_ORDER_ID, true);
-      $orderId = is_array($orderIdList) ? end($orderIdList) : 0;
+      $translatedPost = get_post(intval($_GET['post']));
+      $orderId = $this->getOrderId($translatedPost, true);
 
       // Show info if there is an order and the article is not translated yet
       if (intval($orderId) > 0 && $translatedPost->post_title == self::IN_TRANSLATION_TEXT) {
+        update_post_meta($translatedPost->ID, self::IN_TRANSLATION_FLAG, 1);
         echo '
           <div class="updated">
             <p>' .  sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
@@ -119,6 +144,33 @@ class Translation
         ';
       }
     }
+
+    if (isset($_GET['show-translation-notice']) && isset($_GET['original_post'])) {
+      $originalPost = get_post(intval($_GET['original_post']));
+      $orderId = $this->getOrderId($originalPost, true);
+
+      // Show info if there is an order and the article is not translated yet
+      if (intval($orderId) > 0) {
+        update_post_meta($_GET['post'], self::IN_TRANSLATION_FLAG, 1);
+        echo '
+          <div class="updated">
+            <p>' .  sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
+          </div>
+        ';
+      }
+    }
+  }
+
+  /**
+   * @param \WP_Post $translatedPost the translated post
+   * @return int $orderId
+   */
+  public function getOrderId($translatedPost)
+  {
+    $orderIdList = get_post_meta($translatedPost->ID, Log::META_ORDER_ID, true);
+    $orderId = is_array($orderIdList) ? end($orderIdList) : 0;
+
+    return $orderId;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Supertext\Polylang\Backend;
 
+use Supertext\Polylang\Api\Library;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Core;
 
@@ -21,6 +22,14 @@ class OfferBox
    */
   protected $post = null;
   /**
+   * @var bool determines if the post is already translated in target
+   */
+  protected $hasExistingTranslation = false;
+  /**
+   * @var int id of the translation, if existing
+   */
+  protected $translationPostId = 0;
+  /**
    * @var string the source language
    */
   protected $sourceLang = '';
@@ -38,6 +47,8 @@ class OfferBox
     $this->post = get_post($this->postId);
     $this->sourceLang = Multilang::getPostLanguage($this->post->ID);
     $this->targetLang = $_GET['targetLang'];
+    $this->translationPostId = intval(Multilang::getPostInLanguage($this->postId, $this->targetLang));
+    $this->hasExistingTranslation = ($this->translationPostId > 0);
   }
 
   /**
@@ -61,14 +72,38 @@ class OfferBox
       ';
     }
 
+    // If there is an existing translation
+    if ($this->hasExistingTranslation) {
+      $output .= '
+        <div class="ui-widget ui-info" id="warning_already_translated">
+          <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+            <p>
+              ' . __('There is already a translation for this post. The below offer might be at a lower price than stated, because only parts of the content need to be translated again', 'polylang-supertext') . '
+            </p>
+          </div>
+        </div>
+      ';
+    }
+
     // Create the success url that will create a new post to be translated
     // This will trigger polylang to setup to post, "translation-service=1" triggers creation of article automatically
-    $successUrl = 'post-new.php' .
-      '?post_type=' . $this->post->post_type .
-      '&source=' . $this->sourceLang .
-      '&new_lang=' . $this->targetLang .
-      '&from_post=' . $this->postId .
-      '&translation-service=1';
+    if ($this->hasExistingTranslation) {
+      // Go to the post that will be re-translated (there's nothing to do there, just showing a message
+      $successUrl = 'post.php' .
+        '?post=' . $this->translationPostId .
+        '&original_post=' . $this->postId .
+        '&action=edit' .
+        '&post_type=' . $this->post->post_type .
+        '&show-translation-notice=1';
+    } else {
+      // Go to post new page and create an empty post to be translated
+      $successUrl = 'post-new.php' .
+        '?post_type=' . $this->post->post_type .
+        '&source=' . $this->sourceLang .
+        '&new_lang=' . $this->targetLang .
+        '&from_post=' . $this->postId .
+        '&translation-service=1';
+    }
 
     // Print the actual form
     echo '
@@ -252,6 +287,11 @@ class OfferBox
       for ($index = $i; $index <= 4; $index++) {
         $return .= '<td></td><td></td>';
       }
+    }
+
+    // If nothing, give a message
+    if (!is_array($fields) || count($fields) == 0) {
+      $return .= '<tr><td>' . __('There are no contents to be translated.', 'polylang-supertext') . '</td></tr>';
     }
 
     // Return the table with checkboxes
