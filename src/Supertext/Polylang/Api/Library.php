@@ -140,10 +140,8 @@ class Library
     }
 
     // Get the selected custom fields
-    foreach ($this->getCustomFieldDefinitions($postId) as $field) {
-      if (isset($pattern[$field['id']])) {
-        $result['meta'][$field['id']] = get_post_meta($postId, $field['meta_key'], true);
-      }
+    foreach ($this->getCustomFieldsForTranslation($postId, array_keys($pattern)) as $meta_key => $value) {
+      $result['meta'][$meta_key] = $value;
     }
 
     // Let developers add their own fields
@@ -158,15 +156,15 @@ class Library
    */
   public function getCustomFieldDefinitions($postId)
   {
-    $postCustomFields = get_post_custom($postId);
+    $postCustomFields = get_post_meta($postId);
     $options = $this->getSettingOption();
     $savedCustomFieldsDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
 
     $selectableCustomFieldDefinitions = array();
 
-    foreach ($postCustomFields as $key => $value) {
+    foreach ($postCustomFields as $meta_key => $value) {
       foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
-        if (preg_match('/^' . $savedCustomFieldDefinition['meta_key'] . '$/', $key)) {
+        if (preg_match('/^' . $savedCustomFieldDefinition['meta_key_regex'] . '$/', $meta_key)) {
           $selectableCustomFieldDefinitions[] = $savedCustomFieldDefinition;
         }
       }
@@ -182,23 +180,20 @@ class Library
    */
   public function getCustomFieldsForTranslation($postId, $selectedCustomFieldIds = array())
   {
-    $postCustomFields = get_post_custom($postId);
+    $postCustomFields = get_post_meta($postId);
     $options = $this->getSettingOption();
     $savedCustomFieldsDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
 
     $customFields = array();
 
-    foreach ($postCustomFields as $customFieldKey => $customFieldValue) {
+    foreach ($postCustomFields as $meta_key => $value) {
       foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
         if (!in_array($savedCustomFieldDefinition['id'], $selectedCustomFieldIds)) {
           continue;
         }
 
-        if (preg_match('/^' . $savedCustomFieldDefinition['meta_key'] . '$/', $customFieldKey)) {
-          $customFields[] = array(
-            'key' => $customFieldKey,
-            'value' => $customFieldValue
-          );
+        if (preg_match('/^' . $savedCustomFieldDefinition['meta_key_regex'] . '$/', $meta_key)) {
+          $customFields[$meta_key] = is_array($value) ? $value[0] : $value;
         }
       }
     }

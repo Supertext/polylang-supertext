@@ -31,7 +31,7 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
         'id' => 'group_'.$fieldGroupId,
         'label' => $fieldGroup['title'],
         'type' => 'group',
-        'field_definitions' => $this->getFieldDefinitions($fields)
+        'sub_field_definitions' => $this->getFieldDefinitions($fields)
       );
     }
 
@@ -55,8 +55,8 @@ class AcfCustomFieldProvider implements ICustomFieldProvider
         'id' => 'field_'.$fieldId,
         'label' => $field['label'],
         'type' => 'field',
-        'meta_key' => $metaKey,
-        'field_definitions' => isset($field['sub_fields']) ? $this->getFieldDefinitions($field['sub_fields'], $metaKey . '_\\d+_') : array()
+        'meta_key_regex' => $metaKey,
+        'sub_field_definitions' => isset($field['sub_fields']) ? $this->getFieldDefinitions($field['sub_fields'], $metaKey . '_\\d+_') : array()
       );
     }
 

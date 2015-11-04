@@ -130,7 +130,7 @@ class SettingsPage extends AbstractPage
         'id' => $customFieldsProvider->getPluginName(),
         'label' => $customFieldsProvider->getPluginName(),
         'type' => 'plugin',
-        'field_definitions' => $customFieldsProvider->getCustomFieldDefinitions()
+        'sub_field_definitions' => $customFieldsProvider->getCustomFieldDefinitions()
       );
     }
 
@@ -281,12 +281,12 @@ class SettingsPage extends AbstractPage
       $currentFieldDefinitions = $customFieldDefinitions;
 
       while (($field = array_shift($currentFieldDefinitions))) {
-        if (in_array($field['id'], $checkedCustomFieldIds) && isset($field['meta_key'])) {
+        if (in_array($field['id'], $checkedCustomFieldIds) && isset($field['meta_key_regex'])) {
           $fieldDefinitionsToSave[] = $field;
         }
 
-        if ($field['field_definitions'] > 0) {
-          $currentFieldDefinitions = array_merge($currentFieldDefinitions, $field['field_definitions']);
+        if ($field['sub_field_definitions'] > 0) {
+          $currentFieldDefinitions = array_merge($currentFieldDefinitions, $field['sub_field_definitions']);
         }
       }
     }
