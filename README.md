@@ -1,4 +1,4 @@
-# Supertext WordPress Translation Plugin
+# Supertext Translation Plugin
 
 ## Description
 

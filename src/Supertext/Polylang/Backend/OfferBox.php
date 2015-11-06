@@ -123,14 +123,14 @@ class OfferBox
         <div style="clear:both;">
           <div id="div_waiting_while_loading" style="display:none;">
             <i>
-              ' . __('The order is being sent. One moment, please.', 'polylang-supertext') . '<br>
+              ' . __('One moment please. The translation order is being sent to Supertext.', 'polylang-supertext') . '<br>
               ' . __('As soon as the order is placed, you will be automatically redirected.', 'polylang-supertext') . '
             </i>
             <img src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif" title="' . __('Loading', 'polylang-supertext') . '">
           </div>
           <form name="frm_Translation_Options" id="frm_Translation_Options" method="post" data-post-id="' . $this->postId . '">
             <input type="hidden" id="successUrlMakeOrder" value="' . $successUrl . '" />
-            <h3>' . __('Translation', 'polylang-supertext') . '</h3>
+            <h3>' . sprintf(__('Translation of post %s', 'polylang-supertext'), $this->post->post_title) . '</h3>
             ' . sprintf(
                   __('The article will be translated from <b>%s</b> to <b>%s</b>.', 'polylang-supertext'),
                   $this->getLanguageName($this->sourceLang),
@@ -316,7 +316,7 @@ class OfferBox
     return '
       <div>
         <span style="float:left;"><img src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/icon-st.png" alt="Supertext" title="Supertext">&nbsp;</span>
-        <span style="float:left;"><h2>Supertext: ' . __('Order article translation', 'polylang-supertext') . '</h2></span>
+        <span style="float:left;"><h2>' . __('Your order for Supertext', 'polylang-supertext') . '</h2></span>
       </div>
       <br><br><br>
     ';

@@ -1,4 +1,4 @@
-=== Supertext WordPress Translation Plugin ===
+=== Supertext Translation Plugin ===
 Contributors: msebel, comotive, supertext
 Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 3.8

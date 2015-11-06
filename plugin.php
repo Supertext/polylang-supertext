@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Supertext WordPress Translation Plugin
+Plugin Name: Supertext Translation Plugin
 Plugin URI: http://www.supertext.ch
 Description: This multilingual plugin allows you to order translations for your pages and posts using Supertexts professional translation services.
 Author: comotive GmbH, Supertext AG
