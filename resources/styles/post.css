@@ -18,7 +18,21 @@
   vertical-align: top;
 }
 .div_tb_wrap_translation {
-  padding: 10px;
+  margin-top: -30px;
+  padding: 15px;
+}
+.div_tb_wrap_translation .notice{
+  margin: 20px 10px 20px 20px;
+}
+.div_tb_wrap_translation h3{
+  margin:1.5em 0 0.8em 0;
+}
+.div_tb_wrap_translation #txtComment{
+  width:100%;
+}
+#div_translation_title span{
+  float:left;
+  padding-right: 10px;
 }
 #div_translation_price table tbody tr input{
   padding-right: 0;
@@ -65,6 +79,9 @@
   margin-left: 20px;
   font-style: italic;
   color: #555;
+}
+.div_translation_order_buttons .button{
+  float:right;
 }
 .input-disabled {
   background-color: #f1f1f1!important;

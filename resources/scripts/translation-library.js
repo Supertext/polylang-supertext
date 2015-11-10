@@ -306,8 +306,11 @@ Supertext.Polylang = {
 			if (hasConfirmed) {
 				jQuery('#frm_Translation_Options').hide();
 				// Hide review state, if available
-				if (!jQuery('#warning_not_review_state').length == 0) {
-					jQuery('#warning_not_review_state').hide();
+				if (jQuery('#warning_draft_state').length > 0) {
+					jQuery('#warning_draft_state').hide();
+				}
+				if (jQuery('#warning_already_translated').length > 0) {
+					jQuery('#warning_already_translated').hide();
 				}
 				jQuery('#div_waiting_while_loading').show();
 

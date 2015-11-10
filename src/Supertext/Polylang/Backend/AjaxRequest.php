@@ -45,7 +45,6 @@ class AjaxRequest
     if (!empty($order->Deadline) && !empty($order->Id)) {
       $state = 'success';
       $output = '
-        <br>
         <p>
           ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
           ' . sprintf(__('Your order number is %s.', 'polylang-supertext'), $order->Id) . '<br />
