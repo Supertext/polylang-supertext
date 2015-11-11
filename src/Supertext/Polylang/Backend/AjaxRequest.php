@@ -14,15 +14,10 @@ use Supertext\Polylang\Core;
  */
 class AjaxRequest
 {
-  /**
-   * @param string $output referenced output variable
-   * @param string $state referenced request stated
-   * @param string $optional referenced optional information
-   * @param string $info additonal info (debug output)
-   */
-  public static function createOrder(&$output, &$state, &$optional, &$info = '')
+  public static function createOrder()
   {
     // Call the API for prices
+    $output = '';
     $options = self::getTranslationOptions();
     $library = Core::getInstance()->getLibrary();
     $data = $library->getTranslationData($options['post_id'], $options['pattern']);
@@ -43,7 +38,6 @@ class AjaxRequest
     );
 
     if (!empty($order->Deadline) && !empty($order->Id)) {
-      $state = 'success';
       $output = '
         <p>
           ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
@@ -65,9 +59,23 @@ class AjaxRequest
       $log->addEntry($post->ID, $message);
       $log->addOrderId($post->ID, $order->Id);
 
+      self::setJsonOutput(
+        array(
+          'html' => $output,
+        ),
+        'success'
+      );
+
     } else {
       // Error, couldn't create a correct order
       $log->addEntry($post->ID, __('Error: Could not create an order with Supertext.', 'polylang-supertext'));
+
+      self::setJsonOutput(
+        array(
+          'html' => $output,
+        ),
+        'error'
+      );
     }
   }
 
@@ -84,13 +92,10 @@ class AjaxRequest
 
   /**
    * This was built by MHA by reference. No time to fix just yet, but it works.
-   * @param string $output referenced output variable
-   * @param string $state referenced request stated
-   * @param string $optional referenced optional information
    */
-  public static function getOffer(&$output, &$state, &$optional)
+  public static function getOffer()
   {
-    $optional['requestCounter'] = $_POST['requestCounter'];
+    $optional = array('requestCounter' => $_POST['requestCounter']);
 
     // Call the API for prices
     $options = self::getTranslationOptions();
@@ -106,8 +111,13 @@ class AjaxRequest
 
     //Check if there are no offers
     if (empty($pricing['options'])) {
-      $output = __('There are no offers for this translation.',' polylang-supertext');
-      $state = 'no_data';
+      self::setJsonOutput(
+        array(
+          'html' => __('There are no offers for this translation.',' polylang-supertext'),
+          'optional' => $optional,
+        ),
+        'no_data'
+      );
       return;
     }
 
@@ -152,14 +162,20 @@ class AjaxRequest
       $rows .= '<tr class="lastGroupRow"></tr>';
     }
 
-    $output .=
+    $output =
         '<table border="0" cellpadding="2" cellspacing="0">
             <tbody>
                 '.$rows.'
             </tbody>
           </table>';
 
-    $state = 'success';
+    self::setJsonOutput(
+      array(
+        'html' => $output,
+        'optional' => $optional,
+      ),
+      'success'
+    );
   }
 
   /**
@@ -188,6 +204,8 @@ class AjaxRequest
 
     return $options;
   }
+
+
 
   /**
    * @param array $data data to be sent in body
