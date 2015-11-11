@@ -82,8 +82,9 @@ Supertext.Polylang = {
 		jQuery('#frm_Translation_Options').submit(function() {
 			var form = jQuery(this);
 			var postId = form.data('post-id');
-			var successUrl = jQuery('#successUrlMakeOrder').val();
-			return Supertext.Polylang.createOrder(postId, successUrl);
+			var translationPostId = form.data('translated-post-id');
+			var successUrl = form.data('create-post-url');
+			return Supertext.Polylang.createOrder(postId, translationPostId, successUrl);
 		});
 	},
 
@@ -282,10 +283,10 @@ Supertext.Polylang = {
 	/**
 	 * Create an actual translation order for supertext
 	 * @param postId the post id (original)
-	 * @param successUrl the success url to post to
+	 * @param translationPostId the post id of the translated post
 	 * @returns bool false (always, to prevent native submit)
 	 */
-	createOrder : function (postId, successUrl)
+	createOrder : function (postId, translationPostId, successUrl)
 	{
   	// wird nur einmal ausgelöst
 		if (!Supertext.Polylang.createOrderRunning) {

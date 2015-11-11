@@ -126,8 +126,14 @@ class OfferBox
               <img src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif" title="' . __('Loading', 'polylang-supertext') . '">
             </p>
           </div>
-          <form name="frm_Translation_Options" id="frm_Translation_Options" method="post" data-post-id="' . $this->postId . '">
-            <input type="hidden" id="successUrlMakeOrder" value="' . $successUrl . '" />
+          <form
+            name="frm_Translation_Options"
+            id="frm_Translation_Options"
+            method="post"
+            data-post-id="' . $this->postId . '"
+            data-translation-post-id="' . $this->translationPostId . '"
+            data-create-post-url="'.$successUrl.'"
+           >
             <h3>' . sprintf(__('Translation of post %s', 'polylang-supertext'), $this->post->post_title) . '</h3>
             ' . sprintf(
                   __('The article will be translated from <b>%s</b> to <b>%s</b>.', 'polylang-supertext'),
