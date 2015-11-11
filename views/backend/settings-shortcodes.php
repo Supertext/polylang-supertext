@@ -18,6 +18,12 @@ function getAttributeInput($key, $value){
 <div class="postbox postbox_admin">
   <div class="inside">
     <h3><?php _e('Shortcodes', 'polylang-supertext'); ?></h3>
+    <p>
+      <?php _e('Please define any shortcode attributes you want to have translated.', 'polylang-supertext'); ?>
+    </p>
+    <p>
+      <?php _e('Please define the encoding process if a shortcodes enclosed content is encoded. Available encoding functions are: rawurl, url and base64', 'polylang-supertext'); ?>
+    </p>
     <table id="tblShortcodes">
       <thead>
       <tr>
