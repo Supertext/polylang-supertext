@@ -48,4 +48,23 @@ class Multilang
       return pll_get_post($postId, $language);
     }
   }
+
+  /**
+   * @param int $post_id post id
+   * @param string $lang language code
+   */
+  public static function setPostLanguage($postId, $language){
+    if (function_exists('pll_set_post_language')) {
+      return pll_set_post_language($postId, $language);
+    }
+  }
+
+  /**
+   * @param array $arr an associative array of translations with language code as key and post id as value
+   */
+  public static function savePostTranslations($arr){
+    if (function_exists('pll_save_post_translations')) {
+      return pll_save_post_translations($arr);
+    }
+  }
 } 

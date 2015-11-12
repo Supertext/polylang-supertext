@@ -3,6 +3,7 @@
 namespace Supertext\Polylang\Backend;
 
 use Comotive\Util\String;
+use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Core;
 
@@ -14,14 +15,115 @@ use Supertext\Polylang\Core;
  */
 class AjaxRequest
 {
+
+  public static function createTranslationPost($options){
+    $hasImages = false;
+    $excerpts = array();
+    $postId = $options['post_id'];
+    $post = get_post($postId);
+
+    // Create post object
+    $translationPostData = array(
+      'post_status'   => 'draft',
+      'post_title'    => $post->post_title . ' ' . Translation::IN_TRANSLATION_TEXT,
+      'post_type'     => $post->post_type
+    );
+
+    foreach ($options['pattern'] as $field_name => $selected) {
+      $field_name_parts = explode('_', $field_name);
+
+      if (!$selected) {
+        continue;
+      }
+
+      if($field_name_parts[0] === 'post'){
+        switch($field_name_parts[1]){
+          case 'title':
+          case 'status':
+          case 'type':
+            break;
+          case 'image':
+            $hasImages = true;
+          default:
+            $translationPostData[$field_name] = Translation::IN_TRANSLATION_TEXT;
+        }
+      }else if($field_name_parts[0] !== 'excerpt'){
+        $excerpts[] = $field_name_parts[1];
+      }
+    }
+
+    $translationPostId = wp_insert_post($translationPostData);
+
+    if($translationPostId === 0){
+      return null;
+    }
+
+    if($hasImages){
+      // Set all images to default
+      $attachments = get_children(array('post_parent' => $translationPostId, 'post_type' => 'attachment', 'orderby' => 'menu_order ASC, ID', 'order' => 'DESC'));
+      foreach ($attachments as $attachement_post) {
+        $attachement_post->post_title = Translation::IN_TRANSLATION_TEXT;
+        $attachement_post->post_content = Translation::IN_TRANSLATION_TEXT;
+        $attachement_post->post_excerpt = Translation::IN_TRANSLATION_TEXT;
+        // Update meta and update attachmet post
+        update_post_meta($attachement_post->ID, '_wp_attachment_image_alt', addslashes(Translation::IN_TRANSLATION_TEXT));
+        wp_update_post($attachement_post);
+      }
+    }
+
+    foreach ($excerpts as $excerpt) {
+      update_post_meta($translationPostId, '_excerpt_' .$excerpt, Translation::IN_TRANSLATION_TEXT);
+      update_post_meta($translationPostId, '_modified_excerpt_' . $excerpt, 1);
+    }
+
+    Multilang::setPostLanguage($translationPostId, $options['target_lang']);
+
+    $postsLanguageMappings = array(
+      $options['source_lang'] => $postId,
+      $options['target_lang'] => $translationPostId
+    );
+
+    foreach (Multilang::getLanguages() as $language) {
+      $languagePostId = Multilang::getPostInLanguage($postId, $language->slug);
+      if($languagePostId){
+        $postsLanguageMappings[$language->slug] = $languagePostId;
+      }
+    }
+
+    Multilang::savePostTranslations($postsLanguageMappings);
+
+    Core::getInstance()->getLog()->addEntry($translationPostId, __('The translatable article has been created.', 'polylang-supertext'));
+
+    return get_post($translationPostId);
+  }
+
   public static function createOrder()
   {
     // Call the API for prices
     $output = '';
     $options = self::getTranslationOptions();
+    $postId = $options['post_id'];
+    $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
+
+    if($translationPostId === 0){
+      $translationPost = self::createTranslationPost($options);
+    }else{
+      $translationPost = get_post($translationPostId);
+    }
+
+    if($translationPost === null){
+      self::setJsonOutput(
+        array(
+          'html' => __('Could not create new post for the translation.',' polylang-supertext'),
+        ),
+        'error'
+      );
+      return;
+    }
+
     $library = Core::getInstance()->getLibrary();
-    $data = $library->getTranslationData($options['post_id'], $options['pattern']);
-    $post = get_post($options['post_id']);
+    $data = $library->getTranslationData($postId, $options['pattern']);
+    $post = get_post($postId);
     $wrapper = $library->getUserWrapper();
     $log = Core::getInstance()->getLog();
 
@@ -58,6 +160,9 @@ class AjaxRequest
       );
       $log->addEntry($post->ID, $message);
       $log->addOrderId($post->ID, $order->Id);
+      $log->addOrderId($translationPost->ID, $order->Id);
+
+      update_post_meta($translationPost->ID, Translation::IN_TRANSLATION_FLAG, 1);
 
       self::setJsonOutput(
         array(

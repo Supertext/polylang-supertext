@@ -6,10 +6,10 @@ use Supertext\Polylang\Backend\AjaxRequest;
 
 switch ($_GET['action']) {
   case 'getOffer':
-    AjaxRequest::getOffer($output, $state, $optional);
+    AjaxRequest::getOffer();
     break;
   case 'createOrder':
-    AjaxRequest::createOrder($output, $state, $optional, $info);
+    AjaxRequest::createOrder();
     break;
   default:
 }

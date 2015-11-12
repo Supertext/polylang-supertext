@@ -35,94 +35,9 @@ class Translation
     add_action('media_upload_gallery', array($this, 'disableGalleryInputs'));
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
 
-    // Only in admin, change a title to lock it, if in translation
-    if (is_admin()) {
-      add_filter('edit_form_top', array($this, 'changeToLockTitle'));
-    }
-
-    // Only autosave translation if necessary
-    if (isset($_GET['translation-service']) && $_GET['translation-service'] == 1) {
-      add_filter('default_title', array($this, 'filterTranslatingPost'), 10, 2);
-    }
-
     // Load translations
     load_plugin_textdomain('polylang-supertext', false, 'polylang-supertext/resources/languages');
     load_plugin_textdomain('polylang-supertext-langs', false, 'polylang-supertext/resources/languages');
-  }
-
-  /**
-   * Directly save a new post in translation and redirect to edit screen
-   * @param $postContent the post content
-   * @param $post the post object
-   * @return string the title (1:1, if not a translating post
-   */
-  public function filterTranslatingPost($postContent, $post)
-  {
-    // Set state to prevent override the title attribute with emtpy (default state: auto-draft)
-    $post->post_status = 'draft';
-
-    // Go trough post data and add translation text value
-    foreach ($_POST as $field_name => $field_value) {
-      $field_name_parts = explode('_', $field_name);
-      // Fields with text definition
-      if ($field_name_parts[0] == 'to') {
-        switch ($field_name_parts[1]) {
-          case 'post':
-            switch ($field_name_parts[2]) {
-              case 'image':
-                // Set all images to default
-                $attachments = get_children(array('post_parent' => $post->ID, 'post_type' => 'attachment', 'orderby' => 'menu_order ASC, ID', 'order' => 'DESC'));
-                foreach ($attachments as $attachement_post) {
-                  $attachement_post->post_title = self::IN_TRANSLATION_TEXT;
-                  $attachement_post->post_content = self::IN_TRANSLATION_TEXT;
-                  $attachement_post->post_excerpt = self::IN_TRANSLATION_TEXT;
-                  // Update meta and update attachmet post
-                  update_post_meta($attachement_post->ID, '_wp_attachment_image_alt', addslashes(self::IN_TRANSLATION_TEXT));
-                  wp_update_post($attachement_post);
-                }
-                break;
-
-              default:
-                // Translate a wp defualt field
-                $post->{'post_' . $field_name_parts[2]} = self::IN_TRANSLATION_TEXT;
-                break;
-            }
-            break;
-
-          case 'excerpt':
-            // Falls Service mit Feature (ShareArticle)
-            update_post_meta($post->ID, '_excerpt_' . $field_name_parts[2], self::IN_TRANSLATION_TEXT);
-            update_post_meta($post->ID, '_modified_excerpt_' . $field_name_parts[2], 1);
-            break;
-
-          default:
-            break;
-        }
-      }
-    }
-
-    // Save the changed post
-    // A JS listeing to translation-service=1 will automatically save the new translation
-    wp_update_post($post);
-    Core::getInstance()->getLog()->addEntry($post->ID, __('The translatable article has been created.', 'polylang-supertext'));
-
-    // Return the same untouched title, if nothing should happen
-    return $post->post_title;
-  }
-
-  /**
-   * @param \WP_Post $post
-   * @return \WP_Post changed object
-   */
-  public function changeToLockTitle($post)
-  {
-    if (get_post_meta($post->ID, self::IN_TRANSLATION_FLAG, true) == 1) {
-      $post->post_title = self::IN_TRANSLATION_TEXT;
-      $post->post_content = self::IN_TRANSLATION_TEXT;
-      $post->post_excerpt = self::IN_TRANSLATION_TEXT;
-    }
-
-    return $post;
   }
 
   /**
@@ -131,27 +46,11 @@ class Translation
   public function showInTranslationMessage()
   {
     if (isset($_GET['post']) && isset($_GET['action'])) {
-      $translatedPost = get_post(intval($_GET['post']));
-      $orderId = $this->getOrderId($translatedPost, true);
+      $translationPost = get_post(intval($_GET['post']));
+      $orderId = $this->getOrderId($translationPost, true);
 
       // Show info if there is an order and the article is not translated yet
-      if (intval($orderId) > 0 && $translatedPost->post_title == self::IN_TRANSLATION_TEXT) {
-        update_post_meta($translatedPost->ID, self::IN_TRANSLATION_FLAG, 1);
-        echo '
-          <div class="updated">
-            <p>' .  sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
-          </div>
-        ';
-      }
-    }
-
-    if (isset($_GET['show-translation-notice']) && isset($_GET['original_post'])) {
-      $originalPost = get_post(intval($_GET['original_post']));
-      $orderId = $this->getOrderId($originalPost, true);
-
-      // Show info if there is an order and the article is not translated yet
-      if (intval($orderId) > 0) {
-        update_post_meta($_GET['post'], self::IN_TRANSLATION_FLAG, 1);
+      if (intval($orderId) > 0 && get_post_meta($translationPost->ID, Translation::IN_TRANSLATION_FLAG, true) == 1) {
         echo '
           <div class="updated">
             <p>' .  sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
@@ -162,12 +61,12 @@ class Translation
   }
 
   /**
-   * @param \WP_Post $translatedPost the translated post
+   * @param \WP_Post $translationPost the translated post
    * @return int $orderId
    */
-  public function getOrderId($translatedPost)
+  public function getOrderId($translationPost)
   {
-    $orderIdList = get_post_meta($translatedPost->ID, Log::META_ORDER_ID, true);
+    $orderIdList = get_post_meta($translationPost->ID, Log::META_ORDER_ID, true);
     $orderId = is_array($orderIdList) ? end($orderIdList) : 0;
 
     return $orderId;
@@ -179,7 +78,7 @@ class Translation
    */
   public function addScreenbasedAssets($screen)
   {
-    if ($screen->base == 'post' && ($_GET['action'] == 'edit' || $_GET['translation-service'] == 1)) {
+    if ($screen->base == 'post' && ($_GET['action'] == 'edit')) {
       // SCripts to inject translation
       wp_enqueue_script(
         'supertext-translation-library',

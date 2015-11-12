@@ -26,10 +26,6 @@ class OfferBox
    */
   protected $hasExistingTranslation = false;
   /**
-   * @var int id of the translation, if existing
-   */
-  protected $translationPostId = 0;
-  /**
    * @var string the source language
    */
   protected $sourceLang = '';
@@ -47,8 +43,6 @@ class OfferBox
     $this->post = get_post($this->postId);
     $this->sourceLang = Multilang::getPostLanguage($this->post->ID);
     $this->targetLang = $_GET['targetLang'];
-    $this->translationPostId = intval(Multilang::getPostInLanguage($this->postId, $this->targetLang));
-    $this->hasExistingTranslation = ($this->translationPostId > 0);
   }
 
   /**
@@ -81,26 +75,6 @@ class OfferBox
       ';
     }
 
-    // Create the success url that will create a new post to be translated
-    // This will trigger polylang to setup to post, "translation-service=1" triggers creation of article automatically
-    if ($this->hasExistingTranslation) {
-      // Go to the post that will be re-translated (there's nothing to do there, just showing a message
-      $successUrl = 'post.php' .
-        '?post=' . $this->translationPostId .
-        '&original_post=' . $this->postId .
-        '&action=edit' .
-        '&post_type=' . $this->post->post_type .
-        '&show-translation-notice=1';
-    } else {
-      // Go to post new page and create an empty post to be translated
-      $successUrl = 'post-new.php' .
-        '?post_type=' . $this->post->post_type .
-        '&source=' . $this->sourceLang .
-        '&new_lang=' . $this->targetLang .
-        '&from_post=' . $this->postId .
-        '&translation-service=1';
-    }
-
     // Print the actual form
     echo '
       <link rel="stylesheet" href="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/post.css?v=' . SUPERTEXT_PLUGIN_REVISION . '" />
@@ -131,8 +105,6 @@ class OfferBox
             id="frm_Translation_Options"
             method="post"
             data-post-id="' . $this->postId . '"
-            data-translation-post-id="' . $this->translationPostId . '"
-            data-create-post-url="'.$successUrl.'"
            >
             <h3>' . sprintf(__('Translation of post %s', 'polylang-supertext'), $this->post->post_title) . '</h3>
             ' . sprintf(

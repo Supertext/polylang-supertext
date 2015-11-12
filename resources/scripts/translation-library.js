@@ -53,12 +53,6 @@ Supertext.Polylang = {
 			Supertext.Polylang.injectOfferLinks();
 		}
 
-		// Auto save a newly done translation by "pressing save"
-		var translationParam = location.search.split('translation-service=')[1];
-		if (typeof(translationParam) != 'undefined' && translationParam == 1) {
-			Supertext.Polylang.autoSavePost();
-		}
-
 		// Lock the post if it is in translation
 		window.setTimeout(function() {
 			Supertext.Polylang.disableTranslatingPost();
@@ -82,9 +76,7 @@ Supertext.Polylang = {
 		jQuery('#frm_Translation_Options').submit(function() {
 			var form = jQuery(this);
 			var postId = form.data('post-id');
-			var translationPostId = form.data('translated-post-id');
-			var successUrl = form.data('create-post-url');
-			return Supertext.Polylang.createOrder(postId, translationPostId, successUrl);
+			return Supertext.Polylang.createOrder(postId);
 		});
 	},
 
@@ -95,25 +87,6 @@ Supertext.Polylang = {
 	isWorking : function()
 	{
 		return (jQuery('#supertextPolylangWorking').val() == 1);
-	},
-
-	/**
-	 * Automatically saves a post on load. Used for the newly created translated page
-	 */
-	autoSavePost : function()
-	{
-		// Tell the user something happens
-		jQuery('body').css('cursor', 'progress');
-		// Show an info to the user
-		var element = jQuery('#poststuff');
-		element.css('display', 'none');
-		element.after('<div class="updated"><p>' + Supertext.i18n.translationCreation + '</p></div>');
-
-		// After a second, auto save to permanently save the post to be translated
-		setTimeout(function() {
-			jQuery('#save-action input[type=submit]').trigger('click');
-			jQuery('body').css('cursor', 'default');
-		}, 1000);
 	},
 
 	/**
@@ -283,10 +256,9 @@ Supertext.Polylang = {
 	/**
 	 * Create an actual translation order for supertext
 	 * @param postId the post id (original)
-	 * @param translationPostId the post id of the translated post
 	 * @returns bool false (always, to prevent native submit)
 	 */
-	createOrder : function (postId, translationPostId, successUrl)
+	createOrder : function (postId)
 	{
   	// wird nur einmal ausgelöst
 		if (!Supertext.Polylang.createOrderRunning) {
@@ -330,22 +302,9 @@ Supertext.Polylang = {
 								jQuery('#div_tb_wrap_translation').append(data.body.html);
 								Supertext.Polylang.createOrderRunning = false;
 
-								// do the rest in a few seconds
-								setTimeout(function() {
-									// Copy form to parent
-									parent.jQuery('body').append(offerForm.clone());
-									offerForm = parent.jQuery('#frm_Translation_Options');
-
-									// POST to success page that will create the empty post and connect it
-									offerForm.attr('action', successUrl);
-									// Remove submit validation and send
-									offerForm.attr('onsubmit', '');
-									offerForm.submit();
-
-									// Also, close thickbox (but the form response will anyway)
-									self.parent.tb_remove();
-								}, 3000);
-
+                setTimeout(function() {
+                  self.parent.location.reload();
+                }, 3000);
 								break;
 							default: // error
 								jQuery('#div_tb_wrap_translation').html(
@@ -357,6 +316,7 @@ Supertext.Polylang = {
 					},
 					'json'
 				);
+
 			} else {
 				Supertext.Polylang.createOrderRunning = false;
 			}
