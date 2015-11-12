@@ -16,87 +16,6 @@ use Supertext\Polylang\Core;
 class AjaxRequest
 {
 
-  public static function createTranslationPost($options){
-    $hasImages = false;
-    $excerpts = array();
-    $postId = $options['post_id'];
-    $post = get_post($postId);
-
-    // Create post object
-    $translationPostData = array(
-      'post_status'   => 'draft',
-      'post_title'    => $post->post_title . ' ' . Translation::IN_TRANSLATION_TEXT,
-      'post_type'     => $post->post_type
-    );
-
-    foreach ($options['pattern'] as $field_name => $selected) {
-      $field_name_parts = explode('_', $field_name);
-
-      if (!$selected) {
-        continue;
-      }
-
-      if($field_name_parts[0] === 'post'){
-        switch($field_name_parts[1]){
-          case 'title':
-          case 'status':
-          case 'type':
-            break;
-          case 'image':
-            $hasImages = true;
-          default:
-            $translationPostData[$field_name] = Translation::IN_TRANSLATION_TEXT;
-        }
-      }else if($field_name_parts[0] !== 'excerpt'){
-        $excerpts[] = $field_name_parts[1];
-      }
-    }
-
-    $translationPostId = wp_insert_post($translationPostData);
-
-    if($translationPostId === 0){
-      return null;
-    }
-
-    if($hasImages){
-      // Set all images to default
-      $attachments = get_children(array('post_parent' => $translationPostId, 'post_type' => 'attachment', 'orderby' => 'menu_order ASC, ID', 'order' => 'DESC'));
-      foreach ($attachments as $attachement_post) {
-        $attachement_post->post_title = Translation::IN_TRANSLATION_TEXT;
-        $attachement_post->post_content = Translation::IN_TRANSLATION_TEXT;
-        $attachement_post->post_excerpt = Translation::IN_TRANSLATION_TEXT;
-        // Update meta and update attachmet post
-        update_post_meta($attachement_post->ID, '_wp_attachment_image_alt', addslashes(Translation::IN_TRANSLATION_TEXT));
-        wp_update_post($attachement_post);
-      }
-    }
-
-    foreach ($excerpts as $excerpt) {
-      update_post_meta($translationPostId, '_excerpt_' .$excerpt, Translation::IN_TRANSLATION_TEXT);
-      update_post_meta($translationPostId, '_modified_excerpt_' . $excerpt, 1);
-    }
-
-    Multilang::setPostLanguage($translationPostId, $options['target_lang']);
-
-    $postsLanguageMappings = array(
-      $options['source_lang'] => $postId,
-      $options['target_lang'] => $translationPostId
-    );
-
-    foreach (Multilang::getLanguages() as $language) {
-      $languagePostId = Multilang::getPostInLanguage($postId, $language->slug);
-      if($languagePostId){
-        $postsLanguageMappings[$language->slug] = $languagePostId;
-      }
-    }
-
-    Multilang::savePostTranslations($postsLanguageMappings);
-
-    Core::getInstance()->getLog()->addEntry($translationPostId, __('The translatable article has been created.', 'polylang-supertext'));
-
-    return get_post($translationPostId);
-  }
-
   public static function createOrder()
   {
     // Call the API for prices
@@ -303,7 +222,7 @@ class AjaxRequest
       'pattern' => $options,
       'source_lang' => $_POST['source_lang'],
       'target_lang' => $_POST['target_lang'],
-      'product_id' => $_POST['rad_translation_type'],
+      'product_id' => isset($_POST['rad_translation_type']) ? $_POST['rad_translation_type'] : 0,
       'additional_information' => stripslashes($_POST['txtComment']),
     );
 
@@ -329,4 +248,117 @@ class AjaxRequest
     header('Content-Type: application/json');
     echo json_encode($json);
   }
+
+  /**
+   * @param $options
+   * @return array|null|\WP_Post
+   */
+  public static function createTranslationPost($options){
+    $postId = $options['post_id'];
+
+    $translationPostId = self::createNewPostFrom($postId);
+
+    if($translationPostId === 0){
+      return null;
+    }
+
+    $translationPost = get_post($translationPostId);
+
+    self::AddInTranslationTexts($options, $translationPost);
+
+    wp_update_post($translationPost);
+
+    self::SetLanguage($translationPostId, $postId, $options['target_lang'], $options['source_lang']);
+
+    Core::getInstance()->getLog()->addEntry($translationPostId, __('The translatable article has been created.', 'polylang-supertext'));
+
+    return $translationPost;
+  }
+
+  /**
+   * @param $postId
+   * @return int|\WP_Error
+   */
+  private static function createNewPostFrom($postId)
+  {
+    $post = get_post($postId);
+
+    $translationPostData = array(
+      'post_author' => wp_get_current_user()->ID,
+      'post_mime_type' => $post->post_mime_type,
+      'post_password' => $post->post_password,
+      'post_status' => 'draft',
+      'post_title' => $post->post_title,
+      'post_type' => $post->post_type,
+    );
+
+    return wp_insert_post($translationPostData);
+  }
+
+  /**
+   * @param $options
+   * @param $translationPostId
+   * @param $translationPost
+   */
+  public static function AddInTranslationTexts($options, $translationPost)
+  {
+    foreach ($options['pattern'] as $field_name => $selected) {
+      $field_name_parts = explode('_', $field_name);
+
+      if (!$selected || $field_name_parts[0] !== 'post') {
+        continue;
+      }
+
+      switch ($field_name_parts[1]) {
+        case 'title':
+          $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
+          break;
+        case 'image':
+          // Set all images to default
+          $attachments = get_children(array(
+              'post_parent' => $translationPost->ID,
+              'post_type' => 'attachment',
+              'orderby' => 'menu_order ASC, ID',
+              'order' => 'DESC')
+          );
+
+          foreach ($attachments as $attachement_post) {
+            $attachement_post->post_title = Translation::IN_TRANSLATION_TEXT;
+            $attachement_post->post_content = Translation::IN_TRANSLATION_TEXT;
+            $attachement_post->post_excerpt = Translation::IN_TRANSLATION_TEXT;
+            // Update meta and update attachmet post
+            update_post_meta($attachement_post->ID, '_wp_attachment_image_alt', addslashes(Translation::IN_TRANSLATION_TEXT));
+            wp_update_post($attachement_post);
+          }
+        default:
+          $translationPost->{$field_name} = Translation::IN_TRANSLATION_TEXT;
+      }
+    }
+  }
+
+  /**
+   * @param $translationPostId
+   * @param $postId
+   * @param $targetLanguage
+   * @param $sourceLanguage
+   */
+  public static function SetLanguage($translationPostId, $postId, $targetLanguage, $sourceLanguage)
+  {
+    Multilang::setPostLanguage($translationPostId, $targetLanguage);
+
+    $postsLanguageMappings = array(
+      $sourceLanguage => $postId,
+      $targetLanguage => $translationPostId
+    );
+
+    foreach (Multilang::getLanguages() as $language) {
+      $languagePostId = Multilang::getPostInLanguage($postId, $language->slug);
+      if ($languagePostId) {
+        $postsLanguageMappings[$language->slug] = $languagePostId;
+      }
+    }
+
+    Multilang::savePostTranslations($postsLanguageMappings);
+  }
+
 }

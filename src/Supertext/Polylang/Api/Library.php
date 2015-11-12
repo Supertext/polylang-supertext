@@ -232,7 +232,7 @@ class Library
 
     $tagName = $matches[2];
     $attributes = shortcode_parse_atts($matches[3]);
-    $savedShortcode = $savedShortcodes[$tagName];
+    $savedShortcode = isset($savedShortcodes[$tagName]) ? $savedShortcodes[$tagName] : array('attributes' => array());
     $translatableShortcodeAttributes = $savedShortcode['attributes'];
 
     $attributeNodes = '';
