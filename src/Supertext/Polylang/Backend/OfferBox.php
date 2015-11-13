@@ -43,6 +43,7 @@ class OfferBox
     $this->post = get_post($this->postId);
     $this->sourceLang = Multilang::getPostLanguage($this->post->ID);
     $this->targetLang = $_GET['targetLang'];
+    $this->hasExistingTranslation = intval(Multilang::getPostInLanguage($this->postId, $this->targetLang)) > 0;
   }
 
   /**
@@ -82,7 +83,6 @@ class OfferBox
       <script type="text/javascript" src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/translation-library.js?v=' . SUPERTEXT_PLUGIN_REVISION . '" /></script>
       <script type="text/javascript">
         jQuery(function() {
-          Supertext.Polylang.translatedPostId = ' . intval($this->postId) . ';
           Supertext.Polylang.addOfferEvents();
         });
       </script>
@@ -104,7 +104,6 @@ class OfferBox
             name="frm_Translation_Options"
             id="frm_Translation_Options"
             method="post"
-            data-post-id="' . $this->postId . '"
            >
             <h3>' . sprintf(__('Translation of post %s', 'polylang-supertext'), $this->post->post_title) . '</h3>
             ' . sprintf(
@@ -112,6 +111,7 @@ class OfferBox
                   $this->getLanguageName($this->sourceLang),
                   $this->getLanguageName($this->targetLang)
                 ) . '
+            <input type="hidden" name="post_id" value="' . intval($this->postId) . '">
             <input type="hidden" name="source_lang" id="source_lang" value="' . $this->sourceLang . '">
             <input type="hidden" name="target_lang" id="target_lang" value="' . $this->targetLang . '">
 

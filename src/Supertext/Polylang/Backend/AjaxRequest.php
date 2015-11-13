@@ -25,7 +25,7 @@ class AjaxRequest
     $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
 
     if($translationPostId === 0){
-      $translationPost = self::createTranslationPost($options);
+      $translationPost = self::createTranslationPost($postId, $options);
     }else{
       $translationPost = get_post($translationPostId);
     }
@@ -229,8 +229,6 @@ class AjaxRequest
     return $options;
   }
 
-
-
   /**
    * @param array $data data to be sent in body
    * @param string $state the state
@@ -250,12 +248,11 @@ class AjaxRequest
   }
 
   /**
+   * @param $postId
    * @param $options
    * @return array|null|\WP_Post
    */
-  public static function createTranslationPost($options){
-    $postId = $options['post_id'];
-
+  public static function createTranslationPost($postId, $options){
     $translationPostId = self::createNewPostFrom($postId);
 
     if($translationPostId === 0){

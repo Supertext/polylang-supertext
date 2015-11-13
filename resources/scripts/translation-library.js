@@ -24,10 +24,7 @@ Supertext.Polylang = {
 	 * The very own ajax url (well, yes. legacy.)
 	 */
 	ajaxUrl : '/wp-content/plugins/polylang-supertext/resources/scripts/api/ajax.php',
-	/**
-	 * Set by the offerbox window
-	 */
-	translatedPostId : 0,
+
 	/**
 	 * This can be set to true in order to see a confirmation before purchasing
 	 */
@@ -74,9 +71,7 @@ Supertext.Polylang = {
 
 		// Create order on form submit
 		jQuery('#frm_Translation_Options').submit(function() {
-			var form = jQuery(this);
-			var postId = form.data('post-id');
-			return Supertext.Polylang.createOrder(postId);
+			return Supertext.Polylang.createOrder();
 		});
 	},
 
@@ -225,9 +220,7 @@ Supertext.Polylang = {
 	{
 		Supertext.Polylang.handleElementVisibility(true, true);
 		Supertext.Polylang.requestCounter++;
-		var postId = Supertext.Polylang.translatedPostId;
 		var postData = jQuery('#frm_Translation_Options').serialize()
-			+ '&post_id=' + postId
 			+ '&requestCounter=' + Supertext.Polylang.requestCounter;
 		jQuery.post(
 			Supertext.i18n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=getOffer',
@@ -255,10 +248,9 @@ Supertext.Polylang = {
 
 	/**
 	 * Create an actual translation order for supertext
-	 * @param postId the post id (original)
 	 * @returns bool false (always, to prevent native submit)
 	 */
-	createOrder : function (postId)
+	createOrder : function ()
 	{
   	// wird nur einmal ausgelöst
 		if (!Supertext.Polylang.createOrderRunning) {
@@ -288,7 +280,7 @@ Supertext.Polylang = {
 				jQuery('#div_waiting_while_loading').show();
 
 				var offerForm = jQuery('#frm_Translation_Options');
-				var postData = offerForm.serialize() + '&post_id=' + postId;
+				var postData = offerForm.serialize();
 
 				// Post to API Endpoint and create order
 				jQuery.post(
