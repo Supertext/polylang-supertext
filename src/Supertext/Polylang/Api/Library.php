@@ -129,7 +129,15 @@ class Library
 
     // Gallery
     if ($pattern['post_image'] == true) {
-      $attachments = get_children(array('post_parent' => $postId, 'post_type' => 'attachment', 'orderby' => 'menu_order ASC, ID', 'order' => 'DESC'));
+      $attachments = get_children(
+        array(
+          'post_parent' => $postId,
+          'post_type' => 'attachment',
+          'post_mime_type' => 'image',
+          'orderby' => 'menu_order ASC, ID',
+          'order' => 'DESC')
+      );
+
       foreach ($attachments as $gallery_post) {
         $array_name = 'gallery_image_' . $gallery_post->ID;
         $result[$array_name]['post_title'] = $gallery_post->post_title;

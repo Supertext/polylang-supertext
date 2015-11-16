@@ -24,16 +24,16 @@ class AjaxRequest
     $postId = $options['post_id'];
     $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
 
-    if($translationPostId === 0){
+    if ($translationPostId === 0) {
       $translationPost = self::createTranslationPost($postId, $options);
-    }else{
+    } else {
       $translationPost = get_post($translationPostId);
     }
 
-    if($translationPost === null){
+    if ($translationPost === null) {
       self::setJsonOutput(
         array(
-          'html' => __('Could not create new post for the translation.',' polylang-supertext'),
+          'html' => __('Could not create new post for the translation.', ' polylang-supertext'),
         ),
         'error'
       );
@@ -64,9 +64,9 @@ class AjaxRequest
           ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
           ' . sprintf(__('Your order number is %s.', 'polylang-supertext'), $order->Id) . '<br />
           ' . sprintf(
-                __('The article will be translated until %s.', 'polylang-supertext'),
-                date_i18n('D, d. F H:i', strtotime($order->Deadline))
-          ) . '
+          __('The article will be translated until %s.', 'polylang-supertext'),
+          date_i18n('D, d. F H:i', strtotime($order->Deadline))
+        ) . '
         </p>
         <p>' . __('One moment, the window closes itself in a few seconds and finishes the order. Don\'t close the window yet.', 'polylang-supertext') . '</p>
       ';
@@ -107,7 +107,7 @@ class AjaxRequest
    * @param string $key slug to search
    * @return string name of the $key language
    */
-  public static function getLanguageName($key)
+  private static function getLanguageName($key)
   {
     // Get the supertext key
     $stKey = Core::getInstance()->getLibrary()->mapLanguage($key);
@@ -137,7 +137,7 @@ class AjaxRequest
     if (empty($pricing['options'])) {
       self::setJsonOutput(
         array(
-          'html' => __('There are no offers for this translation.',' polylang-supertext'),
+          'html' => __('There are no offers for this translation.', ' polylang-supertext'),
           'optional' => $optional,
         ),
         'no_data'
@@ -145,28 +145,28 @@ class AjaxRequest
       return;
     }
 
-	// generate html output
+    // generate html output
     $rows = '';
     $checked = 'checked="checked"';
     foreach ($pricing['options'] as $option) {
       $itemsCount = count($option['items']);
 
       $rows .= '<tr class="firstGroupRow">
-                    <td class="qualityGroupCell" rowspan="'.($itemsCount+1).'"><strong>'.$option['name'].'</strong></td>
+                    <td class="qualityGroupCell" rowspan="' . ($itemsCount + 1) . '"><strong>' . $option['name'] . '</strong></td>
                     <td class="selectionCell">&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>';
 
-      foreach($option['items'] as $groupRowNumber =>  $item){
+      foreach ($option['items'] as $groupRowNumber => $item) {
         $radioInputId = $option['id'] . "_" . $item['id'];
         $radioInputValue = $option['id'] . ":" . $item['id'];
 
         $rows .= '
           <tr>
             <td class="selectionCell">
-              <input type="radio" data-currency="' . $pricing['currency'] . '" name="rad_translation_type" id="rad_translation_type_' . $radioInputId . '" value="' . $radioInputValue . '" '.$checked.'>
+              <input type="radio" data-currency="' . $pricing['currency'] . '" name="rad_translation_type" id="rad_translation_type_' . $radioInputId . '" value="' . $radioInputValue . '" ' . $checked . '>
             </td>
             <td>
               <label for="rad_translation_type_' . $radioInputId . '">' . $item['name'] . '</label>
@@ -187,9 +187,9 @@ class AjaxRequest
     }
 
     $output =
-        '<table border="0" cellpadding="2" cellspacing="0">
+      '<table border="0" cellpadding="2" cellspacing="0">
             <tbody>
-                '.$rows.'
+                ' . $rows . '
             </tbody>
           </table>';
 
@@ -205,7 +205,7 @@ class AjaxRequest
   /**
    * @return array translation info
    */
-  protected static function getTranslationOptions()
+  private static function getTranslationOptions()
   {
     $options = array();
     foreach ($_POST as $field_name => $field_value) {
@@ -234,7 +234,7 @@ class AjaxRequest
    * @param string $state the state
    * @param string $info additional request information
    */
-  public static function setJsonOutput($data, $state = 'success', $info = '')
+  private static function setJsonOutput($data, $state = 'success', $info = '')
   {
     $json = array(
       'head' => array(
@@ -252,20 +252,23 @@ class AjaxRequest
    * @param $options
    * @return array|null|\WP_Post
    */
-  public static function createTranslationPost($postId, $options){
+  private static function createTranslationPost($postId, $options)
+  {
     $translationPostId = self::createNewPostFrom($postId);
 
-    if($translationPostId === 0){
+    if ($translationPostId === 0) {
       return null;
     }
 
     $translationPost = get_post($translationPostId);
 
+    self::AddImageAttachments($postId, $translationPostId, $options['source_lang'], $options['target_lang']);
+
     self::AddInTranslationTexts($options, $translationPost);
 
     wp_update_post($translationPost);
 
-    self::SetLanguage($translationPostId, $postId, $options['target_lang'], $options['source_lang']);
+    self::SetLanguage($postId, $translationPostId, $options['source_lang'], $options['target_lang']);
 
     Core::getInstance()->getLog()->addEntry($translationPostId, __('The translatable article has been created.', 'polylang-supertext'));
 
@@ -297,7 +300,7 @@ class AjaxRequest
    * @param $translationPostId
    * @param $translationPost
    */
-  public static function AddInTranslationTexts($options, $translationPost)
+  private static function AddInTranslationTexts($options, $translationPost)
   {
     foreach ($options['pattern'] as $field_name => $selected) {
       $field_name_parts = explode('_', $field_name);
@@ -315,17 +318,18 @@ class AjaxRequest
           $attachments = get_children(array(
               'post_parent' => $translationPost->ID,
               'post_type' => 'attachment',
+              'post_mime_type' => 'image',
               'orderby' => 'menu_order ASC, ID',
               'order' => 'DESC')
           );
 
-          foreach ($attachments as $attachement_post) {
-            $attachement_post->post_title = Translation::IN_TRANSLATION_TEXT;
-            $attachement_post->post_content = Translation::IN_TRANSLATION_TEXT;
-            $attachement_post->post_excerpt = Translation::IN_TRANSLATION_TEXT;
+          foreach ($attachments as $attachment_post) {
+            $attachment_post->post_title = Translation::IN_TRANSLATION_TEXT;
+            $attachment_post->post_content = Translation::IN_TRANSLATION_TEXT;
+            $attachment_post->post_excerpt = Translation::IN_TRANSLATION_TEXT;
             // Update meta and update attachmet post
-            update_post_meta($attachement_post->ID, '_wp_attachment_image_alt', addslashes(Translation::IN_TRANSLATION_TEXT));
-            wp_update_post($attachement_post);
+            update_post_meta($attachment_post->ID, '_wp_attachment_image_alt', addslashes(Translation::IN_TRANSLATION_TEXT));
+            wp_update_post($attachment_post);
           }
         default:
           $translationPost->{$field_name} = Translation::IN_TRANSLATION_TEXT;
@@ -334,22 +338,22 @@ class AjaxRequest
   }
 
   /**
-   * @param $translationPostId
-   * @param $postId
-   * @param $targetLanguage
+   * @param $sourcePostId
+   * @param $targetPostId
    * @param $sourceLanguage
+   * @param $targetLanguage
    */
-  public static function SetLanguage($translationPostId, $postId, $targetLanguage, $sourceLanguage)
+  private static function SetLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
   {
-    Multilang::setPostLanguage($translationPostId, $targetLanguage);
+    Multilang::setPostLanguage($targetPostId, $targetLanguage);
 
     $postsLanguageMappings = array(
-      $sourceLanguage => $postId,
-      $targetLanguage => $translationPostId
+      $sourceLanguage => $sourcePostId,
+      $targetLanguage => $targetPostId
     );
 
     foreach (Multilang::getLanguages() as $language) {
-      $languagePostId = Multilang::getPostInLanguage($postId, $language->slug);
+      $languagePostId = Multilang::getPostInLanguage($sourcePostId, $language->slug);
       if ($languagePostId) {
         $postsLanguageMappings[$language->slug] = $languagePostId;
       }
@@ -358,4 +362,36 @@ class AjaxRequest
     Multilang::savePostTranslations($postsLanguageMappings);
   }
 
+  private static function AddImageAttachments($sourcePostId, $targetPostId, $sourceLang, $targetLang)
+  {
+    $sourceAttachments = get_children(array(
+        'post_parent' => $sourcePostId,
+        'post_type' => 'attachment',
+        'post_mime_type' => 'image',
+        'orderby' => 'menu_order ASC, ID',
+        'order' => 'DESC')
+    );
+
+    foreach ($sourceAttachments as $sourceAttachment) {
+      $sourceAttachmentId = $sourceAttachment->ID;
+      $sourceAttachmentLink = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
+      $sourceAttachmentMetadata = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
+
+      $targetAttachmentId = intval(Multilang::getPostInLanguage($sourceAttachmentId, $targetLang));
+
+      if ($targetAttachmentId == null) {
+        $targeAttachment = $sourceAttachment;
+        $targeAttachment->ID = null;
+        $targeAttachment->post_parent = $targetPostId;
+        $targetAttachmentId = wp_insert_attachment($targeAttachment);
+        add_post_meta($targetAttachmentId, '_wp_attachment_metadata', $sourceAttachmentMetadata);
+        add_post_meta($targetAttachmentId, '_wp_attached_file', $sourceAttachmentLink);
+        self::SetLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
+      }else{
+        $targetAttachment = get_post($targetAttachmentId);
+        $targeAttachment->post_parent = $targetPostId;
+        wp_insert_attachment($targetAttachment);
+      }
+    }
+  }
 }

@@ -12,7 +12,7 @@ function getTree($nodes){
     $nodeHtml .= '<li id="'.$id.'" data-jstree=\'{"icon":"'.$icon.'"}\'>';
     $nodeHtml .= $node['label'];
 
-    if(count($node['sub_field_definitions']) > 0){
+    if(!empty($node['sub_field_definitions']) && count($node['sub_field_definitions']) > 0){
       $nodeHtml .= getTree($node['sub_field_definitions']);
     }
 

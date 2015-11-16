@@ -24,26 +24,11 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
   $translationPostId = intval(Multilang::getPostInLanguage($postId, $targetLang));
 
   // Only if valid, countinue
-  if ($translationPostId > 0 ) {
+  if ($translationPostId > 0) {
     // Get the translation post object
     $post = get_post($translationPostId);
     // check if correct language
-    if ($post->post_status == 'draft' || get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true) == 1) {
-
-      // Load attachments to merge later
-      $attachments = get_children(array(
-        'post_parent' => $post->ID,
-        'post_type' => 'attachment',
-        'orderby' => 'menu_order ASC, ID',
-        'order' => 'DESC'
-      ));
-
-      // Create file links
-      $attachmentFiles = array();
-      foreach ($attachments as $attachment) {
-        $fileLink = get_post_meta($attachment->ID, '_wp_attached_file', true);
-        $attachmentFiles[$fileLink] = $attachment;
-      }
+    if ($post->post_status == 'draft' || intval(get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true)) === 1) {
 
       // Save all translations
       foreach ($json->Groups as $translationGroup) {
@@ -65,35 +50,36 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
             // Gallery images
             $groupData = explode('_', $translationGroup->GroupId);
 
-            if ($groupData[0] == 'gallery' && $groupData[1] == 'image') {
-              // load (via _wp_attached_file; show are any same named files available)
-              $img_id = $groupData[2];
-              $attachementJson = get_post($img_id);
-              $fileLink = get_post_meta($attachementJson->ID, '_wp_attached_file', true);
-              $translatedAttachment = $attachmentFiles[$fileLink];
+            if ($groupData[0] != 'gallery' || $groupData[1] != 'image') {
+              break;
+            }
 
-              // Only fill in, if possible
-              if (!empty($translatedAttachment)) {
-                foreach ($translationGroup->Items as $translationItem) {
-                  switch ($translationItem->Id) {
-                    case 'image_alt':
-                      update_post_meta(
-                        $translatedAttachment->ID,
-                        '_wp_attachment_image_alt',
-                        addslashes(html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
-                      );
-                      break;
+            $sourceAttachmentId = $groupData[2];
+            $targetAttachmentId = intval(Multilang::getPostInLanguage($sourceAttachmentId, $targetLang));
 
-                    default:
-                      $translatedAttachment->{$translationItem->Id} = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-                      break;
-                  }
+            if ($targetAttachmentId > 0) {
+              $targetAttachment = get_post($targetAttachmentId);
+
+              foreach ($translationGroup->Items as $translationItem) {
+                switch ($translationItem->Id) {
+                  case 'image_alt':
+                    update_post_meta(
+                      $targetAttachment->ID,
+                      '_wp_attachment_image_alt',
+                      addslashes(html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
+                    );
+                    break;
+
+                  default:
+                    $targetAttachment->{$translationItem->Id} = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+                    break;
                 }
 
                 // Save the attachment
-                wp_update_post($translatedAttachment);
+                wp_update_post($targetAttachment);
               }
             }
+
             break;
         }
       }
