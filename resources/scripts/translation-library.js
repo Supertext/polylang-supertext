@@ -128,7 +128,7 @@ Supertext.Polylang = {
 		// Set all default fields to readonly
 		jQuery('#post input, #post select, #post textarea').each(function() {
 			// If the value contains the in translation text, lock fields
-			if (jQuery(this).val() == Supertext.i18n.inTranslationText) {
+			if (jQuery(this).val().indexOf(Supertext.i18n.inTranslationText) > -1) {
 				jQuery(this).attr('readonly', 'readonly');
 				jQuery(this).addClass('input-disabled');
 				post_is_in_translation = true;
@@ -158,7 +158,7 @@ Supertext.Polylang = {
 	translationEnabledOnElement : function(element)
 	{
 		if (element.length > 0) {
-			if (element.val().trim() == Supertext.i18n.inTranslationText || element.val().trim() == '<p>' + Supertext.i18n.inTranslationText + '</p>') {
+			if (element.val().indexOf(Supertext.i18n.inTranslationText) > -1) {
 				Supertext.Polylang.inTranslation = true;
 				return true;
 			}
@@ -174,7 +174,7 @@ Supertext.Polylang = {
 		// var arr_ele_name, att_id, post_type;
 		jQuery("#media-items input, #media-items select, #media-items textarea").each(function() {
 			// if the value is the translation text, lock field
-			if (jQuery(this).val() == Supertext.i18n.inTranslationText) {
+			if (jQuery(this).val().indexOf(Supertext.i18n.inTranslationText) > -1) {
 				jQuery(this).attr("readonly", "readonly");
 				jQuery(this).addClass("input-disabled");
 				post_is_in_translation = true;
