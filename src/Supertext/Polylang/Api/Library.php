@@ -276,12 +276,31 @@ class Library
     $options = $this->getSettingOption();
     $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
 
-    $doc = new \DOMDocument();
-    $doc->loadHTML($content);
+    $doc = $this->createHtmlDocument($content);
 
     $childNodes = $doc->getElementsByTagName('body')->item(0)->childNodes;
 
     return $this->replaceShortcodeNodesRecursive($doc, $childNodes, $savedShortcodes);
+  }
+
+  /**
+   * @param $content
+   * @return \DOMDocument
+   */
+  private function createHtmlDocument($content)
+  {
+    $html = '<?xml version="1.0" encoding="utf-8">
+    <html>
+        <head>
+        <meta charset="utf-8" />
+        </head>
+        <body>'.$content.'</body>
+    </html>
+    ';
+
+    $doc = new \DOMDocument();
+    $doc->loadHTML($html);
+    return $doc;
   }
 
   /**
