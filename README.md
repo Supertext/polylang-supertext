@@ -1,4 +1,4 @@
-# Supertext Translation Plugin
+# Supertext Translation
 
 ## Description
 

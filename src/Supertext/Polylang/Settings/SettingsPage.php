@@ -88,7 +88,7 @@ class SettingsPage extends AbstractPage
     // Display the page with typical entry infos
     echo '
       <div class="wrap">
-        <h2>' . __('Settings › Supertext API', 'polylang-supertext') . '</h2>
+        <h2>' . __('Settings › Supertext', 'polylang-supertext') . '</h2>
         ' . $this->showSystemMessage() . '
         ' . $this->addTabs($currentTabId);
 

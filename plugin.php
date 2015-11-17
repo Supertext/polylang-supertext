@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Supertext Translation Plugin
+Plugin Name: Supertext Translation
 Plugin URI: http://www.supertext.ch
-Description: This multilingual plugin allows you to order translations for your pages and posts using Supertexts professional translation services.
-Author: comotive GmbH, Supertext AG
+Description: This plugin allows you to order human translations for your pages and posts using Supertexts professional translation services.
+Author: Supertext AG
 Version: 1.3
 Author URI: http://www.supertext.ch
 License: GPLv2 or later

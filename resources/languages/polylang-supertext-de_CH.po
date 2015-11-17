@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2015-11-11 08:13+0100\n"
-"PO-Revision-Date: 2015-11-11 08:17+0100\n"
+"POT-Creation-Date: 2015-11-17 08:05+0100\n"
+"PO-Revision-Date: 2015-11-17 08:06+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_CH\n"
@@ -104,30 +104,30 @@ msgid "API-Key"
 msgstr "API-Key"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:61
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:227
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:126
 msgid "Delete user"
 msgstr "Benutzer entfernen"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:62
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:225
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:124
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:106
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:97
 msgid "translation saved successfully"
 msgstr "Übersetzung von Supertext swurde erfolgreich importiert."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:109
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:100
 msgid "error: can only import into draft article"
 msgstr "Fehler: Übersetzungs-Import ist nur bei Entwurfs-Beitrag möglich."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:113
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:104
 msgid "error: wrong language or translation post has been deleted"
 msgstr ""
 "Fehler: Übersetzung von Supertext hat die falsche Sprache, oder der zu "
 "übersetzende Artikel wurde gelöscht."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:117
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:108
 msgid "error: method not allowed"
 msgstr "Fehler beim Importieren der Übersetzung von Supertext."
 
@@ -165,8 +165,8 @@ msgid "Custom Fields"
 msgstr "Benutzerdefinierte Felder"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:91
-msgid "Settings › Supertext API"
-msgstr "Einstellungen › Supertext API"
+msgid "Settings › Supertext"
+msgstr "Einstellungen › Supertext"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:162
 msgid "Settings saved"
@@ -176,12 +176,7 @@ msgstr "Einstellungen gespeichert"
 msgid "Save settings"
 msgstr "Einstellungen speichern"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:107
-msgid "The translatable article has been created."
-msgstr "Der zu Übersetzende Beitrag wurde erstellt."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:142
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:157
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:56
 #, php-format
 msgid ""
 "The article was sent to Supertext and is now being translated. Your order "
@@ -190,25 +185,25 @@ msgstr ""
 "Ihr Beitrag wurde an Supertext gesendet und wird Übersetzt. Ihre "
 "Bestellnummer lautet %s."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:228
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:127
 msgid "Translation is being initialized. Please wait a second."
 msgstr "Die Übersetzung wird initialisiert, einen Moment bitte."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:229
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:128
 msgid "An error occured."
 msgstr "Es ist ein Fehler aufgetreten."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:230
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:129
 msgid "Order article translation"
 msgstr "Übersetzung beauftragen"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:231
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:130
 msgid "The order couldn't be sent to Supertext. Please try again."
 msgstr ""
 "Der Auftrag konnte nicht an Supertext gesendet werden. Bitte versuchen Sie "
 "es erneut."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:232
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:131
 msgid ""
 "The article wasn't saved. If you proceed with the translation, the unsaved "
 "changes are lost."
@@ -216,7 +211,7 @@ msgstr ""
 "Der Beitrag wurde nicht gespeichert. Falls Sie mit der Übersetzung "
 "fortfahren, werden die Änderungen verworfen."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:233
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:132
 msgid ""
 "The article can't be translated, because it has an unfinished translation "
 "task. Please use the original article to order a translation."
@@ -224,39 +219,39 @@ msgstr ""
 "Der Beitrag kann nicht übersetzt werden, da dieser selbst noch übersetzt "
 "wird. Bitte verwende den Original Beitrag zur Übersetzung."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:234
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:133
 msgid "You order a translation until {deadline}, for the price of {price}."
 msgstr ""
 "Sie bestellen eine Übersetzung bis zum {deadline} Uhr, zum Preis von {price}."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:235
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:134
 msgid "This translation order is obliging."
 msgstr "Diese Übersetzungsbeauftragung ist verbindlich."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:236
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:135
 msgid ""
 "You will be informed by e-mail as soon as the translation of your article is "
 "finished."
 msgstr ""
 "Sie werden per E-Mail informiert, sobald die Übersetzung abgeschlossen wurde."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:237
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:136
 msgid "Please confirm your order."
 msgstr "Bitte bestätigen Sie die Bestellung."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:293
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Translation.php:192
 msgid "Supertext Plugin Log"
 msgstr "Supertext Plugin Log"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Menu.php:30
-msgid "Supertext API - Settings"
-msgstr "Supertext API - Einstellungen"
+msgid "Supertext - Settings"
+msgstr "Supertext - Einstellungen"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Menu.php:31
-msgid "Supertext API"
-msgstr "Supertext API"
+msgid "Supertext"
+msgstr "Supertext"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:67
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:62
 msgid ""
 "The articles status is <b>draft</b>.<br>Are you sure you want to order a "
 "translation for this article?"
@@ -264,7 +259,7 @@ msgstr ""
 "Der Beitrag hat den Status <b>Entwurf</b>.<br>Sind Sie sicher, dass Sie für "
 "diesen Beitrag eine Übersetzung beauftragen wollen?"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:78
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:73
 msgid ""
 "There is already a translation for this post. The below offer might be at a "
 "lower price than stated, because only parts of the content need to be "
@@ -274,111 +269,115 @@ msgstr ""
 "Preise können tiefer ausfallen als angegeben, da nur einzelne Teile neu "
 "übersetzt werden müssen."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:123
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:97
 msgid "One moment please. The translation order is being sent to Supertext."
 msgstr ""
 "Einen Moment bitte. Der Übersetzungsauftrag wird an Supertext übermittelt."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:124
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:98
 msgid "As soon as the order is placed, you will be automatically redirected."
 msgstr ""
 "Sobald die Bestellung erfolgreich abgeschlossen ist, werden Sie automatisch "
 "weitergeleitet. Bitte schliessen Sie dieses Fenster noch nicht."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:126
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:150
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:100
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:128
 msgid "Loading"
 msgstr "Wird geladen"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:131
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:108
 #, php-format
 msgid "Translation of post %s"
 msgstr "Übersetzung des Beitrages %s"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:133
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:110
 #, php-format
 msgid "The article will be translated from <b>%s</b> to <b>%s</b>."
 msgstr "Der Beitrag soll von <b>%s</b> in <b>%s</b> übersetzt werden."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:140
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:118
 msgid "Contents to be translated"
 msgstr "Inhalte zum Übersetzen festlegen"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:142
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:120
 msgid "Custom fields to be translated"
 msgstr "Benutzerdefinierte Felder"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:145
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:123
 msgid "Quality and deadline"
 msgstr "Qualität und Termin"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:146
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:124
 msgid ""
 "The following settings are available for the selected components of your "
 "article:"
 msgstr "Wählen Sie die Art der Übersetzung und die Lieferfrist:"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:149
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:127
 msgid "Prices are calculated, one moment please."
 msgstr "Die Preise werden berechnet. Einen Moment."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:154
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:132
 msgid "Your comment to Supertext"
 msgstr "Ihr Kommentar an Supertext"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:158
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:136
 msgid "Order translation"
 msgstr "Auftrag erteilen"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:190
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:168
 msgid "Title"
 msgstr "Titel"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:196
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:174
 msgid "Content"
 msgstr "Text"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:202
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:180
 msgid "Excerpt"
 msgstr "Auszug"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:209
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:187
 msgid "Image captions"
 msgstr "Bildertexte"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:292
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:270
 msgid "There are no contents to be translated."
 msgstr "Es gibt keine zu übersetzende Inhalte"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:310
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:288
 msgid "The Supertext plugin hasn't been configured correctly."
 msgstr "Das Supertext Plugin wurde nicht korrekt konfiguriert."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:313
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/OfferBox.php:291
 msgid "Your order for Supertext"
 msgstr "Ihr Übersetzungsauftrag an Supertext"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:49
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:36
+msgid "Could not create new post for the translation."
+msgstr "Konnte neuer Beitrag für die Übersetzung nicht erstellen."
+
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:64
 msgid "The order has been placed successfully."
 msgstr "Die Bestellung wurde erfolgreich abgeschlossen."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:50
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:65
 #, php-format
 msgid "Your order number is %s."
 msgstr "Ihre Bestellnummer lautet %s."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:52
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:67
 #, php-format
 msgid "The article will be translated until %s."
 msgstr "Der Beitrag wird bis am %s Uhr übersetzt."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:56
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:71
 msgid ""
 "One moment, the window closes itself in a few seconds and finishes the "
 "order. Don't close the window yet."
 msgstr "Einen Moment noch, das Fenster schliesst sich automatisch."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:61
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:76
 #, php-format
 msgid ""
 "Order for article translation to %s successfully placed. Your order number "
@@ -387,13 +386,17 @@ msgstr ""
 "Bestellung für Beitragsübersetzung nach %s erfolgreich. Ihre Bestellnummer "
 "lautet %s."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:70
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:95
 msgid "Error: Could not create an order with Supertext."
 msgstr "Fehler: Konnte keine Bestellung bei Supertext erstellen."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:109
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:140
 msgid "There are no offers for this translation."
 msgstr "Für diese Übersetzung sind keine Angebote vorhanden."
+
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:273
+msgid "The translatable article has been created."
+msgstr "Der zu Übersetzende Beitrag wurde erstellt."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/YoastCustomFieldProvider.php:26
 msgid "SEO optimized title"
