@@ -40,6 +40,7 @@ Supertext.Polylang = {
 		  <td colspan="2"><a href="{translationLink}">&nbsp;' + Supertext.i18n.offerTranslation + '</a></td>\
 		</tr>\
   ',
+	errorTemplate: '<h2 class="error-title">{title}</h2><p class="error-message">{message}<br/>({details})</p>',
 
 	/**
 	 * Loading the module on post or page
@@ -270,13 +271,9 @@ Supertext.Polylang = {
 			// If the user confirmed, actually create the order
 			if (hasConfirmed) {
 				jQuery('#frm_Translation_Options').hide();
-				// Hide review state, if available
-				if (jQuery('#warning_draft_state').length > 0) {
-					jQuery('#warning_draft_state').hide();
-				}
-				if (jQuery('#warning_already_translated').length > 0) {
-					jQuery('#warning_already_translated').hide();
-				}
+				jQuery('#warning_draft_state').hide();
+				jQuery('#warning_already_translated').hide();
+
 				jQuery('#div_waiting_while_loading').show();
 
 				var offerForm = jQuery('#frm_Translation_Options');
@@ -290,21 +287,30 @@ Supertext.Polylang = {
 						jQuery('#div_waiting_while_loading').hide();
 						switch (data.head.status) {
 							case 'success':
-								// Show info to user
-								jQuery('#div_tb_wrap_translation').append(data.body.html);
-								Supertext.Polylang.createOrderRunning = false;
-
-                setTimeout(function() {
-                  self.parent.location.reload();
-                }, 3000);
+								jQuery('#div_translation_order_content').html(data.body.html);
 								break;
 							default: // error
-								jQuery('#div_tb_wrap_translation').html(
-									'<h2>' + Supertext.i18n.generalError + '</h2>' +
-									Supertext.i18n.translationOrderError
+								jQuery('#div_translation_order_head').hide();
+								jQuery('#div_translation_order_content').html(
+									Supertext.Polylang.errorTemplate
+										.replace('{title}', Supertext.i18n.generalError)
+										.replace('{message}', Supertext.i18n.translationOrderError)
+										.replace('{details}', data.body.reason)
 								);
 								break;
 						}
+
+						//set window close button, top right 'x'
+						jQuery(self.parent.document).find('#TB_closeWindowButton').click(function(){
+							self.parent.location.reload();
+						});
+
+						jQuery('#btn_close_translation_order_window').click(function(){
+							self.parent.location.reload();
+						});
+						jQuery('#div_close_translation_order_window').show();
+
+						Supertext.Polylang.createOrderRunning = false;
 					},
 					'json'
 				);

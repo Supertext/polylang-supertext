@@ -88,18 +88,19 @@ class OfferBox
       </script>
 
       <div id="div_tb_wrap_translation" class="div_tb_wrap_translation">
-        ' . $output . '
-
-        <div style="clear:both;">
-          <div id="div_waiting_while_loading" style="display:none;">
-            <p>
-              <i>
-                ' . __('One moment please. The translation order is being sent to Supertext.', 'polylang-supertext') . '<br>
-                ' . __('As soon as the order is placed, you will be automatically redirected.', 'polylang-supertext') . '
-              </i>
-              <img src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif" title="' . __('Loading', 'polylang-supertext') . '">
-            </p>
-          </div>
+        <div id="div_translation_order_head">
+          ' . $output . '
+        </div>
+        <div id="div_waiting_while_loading" style="display:none;">
+          <p>
+            <i>
+              ' . __('One moment please. The translation order is being sent to Supertext.', 'polylang-supertext') . '<br>
+              ' . __('Please do not close this window.', 'polylang-supertext') . '
+            </i>
+            <img src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif" title="' . __('Loading', 'polylang-supertext') . '">
+          </p>
+        </div>
+        <div id="div_translation_order_content">
           <form
             name="frm_Translation_Options"
             id="frm_Translation_Options"
@@ -135,8 +136,10 @@ class OfferBox
             <div class="div_translation_order_buttons">
               <input type="submit" name="btn_order" id="btn_order" value="' . __('Order translation', 'polylang-supertext') . '" class="button" />
             </div>
-            <div class="clear"></div>
           </form>
+        </div>
+        <div id="div_close_translation_order_window" class="div_translation_order_buttons" style="display:none">
+              <input type="button" id="btn_close_translation_order_window" class="button" value="'. __('Close window', 'polylang-supertext') .'" />
         </div>
       </div>
     ';

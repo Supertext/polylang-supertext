@@ -80,8 +80,8 @@
   font-style: italic;
   color: #555;
 }
-.div_translation_order_buttons .button{
-  float:right;
+.div_translation_order_buttons{
+  text-align: right;
 }
 .input-disabled {
   background-color: #f1f1f1!important;

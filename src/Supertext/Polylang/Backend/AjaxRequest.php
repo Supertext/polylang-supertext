@@ -33,7 +33,7 @@ class AjaxRequest
     if ($translationPost === null) {
       self::setJsonOutput(
         array(
-          'html' => __('Could not create new post for the translation.', ' polylang-supertext'),
+          'reason' => __('Could not create new post for the translation.', ' polylang-supertext'),
         ),
         'error'
       );
@@ -68,7 +68,6 @@ class AjaxRequest
           date_i18n('D, d. F H:i', strtotime($order->Deadline))
         ) . '
         </p>
-        <p>' . __('One moment, the window closes itself in a few seconds and finishes the order. Don\'t close the window yet.', 'polylang-supertext') . '</p>
       ';
 
       // Log the success and the order id
@@ -96,7 +95,7 @@ class AjaxRequest
 
       self::setJsonOutput(
         array(
-          'html' => $output,
+          'reason' => __('Error: Could not create an order with Supertext.', 'polylang-supertext'),
         ),
         'error'
       );
@@ -234,12 +233,11 @@ class AjaxRequest
    * @param string $state the state
    * @param string $info additional request information
    */
-  private static function setJsonOutput($data, $state = 'success', $info = '')
+  private static function setJsonOutput($data, $state = 'success')
   {
     $json = array(
       'head' => array(
-        'status' => $state,
-        'info' => $info
+        'status' => $state
       ),
       'body' => $data
     );
