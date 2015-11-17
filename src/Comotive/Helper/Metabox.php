@@ -54,14 +54,6 @@ class Metabox
     $this->wpdb = $wpdb;
 
     $this->setTemplates();
-
-    // If this is the first instance, register js/css files for enqueuement
-    if (count(self::$instances) == 0) {
-      $this->enqueueAssets();
-    }
-
-    // Register saving the data when a post is saved
-    add_action('save_post_' . $posttype, array($this, 'saveMetabox'));
   }
 
   /**
@@ -136,40 +128,6 @@ class Metabox
   }
 
   /**
-   * Enqueue the assets if needed (only on edit dialogs)
-   */
-  protected function enqueueAssets()
-  {
-    // Only include in post.php and post-new.php
-    if (String::startsWith($_SERVER['SCRIPT_NAME'], '/wp-admin/post')) {
-      wp_enqueue_script(
-        'metabox-helper-backend-js',
-        '/wp-content/plugins/lbwp/resources/js/metabox-helper.js',
-        array('jquery'),
-        self::VERSION
-      );
-      wp_enqueue_script(
-        'metabox-helper-image-uploader-js',
-        '/wp-content/plugins/lbwp/resources/js/image-uploader.js',
-        array('jquery', 'media-upload'/*, 'media-views'*/),
-        self::VERSION
-      );
-      wp_enqueue_style(
-        'metabox-helper-backend-css',
-        '/wp-content/plugins/lbwp/resources/css/metabox-helper.css',
-        array(),
-        self::VERSION
-      );
-
-      add_action('admin_enqueue_scripts', function () {
-        wp_enqueue_script('chosen-sortable-js', plugins_url('/js/chosen/chosen.sortable.jquery.js', __DIR__), array('chosen-js'));
-        wp_enqueue_script('chosen-js');
-        wp_enqueue_style('chosen-css');
-      });
-    }
-  }
-
-  /**
    * @param string $id the id of the metabox (must be unique within the helper)
    * @param string $title the title of the metabox
    * @param string $context the context (normal, advanced (default))
@@ -210,37 +168,6 @@ class Metabox
     }
 
     echo $html;
-  }
-
-  /**
-   * Save all registered fields
-   * @param int $postId the post it that's being saved
-   */
-  public function saveMetabox($postId)
-  {
-
-    if (
-      defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ||
-      (isset($_REQUEST['action']) && $_REQUEST['action'] == 'inline-save') ||
-      isset($_REQUEST['bulk_edit'])
-    ) {
-      return;
-    }
-
-    // If we save a revision, change the revision post id to the original, to make the preview work
-    if ($origPostId = wp_is_post_revision($postId)) {
-      $postId = $origPostId;
-    }
-
-    foreach ($this->fields as $box => $fields) {
-      foreach ($fields as $field) {
-        callUserFunctionWithSafeArguments($field['save'], array($postId, $field, $box));
-      }
-    }
-
-    if (count($this->errors) > 0) {
-      $_SESSION['metabox_errors_' . $this->posttype] = $this->errors;
-    }
   }
 
   /**
