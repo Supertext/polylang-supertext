@@ -15,6 +15,8 @@ use Supertext\Polylang\Core;
  */
 class AjaxRequest
 {
+  const TRANSLATION_POST_STATUS = 'draft';
+
   /**
    * Creates the order
    */
@@ -23,7 +25,6 @@ class AjaxRequest
     // Call the API for prices
     $options = self::getTranslationOptions();
     $postId = $options['post_id'];
-
 
     $library = Core::getInstance()->getLibrary();
     $data = $library->getTranslationData($postId, $options['pattern']);
@@ -46,20 +47,20 @@ class AjaxRequest
     if (!empty($order->Deadline) && !empty($order->Id)) {
       $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
 
-      if ($translationPostId === 0) {
+      if ($translationPostId == 0) {
         $translationPost = self::createTranslationPost($postId, $options);
-      } else {
-        $translationPost = get_post($translationPostId);
-      }
 
-      if ($translationPost === null) {
-        self::setJsonOutput(
-          array(
-            'reason' => __('Could not create new post for the translation. You need to create the new post manually using Polylang.', ' polylang-supertext'),
-          ),
-          'error'
-        );
-        return;
+        if ($translationPost === null) {
+          self::setJsonOutput(
+            array(
+              'reason' => __('Could not create new post for the translation. You need to create the new post manually using Polylang.', ' polylang-supertext'),
+            ),
+            'error'
+          );
+          return;
+        }
+
+        $translationPostId = $translationPost->ID;
       }
 
       $output = '
@@ -81,9 +82,9 @@ class AjaxRequest
       );
       $log->addEntry($post->ID, $message);
       $log->addOrderId($post->ID, $order->Id);
-      $log->addOrderId($translationPost->ID, $order->Id);
+      $log->addOrderId($translationPostId, $order->Id);
 
-      update_post_meta($translationPost->ID, Translation::IN_TRANSLATION_FLAG, 1);
+      update_post_meta($translationPostId, Translation::IN_TRANSLATION_FLAG, 1);
 
       self::setJsonOutput(
         array(
@@ -290,7 +291,7 @@ class AjaxRequest
       'post_author' => wp_get_current_user()->ID,
       'post_mime_type' => $post->post_mime_type,
       'post_password' => $post->post_password,
-      'post_status' => 'draft',
+      'post_status' => self::TRANSLATION_POST_STATUS,
       'post_title' => $post->post_title,
       'post_type' => $post->post_type,
       'menu_order' => $post->menu_order,
