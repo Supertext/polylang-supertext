@@ -223,9 +223,11 @@ Supertext.Polylang = {
 		Supertext.Polylang.requestCounter++;
 		var postData = jQuery('#frm_Translation_Options').serialize()
 			+ '&requestCounter=' + Supertext.Polylang.requestCounter;
+
 		jQuery.post(
 			Supertext.i18n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=getOffer',
-			postData,
+			postData
+		).done(
 			function(data) {
 				// handle only newest request
 				if (data.body.optional.requestCounter == Supertext.Polylang.requestCounter) {
@@ -239,10 +241,16 @@ Supertext.Polylang = {
 							Supertext.Polylang.handleElementVisibility(false, false);
 							break;
 						default: // error
-							jQuery('#div_translation_price').html(Supertext.i18n.generalError);
+							jQuery('#div_translation_price').html(Supertext.i18n.generalError).addClass("error-message");
+							Supertext.Polylang.handleElementVisibility(false, false);
 							break;
 					}
 				}
+			}
+		).fail(
+			function() {
+				jQuery('#div_translation_price').html(Supertext.i18n.generalError).addClass("error-message");
+				Supertext.Polylang.handleElementVisibility(false, false);
 			}
 		);
 	},
@@ -282,7 +290,8 @@ Supertext.Polylang = {
 				// Post to API Endpoint and create order
 				jQuery.post(
 					Supertext.i18n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=createOrder',
-					postData,
+					postData
+				).done(
 					function(data) {
 						jQuery('#div_waiting_while_loading').hide();
 						switch (data.head.status) {
@@ -311,8 +320,18 @@ Supertext.Polylang = {
 						jQuery('#div_close_translation_order_window').show();
 
 						Supertext.Polylang.createOrderRunning = false;
-					},
-					'json'
+					}
+				).fail(
+					function(jqXHR, textStatus, errorThrown){
+						jQuery('#div_waiting_while_loading').hide();
+						jQuery('#div_translation_order_head').hide();
+						jQuery('#div_translation_order_content').html(
+							Supertext.Polylang.errorTemplate
+								.replace('{title}', Supertext.i18n.generalError)
+								.replace('{message}', Supertext.i18n.translationOrderError)
+								.replace('{details}', errorThrown + ": " + jqXHR.responseText)
+						);
+					}
 				);
 
 			} else {
