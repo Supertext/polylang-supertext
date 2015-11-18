@@ -15,7 +15,9 @@ use Supertext\Polylang\Core;
  */
 class AjaxRequest
 {
-
+  /**
+   * Creates the order
+   */
   public static function createOrder()
   {
     // Call the API for prices
@@ -100,17 +102,6 @@ class AjaxRequest
         'error'
       );
     }
-  }
-
-  /**
-   * @param string $key slug to search
-   * @return string name of the $key language
-   */
-  private static function getLanguageName($key)
-  {
-    // Get the supertext key
-    $stKey = Core::getInstance()->getLibrary()->mapLanguage($key);
-    return __($stKey, 'polylang-supertext-langs');
   }
 
   /**
@@ -200,6 +191,17 @@ class AjaxRequest
       'success'
     );
   }
+  
+  /**
+   * @param string $key slug to search
+   * @return string name of the $key language
+   */
+  private static function getLanguageName($key)
+  {
+    // Get the supertext key
+    $stKey = Core::getInstance()->getLibrary()->mapLanguage($key);
+    return __($stKey, 'polylang-supertext-langs');
+  }
 
   /**
    * @return array translation info
@@ -262,6 +264,8 @@ class AjaxRequest
 
     self::AddImageAttachments($postId, $translationPostId, $options['source_lang'], $options['target_lang']);
 
+    self::copyPostMetas($postId, $translationPostId, $options['target_lang']);
+
     self::AddInTranslationTexts($options, $translationPost);
 
     wp_update_post($translationPost);
@@ -288,9 +292,68 @@ class AjaxRequest
       'post_status' => 'draft',
       'post_title' => $post->post_title,
       'post_type' => $post->post_type,
+      'menu_order' => $post->menu_order,
+      'comment_status' => $post->comment_status,
+      'ping_status' => $post->ping_status,
     );
 
     return wp_insert_post($translationPostData);
+  }
+
+  /**
+   * @param $sourcePostId
+   * @param $targetPostId
+   * @param $sourceLang
+   * @param $targetLang
+   */
+  private static function AddImageAttachments($sourcePostId, $targetPostId, $sourceLang, $targetLang)
+  {
+    $sourceAttachments = get_children(array(
+        'post_parent' => $sourcePostId,
+        'post_type' => 'attachment',
+        'post_mime_type' => 'image',
+        'orderby' => 'menu_order ASC, ID',
+        'order' => 'DESC')
+    );
+
+    foreach ($sourceAttachments as $sourceAttachment) {
+      $sourceAttachmentId = $sourceAttachment->ID;
+      $sourceAttachmentLink = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
+      $sourceAttachmentMetadata = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
+
+      $targetAttachmentId = intval(Multilang::getPostInLanguage($sourceAttachmentId, $targetLang));
+
+      if ($targetAttachmentId == null) {
+        $targeAttachment = $sourceAttachment;
+        $targeAttachment->ID = null;
+        $targeAttachment->post_parent = $targetPostId;
+        $targetAttachmentId = wp_insert_attachment($targeAttachment);
+        add_post_meta($targetAttachmentId, '_wp_attachment_metadata', $sourceAttachmentMetadata);
+        add_post_meta($targetAttachmentId, '_wp_attached_file', $sourceAttachmentLink);
+        self::SetLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
+      }else{
+        $targetAttachment = get_post($targetAttachmentId);
+        $targeAttachment->post_parent = $targetPostId;
+        wp_insert_attachment($targetAttachment);
+      }
+    }
+  }
+
+  /**
+   * Copy post metas using polylang
+   * @param $postId
+   * @param $translationPostId
+   * @param $target_lang
+   */
+  private static function copyPostMetas($postId, $translationPostId, $target_lang)
+  {
+    global $polylang;
+
+    if(empty($polylang)){
+      return;
+    }
+
+    $polylang->sync->copy_post_metas($postId, $translationPostId, $target_lang);
   }
 
   /**
@@ -358,38 +421,5 @@ class AjaxRequest
     }
 
     Multilang::savePostTranslations($postsLanguageMappings);
-  }
-
-  private static function AddImageAttachments($sourcePostId, $targetPostId, $sourceLang, $targetLang)
-  {
-    $sourceAttachments = get_children(array(
-        'post_parent' => $sourcePostId,
-        'post_type' => 'attachment',
-        'post_mime_type' => 'image',
-        'orderby' => 'menu_order ASC, ID',
-        'order' => 'DESC')
-    );
-
-    foreach ($sourceAttachments as $sourceAttachment) {
-      $sourceAttachmentId = $sourceAttachment->ID;
-      $sourceAttachmentLink = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
-      $sourceAttachmentMetadata = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
-
-      $targetAttachmentId = intval(Multilang::getPostInLanguage($sourceAttachmentId, $targetLang));
-
-      if ($targetAttachmentId == null) {
-        $targeAttachment = $sourceAttachment;
-        $targeAttachment->ID = null;
-        $targeAttachment->post_parent = $targetPostId;
-        $targetAttachmentId = wp_insert_attachment($targeAttachment);
-        add_post_meta($targetAttachmentId, '_wp_attachment_metadata', $sourceAttachmentMetadata);
-        add_post_meta($targetAttachmentId, '_wp_attached_file', $sourceAttachmentLink);
-        self::SetLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
-      }else{
-        $targetAttachment = get_post($targetAttachmentId);
-        $targeAttachment->post_parent = $targetPostId;
-        wp_insert_attachment($targetAttachment);
-      }
-    }
   }
 }
