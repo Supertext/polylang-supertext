@@ -21,26 +21,9 @@ class AjaxRequest
   public static function createOrder()
   {
     // Call the API for prices
-    $output = '';
     $options = self::getTranslationOptions();
     $postId = $options['post_id'];
-    $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
 
-    if ($translationPostId === 0) {
-      $translationPost = self::createTranslationPost($postId, $options);
-    } else {
-      $translationPost = get_post($translationPostId);
-    }
-
-    if ($translationPost === null) {
-      self::setJsonOutput(
-        array(
-          'reason' => __('Could not create new post for the translation.', ' polylang-supertext'),
-        ),
-        'error'
-      );
-      return;
-    }
 
     $library = Core::getInstance()->getLibrary();
     $data = $library->getTranslationData($postId, $options['pattern']);
@@ -61,6 +44,24 @@ class AjaxRequest
     );
 
     if (!empty($order->Deadline) && !empty($order->Id)) {
+      $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
+
+      if ($translationPostId === 0) {
+        $translationPost = self::createTranslationPost($postId, $options);
+      } else {
+        $translationPost = get_post($translationPostId);
+      }
+
+      if ($translationPost === null) {
+        self::setJsonOutput(
+          array(
+            'reason' => __('Could not create new post for the translation. You need to create the new post manually using Polylang.', ' polylang-supertext'),
+          ),
+          'error'
+        );
+        return;
+      }
+
       $output = '
         <p>
           ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
@@ -191,7 +192,7 @@ class AjaxRequest
       'success'
     );
   }
-  
+
   /**
    * @param string $key slug to search
    * @return string name of the $key language
