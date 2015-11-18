@@ -119,6 +119,7 @@ class OfferBox
             <h3>' . __('Contents to be translated', 'polylang-supertext') . '</h3>
             ' . $this->getCheckboxes(self::getTranslatableFields($this->postId)) . '
             <h3>' . __('Custom fields to be translated', 'polylang-supertext') . '</h3>
+            <p>'.__('Translatable custom fields can be defined under Settings -> Supertext -> Custom Fields.', 'polylang-supertext').'</p>
             ' . $this->getCheckboxes(self::getTranslatableCustomFields($this->postId)) . '
 
             <h3>' . __('Quality and deadline', 'polylang-supertext') . '</h3>
