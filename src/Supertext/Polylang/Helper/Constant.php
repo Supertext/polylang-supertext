@@ -52,17 +52,29 @@ class Constant
   /**
    * @var string the style handle
    */
-  const STYLE_HANDLE = 'polylang_supertext_styles';
+  const STYLE_HANDLE = 'polylang-supertext-styles';
+  /**
+   * @var string the post style handle
+   */
+  const POST_STYLE_HANDLE = 'polylang-supertext-post-styles';
   /**
    * @var string the jstree style handle
    */
-  const JSTREE_STYLE_HANDLE = 'polylang_supertext_jstree_styles';
+  const JSTREE_STYLE_HANDLE = 'polylang-supertext-jstree-styles';
+  /**
+   * @var string the global script handle
+   */
+  const GLOBAL_SCRIPT_HANDLE = 'polylang-supertext-global-library';
+  /**
+   * @var string the translation script handle
+   */
+  const TRANSLATION_SCRIPT_HANDLE = 'polylang-supertext-translation-library';
   /**
    * @var string the settings script handle
    */
-  const SETTINGS_SCRIPT_HANDLE = 'polylang_supertext_settings_scripts';
+  const SETTINGS_SCRIPT_HANDLE = 'polylang-supertext-settings-scripts';
   /**
    * @var string the jstree script handle
    */
-  const JSTREE_SCRIPT_HANDLE = 'polylang_supertext_jstree_scripts';
+  const JSTREE_SCRIPT_HANDLE = 'polylang-supertext-jstree-scripts';
 }

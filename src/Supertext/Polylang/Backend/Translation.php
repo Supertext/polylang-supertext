@@ -15,6 +15,10 @@ use Supertext\Polylang\Helper\Constant;
 class Translation
 {
   /**
+   * @var string the translation column id
+   */
+  const TRANSLATION_STATUS_COLUMN = 'translation-status';
+  /**
    * @var string the text that marks a post as "in translation"
    */
   const IN_TRANSLATION_TEXT = '[in Translation...]';
@@ -27,6 +31,7 @@ class Translation
    */
   public function __construct()
   {
+
     add_action('admin_init', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('current_screen', array($this, 'addScreenbasedAssets'));
@@ -34,6 +39,11 @@ class Translation
     add_action('admin_footer', array($this, 'printWorkingState'));
     add_action('media_upload_gallery', array($this, 'disableGalleryInputs'));
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
+
+    add_filter('manage_posts_columns', array($this, 'addTranslationStatusColumn'), 100);
+    add_action('manage_posts_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
+    add_filter('manage_pages_columns', array($this, 'addTranslationStatusColumn'), 100);
+    add_action('manage_pages_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
 
     // Load translations
     load_plugin_textdomain('polylang-supertext', false, 'polylang-supertext/resources/languages');
@@ -80,21 +90,10 @@ class Translation
   {
     if ($screen->base == 'post' && ($_GET['action'] == 'edit')) {
       // SCripts to inject translation
-      wp_enqueue_script(
-        'supertext-translation-library',
-        SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/translation-library.js',
-        array('jquery', 'supertext-global-library'),
-        SUPERTEXT_PLUGIN_REVISION,
-        true
-      );
+      wp_enqueue_script(Constant::TRANSLATION_SCRIPT_HANDLE);
 
       // Styles for post backend and offer page
-      wp_enqueue_style(
-        'supertext-post-style',
-        SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/post.css',
-        array(),
-        SUPERTEXT_PLUGIN_REVISION
-      );
+      wp_enqueue_style(Constant::POST_STYLE_HANDLE);
     }
   }
 
@@ -103,13 +102,8 @@ class Translation
    */
   public function addBackendAssets()
   {
-    wp_enqueue_script(
-      'supertext-global-library',
-      SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/global-library.js',
-      array('jquery'),
-      SUPERTEXT_PLUGIN_REVISION,
-      false
-    );
+    wp_enqueue_style(Constant::STYLE_HANDLE);
+    wp_enqueue_script(Constant::GLOBAL_SCRIPT_HANDLE);
   }
 
   /**
@@ -192,6 +186,45 @@ class Translation
       $helper->addMetabox(Log::META_LOG, __('Supertext Plugin Log', 'polylang-supertext'), 'side', 'low');
       $helper->addHtml('info', Log::META_LOG, $html);
     }
+  }
+
+  /**
+   * Sets the translation status column cell
+   * @param $column
+   * @param $postId
+   */
+  public function displayTranslationStatusColumn($column, $postId) {
+    if ($column != self::TRANSLATION_STATUS_COLUMN){
+      return;
+    }
+
+    if(get_post_meta($postId, Translation::IN_TRANSLATION_FLAG, true) == 1){
+      echo '<span class="dashicons dashicons-clock"></span>';
+    }
+  }
+
+  /**
+   * Adds a translation status column.
+   * @param $columns
+   * @return array
+   */
+  public function addTranslationStatusColumn($columns)
+  {
+    $newColumns = array();
+
+    foreach ($columns as $key => $column) {
+      if($key == 'comments'){
+        $newColumns[self::TRANSLATION_STATUS_COLUMN] =  '<span class="dashicons dashicons-translation"></span>';
+      }
+
+      $newColumns[$key] = $column;
+    }
+
+    if(!isset($newColumns[self::TRANSLATION_STATUS_COLUMN])){
+      $newColumns[self::TRANSLATION_STATUS_COLUMN] =  '<span class="dashicons dashicons-translation"></span>';
+    }
+
+    return $newColumns;
   }
 
   /**

@@ -2,9 +2,9 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Supertext\Polylang\Api\Library;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Core;
+use Supertext\Polylang\Helper\Constant;
 
 /**
  * Called in the backend/offer.php view
@@ -44,6 +44,10 @@ class OfferBox
     $this->sourceLang = Multilang::getPostLanguage($this->post->ID);
     $this->targetLang = $_GET['targetLang'];
     $this->hasExistingTranslation = intval(Multilang::getPostInLanguage($this->postId, $this->targetLang)) > 0;
+
+    wp_enqueue_style(Constant::POST_STYLE_HANDLE);
+    wp_enqueue_script(Constant::GLOBAL_SCRIPT_HANDLE);
+    wp_enqueue_script(Constant::TRANSLATION_SCRIPT_HANDLE);
   }
 
   /**
@@ -78,15 +82,11 @@ class OfferBox
 
     // Print the actual form
     echo '
-      <link rel="stylesheet" href="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/post.css?v=' . SUPERTEXT_PLUGIN_REVISION . '" />
-      <script type="text/javascript" src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/global-library.js?v=' . SUPERTEXT_PLUGIN_REVISION . '"></script>
-      <script type="text/javascript" src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/translation-library.js?v=' . SUPERTEXT_PLUGIN_REVISION . '" /></script>
       <script type="text/javascript">
         jQuery(function() {
           Supertext.Polylang.addOfferEvents();
         });
       </script>
-
       <div id="div_tb_wrap_translation" class="div_tb_wrap_translation">
         <div id="div_translation_order_head">
           ' . $output . '

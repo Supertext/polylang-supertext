@@ -6,6 +6,7 @@ use Supertext\Polylang\Api\Library;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
+use Supertext\Polylang\Helper\Constant;
 
 /**
  * Core Class that initializes the plugins features
@@ -53,8 +54,10 @@ class Core
 
   public function load()
   {
-    // Load needed subcomponents
     if (is_admin()) {
+      add_action('init', array($this, 'RegisterAdminAssets'));
+
+      // Load needed subcomponents in admin
       $this->menu = new Menu();
       $this->log = new Log();
       $this->translation = new Translation();
@@ -93,6 +96,20 @@ class Core
   }
 
   /**
+   * Registers all assets
+   */
+  public function RegisterAdminAssets()
+  {
+    wp_register_style(Constant::STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/style.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_style(Constant::POST_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/post.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_style(Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/themes/wordpress-dark/style.min.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_script(Constant::GLOBAL_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/global-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_script(Constant::TRANSLATION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/translation-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION, true);
+    wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree.min.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
+  }
+
+  /**
    * Do stuff when plugin gets activated
    */
   public static function onActivation()
@@ -101,7 +118,7 @@ class Core
 
     $options = $library->getSettingOption();
 
-    if(!isset($options[Helper\Constant::SETTING_SHORTCODES])){
+    if (!isset($options[Helper\Constant::SETTING_SHORTCODES])) {
       $library->saveSetting(Helper\Constant::SETTING_SHORTCODES,
         array(
           'vc_raw_html' => array(

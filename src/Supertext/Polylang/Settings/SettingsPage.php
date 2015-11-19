@@ -142,7 +142,6 @@ class SettingsPage extends AbstractPage
    */
   protected function addResources()
   {
-    wp_enqueue_style(Constant::STYLE_HANDLE);
     wp_enqueue_style(Constant::JSTREE_STYLE_HANDLE);
     wp_enqueue_script(Constant::SETTINGS_SCRIPT_HANDLE);
     wp_enqueue_script(Constant::JSTREE_SCRIPT_HANDLE);
