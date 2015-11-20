@@ -26,7 +26,7 @@ class SettingsPage extends AbstractPage
     $this->tabs = array();
     // First settings page with user funtions
     $this->tabs['users'] = array(
-      'name' => __('Users and languages', 'polylang-supertext'),
+      'name' => __('User and languages', 'polylang-supertext'),
       'views' => array(
         'backend/settings-users',
         'backend/settings-languages'
@@ -40,7 +40,7 @@ class SettingsPage extends AbstractPage
     // If there are providers, make the tab appear
     if (count($this->customFieldsProviders) > 0) {
       $this->tabs['customfields'] = array(
-        'name' => __('Custom Fields', 'polylang-supertext'),
+        'name' => __('Custom fields', 'polylang-supertext'),
         'views' => array(
           'backend/settings-custom-fields'
         ),

@@ -23,19 +23,19 @@ class YoastCustomFieldProvider implements ICustomFieldProvider
     $customFields =  array(
       array(
         'id' => '_yoast_wpseo_title',
-        'label' => __('SEO optimized title', 'polylang-supertext'),
+        'label' => __('SEO-optimized title', 'polylang-supertext'),
         'type' => 'field',
         'meta_key_regex' => '_yoast_wpseo_title'
       ),
       array(
         'id' => '_yoast_wpseo_metadesc',
-        'label' => __('SEO optimized description', 'polylang-supertext'),
+        'label' => __('SEO-optimized description', 'polylang-supertext'),
         'type' => 'field',
         'meta_key_regex' => '_yoast_wpseo_metadesc'
       ),
       array(
         'id' => '_yoast_wpseo_focuskw',
-        'label' => __('Focus keyword', 'polylang-supertext'),
+        'label' => __('Focus keywords', 'polylang-supertext'),
         'type' => 'field',
         'meta_key_regex' => '_yoast_wpseo_focuskw'
       ),

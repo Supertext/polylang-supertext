@@ -53,7 +53,7 @@ class AjaxRequest
         if ($translationPost === null) {
           self::setJsonOutput(
             array(
-              'reason' => __('Could not create new post for the translation. You need to create the new post manually using Polylang.', ' polylang-supertext'),
+              'reason' => __('Could not create a new post for the translation. You need to create the new post manually using Polylang.', ' polylang-supertext'),
             ),
             'error'
           );
@@ -68,7 +68,7 @@ class AjaxRequest
           ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
           ' . sprintf(__('Your order number is %s.', 'polylang-supertext'), $order->Id) . '<br />
           ' . sprintf(
-          __('The article will be translated until %s.', 'polylang-supertext'),
+          __('The article will be translated by %s.', 'polylang-supertext'),
           date_i18n('D, d. F H:i', strtotime($order->Deadline))
         ) . '
         </p>
@@ -76,7 +76,7 @@ class AjaxRequest
 
       // Log the success and the order id
       $message = sprintf(
-        __('Order for article translation to %s successfully placed. Your order number is %s.', 'polylang-supertext'),
+        __('Order for translation of article into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
         self::getLanguageName($options['target_lang']),
         $order->Id
       );
@@ -274,7 +274,7 @@ class AjaxRequest
 
     self::SetLanguage($postId, $translationPostId, $options['source_lang'], $options['target_lang']);
 
-    Core::getInstance()->getLog()->addEntry($translationPostId, __('The translatable article has been created.', 'polylang-supertext'));
+    Core::getInstance()->getLog()->addEntry($translationPostId, __('The article to be translated has been created.', 'polylang-supertext'));
 
     return $translationPost;
   }

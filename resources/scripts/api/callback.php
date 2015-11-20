@@ -97,11 +97,11 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
       $response['message'] = __('translation saved successfully', 'polylang-supertext');
       Core::getInstance()->getLog()->addEntry($translationPostId, $response['message']);
     } else {
-      $response['message'] = __('error: can only import into draft article', 'polylang-supertext');
+      $response['message'] = __('Error: translation import only possible for drafted articles', 'polylang-supertext');
       Core::getInstance()->getLog()->addEntry($translationPostId, $response['message']);
     }
   } else {
-    $response['message'] = __('error: wrong language or translation post has been deleted', 'polylang-supertext');
+    $response['message'] = __('Error: the language of the translation from Supertext does not match or the translated post has been deleted', 'polylang-supertext');
     Core::getInstance()->getLog()->addEntry($postId, $response['message']);
   }
 } else {

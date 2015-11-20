@@ -42,13 +42,13 @@ $selectTemplate = '' .
     </p>
     <p>
       <?php
-      _e('Please fill in a Supertext API key for every WordPress user.', 'polylang-supertext');
+      _e('Please fill in a Supertext API key for every user.', 'polylang-supertext');
       ?>
       <?php
         $url = 'https://www.supertext.ch/customer/accountsettings';
         printf( wp_kses( __('You will find the API key on the <a href="%s">Supertext settings page</a>.', 'polylang-supertext'), array(  'a' => array( 'href' => array() ) ) ), esc_url( $url ) );
       ?><br>
-      <?php _e('Only configured users can make use of the translation features.', 'polylang-supertext'); ?>
+      <?php _e('Only configured users can use the translation features.', 'polylang-supertext'); ?>
     </p>
 
     <table id="tblStFields">
@@ -56,7 +56,7 @@ $selectTemplate = '' .
         <tr>
           <th>Wordpress <?php _e('User', 'polylang-supertext'); ?></th>
           <th>Supertext <?php _e('User', 'polylang-supertext'); ?></th>
-          <th colspan="2"><?php _e('API-Key', 'polylang-supertext'); ?></th>
+          <th colspan="2"><?php _e('API Key', 'polylang-supertext'); ?></th>
         </tr>
       </thead>
       <tbody>

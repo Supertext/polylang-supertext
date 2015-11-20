@@ -22,13 +22,13 @@ function getAttributeInput($key, $value){
       <?php _e('Please define any shortcode attributes you want to have translated.', 'polylang-supertext'); ?>
     </p>
     <p>
-      <?php _e('Please define the encoding process if a shortcodes enclosed content is encoded. Available encoding functions are: rawurl, url and base64', 'polylang-supertext'); ?>
+      <?php _e('Please define the encoding process for all encoded and enclosed content. Available encoding functions are: rawurl, url and base64', 'polylang-supertext'); ?>
     </p>
     <table id="tblShortcodes">
       <thead>
       <tr>
         <th><?php _e('Shortcode', 'polylang-supertext'); ?></th>
-        <th><?php _e('Enclosed content encoding', 'polylang-supertext'); ?></th>
+        <th><?php _e('Encoding for enclosed content', 'polylang-supertext'); ?></th>
         <th><?php _e('Translatable attributes', 'polylang-supertext'); ?></th>
       </tr>
       </thead>

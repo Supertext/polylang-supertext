@@ -74,7 +74,7 @@ class OfferBox
       $output .= '
         <div id="warning_already_translated" class="notice notice-warning">
           <p>
-            ' . __('There is already a translation for this post. The below offer might be at a lower price than stated, because only parts of the content need to be translated again', 'polylang-supertext') . '
+            ' . __('There is already a translation for this post. The quote below may be higher than the final price if only parts of the content need to be translated again.', 'polylang-supertext') . '
           </p>
         </div>
       ';
@@ -108,7 +108,7 @@ class OfferBox
            >
             <h3>' . sprintf(__('Translation of post %s', 'polylang-supertext'), $this->post->post_title) . '</h3>
             ' . sprintf(
-                  __('The article will be translated from <b>%s</b> to <b>%s</b>.', 'polylang-supertext'),
+                  __('The article will be translated from <b>%s</b> into <b>%s</b>.', 'polylang-supertext'),
                   $this->getLanguageName($this->sourceLang),
                   $this->getLanguageName($this->targetLang)
                 ) . '
@@ -116,17 +116,17 @@ class OfferBox
             <input type="hidden" name="source_lang" id="source_lang" value="' . $this->sourceLang . '">
             <input type="hidden" name="target_lang" id="target_lang" value="' . $this->targetLang . '">
 
-            <h3>' . __('Contents to be translated', 'polylang-supertext') . '</h3>
+            <h3>' . __('Content to be translated', 'polylang-supertext') . '</h3>
             ' . $this->getCheckboxes(self::getTranslatableFields($this->postId)) . '
             <h3>' . __('Custom fields to be translated', 'polylang-supertext') . '</h3>
             <p>'.__('Translatable custom fields can be defined under Settings -> Supertext -> Custom Fields.', 'polylang-supertext').'</p>
             ' . $this->getCheckboxes(self::getTranslatableCustomFields($this->postId)) . '
 
-            <h3>' . __('Quality and deadline', 'polylang-supertext') . '</h3>
-            <p>' . __('The following settings are available for the selected components of your article:', 'polylang-supertext') . '</p>
+            <h3>' . __('Service and deadline', 'polylang-supertext') . '</h3>
+            <p>' . __('Select the translation service and deadline:', 'polylang-supertext') . '</p>
 
             <div class="div_translation_price_loading" id="div_translation_price_loading" style="height:200px;">
-              ' . __('Prices are calculated, one moment please.', 'polylang-supertext') . '
+              ' . __('The price is being calculated, one moment please.', 'polylang-supertext') . '
               <img src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif" title="' . __('Loading', 'polylang-supertext') . '">
             </div>
             <div id="div_translation_price" style="display:none;"></div>
@@ -271,7 +271,7 @@ class OfferBox
 
     // If nothing, give a message
     if (!is_array($fields) || count($fields) == 0) {
-      $return .= '<tr><td>' . __('There are no contents to be translated.', 'polylang-supertext') . '</td></tr>';
+      $return .= '<tr><td>' . __('There is no content to be translated.', 'polylang-supertext') . '</td></tr>';
     }
 
     // Return the table with checkboxes
@@ -292,7 +292,7 @@ class OfferBox
       return __('The Supertext plugin hasn\'t been configured correctly.', 'polylang-supertext');
     }
 
-    $title = __('Your order for Supertext', 'polylang-supertext');
+    $title = __('Your Supertext translation order', 'polylang-supertext');
 
     // Return info about supertext
     return '

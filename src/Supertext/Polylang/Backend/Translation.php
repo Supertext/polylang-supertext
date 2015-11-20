@@ -118,15 +118,15 @@ class Translation
           addNewUser : "' . esc_js(__('Add user', 'polylang-supertext')) . '",
           inTranslationText : "' . esc_js(self::IN_TRANSLATION_TEXT) . '",
           deleteUser : "' . esc_js(__('Delete user', 'polylang-supertext')) . '",
-          translationCreation : "' . esc_js(__('Translation is being initialized. Please wait a second.', 'polylang-supertext')) . '",
-          generalError : "' . esc_js(__('An error occured.', 'polylang-supertext')) . '",
-          offerTranslation : "' . esc_js(__('Order article translation', 'polylang-supertext')) . '",
+          translationCreation : "' . esc_js(__('Translation is being initialized. Please wait a moment.', 'polylang-supertext')) . '",
+          generalError : "' . esc_js(__('An error occurred.', 'polylang-supertext')) . '",
+          offerTranslation : "' . esc_js(__('Order translation', 'polylang-supertext')) . '",
           translationOrderError : "' . esc_js(__('The order couldn\'t be sent to Supertext. Please try again.', 'polylang-supertext')) . '",
-          confirmUnsavedArticle : "' . esc_js(__('The article wasn\'t saved. If you proceed with the translation, the unsaved changes are lost.', 'polylang-supertext')) . '",
-          alertUntranslatable : "' . esc_js(__('The article can\'t be translated, because it has an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext')) . '",
-          offerConfirm_Price : "' . esc_js(__('You order a translation until {deadline}, for the price of {price}.', 'polylang-supertext')) . '",
-          offerConfirm_Binding : "' . esc_js(__('This translation order is obliging.', 'polylang-supertext')) . '",
-          offerConfirm_EmailInfo : "' . esc_js(__('You will be informed by e-mail as soon as the translation of your article is finished.', 'polylang-supertext')) . '",
+          confirmUnsavedArticle : "' . esc_js(__('The article was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'polylang-supertext')) . '",
+          alertUntranslatable : "' . esc_js(__('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext')) . '",
+          offerConfirm_Price : "' . esc_js(__('You are ordering a translation with the deadline {deadline} and price {price}.', 'polylang-supertext')) . '",
+          offerConfirm_Binding : "' . esc_js(__('This order for a translation is binding.', 'polylang-supertext')) . '",
+          offerConfirm_EmailInfo : "' . esc_js(__('You will receive an email as soon as the translation of your article is complete.', 'polylang-supertext')) . '",
           offerConfirm_Confirm : "' . esc_js(__('Please confirm your order.', 'polylang-supertext')) . '"
         };
       </script>

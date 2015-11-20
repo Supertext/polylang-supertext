@@ -553,11 +553,11 @@ class String
 				$message =  sprintf(__('Your password must be at least %s long', $textdomain), $nLength);
 			} else if ($sPwd1 !== $sPwd2) {
 				// Prüfen auf Gleichheit nicht OK, Fehler
-				$message = __('The passwords do not match', $textdomain);
+				$message = __('Your passwords do not match', $textdomain);
 			}
 		} else {
 			// Meldung, dass keine neuen Passwörter eingegeben wurden
-			$message = __('Please enter a password', $textdomain);
+			$message = __('Please enter your password', $textdomain);
 		}
 		// Fehler Array zurückgeben
 		return $message;
