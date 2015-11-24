@@ -12,7 +12,7 @@ class Constant
   /**
    * @var string the used API base url
    */
-  const API_URL = self::DEV_API;
+  const API_URL = self::LIVE_API;
   /**
    * @var string development api endpoints
    */
