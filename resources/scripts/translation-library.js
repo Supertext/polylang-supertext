@@ -241,7 +241,7 @@ Supertext.Polylang = {
 							Supertext.Polylang.handleElementVisibility(false, false);
 							break;
 						default: // error
-							jQuery('#div_translation_price').html(Supertext.i18n.generalError).addClass("error-message");
+							jQuery('#div_translation_price').html(Supertext.i18n.generalError + '<br/>' + data.body.reason).addClass("error-message");
 							Supertext.Polylang.handleElementVisibility(false, false);
 							break;
 					}

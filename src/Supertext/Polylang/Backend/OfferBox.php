@@ -266,7 +266,7 @@ class OfferBox
       $messages .= '
         <div id="error_missing_function" class="notice notice-error">
           <p>
-            ' . __('The PHP function <em>curl_exec</em> must be enabled. Otherwise this plugin cannot send the request to Supertext.', 'polylang-supertext') . '
+            ' . __('The PHP function <em>curl_exec</em> is disabled. Please enable it in order to be able to send requests to Supertext.', 'polylang-supertext') . '
           </p>
         </div>
       ';

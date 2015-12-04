@@ -78,17 +78,21 @@ class Wrapper
   public function getLanguageMapping($lang)
   {
     $httpResult = $this->postRequest('translation/LanguageMapping/' . $lang);
-    $json = json_decode($httpResult);
+    $json = json_decode($httpResult['body']);
     $result = array();
-    if (!empty($json->Languages)) {
+
+    if ($httpResult['success'] && !empty($json->Languages)) {
       foreach ($json->Languages as $entry) {
         $result[(string)$entry->Code] = (string)$entry->Name;
       }
     } else {
       echo '
-      <div id="message" class="updated fade"><p>
-        <b>Fehler</b> bei der Verbindung zu Supertext: Die Sprachen konnten nicht geladen werden.
-      </p></div>';
+      <div id="message" class="updated fade">
+        <p>
+          '.__('An error occurred.', ' polylang-supertext').'<br/>
+          '.$httpResult['error'].'
+        </p>
+      </div>';
     }
 
     return $result;
@@ -111,14 +115,15 @@ class Wrapper
     );
 
     $httpresult = $this->postRequest('translation/quote', json_encode($json), true);
-    $json = json_decode($httpresult);
+    $json = json_decode($httpresult['body']);
     $result = array(
-        'currency' => $json->Currency,
-        'currencyName' => $json->CurrencySymbol,
-        'options' => array()
+      'currency' => $json->Currency,
+      'currencyName' => $json->CurrencySymbol,
+      'options' => array(),
+      'error' => $httpresult['error']
     );
 
-    if (!empty($json->Options)) {
+    if ($httpresult['success'] && !empty($json->Options)) {
       foreach ($json->Options as $o) {
         $deliveryOptions = array();
 
@@ -155,6 +160,7 @@ class Wrapper
   public function createOrder($source, $target, $title, $productId, $data, $callback, $reference, $additionalInfo)
   {
     $product = explode(':', $productId);
+
     $json = array(
       'CallbackUrl' => $callback,
       'ContentType' => 'text/html',
@@ -171,14 +177,12 @@ class Wrapper
     );
 
     $httpResult = $this->postRequest('translation/order', json_encode($json), true);
-    $json = json_decode($httpResult);
 
-    // If json is not valid, return the result as debug info
-    if (is_null($json)) {
-      return $httpResult;
-    }
-
-    return $json;
+    return array(
+      'order' => json_decode($httpResult['body']),
+      'success' => $httpResult['success'],
+      'error' => $httpResult['error']
+    );
   }
 
   /**
@@ -210,10 +214,17 @@ class Wrapper
       curl_setopt($ch, CURLOPT_USERPWD, $this->user . ':' . $this->apikey);
     }
 
-    $str = curl_exec($ch);
+    $body = curl_exec($ch);
+
+    $error = $this->getError($ch);
+
     curl_close($ch);
 
-    return $str;
+    return array(
+      'success' => empty($error),
+      'error' => $error,
+      'body' => $body
+    );
   }
 
   /**
@@ -246,5 +257,40 @@ class Wrapper
       $result[] = $group;
     }
     return $result;
+  }
+
+  /**
+   * @param $ch
+   * @return string
+   */
+  protected function getError($ch)
+  {
+    $info = curl_getinfo($ch);
+    $errno = curl_errno($ch);
+    $error = '';
+
+    if ($errno) {
+      $error .= curl_strerror($errno);
+    }
+
+    //Should always be 200
+    switch($info['http_code']){
+      case 0:
+      case 200:
+        break;
+
+      case 401:
+        $error .= __('The Supertext Translation plugin could not login into the Supertext API. Please verify the entered account username and API-Key in the plugin settings.');
+        break;
+
+      default:
+        $error .= __('HTTP-Request error occurred. Details: ') .
+          $info['url'] .
+          ' returned code ' .
+          $info['http_code'];
+        break;
+    }
+
+    return $error;
   }
 }

@@ -105,7 +105,7 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
     Core::getInstance()->getLog()->addEntry($postId, $response['message']);
   }
 } else {
-  $response['message'] = __('error: method not allowed', 'polylang-supertext');
+  $response['message'] = __('Error: method not allowed', 'polylang-supertext');
   Core::getInstance()->getLog()->addEntry($postId, $response['message']);
 }
 

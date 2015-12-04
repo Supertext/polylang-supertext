@@ -33,7 +33,7 @@ class AjaxRequest
     $log = Core::getInstance()->getLog();
 
     // Create the order
-    $order = $wrapper->createOrder(
+    $orderCreation = $wrapper->createOrder(
       $options['source_lang'],
       $options['target_lang'],
       get_bloginfo('name') . ' - ' . $post->post_title,
@@ -44,7 +44,9 @@ class AjaxRequest
       $options['additional_information']
     );
 
-    if (!empty($order->Deadline) && !empty($order->Id)) {
+    $order = $orderCreation['order'];
+
+    if ($orderCreation['success'] && !empty($order->Deadline) && !empty($order->Id)) {
       $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
 
       if ($translationPostId == 0) {
@@ -95,11 +97,11 @@ class AjaxRequest
 
     } else {
       // Error, couldn't create a correct order
-      $log->addEntry($post->ID, __('Error: Could not create an order with Supertext.', 'polylang-supertext'));
+      $log->addEntry($post->ID, $orderCreation['error']);
 
       self::setJsonOutput(
         array(
-          'reason' => __('Error: Could not create an order with Supertext.', 'polylang-supertext'),
+          'reason' => _('Could not create an order with Supertext.', 'polylang-supertext') .' '. $orderCreation['error'],
         ),
         'error'
       );
@@ -124,6 +126,17 @@ class AjaxRequest
       $options['target_lang'],
       $data
     );
+
+    if(!empty($pricing['error'])){
+      self::setJsonOutput(
+        array(
+          'reason' => _('Could not get offers.', 'polylang-supertext') .' '. $pricing['error'],
+          'optional' => $optional
+        ),
+        'error'
+      );
+      return;
+    }
 
     //Check if there are no offers
     if (empty($pricing['options'])) {
