@@ -47,6 +47,7 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
           case 'meta':
             foreach ($translationGroup->Items as $translationItem) {
               $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+              $decodedContent = Core::getInstance()->getLibrary()->replaceShortcodeNodes($decodedContent);
               update_post_meta($post->ID, $translationItem->Id, $decodedContent);
             }
             break;

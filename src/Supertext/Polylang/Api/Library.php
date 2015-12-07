@@ -149,7 +149,7 @@ class Library
 
     // Get the selected custom fields
     foreach ($this->getCustomFieldsForTranslation($postId, array_keys($pattern)) as $meta_key => $value) {
-      $result['meta'][$meta_key] = $value;
+      $result['meta'][$meta_key] = $this->replaceShortcodes($value);
     }
 
     // Let developers add their own fields
