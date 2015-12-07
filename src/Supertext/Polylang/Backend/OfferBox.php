@@ -316,6 +316,8 @@ class OfferBox
       $this->getLanguageName($this->targetLang)
     );
 
+    $customFieldSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=customfields');
+
     return '<form
             name="frm_Translation_Options"
             id="frm_Translation_Options"
@@ -329,7 +331,7 @@ class OfferBox
             <h3>' . __('Content to be translated', 'polylang-supertext') . '</h3>
             ' . $this->getCheckboxes(self::getTranslatableFields($this->postId)) . '
             <h3>' . __('Custom fields to be translated', 'polylang-supertext') . '</h3>
-            <p>' . __('Translatable custom fields can be defined under Settings -> Supertext -> Custom Fields.', 'polylang-supertext') . '</p>
+            <p>' . sprintf( wp_kses( __('Translatable custom fields can be defined in the <a target="_parent" href="%s">settings</a>.', 'polylang-supertext'), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( $customFieldSettingsUrl ) ) . '</p>
             ' . $this->getCheckboxes(self::getTranslatableCustomFields($this->postId)) . '
 
             <h3>' . __('Service and deadline', 'polylang-supertext') . '</h3>

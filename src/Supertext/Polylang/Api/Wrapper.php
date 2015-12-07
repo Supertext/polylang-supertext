@@ -162,6 +162,9 @@ class Wrapper
     $product = explode(':', $productId);
 
     $json = array(
+      'PluginName' => 'polylang-supertext',
+      'PluginVersion' => SUPERTEXT_PLUGIN_VERSION,
+      'InstallationName' => get_bloginfo('name'),
       'CallbackUrl' => $callback,
       'ContentType' => 'text/html',
       'Currency' => $this->currency,

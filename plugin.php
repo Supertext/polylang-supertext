@@ -9,6 +9,7 @@ Author URI: http://www.supertext.ch
 License: GPLv2 or later
 */
 
+define('SUPERTEXT_PLUGIN_VERSION', 1.4);
 define('SUPERTEXT_PLUGIN_REVISION', 7);
 define('SUPERTEXT_POLYLANG_BASE_PATH', __DIR__);
 define('SUPERTEXT_POLYLANG_VIEW_PATH', __DIR__ . '/views/');
@@ -32,3 +33,13 @@ add_action('plugins_loaded', function () {
 // Register the install- and deinstallation hooks
 register_activation_hook(__FILE__, array('\Supertext\Polylang\Core', 'onActivation'));
 register_deactivation_hook(__FILE__, array('\Supertext\Polylang\Core', 'onDeactivation'));
+
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'add_action_links');
+
+function add_action_links($links)
+{
+  $settingsLinks = array(
+    '<a href="' . admin_url('options-general.php?page=supertext-polylang-settings') . '">Settings</a>',
+  );
+  return array_merge($links, $settingsLinks);
+}
