@@ -283,11 +283,11 @@ class Wrapper
         break;
 
       case 401:
-        $error .= __('The Supertext Translation plugin could not login into the Supertext API. Please verify the entered account username and API-Key in the plugin settings.');
+        $error .= __('The Supertext Translation plugin could not login into the Supertext API. Please verify the entered account username and API-Key in the plugin settings.', 'polylang-supertext');
         break;
 
       default:
-        $error .= __('HTTP-Request error occurred. Details: ') .
+        $error .= __('HTTP-Request error occurred. Details: ', 'polylang-supertext') .
           $info['url'] .
           ' returned code ' .
           $info['http_code'];
