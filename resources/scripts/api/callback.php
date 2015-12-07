@@ -28,7 +28,7 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
     // Get the translation post object
     $post = get_post($translationPostId);
     // check if correct language
-    if ($post->post_status == 'draft' && intval(get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true)) === 1) {
+    if ($post->post_status == 'draft' || intval(get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true)) === 1) {
 
       // Save all translations
       foreach ($json->Groups as $translationGroup) {
