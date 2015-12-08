@@ -10,7 +10,7 @@ $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipula
 
 function getAttributeInput($key, $value){
   return '<div class="shortcode-attribute-input">
-           <input type="text" name="shortcodes['.$key.'][attributes][]" value="'.$value.'" /><input type="button" value="-" class="button button-highlighted shortcode-attribute-remove-input" />
+           <input type="text" name="shortcodes['.$key.'][attributes][]" value="'.$value.'" placeholder="'. __('Attribute name...', 'polylang-supertext') .'"/><input type="button" value="-" class="button button-highlighted shortcode-attribute-remove-input" />
          </div>';
 }
 
@@ -55,7 +55,7 @@ function getAttributeInput($key, $value){
         echo '
         <tr>
           <td><label for="'.$checkboxId.'">'.$key.'</label></td>
-          <td><input type="text" name="shortcodes['.$key.'][content_encoding]" value="'.$contentEncoding.'" /></td>
+          <td><input type="text" name="shortcodes['.$key.'][content_encoding]" value="'.$contentEncoding.'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/></td>
           <td>'.$attributeInputs.'<input type="button" value="+" class="button button-highlighted shortcode-attribute-add-input" /></td>
         </tr>';
       }

@@ -43,7 +43,7 @@
 }
 
 #tblShortcodes td:last-child, #tblShortcodes th:last-child{
-  padding-left: 5px;
+  padding-left: 10px;
 }
 
 th[class*='column-translation-status'], td[class*='column-translation-status'] {

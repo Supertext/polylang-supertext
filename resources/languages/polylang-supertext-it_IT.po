@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2015-12-07 16:35+0100\n"
-"PO-Revision-Date: 2015-12-07 16:40+0100\n"
+"POT-Creation-Date: 2015-12-08 09:24+0100\n"
+"PO-Revision-Date: 2015-12-08 09:25+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: it_CH\n"
@@ -15,6 +15,10 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: /var/www/other/wp-polylang/wp-content/plugins/"
 "polylang-supertext\n"
+
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:13
+msgid "Attribute name..."
+msgstr "Nome attributo..."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:20
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:53
@@ -45,6 +49,10 @@ msgstr "Codifica contenuto chiuso"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:32
 msgid "Translatable attributes"
 msgstr "Attributi traducibili"
+
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:58
+msgid "Functions..."
+msgstr "Funzioni..."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-languages.php:31
 msgid "Please select"

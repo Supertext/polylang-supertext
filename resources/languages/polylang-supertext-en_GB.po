@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2015-12-04 17:03+0100\n"
-"PO-Revision-Date: 2015-12-04 17:03+0100\n"
+"POT-Creation-Date: 2015-12-08 09:16+0100\n"
+"PO-Revision-Date: 2015-12-08 09:16+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: en_GB\n"
@@ -15,6 +15,10 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: /var/www/other/wp-polylang/wp-content/plugins/"
 "polylang-supertext\n"
+
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:13
+msgid "Attribute name..."
+msgstr "Attribute name..."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:20
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:53
@@ -44,6 +48,10 @@ msgstr "Encoding for enclosed content"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:32
 msgid "Translatable attributes"
 msgstr "Translatable attributes"
+
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:58
+msgid "Functions..."
+msgstr "Functions..."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-languages.php:31
 msgid "Please select"
@@ -116,15 +124,15 @@ msgstr "Delete user"
 msgid "Add user"
 msgstr "Add user"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:97
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:98
 msgid "translation saved successfully"
 msgstr "Translation from Supertext successfully imported."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:100
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:101
 msgid "Error: translation import only possible for drafted articles"
 msgstr "Error: translation import only possible for drafted articles"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:104
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:105
 msgid ""
 "Error: the language of the translation from Supertext does not match or the "
 "translated post has been deleted"
@@ -132,7 +140,7 @@ msgstr ""
 "Error: the language of the translation from Supertext does not match or the "
 "translated post has been deleted"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:108
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:109
 msgid "Error: method not allowed"
 msgstr "Error: method not allowed"
 
@@ -441,7 +449,7 @@ msgstr "Facebook title"
 msgid "Facebook description"
 msgstr "Facebook description"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:283
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:286
 msgid ""
 "The Supertext Translation plugin could not login into the Supertext API. "
 "Please verify the entered account username and API-Key in the plugin "
@@ -451,7 +459,7 @@ msgstr ""
 "Please verify the entered account username and API-Key in the plugin "
 "settings."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:287
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:290
 msgid "HTTP-Request error occurred. Details: "
 msgstr "HTTP-Request error occurred. Details: "
 

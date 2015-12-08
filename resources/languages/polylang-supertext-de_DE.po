@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2015-12-04 17:02+0100\n"
-"PO-Revision-Date: 2015-12-04 17:02+0100\n"
+"POT-Creation-Date: 2015-12-08 09:14+0100\n"
+"PO-Revision-Date: 2015-12-08 09:14+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_DE\n"
@@ -15,6 +15,10 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: /var/www/other/wp-polylang/wp-content/plugins/"
 "polylang-supertext\n"
+
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:13
+msgid "Attribute name..."
+msgstr "Attributname..."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:20
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:53
@@ -46,6 +50,10 @@ msgstr "Kodierung umschlossener Inhalt"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:32
 msgid "Translatable attributes"
 msgstr "Übersetzbare Attribute"
+
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:58
+msgid "Functions..."
+msgstr "Funktionen..."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-languages.php:31
 msgid "Please select"
@@ -119,15 +127,15 @@ msgstr "Benutzer entfernen"
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:97
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:98
 msgid "translation saved successfully"
 msgstr "Übersetzung von Supertext swurde erfolgreich importiert."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:100
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:101
 msgid "Error: translation import only possible for drafted articles"
 msgstr "Fehler: Übersetzungs-Import ist nur bei Entwurfs-Beitrag möglich."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:104
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:105
 msgid ""
 "Error: the language of the translation from Supertext does not match or the "
 "translated post has been deleted"
@@ -135,7 +143,7 @@ msgstr ""
 "Fehler: Übersetzung von Supertext hat die falsche Sprache, oder der zu "
 "übersetzende Artikel wurde gelöscht."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:108
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/resources/scripts/api/callback.php:109
 msgid "Error: method not allowed"
 msgstr "Fehler: Methode nicht erlaubt"
 
@@ -445,7 +453,7 @@ msgstr "Facebook Titel"
 msgid "Facebook description"
 msgstr "Facebook Beschreibung"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:283
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:286
 msgid ""
 "The Supertext Translation plugin could not login into the Supertext API. "
 "Please verify the entered account username and API-Key in the plugin "
@@ -454,7 +462,7 @@ msgstr ""
 "Das Supertext Translation Plugin konnte sich beim Supertext-System nicht "
 "anmelden. Bitte überprüfen Sie die Benutzereinstellungen. "
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:287
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:290
 msgid "HTTP-Request error occurred. Details: "
 msgstr "HTTP-Anfrage-Fehler. Details: "
 
@@ -501,9 +509,6 @@ msgstr "HTTP-Anfrage-Fehler. Details: "
 
 #~ msgid "Translation"
 #~ msgstr "Übersetzung des Beitrages %s"
-
-#~ msgid "Attributes"
-#~ msgstr "Attribute"
 
 #~ msgid ""
 #~ "Error while communicating with Supertext. We couldn't find any offers. "
