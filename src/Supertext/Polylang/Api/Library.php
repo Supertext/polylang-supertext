@@ -13,6 +13,7 @@ class Library
 {
   const SHORTCODE_TAG = 'div';
   const SHORTCODE_TAG_CLASS = 'polylang-supertext-shortcode';
+  const SHORTCODE_CLOSED_TAG_CLASS = 'polylang-supertext-shortcode-closed';
   const SHORTCODE_ENCLOSED_CONTENT_CLASS = 'polylang-supertext-shortcode-enclosed';
 
   /**
@@ -242,6 +243,7 @@ class Library
     $attributes = shortcode_parse_atts($matches[3]);
     $savedShortcode = isset($savedShortcodes[$tagName]) ? $savedShortcodes[$tagName] : array('attributes' => array());
     $translatableShortcodeAttributes = $savedShortcode['attributes'];
+    $forceEnclosingForm = preg_match('/\[\s*\/\s*'.$tagName.'\s*\]/', $matches[0]);
 
     $attributeNodes = '';
 
@@ -263,7 +265,7 @@ class Library
       $attributeNodes .= '<div class="' . self::SHORTCODE_ENCLOSED_CONTENT_CLASS . '">' . $enclosedContent . '</div>';
     }
 
-    return '<' . self::SHORTCODE_TAG . ' class="' . self::SHORTCODE_TAG_CLASS . '" name="' . $tagName . '">' . $attributeNodes . '</' . self::SHORTCODE_TAG . '>';
+    return '<' . self::SHORTCODE_TAG . ' class="' . ($forceEnclosingForm ? self::SHORTCODE_CLOSED_TAG_CLASS : self::SHORTCODE_TAG_CLASS) . '" name="' . $tagName . '" >' . $attributeNodes . '</' . self::SHORTCODE_TAG . '>';
   }
 
   /**
@@ -319,11 +321,13 @@ class Library
       if($childNode->nodeType ===  XML_ELEMENT_NODE
         && $childNode->nodeName === self::SHORTCODE_TAG
         && $childNode->hasAttribute('class')
-        && $childNode->attributes->getNamedItem('class')->nodeValue === self::SHORTCODE_TAG_CLASS){
+        && ($childNode->attributes->getNamedItem('class')->nodeValue === self::SHORTCODE_TAG_CLASS
+          || $childNode->attributes->getNamedItem('class')->nodeValue === self::SHORTCODE_CLOSED_TAG_CLASS)){
 
         $shortcodeName = $childNode->attributes->getNamedItem('name')->nodeValue;
         $attributes = '';
         $enclosedContent = '';
+        $forceEnclosingForm = $childNode->attributes->getNamedItem('class')->nodeValue === self::SHORTCODE_CLOSED_TAG_CLASS;
 
         foreach ($childNode->childNodes as $shortcodeChildNode) {
           switch($shortcodeChildNode->nodeName){
@@ -350,7 +354,7 @@ class Library
 
         $space = empty($attributes) ? '' : ' ';
         $shortcodeStart = '[' . $shortcodeName . $space . trim($attributes) . ']';
-        $shortcodeEnd = empty($enclosedContent) ? '' : $enclosedContent .'[/' . $shortcodeName . ']';
+        $shortcodeEnd = empty($enclosedContent) && !$forceEnclosingForm ? '' : $enclosedContent .'[/' . $shortcodeName . ']';
 
         $newContent .=  $shortcodeStart . $shortcodeEnd;
       }else{
