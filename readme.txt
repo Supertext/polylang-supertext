@@ -45,6 +45,11 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 1.5 =
+* Added new translation
+* Enhanced error messages and handling
+* Extended Shortcode replacement
+
 = 1.4 =
 * Settings and support for Custom Fields
 * Added support for re-translation
