@@ -23,29 +23,25 @@
   font-size: 13px;
 }
 
-#tblShortcodes .shortcode-attribute-input{
+#shortcodesSettingsForm .shortcode-setting-container{
   float:left;
-  display: none;
-  padding-right: 10px;
+  padding: 5px 10px;
+  margin-right: 5px;
+  background: #ddd;
 }
 
-#tblShortcodes .shortcode-attribute-remove-input{
-  margin-left: -2px;
+#shortcodesSettingsForm .shortcode-setting-attributes{
+  min-width:417px;
 }
 
-#tblShortcodes td{
-  padding-left: 0;
-  padding-right: 10px;
+#shortcodesSettingsForm .shortcode-setting-title{
+  margin-bottom: 5px;
 }
 
-#tblShortcodes td:first-child input{
-  margin:0;
+#shortcodesSettingsForm .shortcode-attribute-input{
+  display:none;
 }
 
-#tblShortcodes td:last-child, #tblShortcodes th:last-child{
-  padding-left: 10px;
-}
-
-th[class*='column-translation-status'], td[class*='column-translation-status'] {
-  width: 2em;
+#shortcodesSettingsForm .button{
+  margin:1px;
 }

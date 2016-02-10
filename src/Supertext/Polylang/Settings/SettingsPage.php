@@ -15,6 +15,10 @@ use Supertext\Polylang\Helper\Constant;
  */
 class SettingsPage extends AbstractPage
 {
+  const USERS_TAB = 'users';
+  const CUSTOM_FIELDS_TAB = 'customfields';
+  const SHORTCODES_TAB = 'shortcodes';
+
   private $tabs = array();
   private $customFieldsProviders = array();
 
@@ -25,7 +29,7 @@ class SettingsPage extends AbstractPage
     // Tabs definitions
     $this->tabs = array();
     // First settings page with user funtions
-    $this->tabs['users'] = array(
+    $this->tabs[self::USERS_TAB] = array(
       'name' => __('User and languages', 'polylang-supertext'),
       'views' => array(
         'backend/settings-users',
@@ -39,7 +43,7 @@ class SettingsPage extends AbstractPage
 
     // If there are providers, make the tab appear
     if (count($this->customFieldsProviders) > 0) {
-      $this->tabs['customfields'] = array(
+      $this->tabs[self::CUSTOM_FIELDS_TAB] = array(
         'name' => __('Custom fields', 'polylang-supertext'),
         'views' => array(
           'backend/settings-custom-fields'
@@ -49,7 +53,7 @@ class SettingsPage extends AbstractPage
     }
 
     // finally, add shortcodes
-     $this->tabs['shortcodes'] = array(
+     $this->tabs[self::SHORTCODES_TAB] = array(
       'name' => __('Shortcodes', 'polylang-supertext'),
       'views' => array(
         'backend/settings-shortcodes'
@@ -216,7 +220,7 @@ class SettingsPage extends AbstractPage
   {
     //Return default tab if none set
     if (empty($_GET['tab'])) {
-      return 'users';
+      return self::USERS_TAB;
     }
 
     $tabId = esc_attr($_GET['tab']);
@@ -295,7 +299,7 @@ class SettingsPage extends AbstractPage
 
   protected function saveShortcodesSettings()
   {
-    $shortcodeToSave = array();
+    $shortcodeSettingsToSave = array();
 
     foreach ($_POST['shortcodes'] as $name => $shortcode) {
       $settings = array(
@@ -315,10 +319,10 @@ class SettingsPage extends AbstractPage
         continue;
       }
 
-      $shortcodeToSave[$name] = $settings;
+      $shortcodeSettingsToSave[$name] = $settings;
     }
 
-    $this->library->saveSetting(Constant::SETTING_SHORTCODES, $shortcodeToSave);
+    $this->library->saveSetting(Constant::SETTING_SHORTCODES, $shortcodeSettingsToSave);
   }
 
   private function removeEmptyFields($attributes)
@@ -326,7 +330,7 @@ class SettingsPage extends AbstractPage
     $cleanedAttributes = array();
 
     foreach ($attributes as $attribute) {
-      if(!empty($attribute)){
+      if(!empty($attribute['name'])){
         $cleanedAttributes[] = $attribute;
       }
     }

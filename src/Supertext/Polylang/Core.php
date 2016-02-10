@@ -65,6 +65,8 @@ class Core
 
     // Always loaded components
     $this->library = new Library();
+
+    $this->checkVersion();
   }
 
   /**
@@ -103,6 +105,7 @@ class Core
     wp_register_style(Constant::STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/style.css', array(), SUPERTEXT_PLUGIN_REVISION);
     wp_register_style(Constant::POST_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/post.css', array(), SUPERTEXT_PLUGIN_REVISION);
     wp_register_style(Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/themes/wordpress-dark/style.min.css', array(), SUPERTEXT_PLUGIN_REVISION);
+
     wp_register_script(Constant::GLOBAL_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/global-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
     wp_register_script(Constant::TRANSLATION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/translation-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION, true);
     wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
@@ -119,6 +122,7 @@ class Core
     $options = $library->getSettingOption();
 
     if (!isset($options[Helper\Constant::SETTING_SHORTCODES])) {
+      //no shortcode settings, add defaults
       $library->saveSetting(Helper\Constant::SETTING_SHORTCODES,
         array(
           'vc_raw_html' => array(
@@ -127,10 +131,43 @@ class Core
           ),
           'vc_custom_heading' => array(
             'content_encoding' => null,
-            'attributes' => array('text')
+            'attributes' => array(
+              array('name' => 'text', 'encoding' => '')
+            )
           )
         )
       );
+    }else{
+      //Check options state and update if needed
+      $shortcodes = $options[Helper\Constant::SETTING_SHORTCODES];
+      $checkedShortcodes = array();
+
+      foreach ($shortcodes as $key => $shortcode) {
+        if(!is_array($shortcode['attributes'])){
+          $shortcode['attributes'] = array();
+          $checkedShortcodes[$key] = $shortcode;
+          continue;
+        }
+
+        if(empty($shortcode['attributes'])){
+          $checkedShortcodes[$key] = $shortcode;
+          continue;
+        }
+
+        $checkedAttributes = array();
+        foreach ($shortcode['attributes'] as $attribute) {
+          if(!is_array($attribute)){
+            $checkedAttributes[] = array('name' => $attribute, 'encoding' => '');
+          }else{
+            $checkedAttributes[] = $attribute;
+          }
+        }
+
+        $shortcode['attributes'] = $checkedAttributes;
+        $checkedShortcodes[$key] = $shortcode;
+      }
+
+      $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, $checkedShortcodes);
     }
   }
 
@@ -140,5 +177,13 @@ class Core
   public static function onDeactivation()
   {
 
+  }
+
+  private function checkVersion()
+  {
+    if (get_option(Constant::VERSION_OPTION) != SUPERTEXT_PLUGIN_VERSION) {
+      $this->onActivation();
+      update_option(Constant::VERSION_OPTION, SUPERTEXT_PLUGIN_VERSION);
+    }
   }
 } 

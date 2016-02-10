@@ -8,9 +8,11 @@ $library = $context->getCore()->getLibrary();
 $options = $library->getSettingOption();
 $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipulation::forceArray($options[Constant::SETTING_SHORTCODES]) : array();
 
-function getAttributeInput($key, $value){
-  return '<div class="shortcode-attribute-input">
-           <input type="text" name="shortcodes['.$key.'][attributes][]" value="'.$value.'" placeholder="'. __('Attribute name...', 'polylang-supertext') .'"/><input type="button" value="-" class="button button-highlighted shortcode-attribute-remove-input" />
+function getAttributeInput($index, $key, $value){
+  return '<div class="shortcode-attribute-input" data-index="'.$index.'">
+           <input type="text" name="shortcodes['.$key.'][attributes]['.$index.'][name]" value="'.$value['name'].'" placeholder="'. __('Attribute name...', 'polylang-supertext') .'"/>
+           <input type="text" name="shortcodes['.$key.'][attributes]['.$index.'][encoding]" value="'.$value['encoding'].'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/>
+           <input type="button" value="-" class="button button-highlighted shortcode-attribute-remove-input" />
          </div>';
 }
 
@@ -24,43 +26,41 @@ function getAttributeInput($key, $value){
     <p>
       <?php _e('Please define the encoding process for all encoded and enclosed content. Available encoding functions are: rawurl, url and base64', 'polylang-supertext'); ?>
     </p>
-    <table id="tblShortcodes">
-      <thead>
-      <tr>
-        <th><?php _e('Shortcode', 'polylang-supertext'); ?></th>
-        <th><?php _e('Encoding for enclosed content', 'polylang-supertext'); ?></th>
-        <th><?php _e('Translatable attributes', 'polylang-supertext'); ?></th>
-      </tr>
-      </thead>
-      <tbody>
-      <?php
-      foreach ($shortcode_tags as $key => $function) {
-        $checkboxId = 'chkbx'.$key;
-        $contentEncoding = '';
-        $savedShortcodeAttributes = array();
-        $checked = '';
+    <?php
+    foreach ($shortcode_tags as $key => $function) {
+      $contentEncoding = '';
+      $savedShortcodeAttributes = array();
 
-        if(isset($savedShortcodes[$key])){
-          $savedShortcodeAttributes = $savedShortcodes[$key]['attributes'];
-          $contentEncoding = $savedShortcodes[$key]['content_encoding'];
-          $checked = 'checked="checked"';
-        }
-
-        $attributeInputs = getAttributeInput($key, '');
-
-        foreach ($savedShortcodeAttributes as $savedShortcodeAttribute) {
-          $attributeInputs .= getAttributeInput($key, $savedShortcodeAttribute);
-        }
-
-        echo '
-        <tr>
-          <td><label for="'.$checkboxId.'">'.$key.'</label></td>
-          <td><input type="text" name="shortcodes['.$key.'][content_encoding]" value="'.$contentEncoding.'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/></td>
-          <td>'.$attributeInputs.'<input type="button" value="+" class="button button-highlighted shortcode-attribute-add-input" /></td>
-        </tr>';
+      if(isset($savedShortcodes[$key])){
+        $savedShortcodeAttributes = $savedShortcodes[$key]['attributes'];
+        $contentEncoding = $savedShortcodes[$key]['content_encoding'];
       }
-      ?>
-      </tbody>
-    </table>
+
+      $attributeIndex = 0;
+      $attributeInputs = getAttributeInput($attributeIndex, $key, array('name'=>'', 'encoding'=>''));
+      foreach ($savedShortcodeAttributes as $savedShortcodeAttribute) {
+        $attributeInputs .= getAttributeInput(++$attributeIndex, $key, $savedShortcodeAttribute);
+      }
+
+      echo '<div>
+              <h4>' . $key . '</h4>
+              <div class="shortcode-setting-container">
+                <div class="shortcode-setting-title">
+                  ' . __('Encoding for enclosed content', 'polylang-supertext') . '
+                </div>
+                <div class="shortcode-content-encoding">
+                  <input type="text" name="shortcodes['.$key.'][content_encoding]" value="'.$contentEncoding.'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/>
+                </div>
+              </div>
+              <div class="shortcode-setting-container shortcode-setting-attributes">
+                <div class="shortcode-setting-title">
+                  ' . __('Translatable attributes', 'polylang-supertext') . '
+                </div>
+                <div>'.$attributeInputs.'<input type="button" value="+" class="button button-highlighted shortcode-attribute-add-input" /></div>
+              </div>
+              <div class="clear"></div>
+            </div>';
+    } ?>
   </div>
 </div>
+

@@ -215,7 +215,7 @@ class Library
    * @param string post content to process
    * @return string post content with replaced shortcodes
    */
-  private function replaceShortcodes($content)
+  public function replaceShortcodes($content)
   {
     $options = $this->getSettingOption();
     $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
@@ -241,19 +241,11 @@ class Library
 
     $tagName = $matches[2];
     $attributes = shortcode_parse_atts($matches[3]);
-    $savedShortcode = isset($savedShortcodes[$tagName]) ? $savedShortcodes[$tagName] : array('attributes' => array());
+    $savedShortcode = isset($savedShortcodes[$tagName]) ? $savedShortcodes[$tagName] : array('attributes' => array(''));
     $translatableShortcodeAttributes = $savedShortcode['attributes'];
     $forceEnclosingForm = preg_match('/\[\s*\/\s*'.$tagName.'\s*\]/', $matches[0]);
 
-    $attributeNodes = '';
-
-    foreach ($attributes as $name => $value) {
-      if (in_array($name, $translatableShortcodeAttributes)) {
-        $attributeNodes .= '<span name="' . $name . '">' . $value . '</span>';
-      } else {
-        $attributeNodes .= '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
-      }
-    }
+    $attributeNodes = $this->getAttributeNodes($attributes, $translatableShortcodeAttributes);
 
     //Enclosed content can contain shortcodes as well
     if (!empty($matches[5])) {
@@ -333,7 +325,11 @@ class Library
           switch($shortcodeChildNode->nodeName){
             case 'span':
               $attributeName = $shortcodeChildNode->attributes->getNamedItem('name')->nodeValue;
-              $attributeValue = $shortcodeChildNode->nodeValue;
+              if(isset($savedShortcodes[$shortcodeName])){
+                $attributeValue = $this->getAttributeValue($attributeName, $shortcodeChildNode->nodeValue, $savedShortcodes[$shortcodeName]['attributes']) ;
+              }else{
+                $attributeValue = $shortcodeChildNode->nodeValue;
+              }
               $attributes .= $attributeName . '="' . $attributeValue . '" ';
               break;
             case 'input':
@@ -363,6 +359,51 @@ class Library
     }
 
     return $newContent;
+  }
+
+  /**
+   * @param $attributes
+   * @param $translatableShortcodeAttributes
+   * @return string
+   */
+  private function getAttributeNodes($attributes, $translatableShortcodeAttributes)
+  {
+    $attributeNodes = '';
+
+    foreach ($attributes as $name => $value) {
+      $isTranslatable = false;
+      $encodeWith = '';
+
+      foreach ($translatableShortcodeAttributes as $translatableShortcodeAttribute) {
+        if($translatableShortcodeAttribute['name'] == $name){
+          $isTranslatable = true;
+          $encodeWith = $translatableShortcodeAttribute['encoding'];
+        }
+      }
+
+      if ($isTranslatable) {
+        $spanContent = empty($encodeWith) ? $value : $this->decodeEnclosedContent($value, $encodeWith);
+        $attributeNodes .= '<span name="' . $name . '">'.$spanContent.'</span>';
+      } else {
+        $attributeNodes .= '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
+      }
+    }
+    return $attributeNodes;
+  }
+
+  /**
+   * @param $name
+   * @param $nodeValue
+   * @param $translatableShortcodeAttributes
+   * @return string
+   */
+  private function getAttributeValue($name, $nodeValue, $translatableShortcodeAttributes)
+  {
+    foreach ($translatableShortcodeAttributes as $translatableShortcodeAttribute) {
+      if($translatableShortcodeAttribute['name'] == $name){
+        return $this->encodeEnclosedContent($nodeValue, $translatableShortcodeAttribute['encoding']);
+      }
+    }
   }
 
   private function decodeEnclosedContent($content, $contentEncoding)
@@ -406,4 +447,4 @@ class Library
 
     return $content;
   }
-} 
+}

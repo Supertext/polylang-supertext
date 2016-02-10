@@ -16,7 +16,7 @@ class Constant
   /**
    * @var string development api endpoints
    */
-  const DEV_API = 'https://192.168.0.6/Supertext/api/v1/';
+  const DEV_API = 'https://192.168.0.17/Supertext/api/v1/';
   /**
    * @var string live api endpoints
    */
@@ -25,6 +25,10 @@ class Constant
    * @var string the settings option
    */
   const SETTINGS_OPTION = 'polylang_supertext_settings';
+  /**
+   * @var string the version option
+   */
+  const VERSION_OPTION = 'polylang_supertext_version';
   /**
    * @var string name of the subsetting for user mapping
    */

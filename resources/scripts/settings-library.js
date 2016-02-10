@@ -92,9 +92,19 @@ Supertext.Settings.Shortcodes = (function ($) {
 
   function addAttributeInput(){
     var $this = $(this);
-    var attributeInputCopy = $this.prev().clone();
+    var attributeInputCopy = $($this.prev().clone());
+    var oldIndex = $this.prev().data('index');
+    var newIndex = oldIndex + 1;
 
-    attributeInputCopy.children('input[type=text]').val('');
+    attributeInputCopy.data('index', newIndex);
+    attributeInputCopy.attr('data-index', newIndex);
+
+    attributeInputCopy.children('input[type=text]').each(function(){
+      var $this = $(this);
+      $this.val('');
+      var name = $(this).attr('name').replace('[attributes]['+oldIndex+']', '[attributes]['+newIndex+']');
+      $this.attr('name', name);
+    });
 
     attributeInputCopy.children('.shortcode-attribute-remove-input')
       .on('click', removeAttributeInput);
@@ -107,19 +117,10 @@ Supertext.Settings.Shortcodes = (function ($) {
   }
 
   function showNotEmptyAttributeInputs(){
-    $('#tblShortcodes tbody .shortcode-attribute-input input[type=text]').each(function(){
+    $('#shortcodesSettingsForm .shortcode-attribute-input input[type=text]').each(function(){
       var $this = $(this);
       if($this.val() != ''){
         $this.parent().show();
-      }
-    });
-  }
-
-  function removeEmptyAttributeInputs(){
-    $('#tblShortcodes tbody .shortcode-attribute-input input[type=text]').each(function(){
-      var $this = $(this);
-      if($this.val() == ''){
-        $this.attr('name', '');
       }
     });
   }
@@ -130,13 +131,11 @@ Supertext.Settings.Shortcodes = (function ($) {
 
       showNotEmptyAttributeInputs();
 
-      $('#tblShortcodes tbody .shortcode-attribute-add-input')
+      $('#shortcodesSettingsForm .shortcode-attribute-add-input')
         .on('click', addAttributeInput);
 
-      $('#tblShortcodes tbody .shortcode-attribute-remove-input')
+      $('#shortcodesSettingsForm .shortcode-attribute-remove-input')
         .on('click', removeAttributeInput);
-
-      $('#shortcodesSettingsForm').submit(removeEmptyAttributeInputs);
     }
   }
 })(jQuery);
