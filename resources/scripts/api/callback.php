@@ -12,6 +12,11 @@ $response = array('message' => 'unknown error');
 $requestBody = file_get_contents('php://input');
 $json = json_decode($requestBody);
 
+if($requestBody === false || empty($requestBody) || empty($json)){
+  http_response_code(400);
+  return;
+}
+
 $refData = explode('-', $json->ReferenceData, 2);
 $postId = $refData[0];
 $secureToken = $refData[1];
@@ -100,14 +105,17 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
     } else {
       $response['message'] = __('Error: translation import only possible for drafted articles', 'polylang-supertext');
       Core::getInstance()->getLog()->addEntry($translationPostId, $response['message']);
+      http_response_code(403);
     }
   } else {
     $response['message'] = __('Error: the language of the translation from Supertext does not match or the translated post has been deleted', 'polylang-supertext');
     Core::getInstance()->getLog()->addEntry($postId, $response['message']);
+    http_response_code(404);
   }
 } else {
   $response['message'] = __('Error: method not allowed', 'polylang-supertext');
   Core::getInstance()->getLog()->addEntry($postId, $response['message']);
+  http_response_code(403);
 }
 
 // Print the response
