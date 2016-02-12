@@ -106,8 +106,13 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
         }
       }
 
+      if($workflowSettings['publishOnCallback']){
+        $post->post_status = 'publish';
+      }
+
       // Now finally save that post and flush cache
       wp_update_post($post);
+
       // All good, remove translation flag
       delete_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG);
 
