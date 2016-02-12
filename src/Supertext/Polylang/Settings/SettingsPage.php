@@ -18,6 +18,7 @@ class SettingsPage extends AbstractPage
   const USERS_TAB = 'users';
   const CUSTOM_FIELDS_TAB = 'customfields';
   const SHORTCODES_TAB = 'shortcodes';
+  const WORKFLOW_TAB = 'workflow';
 
   private $tabs = array();
   private $customFieldsProviders = array();
@@ -59,6 +60,14 @@ class SettingsPage extends AbstractPage
         'backend/settings-shortcodes'
       ),
       'saveFunction' => 'saveShortcodesSettings'
+    );
+
+    $this->tabs[self::WORKFLOW_TAB] = array(
+      'name' => __('Workflow', 'polylang-supertext'),
+      'views' => array(
+        'backend/settings-workflow'
+      ),
+      'saveFunction' => 'saveWorkflowSettings'
     );
   }
 
@@ -297,6 +306,9 @@ class SettingsPage extends AbstractPage
     $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, $fieldDefinitionsToSave);
   }
 
+  /**
+   * Saves shortcode settings to options
+   */
   protected function saveShortcodesSettings()
   {
     $shortcodeSettingsToSave = array();
@@ -325,6 +337,9 @@ class SettingsPage extends AbstractPage
     $this->library->saveSetting(Constant::SETTING_SHORTCODES, $shortcodeSettingsToSave);
   }
 
+  /**
+   * Removes empty attribute settings
+   */
   private function removeEmptyFields($attributes)
   {
     $cleanedAttributes = array();
@@ -336,5 +351,18 @@ class SettingsPage extends AbstractPage
     }
 
     return $cleanedAttributes;
+  }
+
+  /**
+   * Saves workflow settings to options
+   */
+  private function saveWorkflowSettings()
+  {
+    $settingsToSave = array(
+      'publishOnCallback' => isset($_POST['publishOnCallback']) && !empty($_POST['publishOnCallback']),
+      'overridePublishedPosts' => isset($_POST['overridePublishedPosts']) && !empty($_POST['overridePublishedPosts'])
+    );
+
+    $this->library->saveSetting(Constant::SETTING_WORKFLOW, $settingsToSave);
   }
 } 

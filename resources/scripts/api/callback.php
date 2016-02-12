@@ -6,8 +6,14 @@ use Supertext\Polylang\Core;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Backend\Translation;
+use Supertext\Polylang\Helper\Constant;
+use Comotive\Util\ArrayManipulation;
 
 // Get json request body
+$library = Core::getInstance()->getLibrary();
+$options = $library->getSettingOption();
+$workflowSettings = isset($options[Constant::SETTING_WORKFLOW]) ? ArrayManipulation::forceArray($options[Constant::SETTING_WORKFLOW]) : array();
+
 $response = array('message' => 'unknown error');
 $requestBody = file_get_contents('php://input');
 $json = json_decode($requestBody);
@@ -32,8 +38,13 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
   if ($translationPostId > 0) {
     // Get the translation post object
     $post = get_post($translationPostId);
-    // check if correct language
-    if ($post->post_status == 'draft' || intval(get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true)) === 1) {
+
+    $isPostWritable =
+      $post->post_status == 'draft' ||
+      ($post->post_status == 'publish' && $workflowSettings['overridePublishedPosts']) ||
+      intval(get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true)) === 1;
+
+    if ($isPostWritable) {
 
       // Save all translations
       foreach ($json->Groups as $translationGroup) {
@@ -43,7 +54,7 @@ if (md5(Wrapper::REFERENCE_HASH . $postId) == $secureToken) {
               $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
 
               if($translationItem->Id === 'post_content'){
-                $decodedContent = Core::getInstance()->getLibrary()->replaceShortcodeNodes($decodedContent);
+                $decodedContent = $library->replaceShortcodeNodes($decodedContent);
               }
 
               $post->{$translationItem->Id} = $decodedContent;

@@ -46,6 +46,10 @@ class Constant
    */
   const SETTING_SHORTCODES = 'shortcodes';
   /**
+   * $var string name of the subsetting for workflow settings
+   */
+  const SETTING_WORKFLOW = 'workflow';
+  /**
    * @var string name of the subsetting for language mapping
    */
   const SETTING_WORKING = 'isWorking';
