@@ -37,10 +37,6 @@ class Wrapper
    * @var array Open api connections per user
    */
   static private $apiConnections = array();
-  /**
-   * @var string a reference hash to obfuscate post id info in callback
-   */
-  const REFERENCE_HASH = '0b7ff2942c3377be90f46673dc197bee';
 
   /**
    * @param string $user the supertext user name

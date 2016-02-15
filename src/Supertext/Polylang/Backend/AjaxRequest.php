@@ -31,6 +31,8 @@ class AjaxRequest
     $post = get_post($postId);
     $wrapper = $library->getUserWrapper();
     $log = Core::getInstance()->getLog();
+    $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
+    $translationReferenceHash = bin2hex($randomBytes);
 
     // Create the order
     $orderCreation = $wrapper->createOrder(
@@ -40,7 +42,7 @@ class AjaxRequest
       $options['product_id'],
       $data,
       SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php',
-      $post->ID . '-' . md5(Wrapper::REFERENCE_HASH . $post->ID),
+      $post->ID . '-' . md5($translationReferenceHash . $post->ID),
       $options['additional_information']
     );
 
@@ -87,6 +89,7 @@ class AjaxRequest
       $log->addOrderId($translationPostId, $order->Id);
 
       update_post_meta($translationPostId, Translation::IN_TRANSLATION_FLAG, 1);
+      update_post_meta($translationPostId, Translation::IN_TRANSLATION_REFERENCE_HASH, $translationReferenceHash);
 
       self::setJsonOutput(
         array(

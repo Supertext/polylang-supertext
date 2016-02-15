@@ -55,7 +55,7 @@ class Core
   public function load()
   {
     if (is_admin()) {
-      add_action('init', array($this, 'RegisterAdminAssets'));
+      add_action('init', array($this, 'registerAdminAssets'));
 
       // Load needed subcomponents in admin
       $this->menu = new Menu();
@@ -100,7 +100,7 @@ class Core
   /**
    * Registers all assets
    */
-  public function RegisterAdminAssets()
+  public function registerAdminAssets()
   {
     wp_register_style(Constant::STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/style.css', array(), SUPERTEXT_PLUGIN_REVISION);
     wp_register_style(Constant::POST_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/post.css', array(), SUPERTEXT_PLUGIN_REVISION);
@@ -168,6 +168,25 @@ class Core
       }
 
       $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, $checkedShortcodes);
+    }
+
+    $query = new \WP_Query(array(
+      'meta_key' => Translation::IN_TRANSLATION_FLAG
+    ));
+
+    if($query->have_posts()){
+      $posts = $query->get_posts();
+      foreach ($posts as $post) {
+        if(intval(get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true)) !== 1){
+          continue;
+        }
+
+        $referenceHash = get_post_meta($post->ID, Translation::IN_TRANSLATION_REFERENCE_HASH, true);
+
+        if(empty($referenceHash)){
+          update_post_meta($post->ID, Translation::IN_TRANSLATION_REFERENCE_HASH, '0b7ff2942c3377be90f46673dc197bee');
+        }
+      }
     }
   }
 
