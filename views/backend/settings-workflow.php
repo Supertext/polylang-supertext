@@ -16,11 +16,11 @@ $overridePublishedPostsChecked = $workflowSettings['overridePublishedPosts'] ? '
       <tbody>
         <tr>
           <td><input type="checkbox" id="chbxPublishOnCallback" name="publishOnCallback" <?php echo $publishOnCallbackChecked; ?> /></td>
-          <td><label for="chbxPublishOnCallback">Automatically publish translations</label></td>
+          <td><label for="chbxPublishOnCallback"><?php _e('Automatically publish translations', 'polylang-supertext'); ?></label></td>
         </tr>
         <tr>
           <td><input type="checkbox" id="chbxOverridePublishedPosts" name="overridePublishedPosts"  <?php echo $overridePublishedPostsChecked; ?>/></td>
-          <td><label for="chbxOverridePublishedPosts">Allow Supertext to override published posts</label></td>
+          <td><label for="chbxOverridePublishedPosts"><?php _e('Allow Supertext to overwrite published posts', 'polylang-supertext'); ?></label></td>
         </tr>
       </tbody>
     </table>
