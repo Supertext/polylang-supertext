@@ -27,7 +27,7 @@ class CallbackHandler
     $referenceHash = get_post_meta($translationPostId, Translation::IN_TRANSLATION_REFERENCE_HASH, true);
 
     // check md5 Secure String
-    if (md5($referenceHash . $postId) !== $secureToken) {
+    if (empty($referenceHash) || md5($referenceHash . $postId) !== $secureToken) {
       $message = __('Error: method not allowed', 'polylang-supertext');
       Core::getInstance()->getLog()->addEntry($postId, $message);
       return $this->createResult(403, $message);
