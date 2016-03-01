@@ -171,7 +171,8 @@ class Core
     }
 
     $query = new \WP_Query(array(
-      'meta_key' => Translation::IN_TRANSLATION_FLAG
+      'meta_key' => Translation::IN_TRANSLATION_FLAG,
+      'posts_per_page'=> -1
     ));
 
     if($query->have_posts()){
