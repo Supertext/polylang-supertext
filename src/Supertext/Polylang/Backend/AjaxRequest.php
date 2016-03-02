@@ -2,7 +2,7 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Comotive\Util\String;
+use Comotive\Util\StringUtils;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Core;
@@ -183,7 +183,7 @@ class AjaxRequest
               <label for="rad_translation_type_' . $radioInputId . '">' . date_i18n('D, d. F H:i', strtotime($item['date'])) . '</label>
             </td>
             <td align="right" class="ti_price">
-              <label for="rad_translation_type_' . $radioInputId . '">' . $pricing['currency'] . ' ' . String::numberFormat($item['price'], 2) . '</label>
+              <label for="rad_translation_type_' . $radioInputId . '">' . $pricing['currency'] . ' ' . StringUtils::numberFormat($item['price'], 2) . '</label>
             </td>
           </tr>
         ';

@@ -2,10 +2,7 @@
 
 namespace Comotive\Util;
 
-use LBWP\Module\Frontend\OutputFilter;
 use WP_Error;
-use LBWP\Util\String;
-use LBWP\Core as LbwpCore;
 
 /**
  * Utility functions for WordPress
@@ -171,32 +168,6 @@ class WordPress
   }
 
   /**
-   * @param string $html
-   * @return string html with ssl links
-   */
-  public static function handleSslLinks($html)
-  {
-    if ($_SERVER['HTTPS']) {
-      $core = LbwpCore::getInstance();
-      $cdnBucket = $core->getCdnName();
-      $replacements = array(
-        array('http://' . $cdnBucket, 'https://' . $core->getSslCdnName()),
-        array('http://' . OutputFilter::CLOUDFRONT_DOMAIN, 'https://' . OutputFilter::CLOUDFRONT_DOMAIN),
-        array('http://' . LBWP_HOST, 'https://' . LBWP_HOST)
-      );
-
-      foreach ($replacements as $replacement) {
-        $html = str_replace($replacement[0], $replacement[1], $html);
-        $replacement[0] = str_replace('/', '\/', $replacement[0]);
-        $replacement[1] = str_replace('/', '\/', $replacement[1]);
-        $html = str_replace($replacement[0], $replacement[1], $html);
-      }
-    }
-
-    return $html;
-  }
-
-  /**
    * @param string $name post_name
    * @param string $posttype post_type
    * @return int the found id
@@ -206,7 +177,7 @@ class WordPress
     $wpdb = self::getDb();
     // Get id by simple query
     $sql = 'SELECT ID FROM {sql:postTable} WHERE post_type = {postType} AND post_name = {postName}';
-    $postId = $wpdb->get_var(String::prepareSql($sql, array(
+    $postId = $wpdb->get_var(StringUtils::prepareSql($sql, array(
       'postTable' => $wpdb->posts,
       'postType' => $posttype,
       'postName' => $name

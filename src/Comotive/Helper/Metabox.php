@@ -3,7 +3,7 @@
 namespace Comotive\Helper;
 
 use wpdb;
-use Comotive\Util\String;
+use Comotive\Util\StringUtils;
 use Comotive\Util\Date;
 
 /**
@@ -586,7 +586,7 @@ class Metabox
     $value = stripslashes(trim($value));
 
     // Validate the input with EU_FORMAT_DATE
-    if (!String::check_date($value, Date::EU_FORMAT_DATE)) {
+    if (!StringUtils::check_date($value, Date::EU_FORMAT_DATE)) {
       $value = ''; // Make the error pop up
     }
 
@@ -825,7 +825,7 @@ class Metabox
       ';
 
       global $wpdb;
-      $posts = $wpdb->get_results(String::prepareSql($sql, array(
+      $posts = $wpdb->get_results(StringUtils::prepareSql($sql, array(
         'postTable' => $wpdb->posts,
         'postId' => intval($_GET['term']),
         'postTitle' => '%' . $_GET['term'] . '%',
@@ -1312,7 +1312,7 @@ class Metabox
     }
 
     // Replace in the input field
-    $input = String::getWpEditor($value, $key, array(
+    $input = StringUtils::getWpEditor($value, $key, array(
       'textarea_rows' => $args['rows']
     ));
     $html = str_replace('{input}', $input, $html);
