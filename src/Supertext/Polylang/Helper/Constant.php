@@ -16,7 +16,7 @@ class Constant
   /**
    * @var string development api endpoints
    */
-  const DEV_API = 'https://192.168.0.17/Supertext/api/v1/';
+  const DEV_API = 'https://192.168.0.30/Supertext/api/v1/';
   /**
    * @var string live api endpoints
    */
