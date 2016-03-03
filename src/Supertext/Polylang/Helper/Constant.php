@@ -85,4 +85,8 @@ class Constant
    * @var string the jstree script handle
    */
   const JSTREE_SCRIPT_HANDLE = 'polylang-supertext-jstree-scripts';
+  /**
+   * @var string the jquery ui complete handle
+   */
+  const JQUERY_UI_AUTOCOMPLETE = 'jquery-ui-autocomplete';
 }

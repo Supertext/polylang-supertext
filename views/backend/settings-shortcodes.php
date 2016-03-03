@@ -11,7 +11,7 @@ $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipula
 function getAttributeInput($index, $key, $value){
   return '<div class="shortcode-attribute-input" data-index="'.$index.'">
            <input type="text" name="shortcodes['.$key.'][attributes]['.$index.'][name]" value="'.$value['name'].'" placeholder="'. __('Attribute name...', 'polylang-supertext') .'"/>
-           <input type="text" name="shortcodes['.$key.'][attributes]['.$index.'][encoding]" value="'.$value['encoding'].'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/>
+           <input class="shortcode-input-encoding" type="text" name="shortcodes['.$key.'][attributes]['.$index.'][encoding]" value="'.$value['encoding'].'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/>
            <input type="button" value="-" class="button button-highlighted shortcode-attribute-remove-input" />
          </div>';
 }
@@ -49,7 +49,7 @@ function getAttributeInput($index, $key, $value){
                   ' . __('Encoding for enclosed content', 'polylang-supertext') . '
                 </div>
                 <div class="shortcode-content-encoding">
-                  <input type="text" name="shortcodes['.$key.'][content_encoding]" value="'.$contentEncoding.'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/>
+                  <input class="shortcode-input-encoding" type="text" name="shortcodes['.$key.'][content_encoding]" value="'.$contentEncoding.'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/>
                 </div>
               </div>
               <div class="shortcode-setting-container shortcode-setting-attributes">

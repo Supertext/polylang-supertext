@@ -158,6 +158,7 @@ class SettingsPage extends AbstractPage
     wp_enqueue_style(Constant::JSTREE_STYLE_HANDLE);
     wp_enqueue_script(Constant::SETTINGS_SCRIPT_HANDLE);
     wp_enqueue_script(Constant::JSTREE_SCRIPT_HANDLE);
+    wp_enqueue_script(Constant::JQUERY_UI_AUTOCOMPLETE);
   }
 
   /**
