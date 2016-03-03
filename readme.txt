@@ -2,7 +2,7 @@
 Contributors: msebel, comotive, supertext
 Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 3.8
-Tested up to: 4.4
+Tested up to: 4.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,13 @@ You can create an account at [Supertext] (https://www.supertext.ch/en/signup) if
 Get the API key from the Settings page: [Account Settings] (https://www.supertext.ch/customer/accountsettings)
 
 == Changelog ==
+
+= 1.6 =
+* Added ability to define shortcode attribute encodings
+* Enhanced callback error handling
+* Extended callback to return appropriate http response codes
+* Enhanced token generation and validation
+* Added new setting to automatically publish translations and allow Supertext to override published content
 
 = 1.5 =
 * Added new translation
