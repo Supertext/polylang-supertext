@@ -160,6 +160,14 @@ class Library
   }
 
   /**
+   * @param $fieldId the field id
+   * @return string the field name created from the field id
+   */
+  public function getFieldNameFromId($fieldId){
+    return str_replace(' ', '_', $fieldId);
+  }
+
+  /**
    * @param $postId the id of the post to translate
    * @return array the list of custom fields definitions (available for the post)
    */
@@ -184,10 +192,10 @@ class Library
 
   /**
    * @param $postId the id of the post to translate
-   * @param array $selectedCustomFieldIds the ids of the selected custom field definitions
+   * @param array $selectedCustomFieldNames the ids of the selected custom field definitions
    * @return array the list of custom field keys and values
    */
-  public function getCustomFieldsForTranslation($postId, $selectedCustomFieldIds = array())
+  public function getCustomFieldsForTranslation($postId, $selectedCustomFieldNames = array())
   {
     $postCustomFields = get_post_meta($postId);
     $options = $this->getSettingOption();
@@ -197,7 +205,7 @@ class Library
 
     foreach ($postCustomFields as $meta_key => $value) {
       foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
-        if (!in_array($savedCustomFieldDefinition['id'], $selectedCustomFieldIds)) {
+        if (!in_array($this->getFieldNameFromId($savedCustomFieldDefinition['id']), $selectedCustomFieldNames)) {
           continue;
         }
 
