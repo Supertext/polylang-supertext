@@ -218,14 +218,14 @@ class Translation
 
     foreach ($columns as $key => $column) {
       if($key == 'comments'){
-        $newColumns[self::TRANSLATION_STATUS_COLUMN] =  '<span class="dashicons dashicons-translation"></span>';
+        $newColumns[self::TRANSLATION_STATUS_COLUMN] =  '<span class="dashicons dashicons-translation" width="20px"></span>';
       }
 
       $newColumns[$key] = $column;
     }
 
     if(!isset($newColumns[self::TRANSLATION_STATUS_COLUMN])){
-      $newColumns[self::TRANSLATION_STATUS_COLUMN] =  '<span class="dashicons dashicons-translation"></span>';
+      $newColumns[self::TRANSLATION_STATUS_COLUMN] =  '<span class="dashicons dashicons-translation" width="20px"></span>';
     }
 
     return $newColumns;
