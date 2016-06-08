@@ -121,23 +121,8 @@ class Core
 
     $options = $library->getSettingOption();
 
-    if (!isset($options[Helper\Constant::SETTING_SHORTCODES])) {
-      //no shortcode settings, add defaults
-      $library->saveSetting(Helper\Constant::SETTING_SHORTCODES,
-        array(
-          'vc_raw_html' => array(
-            'content_encoding' => 'rawurl,base64',
-            'attributes' => array()
-          ),
-          'vc_custom_heading' => array(
-            'content_encoding' => null,
-            'attributes' => array(
-              array('name' => 'text', 'encoding' => '')
-            )
-          )
-        )
-      );
-    }else{
+    //Migrate options
+    if (isset($options[Helper\Constant::SETTING_SHORTCODES])){
       //Check options state and update if needed
       $shortcodes = $options[Helper\Constant::SETTING_SHORTCODES];
       $checkedShortcodes = array();
@@ -168,26 +153,6 @@ class Core
       }
 
       $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, $checkedShortcodes);
-    }
-
-    $query = new \WP_Query(array(
-      'meta_key' => Translation::IN_TRANSLATION_FLAG,
-      'posts_per_page'=> -1
-    ));
-
-    if($query->have_posts()){
-      $posts = $query->get_posts();
-      foreach ($posts as $post) {
-        if(intval(get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true)) !== 1){
-          continue;
-        }
-
-        $referenceHash = get_post_meta($post->ID, Translation::IN_TRANSLATION_REFERENCE_HASH, true);
-
-        if(empty($referenceHash)){
-          update_post_meta($post->ID, Translation::IN_TRANSLATION_REFERENCE_HASH, '0b7ff2942c3377be90f46673dc197bee');
-        }
-      }
     }
   }
 
