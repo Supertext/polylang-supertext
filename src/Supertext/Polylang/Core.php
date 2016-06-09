@@ -6,6 +6,7 @@ use Supertext\Polylang\Api\Library;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
+use Supertext\Polylang\Helper\BeaverBuilderTextAccessor;
 use Supertext\Polylang\Helper\Constant;
 
 /**
@@ -35,7 +36,10 @@ class Core
    * @var Translation the translation library
    */
   protected $translation = NULL;
-
+  /**
+   * @var text accessors
+   */
+  protected $textAccessors = array();
   /**
    * Creates the instance and saves reference
    */
@@ -64,7 +68,10 @@ class Core
     }
 
     // Always loaded components
-    $this->library = new Library();
+    $this->textAccessors = array(
+        'beaver_builder_texts' => new BeaverBuilderTextAccessor()
+    );
+    $this->library = new Library($this->textAccessors);
 
     $this->checkVersion();
   }
@@ -77,13 +84,6 @@ class Core
     return $this->library;
   }
 
-  /**
-   * @return Translation the translation object
-   */
-  public function getTranslation()
-  {
-    return $this->translation;
-  }
 
   /**
    * @return Log the logger, might be instantiated only if needed
@@ -95,6 +95,22 @@ class Core
     }
 
     return $this->log;
+  }
+
+  /**
+   * @return Translation the translation object
+   */
+  public function getTranslation()
+  {
+    return $this->translation;
+  }
+
+  /**
+   * @return text accessors
+   */
+  public function getTextAccessors()
+  {
+    return $this->textAccessors;
   }
 
   /**

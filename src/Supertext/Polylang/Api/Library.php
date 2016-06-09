@@ -2,6 +2,7 @@
 
 namespace Supertext\Polylang\Api;
 
+use Supertext\Polylang\Helper\BeaverBuilderTextAccessor;
 use Supertext\Polylang\Helper\Constant;
 
 /**
@@ -15,6 +16,13 @@ class Library
   const SHORTCODE_TAG_CLASS = 'polylang-supertext-shortcode';
   const SHORTCODE_CLOSED_TAG_CLASS = 'polylang-supertext-shortcode-closed';
   const SHORTCODE_ENCLOSED_CONTENT_CLASS = 'polylang-supertext-shortcode-enclosed';
+
+  private $textAccessors;
+
+  public function __construct($textAccessors)
+  {
+    $this->textAccessors = $textAccessors;
+  }
 
   /**
    * @param string $language polylang language code
@@ -151,6 +159,10 @@ class Library
     // Get the selected custom fields
     foreach ($this->getCustomFieldsForTranslation($postId, array_keys($pattern)) as $meta_key => $value) {
       $result['meta'][$meta_key] = $this->replaceShortcodes($value);
+    }
+
+    foreach($this->textAccessors as $id => $textAccessor){
+      $result[$id] = $textAccessor->getTexts($post);
     }
 
     // Let developers add their own fields
