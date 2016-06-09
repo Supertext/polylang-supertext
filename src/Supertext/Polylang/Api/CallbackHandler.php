@@ -52,6 +52,8 @@ class CallbackHandler
 
     $this->saveTranslations($post, $json, $targetLang);
 
+    Core::getInstance()->getContentProvider()->SaveTranslatedData($postId, $translationPostId, $json);
+
     if ($workflowSettings['publishOnCallback']) {
       $post->post_status = 'publish';
     }
@@ -94,7 +96,9 @@ class CallbackHandler
             update_post_meta($post->ID, $translationItem->Id, $decodedContent);
           }
           break;
+        case 'beaver_builder_texts':
 
+          break;
         default:
           // Gallery images
           $groupData = explode('_', $translationGroup->GroupId);

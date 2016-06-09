@@ -38,15 +38,14 @@ class BeaverBuilderTextAccessor implements ITextAccessor
     {
         $layoutData = FLBuilderModel::get_layout_data(null, $post->ID);
 
-        $object = $layoutData;
-
         foreach($texts as $id => $text){
+            $object = $layoutData;
             $keys = explode('_', $id);
-            $astKeyIndex = count($keys)-1;
+            $lastKeyIndex = count($keys)-1;
 
             foreach($keys as $index => $key){
 
-                if($index !== $astKeyIndex)
+                if($index !== $lastKeyIndex)
                 {
                     if(is_array($object)){
                         $object = $object[$key];

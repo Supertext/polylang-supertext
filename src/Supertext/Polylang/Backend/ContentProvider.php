@@ -86,6 +86,25 @@ class ContentProvider
         return $result;
     }
 
+    public function SaveTranslatedData($postId, $translationPostId, $json)
+    {
+        foreach ($json->Groups as $translationGroup) {
+            if(isset($this->textAccessors[$translationGroup->GroupId])){
+                $textAccessor = $this->textAccessors[$translationGroup->GroupId];
+
+                $textAccessor->prepareTranslationPost($postId, $translationPostId);
+
+                $texts = array();
+
+                foreach ($translationGroup->Items as $translationItem) {
+                    $texts[$translationItem->Id] = $translationItem->Content;
+                }
+
+                $textAccessor->setTexts(get_post($translationPostId), $texts);
+            }
+        }
+    }
+
     /**
      * @param $fieldId the field id
      * @return string the field name created from the field id
@@ -382,4 +401,6 @@ class ContentProvider
 
         return $content;
     }
+
+
 }
