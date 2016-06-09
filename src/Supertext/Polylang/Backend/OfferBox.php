@@ -156,14 +156,14 @@ class OfferBox
   {
     $result = array();
 
-    $library = Core::getInstance()->getLibrary();
-    $fields = $library->getCustomFieldDefinitions($postId);
+    $contentProvider = Core::getInstance()->getContentProvider();
+    $fields = $contentProvider->getCustomFieldDefinitions($postId);
 
     // Create the field list to generate checkboxes
     foreach ($fields as $field) {
       $result[] = array(
         'title' => $field['label'],
-        'name' => 'to_' . $library->getFieldNameFromId($field['id']),
+        'name' => 'to_' . $contentProvider->getFieldNameFromId($field['id']),
         'default' => true
       );
     }

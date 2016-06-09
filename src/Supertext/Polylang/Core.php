@@ -3,6 +3,7 @@
 namespace Supertext\Polylang;
 
 use Supertext\Polylang\Api\Library;
+use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
@@ -37,9 +38,9 @@ class Core
    */
   protected $translation = NULL;
   /**
-   * @var text accessors
+   * @var ContentProvider the content provider
    */
-  protected $textAccessors = array();
+  protected $contentProvider = NULL;
   /**
    * Creates the instance and saves reference
    */
@@ -67,11 +68,8 @@ class Core
       $this->translation = new Translation();
     }
 
-    // Always loaded components
-    $this->textAccessors = array(
-        'beaver_builder_texts' => new BeaverBuilderTextAccessor()
-    );
-    $this->library = new Library($this->textAccessors);
+    $this->library = new Library();
+    $this->contentProvider = new ContentProvider($this->library);
 
     $this->checkVersion();
   }
@@ -105,12 +103,9 @@ class Core
     return $this->translation;
   }
 
-  /**
-   * @return text accessors
-   */
-  public function getTextAccessors()
+  public function getContentProvider()
   {
-    return $this->textAccessors;
+    return $this->contentProvider;
   }
 
   /**

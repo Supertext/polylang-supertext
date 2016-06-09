@@ -51,7 +51,7 @@ class BeaverBuilderTextAccessor implements ITextAccessor
                     if(is_array($object)){
                         $object = $object[$key];
                     }else if (is_object($object)){
-                        $object = $object->$key;
+                        $object = $object->{$key};
                     }
 
                     continue;

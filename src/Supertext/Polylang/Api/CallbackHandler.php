@@ -50,7 +50,7 @@ class CallbackHandler
       return $this->createResult(403, $message);
     }
 
-    $this->saveTranslations($post, $json, $library, $targetLang);
+    $this->saveTranslations($post, $json, $targetLang);
 
     if ($workflowSettings['publishOnCallback']) {
       $post->post_status = 'publish';
@@ -70,10 +70,9 @@ class CallbackHandler
   /**
    * @param $post
    * @param $json
-   * @param $library
    * @param $targetLang
    */
-  private function saveTranslations($post, $json, $library, $targetLang)
+  private function saveTranslations($post, $json, $targetLang)
   {
     foreach ($json->Groups as $translationGroup) {
       switch ($translationGroup->GroupId) {
@@ -82,7 +81,7 @@ class CallbackHandler
             $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
 
             if ($translationItem->Id === 'post_content') {
-              $decodedContent = $library->replaceShortcodeNodes($decodedContent);
+              $decodedContent = Core::getInstance()->getContentProvider()->replaceShortcodeNodes($decodedContent);
             }
 
             $post->{$translationItem->Id} = $decodedContent;
@@ -91,7 +90,7 @@ class CallbackHandler
         case 'meta':
           foreach ($translationGroup->Items as $translationItem) {
             $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-            $decodedContent = Core::getInstance()->getLibrary()->replaceShortcodeNodes($decodedContent);
+            $decodedContent = Core::getInstance()->getContentProvider()->replaceShortcodeNodes($decodedContent);
             update_post_meta($post->ID, $translationItem->Id, $decodedContent);
           }
           break;

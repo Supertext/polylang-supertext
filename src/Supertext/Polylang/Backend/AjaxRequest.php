@@ -27,7 +27,7 @@ class AjaxRequest
     $postId = $options['post_id'];
 
     $library = Core::getInstance()->getLibrary();
-    $data = $library->getTranslationData($postId, $options['pattern']);
+    $data = Core::getInstance()->getContentProvider()->getTranslationData($postId, $options['pattern']);
     $post = get_post($postId);
     $wrapper = $library->getUserWrapper();
     $log = Core::getInstance()->getLog();
@@ -121,7 +121,7 @@ class AjaxRequest
     // Call the API for prices
     $options = self::getTranslationOptions();
     $library = Core::getInstance()->getLibrary();
-    $data = $library->getTranslationData($options['post_id'], $options['pattern']);
+    $data = Core::getInstance()->getContentProvider()->getTranslationData($options['post_id'], $options['pattern']);
     $wrapper = $library->getUserWrapper();
     // Call for prices
     $pricing = $wrapper->getQuote(
