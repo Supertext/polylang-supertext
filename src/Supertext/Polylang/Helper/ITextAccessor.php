@@ -5,11 +5,9 @@ namespace Supertext\Polylang\Helper;
 
 interface ITextAccessor
 {
-    public function getPluginName();
+  public function getTexts($post, $userSelection);
 
-    public function getTexts($post);
+  public function setTexts($post, $texts);
 
-    public function setTexts($post, $texts);
-
-    public function prepareTranslationPost($postId, $translationPostId);
+  public function prepareTranslationPost($post, $translationPost);
 }

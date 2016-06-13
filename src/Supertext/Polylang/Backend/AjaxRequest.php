@@ -27,8 +27,8 @@ class AjaxRequest
     $postId = $options['post_id'];
 
     $library = Core::getInstance()->getLibrary();
-    $data = Core::getInstance()->getContentProvider()->getTranslationData($postId, $options['pattern']);
     $post = get_post($postId);
+    $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['pattern']);
     $wrapper = $library->getUserWrapper();
     $log = Core::getInstance()->getLog();
     $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
@@ -121,7 +121,8 @@ class AjaxRequest
     // Call the API for prices
     $options = self::getTranslationOptions();
     $library = Core::getInstance()->getLibrary();
-    $data = Core::getInstance()->getContentProvider()->getTranslationData($options['post_id'], $options['pattern']);
+    $post = $options['post_id'];
+    $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['pattern']);
     $wrapper = $library->getUserWrapper();
     // Call for prices
     $pricing = $wrapper->getQuote(

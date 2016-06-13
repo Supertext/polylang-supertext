@@ -20,7 +20,7 @@ class YoastCustomFieldProvider implements ICustomFieldProvider
    */
   public function getCustomFieldDefinitions()
   {
-    $customFields =  array(
+    $customFields = array(
       array(
         'id' => '_yoast_wpseo_title',
         'label' => __('SEO-optimized title', 'polylang-supertext'),

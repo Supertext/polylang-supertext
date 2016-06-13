@@ -34,15 +34,15 @@ class CallbackHandler
     }
 
     // Get the translation post object
-    $post = get_post($translationPostId);
+    $translationPost = get_post($translationPostId);
     $library = Core::getInstance()->getLibrary();
     $options = $library->getSettingOption();
     $workflowSettings = isset($options[Constant::SETTING_WORKFLOW]) ? ArrayManipulation::forceArray($options[Constant::SETTING_WORKFLOW]) : array();
 
     $isPostWritable =
-      $post->post_status == 'draft' ||
-      ($post->post_status == 'publish' && $workflowSettings['overridePublishedPosts']) ||
-      intval(get_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG, true)) === 1;
+      $translationPost->post_status == 'draft' ||
+      ($translationPost->post_status == 'publish' && $workflowSettings['overridePublishedPosts']) ||
+      intval(get_post_meta($translationPost->ID, Translation::IN_TRANSLATION_FLAG, true)) === 1;
 
     if (!$isPostWritable) {
       $message = __('Error: translation import only possible for drafted articles', 'polylang-supertext');
@@ -50,91 +50,21 @@ class CallbackHandler
       return $this->createResult(403, $message);
     }
 
-    $this->saveTranslations($post, $json, $targetLang);
-
-    Core::getInstance()->getContentProvider()->SaveTranslatedData($postId, $translationPostId, $json);
+    Core::getInstance()->getContentProvider()->SaveTranslatedData(get_post($postId), $translationPost, $json);
 
     if ($workflowSettings['publishOnCallback']) {
-      $post->post_status = 'publish';
+      $translationPost->post_status = 'publish';
     }
 
     // Now finally save that post and flush cache
-    wp_update_post($post);
+    wp_update_post($translationPost);
 
     // All good, remove translation flag
-    delete_post_meta($post->ID, Translation::IN_TRANSLATION_FLAG);
+    delete_post_meta($translationPost->ID, Translation::IN_TRANSLATION_FLAG);
 
     $message = __('translation saved successfully', 'polylang-supertext');
     Core::getInstance()->getLog()->addEntry($translationPostId, $message);
     return $this->createResult(200, $message);
-  }
-
-  /**
-   * @param $post
-   * @param $json
-   * @param $targetLang
-   */
-  private function saveTranslations($post, $json, $targetLang)
-  {
-    foreach ($json->Groups as $translationGroup) {
-      switch ($translationGroup->GroupId) {
-        case 'post':
-          foreach ($translationGroup->Items as $translationItem) {
-            $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-
-            if ($translationItem->Id === 'post_content') {
-              $decodedContent = Core::getInstance()->getContentProvider()->replaceShortcodeNodes($decodedContent);
-            }
-
-            $post->{$translationItem->Id} = $decodedContent;
-          }
-          break;
-        case 'meta':
-          foreach ($translationGroup->Items as $translationItem) {
-            $decodedContent = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-            $decodedContent = Core::getInstance()->getContentProvider()->replaceShortcodeNodes($decodedContent);
-            update_post_meta($post->ID, $translationItem->Id, $decodedContent);
-          }
-          break;
-        case 'beaver_builder_texts':
-
-          break;
-        default:
-          // Gallery images
-          $groupData = explode('_', $translationGroup->GroupId);
-
-          if ($groupData[0] != 'gallery' || $groupData[1] != 'image') {
-            break;
-          }
-
-          $sourceAttachmentId = $groupData[2];
-          $targetAttachmentId = intval(Multilang::getPostInLanguage($sourceAttachmentId, $targetLang));
-
-          if ($targetAttachmentId > 0) {
-            $targetAttachment = get_post($targetAttachmentId);
-
-            foreach ($translationGroup->Items as $translationItem) {
-              switch ($translationItem->Id) {
-                case 'image_alt':
-                  update_post_meta(
-                    $targetAttachment->ID,
-                    '_wp_attachment_image_alt',
-                    addslashes(html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
-                  );
-                  break;
-
-                default:
-                  $targetAttachment->{$translationItem->Id} = html_entity_decode($translationItem->Content, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-                  break;
-              }
-
-              // Save the attachment
-              wp_update_post($targetAttachment);
-            }
-          }
-          break;
-      }
-    }
   }
 
   /**
