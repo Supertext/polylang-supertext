@@ -37,12 +37,6 @@ class ContentProvider
   {
     $result = array();
 
-    // Get the selected custom fields
-    foreach ($this->getCustomFieldsForTranslation($post->ID, array_keys($userSelection)) as $meta_key => $value) {
-      $result['meta'][$meta_key] = $this->replaceShortcodes($value);
-    }
-
-
     foreach ($this->textAccessors as $id => $textAccessor) {
       $result[$id] = $textAccessor->getTexts($post, $userSelection);
     }
@@ -70,65 +64,5 @@ class ContentProvider
         $textAccessor->setTexts($translationPost, $texts);
       }
     }
-  }
-
-  /**
-   * @param $fieldId the field id
-   * @return string the field name created from the field id
-   */
-  public function getFieldNameFromId($fieldId)
-  {
-    return str_replace(' ', '_', $fieldId);
-  }
-
-  /**
-   * @param $postId the id of the post to translate
-   * @return array the list of custom fields definitions (available for the post)
-   */
-  public function getCustomFieldDefinitions($postId)
-  {
-    $postCustomFields = get_post_meta($postId);
-    $options = $this->library->getSettingOption();
-    $savedCustomFieldsDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
-
-    $selectableCustomFieldDefinitions = array();
-
-    foreach ($postCustomFields as $meta_key => $value) {
-      foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
-        if (preg_match('/^' . $savedCustomFieldDefinition['meta_key_regex'] . '$/', $meta_key)) {
-          $selectableCustomFieldDefinitions[] = $savedCustomFieldDefinition;
-        }
-      }
-    }
-
-    return $selectableCustomFieldDefinitions;
-  }
-
-  /**
-   * @param $postId the id of the post to translate
-   * @param array $selectedCustomFieldNames the ids of the selected custom field definitions
-   * @return array the list of custom field keys and values
-   */
-  public function getCustomFieldsForTranslation($postId, $selectedCustomFieldNames = array())
-  {
-    $postCustomFields = get_post_meta($postId);
-    $options = $this->library->getSettingOption();
-    $savedCustomFieldsDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? $options[Constant::SETTING_CUSTOM_FIELDS] : array();
-
-    $customFields = array();
-
-    foreach ($postCustomFields as $meta_key => $value) {
-      foreach ($savedCustomFieldsDefinitions as $savedCustomFieldDefinition) {
-        if (!in_array($this->getFieldNameFromId($savedCustomFieldDefinition['id']), $selectedCustomFieldNames)) {
-          continue;
-        }
-
-        if (preg_match('/^' . $savedCustomFieldDefinition['meta_key_regex'] . '$/', $meta_key)) {
-          $customFields[$meta_key] = is_array($value) ? $value[0] : $value;
-        }
-      }
-    }
-
-    return $customFields;
   }
 }

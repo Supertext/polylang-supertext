@@ -6,7 +6,7 @@ namespace Supertext\Polylang\Helper;
  * The ACF Custom Field provider
  * @package Supertext\Polylang\Helper
  */
-class YoastCustomFieldProvider implements ICustomFieldProvider
+class YoastCustomFieldProvider
 {
   const PLUGIN_NAME = 'WP SEO by Yoast';
 

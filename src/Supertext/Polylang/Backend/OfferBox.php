@@ -156,8 +156,8 @@ class OfferBox
   {
     $result = array();
 
-    $contentProvider = Core::getInstance()->getContentProvider();
-    $fields = $contentProvider->getCustomFieldDefinitions($postId);
+    /*$contentProvider = Core::getInstance()->getContentProvider();
+    $fields = $contentProvider->getAcfFieldDefinitions($postId);
 
     // Create the field list to generate checkboxes
     foreach ($fields as $field) {
@@ -169,7 +169,7 @@ class OfferBox
     }
 
     // Let developers add their own translatable custom fields
-    $result = apply_filters('translation_custom_fields_for_post', $result, $postId);
+    $result = apply_filters('translation_custom_fields_for_post', $result, $postId);*/
 
     return $result;
   }
@@ -317,7 +317,7 @@ class OfferBox
       $this->getLanguageName($this->targetLang)
     );
 
-    $customFieldSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=customfields');
+    $customFieldSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=content');
 
     return '<form
             name="frm_Translation_Options"

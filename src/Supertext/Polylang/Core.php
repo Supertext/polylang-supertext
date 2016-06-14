@@ -200,7 +200,7 @@ class Core
     );
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
-      $textAccessors['acf'] = new AcfTextAccessor($textProcessor);
+      $textAccessors['acf'] = new AcfTextAccessor($textProcessor, $this->library);
     }
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php')) {

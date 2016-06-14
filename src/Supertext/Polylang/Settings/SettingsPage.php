@@ -2,10 +2,8 @@
 
 namespace Supertext\Polylang\Settings;
 
-use Comotive\Util\WordPress;
 use Supertext\Polylang\Api\Multilang;
-use Supertext\Polylang\Helper\AcfCustomFieldProvider;
-use Supertext\Polylang\Helper\YoastCustomFieldProvider;
+use Supertext\Polylang\Helper\ISettingsAware;
 use Supertext\Polylang\Helper\Constant;
 
 /**
@@ -16,77 +14,56 @@ use Supertext\Polylang\Helper\Constant;
 class SettingsPage extends AbstractPage
 {
   const USERS_TAB = 'users';
-  const CUSTOM_FIELDS_TAB = 'customfields';
+  const CONTENT_TAB = 'content';
   const SHORTCODES_TAB = 'shortcodes';
   const WORKFLOW_TAB = 'workflow';
 
+  private $textAccessors;
   private $tabs = array();
-  private $customFieldsProviders = array();
 
   public function __construct()
   {
     parent::__construct();
 
+    $this->textAccessors = $this->getCore()->getTextAccessors();
+
     // Tabs definitions
     $this->tabs = array();
-    // First settings page with user funtions
+
+    // User and language settings tab
     $this->tabs[self::USERS_TAB] = array(
       'name' => __('User and languages', 'polylang-supertext'),
-      'views' => array(
-        'backend/settings-users',
-        'backend/settings-languages'
+      'viewBundle' => array(
+        array('view' => 'backend/settings-users', 'context' => $this),
+        array('view' => 'backend/settings-languages', 'context' => $this)
       ),
       'saveFunction' => 'saveUserAndLanguageSettings'
     );
 
-    // Add all possible custom field provides
-    $this->registerCustomFieldProviders();
+    // Content settings tab
+    $this->tabs[self::CONTENT_TAB] = array(
+      'name' => __('Content', 'polylang-supertext'),
+      'viewBundle' => $this->getContentViewBundle(),
+      'saveFunction' => 'saveContentSettings'
+    );
 
-    // If there are providers, make the tab appear
-    if (count($this->customFieldsProviders) > 0) {
-      $this->tabs[self::CUSTOM_FIELDS_TAB] = array(
-        'name' => __('Custom fields', 'polylang-supertext'),
-        'views' => array(
-          'backend/settings-custom-fields'
-        ),
-        'saveFunction' => 'saveCustomFieldsSettings'
-      );
-    }
-
-    // finally, add shortcodes
-     $this->tabs[self::SHORTCODES_TAB] = array(
+    // Shortcode settings tab
+    $this->tabs[self::SHORTCODES_TAB] = array(
       'name' => __('Shortcodes', 'polylang-supertext'),
-      'views' => array(
-        'backend/settings-shortcodes'
+      'viewBundle' => array(
+        array('view' => 'backend/settings-shortcodes', 'context' => $this)
       ),
       'saveFunction' => 'saveShortcodesSettings'
     );
 
+    // Workflow settings tab
     $this->tabs[self::WORKFLOW_TAB] = array(
       'name' => __('Workflow', 'polylang-supertext'),
-      'views' => array(
-        'backend/settings-workflow'
+      'viewBundle' => array(
+        array('view' => 'backend/settings-workflow', 'context' => $this)
       ),
       'saveFunction' => 'saveWorkflowSettings'
     );
-  }
-
-  /**
-   * Register all plugins that are supported
-   */
-  protected function registerCustomFieldProviders()
-  {
-    $this->customFieldsProviders = array();
-
-    // Support for advanced custom fields pro
-    if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php') ) {
-      $this->customFieldsProviders[] = new AcfCustomFieldProvider();
-    }
-
-    // Support vor WP SEO by Yoast
-    if (WordPress::isPluginActive('wordpress-seo/wp-seo.php')) {
-      $this->customFieldsProviders[] = new YoastCustomFieldProvider();
-    }
   }
 
   /**
@@ -130,30 +107,24 @@ class SettingsPage extends AbstractPage
     wp_redirect($this->getPageUrl($currentTabId) . '&message=saved');
   }
 
-  /**
-   * Gets all custom fields that can be used for translation
-   * @return array with all selectable custom fields definitions
-   */
-  public function getCustomFieldDefinitions()
+  private function getContentViewBundle()
   {
-    $allFieldDefinitions = array();
+    $viewBundle = array();
 
-    foreach ($this->customFieldsProviders as $customFieldsProvider) {
-      $allFieldDefinitions[] = array(
-        'id' => $customFieldsProvider->getPluginName(),
-        'label' => $customFieldsProvider->getPluginName(),
-        'type' => 'plugin',
-        'sub_field_definitions' => $customFieldsProvider->getCustomFieldDefinitions()
-      );
+    foreach($this->textAccessors as $textAccessor)
+    {
+      if($textAccessor instanceof ISettingsAware){
+        $viewBundle[] = $textAccessor->getSettingsViewBundle();
+      }
     }
 
-    return $allFieldDefinitions;
+    return $viewBundle;
   }
 
   /**
    * Add js/css resources needed on this page
    */
-  protected function addResources()
+  private function addResources()
   {
     wp_enqueue_style(Constant::JSTREE_STYLE_HANDLE);
     wp_enqueue_script(Constant::SETTINGS_SCRIPT_HANDLE);
@@ -164,7 +135,7 @@ class SettingsPage extends AbstractPage
   /**
    * @return string system message, if given, otherwise void
    */
-  protected function showSystemMessage()
+  private function showSystemMessage()
   {
     if (!isset($_REQUEST['message']) || $_REQUEST['message'] !== 'saved') {
       return '';
@@ -182,7 +153,7 @@ class SettingsPage extends AbstractPage
    * @param string $currentTabId id of current tab
    * @return string all tabs as links
    */
-  protected function addTabs($currentTabId)
+  private function addTabs($currentTabId)
   {
     $html = '<h2 class="nav-tab-wrapper">';
 
@@ -199,14 +170,14 @@ class SettingsPage extends AbstractPage
   /**
    * @param $currentTabId the current tab id
    */
-  protected function addViews($currentTabId)
+  private function addViews($currentTabId)
   {
     echo '
         <form id="' . $currentTabId . 'SettingsForm" method="post" action="' . $this->getPageUrl($currentTabId) . '">';
 
     // Include the views
-    foreach ($this->tabs[$currentTabId]['views'] as $view) {
-      $this->includeView($view, $this);
+    foreach ($this->tabs[$currentTabId]['viewBundle'] as $viewBundle) {
+      $this->includeView($viewBundle['view'], $viewBundle['context']);
     }
 
     echo '
@@ -226,7 +197,7 @@ class SettingsPage extends AbstractPage
   /**
    * @return string|void
    */
-  public function GetCurrentTabId()
+  private function GetCurrentTabId()
   {
     //Return default tab if none set
     if (empty($_GET['tab'])) {
@@ -246,7 +217,7 @@ class SettingsPage extends AbstractPage
   /**
    * Saves user and language settings to options
    */
-  protected function saveUserAndLanguageSettings()
+  private function saveUserAndLanguageSettings()
   {
     // Saving the user mappings
     $userMap = array();
@@ -281,36 +252,20 @@ class SettingsPage extends AbstractPage
     }
   }
 
-  /**
-   * Saves the custom field settings to options
-   */
-  protected function saveCustomFieldsSettings()
+  private function saveContentSettings()
   {
-    $checkedCustomFieldIds = explode(',', $_POST['checkedCustomFieldIdsInput']);
-    $fieldDefinitionsToSave = array();
-
-    foreach ($this->customFieldsProviders as $customFieldsProvider) {
-      $customFieldDefinitions = $customFieldsProvider->getCustomFieldDefinitions();
-      $currentFieldDefinitions = $customFieldDefinitions;
-
-      while (($field = array_shift($currentFieldDefinitions))) {
-        if (in_array($field['id'], $checkedCustomFieldIds) && isset($field['meta_key_regex'])) {
-          $fieldDefinitionsToSave[] = $field;
-        }
-
-        if ($field['sub_field_definitions'] > 0) {
-          $currentFieldDefinitions = array_merge($currentFieldDefinitions, $field['sub_field_definitions']);
-        }
+    foreach($this->textAccessors as $textAccessor)
+    {
+      if($textAccessor instanceof ISettingsAware){
+        $textAccessor->SaveSettings($_POST[$textAccessor->getPostDataKey()]);
       }
     }
-
-    $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, $fieldDefinitionsToSave);
   }
 
   /**
    * Saves shortcode settings to options
    */
-  protected function saveShortcodesSettings()
+  private function saveShortcodesSettings()
   {
     $shortcodeSettingsToSave = array();
 

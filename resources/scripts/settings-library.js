@@ -49,40 +49,50 @@ Supertext.Settings.Users = (function ($) {
 })(jQuery);
 
 //Custom Fields tab module
-Supertext.Settings.CustomFields = (function ($) {
-  var $customFieldsTree,
-    $checkedCustomFieldIdsInput;
+Supertext.Settings.Content = (function ($) {
 
-  function setCheckedCustomFields() {
-    var checkedNodes = $customFieldsTree.jstree("get_checked", false);
-    $checkedCustomFieldIdsInput.val(checkedNodes.join(','));
-  }
+  var acfSettings = (function() {
+    var $acfFieldsTree,
+      $checkedAcfFieldsInput;
+
+    function setCheckedAcfFields() {
+      var checkedNodes = $acfFieldsTree.jstree("get_checked", false);
+      $checkedAcfFieldsInput.val(checkedNodes.join(','));
+    }
+
+    return {
+      initialize: function(options) {
+        options = options || {};
+
+        $acfFieldsTree = $('#acfFieldsTree');
+        $checkedAcfFieldsInput = $('#checkedAcfFieldsInput');
+
+        $acfFieldsTree
+          .jstree({
+            'core': {
+              'themes': {
+                'name': 'wordpress-dark'
+              }
+            },
+            'plugins': ['checkbox'],
+            'checkbox': {
+              'keep_selected_style': false
+            }
+          });
+
+        $acfFieldsTree.jstree('select_node', savedAcfFields);
+
+        $('#contentSettingsForm').submit(setCheckedAcfFields);
+      }
+    }
+  }());
 
   return {
     initialize: function (options) {
       options = options || {};
 
-      var preselectedNodeIds = options.preselectedNodeIds || [];
+      acfSettings.initialize(options);
 
-      $customFieldsTree = $('#customFieldsTree');
-      $checkedCustomFieldIdsInput = $('#checkedCustomFieldIdsInput');
-
-      $customFieldsTree
-        .jstree({
-          'core': {
-            'themes': {
-              'name': 'wordpress-dark'
-            }
-          },
-          'plugins': ['checkbox'],
-          'checkbox': {
-            'keep_selected_style': false
-          }
-        });
-
-      $customFieldsTree.jstree('select_node', preselectedNodeIds);
-
-      $('#customfieldsSettingsForm').submit(setCheckedCustomFields);
     }
   }
 })(jQuery);
@@ -198,12 +208,8 @@ jQuery(document).ready(function () {
       Supertext.Settings.Users.initialize();
       break;
 
-    case 'customfields':
-      Supertext.Settings.CustomFields.initialize(
-        {
-          preselectedNodeIds: savedCustomFieldIds
-        }
-      );
+    case 'content':
+      Supertext.Settings.Content.initialize();
       break;
 
     case 'shortcodes':

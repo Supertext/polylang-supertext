@@ -40,7 +40,7 @@ class Constant
   /**
    * $var string name of the subsetting for custom field definitions
    */
-  const SETTING_CUSTOM_FIELDS = 'customFields';
+  const SETTING_ACF_FIELDS = 'acfFields';
   /**
    * $var string name of the subsetting for shortcodes
    */

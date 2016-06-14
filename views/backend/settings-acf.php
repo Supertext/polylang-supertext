@@ -1,6 +1,4 @@
 <?php
-use Supertext\Polylang\Helper\Constant;
-use Comotive\Util\ArrayManipulation;
 
 function getTree($nodes){
   $nodeHtml = '<ul>';
@@ -24,17 +22,7 @@ function getTree($nodes){
   return $nodeHtml;
 }
 
-/** @var Page $context */
-$library = $context->getCore()->getLibrary();
-$options = $library->getSettingOption();
-$savedCustomFieldDefinitions = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_CUSTOM_FIELDS]) : array();
-$customFieldDefinitions = $context->getCustomFieldDefinitions();
-$htmlTree = getTree($customFieldDefinitions);
-
-$savedCustomFieldIds = array();
-foreach ($savedCustomFieldDefinitions as $savedCustomFieldDefinition) {
-  $savedCustomFieldIds[] = $savedCustomFieldDefinition['id'];
-}
+$htmlTree = getTree($context['acfFieldDefinitions']);
 
 ?>
 <div class="postbox postbox_admin">
@@ -43,13 +31,13 @@ foreach ($savedCustomFieldDefinitions as $savedCustomFieldDefinition) {
     <p>
       <?php _e('Please select the custom fields that can be used for translations.', 'polylang-supertext'); ?>
     </p>
-    <div id="customFieldsTree">
+    <div id="acfFieldsTree">
       <?php echo $htmlTree; ?>
     </div>
-    <input name="checkedCustomFieldIdsInput" id="checkedCustomFieldIdsInput" type="hidden" value="" />
+    <input name="acf[checkedAcfFields]" id="checkedAcfFieldsInput" type="hidden" value="" />
   </div>
 </div>
 
 <script type="text/javascript">
-  var savedCustomFieldIds = <?php echo json_encode($savedCustomFieldIds); ?>;
+  var savedAcfFields = <?php echo json_encode($context['savedAcfFields']); ?>;
 </script>
