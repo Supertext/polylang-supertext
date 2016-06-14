@@ -12,7 +12,7 @@ class PostMediaTextAccessor implements ITextAccessor
   {
     $texts = array();
 
-    if ($userSelection['post_image'] == true) {
+    if ($userSelection['post_image']) {
       $attachments = get_children(
         array(
           'post_parent' => $post->ID,

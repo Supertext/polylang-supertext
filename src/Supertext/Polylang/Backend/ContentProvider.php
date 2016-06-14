@@ -2,11 +2,12 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Supertext\Polylang\Helper\BeaverBuilderTextAccessor;
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\PostMediaTextAccessor;
-use Supertext\Polylang\Helper\PostTextAccessor;
 use Supertext\Polylang\Helper\TextProcessor;
+use Supertext\Polylang\Helper\PostTextAccessor;
+use Supertext\Polylang\Helper\PostMediaTextAccessor;
+use Supertext\Polylang\Helper\AcfTextAccessor;
+use Supertext\Polylang\Helper\BeaverBuilderTextAccessor;
 
 /**
  * Processes post content
@@ -20,15 +21,9 @@ class ContentProvider
   private $textAccessors = null;
   private $library;
 
-  public function __construct($library)
+  public function __construct($textAccessors, $library)
   {
-    $this->textAccessors = array(
-      'post' => new PostTextAccessor(new TextProcessor($library)),
-      'media' => new PostMediaTextAccessor(),
-      'acf' => new AcfTextAccessor(),
-      'beaver_builder' => new BeaverBuilderTextAccessor()
-    );
-
+    $this->textAccessors = $textAccessors;
     $this->library = $library;
   }
 

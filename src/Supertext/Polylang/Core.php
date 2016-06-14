@@ -2,6 +2,7 @@
 
 namespace Supertext\Polylang;
 
+use Comotive\Util\WordPress;
 use Supertext\Polylang\Api\Library;
 use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
@@ -9,6 +10,10 @@ use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
 use Supertext\Polylang\Helper\BeaverBuilderTextAccessor;
 use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\TextProcessor;
+use Supertext\Polylang\Helper\PostTextAccessor;
+use Supertext\Polylang\Helper\PostMediaTextAccessor;
+use Supertext\Polylang\Helper\AcfTextAccessor;
 
 /**
  * Core Class that initializes the plugins features
@@ -20,27 +25,33 @@ class Core
   /**
    * @var Core the current plugin instance
    */
-  protected static $instance = NULL;
+  private static $instance = NULL;
   /**
    * @var Library the library of global functions
    */
-  protected $library = NULL;
+  private $library = NULL;
   /**
    * @var Menu the backend menu handler
    */
-  protected $menu = NULL;
+  private $menu = NULL;
   /**
    * @var Log the backend menu handler
    */
-  protected $log = NULL;
+  private $log = NULL;
   /**
    * @var Translation the translation library
    */
-  protected $translation = NULL;
+  private $translation = NULL;
+  /**
+   * @var
+   */
+  private $textAccessors;
   /**
    * @var ContentProvider the content provider
    */
-  protected $contentProvider = NULL;
+  private $contentProvider = NULL;
+
+
   /**
    * Creates the instance and saves reference
    */
@@ -69,7 +80,8 @@ class Core
     }
 
     $this->library = new Library();
-    $this->contentProvider = new ContentProvider($this->library);
+    $this->textAccessors = $this->CreateTextAccessors();
+    $this->contentProvider = new ContentProvider($this->textAccessors, $this->library);
 
     $this->checkVersion();
   }
@@ -81,7 +93,6 @@ class Core
   {
     return $this->library;
   }
-
 
   /**
    * @return Log the logger, might be instantiated only if needed
@@ -101,6 +112,11 @@ class Core
   public function getTranslation()
   {
     return $this->translation;
+  }
+
+  public function getTextAccessors()
+  {
+    return $this->textAccessors;
   }
 
   public function getContentProvider()
@@ -133,28 +149,28 @@ class Core
     $options = $library->getSettingOption();
 
     //Migrate options
-    if (isset($options[Helper\Constant::SETTING_SHORTCODES])){
+    if (isset($options[Helper\Constant::SETTING_SHORTCODES])) {
       //Check options state and update if needed
       $shortcodes = $options[Helper\Constant::SETTING_SHORTCODES];
       $checkedShortcodes = array();
 
       foreach ($shortcodes as $key => $shortcode) {
-        if(!is_array($shortcode['attributes'])){
+        if (!is_array($shortcode['attributes'])) {
           $shortcode['attributes'] = array();
           $checkedShortcodes[$key] = $shortcode;
           continue;
         }
 
-        if(empty($shortcode['attributes'])){
+        if (empty($shortcode['attributes'])) {
           $checkedShortcodes[$key] = $shortcode;
           continue;
         }
 
         $checkedAttributes = array();
         foreach ($shortcode['attributes'] as $attribute) {
-          if(!is_array($attribute)){
+          if (!is_array($attribute)) {
             $checkedAttributes[] = array('name' => $attribute, 'encoding' => '');
-          }else{
+          } else {
             $checkedAttributes[] = $attribute;
           }
         }
@@ -172,7 +188,26 @@ class Core
    */
   public static function onDeactivation()
   {
+  }
 
+  private function CreateTextAccessors()
+  {
+    $textProcessor = new TextProcessor($this->library);
+
+    $textAccessors = array(
+      'post' => new PostTextAccessor($textProcessor),
+      'media' => new PostMediaTextAccessor()
+    );
+
+    if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
+      $textAccessors['acf'] = new AcfTextAccessor($textProcessor);
+    }
+
+    if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php')) {
+      $textAccessors['beaver_builder'] = new BeaverBuilderTextAccessor();
+    }
+
+    return $textAccessors;
   }
 
   private function checkVersion()
@@ -182,4 +217,5 @@ class Core
       update_option(Constant::VERSION_OPTION, SUPERTEXT_PLUGIN_VERSION);
     }
   }
-} 
+
+}
