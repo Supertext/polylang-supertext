@@ -23,6 +23,14 @@
   font-size: 13px;
 }
 
+.postbox .button-add {
+  padding-top: 4px;
+}
+
+.postbox .button-remove {
+  padding-top:2px;
+}
+
 #shortcodesSettingsForm .shortcode-setting-container{
   float:left;
   padding: 5px 10px;
@@ -48,4 +56,8 @@
 
 .column-translation-status{
   width:20px;
+}
+
+#contentSettingsForm .custom-field-input{
+  margin-bottom: 3px;
 }

@@ -11,7 +11,7 @@ Supertext.Settings = {};
 //Users tab module
 Supertext.Settings.Users = (function ($) {
   var $tableBody,
-      $rowTemplate;
+    $rowTemplate;
 
   function addUserField() {
     var $newRow = $rowTemplate.clone();
@@ -22,7 +22,7 @@ Supertext.Settings.Users = (function ($) {
   function removeUserField() {
     $(this).parent('td').parent('tr').remove();
 
-    if($tableBody.find('tr').length === 0){
+    if ($tableBody.find('tr').length === 0) {
       addUserField();
     }
   }
@@ -35,7 +35,7 @@ Supertext.Settings.Users = (function ($) {
       $tableBody.find('tr .saved-user-id-hidden')
       $tableBody.find('tr .remove-user-button').click(removeUserField);
       //select users in wp dropdown
-      $tableBody.find('tr .saved-user-id-hidden').each(function(){
+      $tableBody.find('tr .saved-user-id-hidden').each(function () {
         var $this = $(this);
         $this.prev().val($this.val());
       });
@@ -51,7 +51,36 @@ Supertext.Settings.Users = (function ($) {
 //Custom Fields tab module
 Supertext.Settings.Content = (function ($) {
 
-  var acfSettings = (function() {
+  var customFieldsSettings = (function () {
+    var $customFieldInputCopy;
+
+    function addCustomFieldInput() {
+      var $this = $(this);
+      var $newCustomFieldInput = $customFieldInputCopy.clone();
+
+      $newCustomFieldInput.insertBefore($this).show();
+    }
+
+    function removeCustomFieldInput() {
+      $(this).parent().remove();
+    }
+
+    return {
+      initialize: function (options) {
+
+        $customFieldInputCopy = $('#contentSettingsForm .custom-field-input').last().clone();
+
+        $('#contentSettingsForm .custom-field-remove-input')
+          .on('click', removeCustomFieldInput);
+
+        $('#contentSettingsForm .custom-field-add-input')
+          .on('click', addCustomFieldInput);
+      }
+    }
+
+  }());
+
+  var acfSettings = (function () {
     var $acfFieldsTree,
       $checkedAcfFieldsInput;
 
@@ -61,7 +90,7 @@ Supertext.Settings.Content = (function ($) {
     }
 
     return {
-      initialize: function(options) {
+      initialize: function (options) {
         options = options || {};
 
         $acfFieldsTree = $('#acfFieldsTree');
@@ -91,6 +120,7 @@ Supertext.Settings.Content = (function ($) {
     initialize: function (options) {
       options = options || {};
 
+      customFieldsSettings.initialize(options);
       acfSettings.initialize(options);
 
     }
@@ -105,7 +135,7 @@ Supertext.Settings.Shortcodes = (function ($) {
     "base64"
   ];
 
-  function addAttributeInput(){
+  function addAttributeInput() {
     var $this = $(this);
     var attributeInputCopy = $($this.prev().clone());
     var oldIndex = $this.prev().data('index');
@@ -114,10 +144,10 @@ Supertext.Settings.Shortcodes = (function ($) {
     attributeInputCopy.data('index', newIndex);
     attributeInputCopy.attr('data-index', newIndex);
 
-    attributeInputCopy.children('input[type=text]').each(function(){
+    attributeInputCopy.children('input[type=text]').each(function () {
       var $this = $(this);
       $this.val('');
-      var name = $(this).attr('name').replace('[attributes]['+oldIndex+']', '[attributes]['+newIndex+']');
+      var name = $(this).attr('name').replace('[attributes][' + oldIndex + ']', '[attributes][' + newIndex + ']');
       $this.attr('name', name);
     });
 
@@ -127,21 +157,21 @@ Supertext.Settings.Shortcodes = (function ($) {
     attributeInputCopy.insertBefore($this).show();
   }
 
-  function removeAttributeInput(){
+  function removeAttributeInput() {
     $(this).parent().remove();
   }
 
-  function showNotEmptyAttributeInputs(){
-    $('#shortcodesSettingsForm .shortcode-attribute-input input[type=text]').each(function(){
+  function showNotEmptyAttributeInputs() {
+    $('#shortcodesSettingsForm .shortcode-attribute-input input[type=text]').each(function () {
       var $this = $(this);
-      if($this.val() != ''){
+      if ($this.val() != '') {
         $this.parent().show();
       }
     });
   }
 
   function split(val) {
-    return val.split( /,\s*/ );
+    return val.split(/,\s*/);
   }
 
   function extractLast(term) {
@@ -161,35 +191,35 @@ Supertext.Settings.Shortcodes = (function ($) {
         .on('click', removeAttributeInput);
 
       $('.shortcode-input-encoding')
-          .bind( "keydown", function( event ) {
-            if ( event.keyCode === $.ui.keyCode.TAB &&
-                $( this ).autocomplete( "instance" ).menu.active ) {
-              event.preventDefault();
-            }
-          })
-          .autocomplete({
-            minLength: 0,
-            source: function( request, response ) {
-              // delegate back to autocomplete, but extract the last term
-              response( $.ui.autocomplete.filter(
-                  availableEncodingFunctions, extractLast( request.term ) ) );
-            },
-            focus: function() {
-              // prevent value inserted on focus
-              return false;
-            },
-            select: function( event, ui ) {
-              var terms = split(this.value);
-              // remove the current input
-              terms.pop();
-              // add the selected item
-              terms.push( ui.item.value );
-              // add placeholder to get the comma-and-space at the end
-              terms.push( "" );
-              this.value = terms.join(", ");
-              return false;
-            }
+        .bind("keydown", function (event) {
+          if (event.keyCode === $.ui.keyCode.TAB &&
+            $(this).autocomplete("instance").menu.active) {
+            event.preventDefault();
           }
+        })
+        .autocomplete({
+          minLength: 0,
+          source: function (request, response) {
+            // delegate back to autocomplete, but extract the last term
+            response($.ui.autocomplete.filter(
+              availableEncodingFunctions, extractLast(request.term)));
+          },
+          focus: function () {
+            // prevent value inserted on focus
+            return false;
+          },
+          select: function (event, ui) {
+            var terms = split(this.value);
+            // remove the current input
+            terms.pop();
+            // add the selected item
+            terms.push(ui.item.value);
+            // add placeholder to get the comma-and-space at the end
+            terms.push("");
+            this.value = terms.join(", ");
+            return false;
+          }
+        }
       );
     }
   }
@@ -203,7 +233,7 @@ jQuery(document).ready(function () {
   var tabName = tab === null ? 'users' : tab[1];
 
   //initialize tab module
-  switch(tabName){
+  switch (tabName) {
     case 'users':
       Supertext.Settings.Users.initialize();
       break;

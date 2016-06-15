@@ -24,11 +24,11 @@ class AcfTextAccessor implements ITextAccessor, ISettingsAware
 
   public function getTranslatableFields($postId)
   {
-    $translatableFields = array();
     $options = $this->library->getSettingOption();
     $savedAcfFields = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
     $fields = get_field_objects($postId);
 
+    $translatableFields = array();
     foreach($fields as $field){
       if(!in_array($field['name'], $savedAcfFields)){
         continue;
@@ -51,7 +51,7 @@ class AcfTextAccessor implements ITextAccessor, ISettingsAware
     $texts = array();
 
     foreach($selectedTranslatableFields as $id => $selected){
-      $texts[$id] = $fields[$id];
+      $texts[$id] = $this->textProcessor->replaceShortcodes($fields[$id]);
     }
 
     return $texts;
@@ -60,7 +60,9 @@ class AcfTextAccessor implements ITextAccessor, ISettingsAware
   public function setTexts($post, $texts)
   {
     foreach($texts as $id => $text){
-      update_field($id, $text, $post->ID);
+      $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+      $decodedContent = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+      update_field($id, $decodedContent, $post->ID);
     }
   }
 

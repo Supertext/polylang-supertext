@@ -67,7 +67,8 @@ class BeaverBuilderTextAccessor implements ITextAccessor
           continue;
         }
 
-        $object->$key = $text;
+        $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+        $object->$key = $decodedContent;
       }
     }
 

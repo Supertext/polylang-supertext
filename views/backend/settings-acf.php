@@ -27,7 +27,7 @@ $htmlTree = getTree($context['acfFieldDefinitions']);
 ?>
 <div class="postbox postbox_admin">
   <div class="inside">
-    <h3><?php _e('Translatable Custom Fields', 'polylang-supertext'); ?></h3>
+    <h3>Advanced Custom Fields (Plugin)</h3>
     <p>
       <?php _e('Please select the custom fields that can be used for translations.', 'polylang-supertext'); ?>
     </p>

@@ -10,6 +10,7 @@ use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
 use Supertext\Polylang\Helper\BeaverBuilderTextAccessor;
 use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\CustomFieldsTextAccessor;
 use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostTextAccessor;
 use Supertext\Polylang\Helper\PostMediaTextAccessor;
@@ -196,7 +197,8 @@ class Core
 
     $textAccessors = array(
       'post' => new PostTextAccessor($textProcessor),
-      'media' => new PostMediaTextAccessor()
+      'media' => new PostMediaTextAccessor(),
+      'customFields' => new CustomFieldsTextAccessor($textProcessor, $this->library)
     );
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
