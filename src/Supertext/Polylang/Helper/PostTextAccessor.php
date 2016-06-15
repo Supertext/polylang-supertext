@@ -12,23 +12,47 @@ class PostTextAccessor implements ITextAccessor
 
   public function __construct($textProcessor)
   {
-
     $this->textProcessor = $textProcessor;
   }
 
-  public function getTexts($post, $userSelection)
+  public function getTranslatableFields($postId)
+  {
+    $translatableFields = array();
+
+    $translatableFields[] = array(
+      'title' => __('Title', 'polylang-supertext'),
+      'name' => 'post_title',
+      'default' => true
+    );
+
+    $translatableFields[] = array(
+      'title' => __('Content', 'polylang-supertext'),
+      'name' => 'post_content',
+      'default' => true
+    );
+
+    $translatableFields[] = array(
+      'title' => __('Excerpt', 'polylang-supertext'),
+      'name' => 'post_excerpt',
+      'default' => true
+    );
+
+    return $translatableFields;
+  }
+
+  public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
 
-    if ($userSelection['post_title']) {
+    if ($selectedTranslatableFields['post_title']) {
       $texts['post_title'] = $post->post_title;
     }
 
-    if ($userSelection['post_content']) {
+    if ($selectedTranslatableFields['post_content']) {
       $texts['post_content'] = $this->textProcessor->replaceShortcodes($post->post_content);
     }
 
-    if ($userSelection['post_excerpt']) {
+    if ($selectedTranslatableFields['post_excerpt']) {
       $texts['post_excerpt'] = $post->post_excerpt;
     }
 

@@ -5,7 +5,9 @@ namespace Supertext\Polylang\Helper;
 
 interface ITextAccessor
 {
-  public function getTexts($post, $userSelection);
+  public function getTranslatableFields($postId);
+
+  public function getTexts($post, $selectedTranslatableFields);
 
   public function setTexts($post, $texts);
 

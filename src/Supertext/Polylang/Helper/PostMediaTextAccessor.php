@@ -8,11 +8,24 @@ class PostMediaTextAccessor implements ITextAccessor
 {
   const KEY_SEPARATOR = '__';
 
-  public function getTexts($post, $userSelection)
+  public function getTranslatableFields($postId)
+  {
+    $translatableFields = array();
+
+    $translatableFields[] = array(
+      'title' => __('Image captions', 'polylang-supertext'),
+      'name' => 'post_image',
+      'default' => true
+    );
+
+    return $translatableFields;
+  }
+
+  public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
 
-    if ($userSelection['post_image']) {
+    if ($selectedTranslatableFields['post_image']) {
       $attachments = get_children(
         array(
           'post_parent' => $post->ID,

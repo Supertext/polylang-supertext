@@ -28,7 +28,7 @@ class AjaxRequest
 
     $library = Core::getInstance()->getLibrary();
     $post = get_post($postId);
-    $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['pattern']);
+    $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
     $wrapper = $library->getUserWrapper();
     $log = Core::getInstance()->getLog();
     $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
@@ -122,7 +122,7 @@ class AjaxRequest
     $options = self::getTranslationOptions();
     $library = Core::getInstance()->getLibrary();
     $post = $options['post_id'];
-    $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['pattern']);
+    $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
     $wrapper = $library->getUserWrapper();
     // Call for prices
     $pricing = $wrapper->getQuote(
@@ -227,23 +227,14 @@ class AjaxRequest
    */
   private static function getTranslationOptions()
   {
-    $options = array();
-    foreach ($_POST as $field_name => $field_value) {
-      // Search texts
-      if (substr($field_name, 0, 3) == 'to_') {
-        $field_name = substr($field_name, 3);
-        $options[$field_name] = true;
-      }
-    }
-
     // Param zusammenstellen
     $options = array(
       'post_id' => $_POST['post_id'],
-      'pattern' => $options,
+      'translatable_fields' => $_POST['translatable_fields'],
       'source_lang' => $_POST['source_lang'],
       'target_lang' => $_POST['target_lang'],
       'product_id' => isset($_POST['rad_translation_type']) ? $_POST['rad_translation_type'] : 0,
-      'additional_information' => stripslashes($_POST['txtComment']),
+      'additional_information' => stripslashes($_POST['txt_comment']),
     );
 
     return $options;
@@ -382,18 +373,21 @@ class AjaxRequest
    */
   private static function AddInTranslationTexts($options, $translationPost)
   {
-    foreach ($options['pattern'] as $field_name => $selected) {
-      $field_name_parts = explode('_', $field_name);
+    /*if(isset($options['translatable_fields']['post'])){
+      $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
+    }
 
-      if (!$selected || $field_name_parts[0] !== 'post') {
-        continue;
-      }
+    if(isset($options['translatable_fields']['media'])){
+      $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
+    }
 
-      switch ($field_name_parts[1]) {
-        case 'title':
-          $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
+    foreach ( as $field_name => $selected) {
+
+      switch ($field_name) {
+        case :
+
           break;
-        case 'image':
+        case 'post_image':
           // Set all images to default
           $attachments = get_children(array(
               'post_parent' => $translationPost->ID,
@@ -414,7 +408,7 @@ class AjaxRequest
         default:
           $translationPost->{$field_name} = Translation::IN_TRANSLATION_TEXT;
       }
-    }
+    }*/
   }
 
   /**

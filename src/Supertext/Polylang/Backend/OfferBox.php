@@ -86,7 +86,7 @@ class OfferBox
           </p>
         </div>
         <div id="div_translation_order_content">
-          '. $orderForm .'
+          ' . $orderForm . '
         </div>
         <div id="div_close_translation_order_window" class="div_translation_order_buttons" style="display:none">
               <input type="button" id="btn_close_translation_order_window" class="button" value="' . __('Close window', 'polylang-supertext') . '" />
@@ -110,105 +110,44 @@ class OfferBox
   }
 
   /**
-   * @param int $postId the post to be translated
-   * @return array list of translatable fields
-   */
-  public static function getTranslatableFields($postId)
-  {
-    $result = array();
-
-    $result[] = array(
-      'title' => __('Title', 'polylang-supertext'),
-      'name' => 'to_post_title',
-      'default' => true
-    );
-
-    $result[] = array(
-      'title' => __('Content', 'polylang-supertext'),
-      'name' => 'to_post_content',
-      'default' => true
-    );
-
-    $result[] = array(
-      'title' => __('Excerpt', 'polylang-supertext'),
-      'name' => 'to_post_excerpt',
-      'default' => true
-    );
-
-    // Texts for images
-    $result[] = array(
-      'title' => __('Image captions', 'polylang-supertext'),
-      'name' => 'to_post_image',
-      'default' => true
-    );
-
-    // Let developers add their own translatable items
-    $result = apply_filters('translation_fields_for_post', $result, $postId);
-
-    return $result;
-  }
-
-  /**
-   * @param int $postId the post to be translated
-   * @return array list of translatable fields
-   */
-  public static function getTranslatableCustomFields($postId)
-  {
-    $result = array();
-
-    /*$contentProvider = Core::getInstance()->getContentProvider();
-    $fields = $contentProvider->getAcfFieldDefinitions($postId);
-
-    // Create the field list to generate checkboxes
-    foreach ($fields as $field) {
-      $result[] = array(
-        'title' => $field['label'],
-        'name' => 'to_' . $contentProvider->getFieldNameFromId($field['id']),
-        'default' => true
-      );
-    }
-
-    // Let developers add their own translatable custom fields
-    $result = apply_filters('translation_custom_fields_for_post', $result, $postId);*/
-
-    return $result;
-  }
-
-  /**
    * Generate checkboxes for the user to select translation fields
-   * @param array $fields that are translateable
+   * @param array $translatableFields that are translateable
    * @return string html code for checkboxes
    */
-  protected function getCheckboxes($fields)
+  protected function getCheckboxes($translatableFieldGroups)
   {
     $return = '';
     // Go trough all possible fields
     $i = 0;
-    foreach ($fields as $tick) {
-      $i++;
-      $checkName = $tick['name'];
+    foreach ($translatableFieldGroups as $groupId => $translatableFields) {
 
-      if ($i == 1) {
-        $return .= '<tr>';
-      }
+      foreach ($translatableFields as $translatableField) {
 
-      $checked = '';
-      if ($tick['default'] == true) {
-        $checked = ' checked';
-      }
+        $i++;
+        $checkName = $groupId.$translatableField['name'];
 
-      $return .= '
+        if ($i == 1) {
+          $return .= '<tr>';
+        }
+
+        $checked = '';
+        if ($translatableField['default'] == true) {
+          $checked = ' checked';
+        }
+
+        $return .= '
         <td>
-          <input type="checkbox" class="chkTranslationOptions" name="' . $checkName . '" id="' . $checkName . '" value="1"' . $checked . '>
+          <input type="checkbox" class="chkTranslationOptions" name="translatable_fields['.$groupId.'][' . $translatableField['name'] . ']" id="' . $checkName . '" ' . $checked . '>
         </td>
         <td style="padding-right:10px;">
-          <label for="' . $checkName . '">' . $tick['title'] . '</label>
+          <label for="' . $checkName . '">' . $translatableField['title'] . '</label>
         </td>
       ';
 
-      if ($i == 4) {
-        $return .= '</tr>';
-        $i = 0;
+        if ($i == 4) {
+          $return .= '</tr>';
+          $i = 0;
+        }
       }
     }
 
@@ -220,7 +159,7 @@ class OfferBox
     }
 
     // If nothing, give a message
-    if (!is_array($fields) || count($fields) == 0) {
+    if (!is_array($translatableFieldGroups) || count($translatableFieldGroups) == 0) {
       $return .= '<tr><td>' . __('There is no content to be translated.', 'polylang-supertext') . '</td></tr>';
     }
 
@@ -318,6 +257,7 @@ class OfferBox
     );
 
     $customFieldSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=content');
+    $translatableFieldGroups = Core::getInstance()->getContentProvider()->getTranslatableFieldGroups($this->postId);
 
     return '<form
             name="frm_Translation_Options"
@@ -330,10 +270,10 @@ class OfferBox
             <input type="hidden" name="target_lang" id="target_lang" value="' . $this->targetLang . '">
 
             <h3>' . __('Content to be translated', 'polylang-supertext') . '</h3>
-            ' . $this->getCheckboxes(self::getTranslatableFields($this->postId)) . '
+            ' . $this->getCheckboxes($translatableFieldGroups) . '
             <h3>' . __('Custom fields to be translated', 'polylang-supertext') . '</h3>
-            <p>' . sprintf( wp_kses( __('Translatable custom fields can be defined in the <a target="_parent" href="%s">settings</a>.', 'polylang-supertext'), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( $customFieldSettingsUrl ) ) . '</p>
-            ' . $this->getCheckboxes(self::getTranslatableCustomFields($this->postId)) . '
+            <p>' . sprintf(wp_kses(__('Translatable custom fields can be defined in the <a target="_parent" href="%s">settings</a>.', 'polylang-supertext'), array('a' => array('href' => array(), 'target' => array()))), esc_url($customFieldSettingsUrl)) . '</p>
+
 
             <h3>' . __('Service and deadline', 'polylang-supertext') . '</h3>
             <p>' . __('Select the translation service and deadline:', 'polylang-supertext') . '</p>
@@ -345,7 +285,7 @@ class OfferBox
             <div id="div_translation_price" style="display:none;"></div>
 
             <h3>' . __('Your comment to Supertext', 'polylang-supertext') . '</h3>
-            <p><textarea name="txtComment" id="txtComment"></textarea></p>
+            <p><textarea name="txt_comment" id="txt_comment"></textarea></p>
 
             <div class="div_translation_order_buttons">
               <input type="submit" name="btn_order" id="btn_order" value="' . __('Order translation', 'polylang-supertext') . '" class="button" />

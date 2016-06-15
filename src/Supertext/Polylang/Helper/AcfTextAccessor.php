@@ -22,15 +22,46 @@ class AcfTextAccessor implements ITextAccessor, ISettingsAware
     $this->library = $library;
   }
 
-  public function getTexts($post, $userSelection)
+  public function getTranslatableFields($postId)
   {
+    $translatableFields = array();
+    $options = $this->library->getSettingOption();
+    $savedAcfFields = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
+    $fields = get_field_objects($postId);
 
+    foreach($fields as $field){
+      if(!in_array($field['name'], $savedAcfFields)){
+        continue;
+      }
+
+      $translatableFields[] = array(
+        'title' => $field['label'],
+        'name' => $field['name'],
+        'default' => true
+      );
+    }
+
+    return $translatableFields;
+  }
+
+  public function getTexts($post, $selectedTranslatableFields)
+  {
+    $fields = get_fields($post->ID);
+
+    $texts = array();
+
+    foreach($selectedTranslatableFields as $id => $selected){
+      $texts[$id] = $fields[$id];
+    }
+
+    return $texts;
   }
 
   public function setTexts($post, $texts)
   {
-
-
+    foreach($texts as $id => $text){
+      update_field($id, $text, $post->ID);
+    }
   }
 
   public function prepareTranslationPost($post, $translationPost)
@@ -41,7 +72,6 @@ class AcfTextAccessor implements ITextAccessor, ISettingsAware
   public function getSettingsViewBundle()
   {
     $options = $this->library->getSettingOption();
-
     $savedAcfFields = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
 
     return array(

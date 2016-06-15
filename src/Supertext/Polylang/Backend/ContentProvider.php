@@ -2,13 +2,6 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\TextProcessor;
-use Supertext\Polylang\Helper\PostTextAccessor;
-use Supertext\Polylang\Helper\PostMediaTextAccessor;
-use Supertext\Polylang\Helper\AcfTextAccessor;
-use Supertext\Polylang\Helper\BeaverBuilderTextAccessor;
-
 /**
  * Processes post content
  * @package Supertext\Polylang\Backend
@@ -27,18 +20,32 @@ class ContentProvider
     $this->library = $library;
   }
 
-  /**
-   * @param $post
-   * @param array $userSelection user selection of items to be translated
-   * @return array translation data
-   * @internal param int $postId the post id to get data for
-   */
-  public function getTranslationData($post, $userSelection)
+  public function getTranslatableFieldGroups($postId)
   {
     $result = array();
 
     foreach ($this->textAccessors as $id => $textAccessor) {
-      $result[$id] = $textAccessor->getTexts($post, $userSelection);
+      $result[$id] = $textAccessor->getTranslatableFields($postId);
+    }
+
+    // Let developers add their own translatable items
+    $result = apply_filters('translation_fields_for_post', $result, $postId);
+
+    return $result;
+  }
+
+  public function getTranslationData($post, $selectedTranslatableFieldGroups)
+  {
+    $result = array();
+
+    foreach ($this->textAccessors as $id => $textAccessor) {
+      $texts = $textAccessor->getTexts($post, $selectedTranslatableFieldGroups[$id]);
+
+      if(count($texts) === 0){
+        continue;
+      }
+
+      $result[$id] = $texts;
     }
 
     // Let developers add their own fields

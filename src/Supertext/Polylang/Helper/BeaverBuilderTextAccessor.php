@@ -8,9 +8,26 @@ class BeaverBuilderTextAccessor implements ITextAccessor
 {
   const KEY_SEPARATOR = '__';
 
-  public function getTexts($post, $userSelection)
+  public function getTranslatableFields($postId)
+  {
+    $translatableFields = array();
+
+    $translatableFields[] = array(
+      'title' => __('Beaver Builder content', 'polylang-supertext'),
+      'name' => 'beaver_builder_content',
+      'default' => true
+    );
+
+    return $translatableFields;
+  }
+
+  public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
+
+    if(!$selectedTranslatableFields['beaver_builder_content']){
+      return $texts;
+    }
 
     $layoutData = FLBuilderModel::get_layout_data(null, $post->ID);
 
