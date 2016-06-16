@@ -33,7 +33,7 @@ class SettingsPage extends AbstractPage
     // User and language settings tab
     $this->tabs[self::USERS_TAB] = array(
       'name' => __('User and languages', 'polylang-supertext'),
-      'viewBundle' => array(
+      'viewBundles' => array(
         array('view' => 'backend/settings-users', 'context' => $this),
         array('view' => 'backend/settings-languages', 'context' => $this)
       ),
@@ -43,14 +43,14 @@ class SettingsPage extends AbstractPage
     // Content settings tab
     $this->tabs[self::CONTENT_TAB] = array(
       'name' => __('Content', 'polylang-supertext'),
-      'viewBundle' => $this->getContentViewBundle(),
+      'viewBundles' => $this->getContentViewBundles(),
       'saveFunction' => 'saveContentSettings'
     );
 
     // Shortcode settings tab
     $this->tabs[self::SHORTCODES_TAB] = array(
       'name' => __('Shortcodes', 'polylang-supertext'),
-      'viewBundle' => array(
+      'viewBundles' => array(
         array('view' => 'backend/settings-shortcodes', 'context' => $this)
       ),
       'saveFunction' => 'saveShortcodesSettings'
@@ -59,7 +59,7 @@ class SettingsPage extends AbstractPage
     // Workflow settings tab
     $this->tabs[self::WORKFLOW_TAB] = array(
       'name' => __('Workflow', 'polylang-supertext'),
-      'viewBundle' => array(
+      'viewBundles' => array(
         array('view' => 'backend/settings-workflow', 'context' => $this)
       ),
       'saveFunction' => 'saveWorkflowSettings'
@@ -107,7 +107,7 @@ class SettingsPage extends AbstractPage
     wp_redirect($this->getPageUrl($currentTabId) . '&message=saved');
   }
 
-  private function getContentViewBundle()
+  private function getContentViewBundles()
   {
     $viewBundle = array();
 
@@ -176,7 +176,7 @@ class SettingsPage extends AbstractPage
         <form id="' . $currentTabId . 'SettingsForm" method="post" action="' . $this->getPageUrl($currentTabId) . '">';
 
     // Include the views
-    foreach ($this->tabs[$currentTabId]['viewBundle'] as $viewBundle) {
+    foreach ($this->tabs[$currentTabId]['viewBundles'] as $viewBundle) {
       $this->includeView($viewBundle['view'], $viewBundle['context']);
     }
 
@@ -257,7 +257,7 @@ class SettingsPage extends AbstractPage
     foreach($this->textAccessors as $textAccessor)
     {
       if($textAccessor instanceof ISettingsAware){
-        $textAccessor->SaveSettings($_POST[$textAccessor->getPostDataKey()]);
+        $textAccessor->SaveSettings($_POST);
       }
     }
   }

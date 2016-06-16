@@ -1,8 +1,8 @@
 <?php
 
-function getCustomFieldInput($value){
+function getCustomFieldInput($value=''){
   return '<div class="custom-field-input">
-      <input type="text" name="customFields[]" placeholder="'.__('Custom field name...', 'polylang-supertext').'" value="'.$value.'"/>
+      <input type="text" name="custom-fields[]" placeholder="'.__('Custom field name...', 'polylang-supertext').'" value="'.$value.'"/>
       <button type="button" class="button button-highlighted button-remove custom-field-remove-input"><span class="dashicons dashicons-trash"></span></button>
     </div>';
 }

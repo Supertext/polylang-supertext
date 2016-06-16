@@ -85,15 +85,9 @@ class AcfTextAccessor implements ITextAccessor, ISettingsAware
     );
   }
 
-
-  public function getPostDataKey()
-  {
-    return 'acf';
-  }
-
   public function SaveSettings($postData)
   {
-    $checkedAcfFields = explode(',', $postData['checkedAcfFields']);
+    $checkedAcfFields = explode(',', $postData['acf']['checkedAcfFields']);
 
     $acfFieldsToSave = array();
 

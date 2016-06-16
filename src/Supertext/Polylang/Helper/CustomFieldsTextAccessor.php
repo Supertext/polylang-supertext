@@ -78,13 +78,8 @@ class CustomFieldsTextAccessor implements ITextAccessor, ISettingsAware
     );
   }
 
-  public function getPostDataKey()
-  {
-    return "customFields";
-  }
-
   public function SaveSettings($postData)
   {
-    $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, array_filter($postData));
+    $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, array_filter($postData['custom-fields']));
   }
 }
