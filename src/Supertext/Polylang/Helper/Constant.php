@@ -78,10 +78,6 @@ class Constant
    */
   const JSTREE_STYLE_HANDLE = 'polylang-supertext-jstree-styles';
   /**
-   * @var string the global script handle
-   */
-  const GLOBAL_SCRIPT_HANDLE = 'polylang-supertext-global-library';
-  /**
    * @var string the translation script handle
    */
   const TRANSLATION_SCRIPT_HANDLE = 'polylang-supertext-translation-library';

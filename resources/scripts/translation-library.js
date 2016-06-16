@@ -1,3 +1,5 @@
+var Supertext = Supertext || {};
+
 /**
  * Polylang translation plugin to inject translation options
  * @author Michael Sebel <michael@comotive.ch>
@@ -417,6 +419,6 @@ Supertext.Polylang = {
 };
 
 // Load on load. yass.
-jQuery(function() {
+jQuery(document).ready(function () {
 	Supertext.Polylang.initialize();
 });

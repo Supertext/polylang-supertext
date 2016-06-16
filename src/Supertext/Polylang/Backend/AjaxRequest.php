@@ -276,7 +276,7 @@ class AjaxRequest
 
     self::copyPostMetas($postId, $translationPostId, $options['target_lang']);
 
-    self::AddInTranslationTexts($options, $translationPost);
+    self::AddInTranslationTexts($translationPost);
 
     wp_update_post($translationPost);
 
@@ -367,48 +367,11 @@ class AjaxRequest
   }
 
   /**
-   * @param $options
-   * @param $translationPostId
    * @param $translationPost
    */
-  private static function AddInTranslationTexts($options, $translationPost)
+  private static function AddInTranslationTexts($translationPost)
   {
-    /*if(isset($options['translatable_fields']['post'])){
-      $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
-    }
-
-    if(isset($options['translatable_fields']['media'])){
-      $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
-    }
-
-    foreach ( as $field_name => $selected) {
-
-      switch ($field_name) {
-        case :
-
-          break;
-        case 'post_image':
-          // Set all images to default
-          $attachments = get_children(array(
-              'post_parent' => $translationPost->ID,
-              'post_type' => 'attachment',
-              'post_mime_type' => 'image',
-              'orderby' => 'menu_order ASC, ID',
-              'order' => 'DESC')
-          );
-
-          foreach ($attachments as $attachment_post) {
-            $attachment_post->post_title = Translation::IN_TRANSLATION_TEXT;
-            $attachment_post->post_content = Translation::IN_TRANSLATION_TEXT;
-            $attachment_post->post_excerpt = Translation::IN_TRANSLATION_TEXT;
-            // Update meta and update attachmet post
-            update_post_meta($attachment_post->ID, '_wp_attachment_image_alt', addslashes(Translation::IN_TRANSLATION_TEXT));
-            wp_update_post($attachment_post);
-          }
-        default:
-          $translationPost->{$field_name} = Translation::IN_TRANSLATION_TEXT;
-      }
-    }*/
+    $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
   }
 
   /**

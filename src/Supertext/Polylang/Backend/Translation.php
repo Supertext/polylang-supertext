@@ -30,12 +30,13 @@ class Translation
    * $var string the translation reference hash
    */
   const IN_TRANSLATION_REFERENCE_HASH = '_in_translation_ref_hash';
+
   /**
    * Various filters to change and/or display things
    */
+
   public function __construct()
   {
-
     add_action('admin_init', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('current_screen', array($this, 'addScreenbasedAssets'));
@@ -67,7 +68,7 @@ class Translation
       if (intval($orderId) > 0 && get_post_meta($translationPost->ID, Translation::IN_TRANSLATION_FLAG, true) == 1) {
         echo '
           <div class="updated">
-            <p>' .  sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
+            <p>' . sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
           </div>
         ';
       }
@@ -107,7 +108,6 @@ class Translation
   public function addBackendAssets()
   {
     wp_enqueue_style(Constant::STYLE_HANDLE);
-    wp_enqueue_script(Constant::GLOBAL_SCRIPT_HANDLE);
   }
 
   /**
@@ -117,6 +117,7 @@ class Translation
   {
     echo '
       <script type="text/javascript">
+        var Supertext = Supertext || {};
         Supertext.i18n = {
           resourceUrl : "' . get_bloginfo('wpurl') . '",
           addNewUser : "' . esc_js(__('Add user', 'polylang-supertext')) . '",
@@ -197,12 +198,13 @@ class Translation
    * @param $column
    * @param $postId
    */
-  public function displayTranslationStatusColumn($column, $postId) {
-    if ($column != self::TRANSLATION_STATUS_COLUMN){
+  public function displayTranslationStatusColumn($column, $postId)
+  {
+    if ($column != self::TRANSLATION_STATUS_COLUMN) {
       return;
     }
 
-    if(get_post_meta($postId, Translation::IN_TRANSLATION_FLAG, true) == 1){
+    if (get_post_meta($postId, Translation::IN_TRANSLATION_FLAG, true) == 1) {
       echo '<span class="dashicons dashicons-clock"></span>';
     }
   }
@@ -217,15 +219,15 @@ class Translation
     $newColumns = array();
 
     foreach ($columns as $key => $column) {
-      if($key == 'comments'){
-        $newColumns[self::TRANSLATION_STATUS_COLUMN] =  '<span class="dashicons dashicons-translation" width="20px"></span>';
+      if ($key == 'comments') {
+        $newColumns[self::TRANSLATION_STATUS_COLUMN] = '<span class="dashicons dashicons-translation" width="20px"></span>';
       }
 
       $newColumns[$key] = $column;
     }
 
-    if(!isset($newColumns[self::TRANSLATION_STATUS_COLUMN])){
-      $newColumns[self::TRANSLATION_STATUS_COLUMN] =  '<span class="dashicons dashicons-translation" width="20px"></span>';
+    if (!isset($newColumns[self::TRANSLATION_STATUS_COLUMN])) {
+      $newColumns[self::TRANSLATION_STATUS_COLUMN] = '<span class="dashicons dashicons-translation" width="20px"></span>';
     }
 
     return $newColumns;

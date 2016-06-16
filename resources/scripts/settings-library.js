@@ -1,10 +1,4 @@
-/**
- * Sorry for this mess :-( we reused this from blogwerk
- * @author Michael Hadorn <michael.hadorn@blogwerk.com> (initial library)
- * @author Michael Sebel <michael@comotive.ch> (refactoring)
- */
-
-Supertext = Supertext || {};
+var Supertext = Supertext || {};
 
 Supertext.Settings = {};
 
