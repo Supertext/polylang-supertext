@@ -49,7 +49,7 @@ Supertext.Settings.Users = (function ($) {
 })(jQuery);
 
 //Custom Fields tab module
-Supertext.Settings.Content = (function ($) {
+Supertext.Settings.TranslatableFields = (function ($) {
 
   var customFieldsSettings = (function () {
     var $customFieldInputCopy;
@@ -71,12 +71,12 @@ Supertext.Settings.Content = (function ($) {
     return {
       initialize: function (options) {
 
-        $customFieldInputCopy = $('#contentSettingsForm .custom-field-input').last().clone();
+        $customFieldInputCopy = $('#translatablefieldsSettingsForm .custom-field-input').last().clone();
 
-        $('#contentSettingsForm .custom-field-remove-input')
+        $('#translatablefieldsSettingsForm .custom-field-remove-input')
           .on('click', removeCustomFieldInput);
 
-        $('#contentSettingsForm .custom-field-add-input')
+        $('#translatablefieldsSettingsForm .custom-field-add-input')
           .on('click', addCustomFieldInput);
       }
     }
@@ -114,7 +114,7 @@ Supertext.Settings.Content = (function ($) {
 
         $acfFieldsTree.jstree('select_node', savedAcfFields);
 
-        $('#contentSettingsForm').submit(setCheckedAcfFields);
+        $('#translatablefieldsSettingsForm').submit(setCheckedAcfFields);
       }
     }
   }());
@@ -241,8 +241,8 @@ jQuery(document).ready(function () {
       Supertext.Settings.Users.initialize();
       break;
 
-    case 'content':
-      Supertext.Settings.Content.initialize();
+    case 'translatablefields':
+      Supertext.Settings.TranslatableFields.initialize();
       break;
 
     case 'shortcodes':

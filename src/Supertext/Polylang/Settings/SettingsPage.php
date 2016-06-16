@@ -14,7 +14,7 @@ use Supertext\Polylang\Helper\Constant;
 class SettingsPage extends AbstractPage
 {
   const USERS_TAB = 'users';
-  const CONTENT_TAB = 'content';
+  const TRANSLATABLE_FIELDS_TAB = 'translatablefields';
   const SHORTCODES_TAB = 'shortcodes';
   const WORKFLOW_TAB = 'workflow';
 
@@ -40,11 +40,11 @@ class SettingsPage extends AbstractPage
       'saveFunction' => 'saveUserAndLanguageSettings'
     );
 
-    // Content settings tab
-    $this->tabs[self::CONTENT_TAB] = array(
-      'name' => __('Content', 'polylang-supertext'),
-      'viewBundles' => $this->getContentViewBundles(),
-      'saveFunction' => 'saveContentSettings'
+    // Translatable fields settings tab
+    $this->tabs[self::TRANSLATABLE_FIELDS_TAB] = array(
+      'name' => __('Translatable fields', 'polylang-supertext'),
+      'viewBundles' => $this->getContentProviderSettingsViewBundles(),
+      'saveFunction' => 'saveTranslatableFieldsSettings'
     );
 
     // Shortcode settings tab
@@ -107,7 +107,7 @@ class SettingsPage extends AbstractPage
     wp_redirect($this->getPageUrl($currentTabId) . '&message=saved');
   }
 
-  private function getContentViewBundles()
+  private function getContentProviderSettingsViewBundles()
   {
     $viewBundle = array();
 
@@ -252,7 +252,7 @@ class SettingsPage extends AbstractPage
     }
   }
 
-  private function saveContentSettings()
+  private function saveTranslatableFieldsSettings()
   {
     foreach($this->contentAccessors as $contentAccessor)
     {
