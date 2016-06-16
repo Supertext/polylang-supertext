@@ -53,10 +53,9 @@ Supertext.Polylang = {
 			Supertext.Polylang.injectOfferLinks();
 		}
 
-		// Lock the post if it is in translation
-		window.setTimeout(function() {
-			Supertext.Polylang.disableTranslatingPost();
-		}, 2000);
+    if (jquery('#title').val().indexOf(Supertext.i18n.inTranslationText) > -1)
+
+    Supertext.Polylang.disableTranslatingPost();
 	},
 
 	/**
@@ -131,42 +130,22 @@ Supertext.Polylang = {
 		// Set all default fields to readonly
 		jQuery('#post input, #post select, #post textarea').each(function() {
 			// If the value contains the in translation text, lock fields
-			if (jQuery(this).val().indexOf(Supertext.i18n.inTranslationText) > -1) {
-				jQuery(this).attr('readonly', 'readonly');
-				jQuery(this).addClass('input-disabled');
-				post_is_in_translation = true;
-			}
+      jQuery(this).attr('readonly', 'readonly');
+      jQuery(this).addClass('input-disabled');
+      post_is_in_translation = true;
 		});
 
 		// Kings discipline: disable the editor
-		if (Supertext.Polylang.translationEnabledOnElement(jQuery('#content'))) {
-			// Hide the editor
-			jQuery('#wp-content-editor-container').addClass('input-disabled')
-			jQuery('#content').hide();
-			// Also, hide editor toggle
-			jQuery('#post-status-info, #content-html, #content-tmce, .mce-tinymce').hide();
-			// Print informational text
-			jQuery('#wp-content-editor-container').html(
-				'<div style="margin:10px;">' + Supertext.i18n.inTranslationText + '</div>' +
-				jQuery('#wp-content-editor-container').html()
-			);
-		}
-	},
-
-	/**
-	 * Checks if an elements value is currently in translation
-	 * @param element the element to look at
-	 * @returns {boolean} true, if the element contains a translation status
-	 */
-	translationEnabledOnElement : function(element)
-	{
-		if (element.length > 0) {
-			if (element.val().indexOf(Supertext.i18n.inTranslationText) > -1) {
-				Supertext.Polylang.inTranslation = true;
-				return true;
-			}
-		}
-		return false;
+    // Hide the editor
+    jQuery('#wp-content-editor-container').addClass('input-disabled')
+    jQuery('#content').hide();
+    // Also, hide editor toggle
+    jQuery('#post-status-info, #content-html, #content-tmce, .mce-tinymce').hide();
+    // Print informational text
+    jQuery('#wp-content-editor-container').html(
+      '<div style="margin:10px;">' + Supertext.i18n.inTranslationText + '</div>' +
+      jQuery('#wp-content-editor-container').html()
+    );
 	},
 
 	/**
@@ -177,19 +156,15 @@ Supertext.Polylang = {
 		// var arr_ele_name, att_id, post_type;
 		jQuery("#media-items input, #media-items select, #media-items textarea").each(function() {
 			// if the value is the translation text, lock field
-			if (jQuery(this).val().indexOf(Supertext.i18n.inTranslationText) > -1) {
-				jQuery(this).attr("readonly", "readonly");
-				jQuery(this).addClass("input-disabled");
-				post_is_in_translation = true;
-			}
+      jQuery(this).attr("readonly", "readonly");
+      jQuery(this).addClass("input-disabled");
+      post_is_in_translation = true;
 		});
 
-		if (Supertext.Polylang.translationEnabledOnElement(self.parent.jQuery('#content'))) {
-			jQuery("#insert-gallery, table.slidetoggle tbody tr td input[type=submit].button").each(function() {
-				jQuery(this).attr('disabled', 'disabled');
-				jQuery(this).addClass("input-disabled");
-			});
-		}
+    jQuery("#insert-gallery, table.slidetoggle tbody tr td input[type=submit].button").each(function() {
+      jQuery(this).attr('disabled', 'disabled');
+      jQuery(this).addClass("input-disabled");
+    });
 	},
 
 	/**
