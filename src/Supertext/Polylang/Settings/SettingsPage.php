@@ -18,14 +18,14 @@ class SettingsPage extends AbstractPage
   const SHORTCODES_TAB = 'shortcodes';
   const WORKFLOW_TAB = 'workflow';
 
-  private $textAccessors;
+  private $contentAccessors;
   private $tabs = array();
 
   public function __construct()
   {
     parent::__construct();
 
-    $this->textAccessors = $this->getCore()->getTextAccessors();
+    $this->contentAccessors = $this->getCore()->getContentAccessors();
 
     // Tabs definitions
     $this->tabs = array();
@@ -111,10 +111,10 @@ class SettingsPage extends AbstractPage
   {
     $viewBundle = array();
 
-    foreach($this->textAccessors as $textAccessor)
+    foreach($this->contentAccessors as $contentAccessor)
     {
-      if($textAccessor instanceof ISettingsAware){
-        $viewBundle[] = $textAccessor->getSettingsViewBundle();
+      if($contentAccessor instanceof ISettingsAware){
+        $viewBundle[] = $contentAccessor->getSettingsViewBundle();
       }
     }
 
@@ -254,10 +254,10 @@ class SettingsPage extends AbstractPage
 
   private function saveContentSettings()
   {
-    foreach($this->textAccessors as $textAccessor)
+    foreach($this->contentAccessors as $contentAccessor)
     {
-      if($textAccessor instanceof ISettingsAware){
-        $textAccessor->SaveSettings($_POST);
+      if($contentAccessor instanceof ISettingsAware){
+        $contentAccessor->SaveSettings($_POST);
       }
     }
   }

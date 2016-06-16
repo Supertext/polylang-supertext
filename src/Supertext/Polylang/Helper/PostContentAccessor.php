@@ -3,7 +3,7 @@
 namespace Supertext\Polylang\Helper;
 
 
-class PostTextAccessor implements ITextAccessor
+class PostContentAccessor implements IContentAccessor
 {
   /**
    * @var the text processor

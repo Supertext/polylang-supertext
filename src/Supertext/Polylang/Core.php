@@ -8,13 +8,13 @@ use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
-use Supertext\Polylang\Helper\BeaverBuilderTextAccessor;
+use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\CustomFieldsTextAccessor;
+use Supertext\Polylang\Helper\CustomFieldsContentAccessor;
 use Supertext\Polylang\Helper\TextProcessor;
-use Supertext\Polylang\Helper\PostTextAccessor;
-use Supertext\Polylang\Helper\PostMediaTextAccessor;
-use Supertext\Polylang\Helper\AcfTextAccessor;
+use Supertext\Polylang\Helper\PostContentAccessor;
+use Supertext\Polylang\Helper\PostMediaContentAccessor;
+use Supertext\Polylang\Helper\AcfContentAccessor;
 
 /**
  * Core Class that initializes the plugins features
@@ -46,7 +46,7 @@ class Core
   /**
    * @var
    */
-  private $textAccessors;
+  private $contentAccessors;
   /**
    * @var ContentProvider the content provider
    */
@@ -81,8 +81,8 @@ class Core
     }
 
     $this->library = new Library();
-    $this->textAccessors = $this->CreateTextAccessors();
-    $this->contentProvider = new ContentProvider($this->textAccessors, $this->library);
+    $this->contentAccessors = $this->CreateContentAccessors();
+    $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
 
     $this->checkVersion();
   }
@@ -115,9 +115,9 @@ class Core
     return $this->translation;
   }
 
-  public function getTextAccessors()
+  public function getContentAccessors()
   {
-    return $this->textAccessors;
+    return $this->contentAccessors;
   }
 
   public function getContentProvider()
@@ -191,25 +191,25 @@ class Core
   {
   }
 
-  private function CreateTextAccessors()
+  private function CreateContentAccessors()
   {
     $textProcessor = new TextProcessor($this->library);
 
-    $textAccessors = array(
-      'post' => new PostTextAccessor($textProcessor),
-      'media' => new PostMediaTextAccessor(),
-      'customFields' => new CustomFieldsTextAccessor($textProcessor, $this->library)
+    $contentAccessors = array(
+      'post' => new PostContentAccessor($textProcessor),
+      'media' => new PostMediaContentAccessor(),
+      'customFields' => new CustomFieldsContentAccessor($textProcessor, $this->library)
     );
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
-      $textAccessors['acf'] = new AcfTextAccessor($textProcessor, $this->library);
+      $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $this->library);
     }
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php')) {
-      $textAccessors['beaver_builder'] = new BeaverBuilderTextAccessor();
+      $contentAccessors['beaver_builder'] = new BeaverBuilderContentAccessor();
     }
 
-    return $textAccessors;
+    return $contentAccessors;
   }
 
   private function checkVersion()

@@ -4,7 +4,7 @@ namespace Supertext\Polylang\Helper;
 
 use Comotive\Util\ArrayManipulation;
 
-class CustomFieldsTextAccessor implements ITextAccessor, ISettingsAware
+class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
 {
   /**
    * @var text processor

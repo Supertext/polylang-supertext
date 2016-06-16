@@ -11,12 +11,12 @@ class ContentProvider
   /**
    * @var array|null the text processors
    */
-  private $textAccessors = null;
+  private $contentAccessors = null;
   private $library;
 
-  public function __construct($textAccessors, $library)
+  public function __construct($contentAccessors, $library)
   {
-    $this->textAccessors = $textAccessors;
+    $this->contentAccessors = $contentAccessors;
     $this->library = $library;
   }
 
@@ -24,8 +24,8 @@ class ContentProvider
   {
     $result = array();
 
-    foreach ($this->textAccessors as $id => $textAccessor) {
-      $result[$id] = $textAccessor->getTranslatableFields($postId);
+    foreach ($this->contentAccessors as $id => $contentAccessor) {
+      $result[$id] = $contentAccessor->getTranslatableFields($postId);
     }
 
     // Let developers add their own translatable items
@@ -38,8 +38,8 @@ class ContentProvider
   {
     $result = array();
 
-    foreach ($this->textAccessors as $id => $textAccessor) {
-      $texts = $textAccessor->getTexts($post, $selectedTranslatableFieldGroups[$id]);
+    foreach ($this->contentAccessors as $id => $contentAccessor) {
+      $texts = $contentAccessor->getTexts($post, $selectedTranslatableFieldGroups[$id]);
 
       if(count($texts) === 0){
         continue;
@@ -57,10 +57,10 @@ class ContentProvider
   public function SaveTranslatedData($post, $translationPost, $json)
   {
     foreach ($json->Groups as $translationGroup) {
-      if (isset($this->textAccessors[$translationGroup->GroupId])) {
-        $textAccessor = $this->textAccessors[$translationGroup->GroupId];
+      if (isset($this->contentAccessors[$translationGroup->GroupId])) {
+        $contentAccessors = $this->contentAccessors[$translationGroup->GroupId];
 
-        $textAccessor->prepareTranslationPost($post, $translationPost);
+        $contentAccessors->prepareTranslationPost($post, $translationPost);
 
         $texts = array();
 
@@ -68,7 +68,7 @@ class ContentProvider
           $texts[$translationItem->Id] = $translationItem->Content;
         }
 
-        $textAccessor->setTexts($translationPost, $texts);
+        $contentAccessors->setTexts($translationPost, $texts);
       }
     }
   }

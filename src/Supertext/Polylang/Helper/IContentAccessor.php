@@ -3,7 +3,7 @@
 namespace Supertext\Polylang\Helper;
 
 
-interface ITextAccessor
+interface IContentAccessor
 {
   public function getTranslatableFields($postId);
 

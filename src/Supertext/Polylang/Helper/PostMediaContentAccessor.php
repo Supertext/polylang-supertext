@@ -4,7 +4,7 @@ namespace Supertext\Polylang\Helper;
 
 use Supertext\Polylang\Api\Multilang;
 
-class PostMediaTextAccessor implements ITextAccessor
+class PostMediaContentAccessor implements IContentAccessor
 {
   const KEY_SEPARATOR = '__';
 

@@ -4,7 +4,7 @@ namespace Supertext\Polylang\Helper;
 
 use FLBuilderModel;
 
-class BeaverBuilderTextAccessor implements ITextAccessor
+class BeaverBuilderContentAccessor implements IContentAccessor
 {
   const KEY_SEPARATOR = '__';
 
