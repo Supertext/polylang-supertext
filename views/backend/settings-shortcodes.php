@@ -12,7 +12,7 @@ function getAttributeInput($index, $key, $value){
   return '<div class="shortcode-attribute-input" data-index="'.$index.'">
            <input type="text" name="shortcodes['.$key.'][attributes]['.$index.'][name]" value="'.$value['name'].'" placeholder="'. __('Attribute name...', 'polylang-supertext') .'"/>
            <input class="shortcode-input-encoding" type="text" name="shortcodes['.$key.'][attributes]['.$index.'][encoding]" value="'.$value['encoding'].'" placeholder="'. __('Functions...', 'polylang-supertext') .'"/>
-           <input type="button" value="-" class="button button-highlighted shortcode-attribute-remove-input" />
+           <button type="button" class="button button-highlighted button-remove shortcode-attribute-remove-input"><span class="dashicons dashicons-trash"></span></button>
          </div>';
 }
 
@@ -56,7 +56,7 @@ function getAttributeInput($index, $key, $value){
                 <div class="shortcode-setting-title">
                   ' . __('Translatable attributes', 'polylang-supertext') . '
                 </div>
-                <div>'.$attributeInputs.'<input type="button" value="+" class="button button-highlighted shortcode-attribute-add-input" /></div>
+                <div>'.$attributeInputs.'<button type="button" class="button button-highlighted button-add shortcode-attribute-add-input">'.__('Add attribute', 'polylang-supertext').'</button></div>
               </div>
               <div class="clear"></div>
             </div>';

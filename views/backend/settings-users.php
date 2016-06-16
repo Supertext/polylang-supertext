@@ -94,7 +94,7 @@ foreach ($userMap as $userConfig) {
         <input type="text" name="fieldStApi[]" value="' . $userConfig['stApi'] . '" style="width: 200px">
       </td>
       <td>
-        <img class="remove-user-button" src="' . SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/delete.png" alt="" title="' . $deleteUser . '">
+        <button type="button" class="button button-highlighted button-remove remove-user-button"><span class="dashicons dashicons-trash"></span></button>
       </td>
     </tr>';
 }
@@ -102,8 +102,7 @@ foreach ($userMap as $userConfig) {
 echo '
       </tbody>
       </table>
-      <br />
-      <input class="button button-highlighted" type="button" id="btnAddUser" value="' . $addUser . '" >
+      <input class="button button-highlighted button-add" type="button" id="btnAddUser" value="' . $addUser . '" >
     </div>
   </div>';
 ?>

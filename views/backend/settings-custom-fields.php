@@ -23,7 +23,7 @@ foreach($savedCustomFields as $savedCustomField){
     </p>
     <?php echo $savedCustomFieldsInputs; ?>
     <?php echo getCustomFieldInput(); ?>
-    <button type="button" class="button button-highlighted button-add custom-field-add-input"><span class="dashicons dashicons-plus"></span></button>
+    <button type="button" class="button button-highlighted button-add custom-field-add-input"><?php _e('Add field', 'polylang-supertext'); ?></button>
   </div>
 </div>
 
