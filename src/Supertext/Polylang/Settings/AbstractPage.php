@@ -2,7 +2,7 @@
 namespace Supertext\Polylang\Settings;
 
 use Supertext\Polylang\Core;
-use Supertext\Polylang\Api\Library;
+use Supertext\Polylang\Backend\Library;
 
 /**
  * Simple abstract class to build backend settings pages

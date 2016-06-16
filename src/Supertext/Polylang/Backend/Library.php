@@ -1,14 +1,10 @@
 <?php
 
-namespace Supertext\Polylang\Api;
+namespace Supertext\Polylang\Backend;
 
 use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Api\Wrapper;
 
-/**
- * A supertext global function library
- * @package Supertext\Polylang\Api
- * @author Michael Sebel <michael@comotive.ch>
- */
 class Library
 {
   /**

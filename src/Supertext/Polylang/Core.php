@@ -3,7 +3,7 @@
 namespace Supertext\Polylang;
 
 use Comotive\Util\WordPress;
-use Supertext\Polylang\Api\Library;
+use Supertext\Polylang\Backend\Library;
 use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
@@ -198,7 +198,7 @@ class Core
     $contentAccessors = array(
       'post' => new PostContentAccessor($textProcessor),
       'media' => new PostMediaContentAccessor(),
-      'customFields' => new CustomFieldsContentAccessor($textProcessor, $this->library),
+      'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $this->library),
       'pcf' => new PcfContentAccessor($textProcessor, $this->library)
     );
 

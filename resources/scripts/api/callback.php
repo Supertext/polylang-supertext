@@ -2,7 +2,7 @@
 
 require_once '../../../../../../wp-load.php';
 
-use \Supertext\Polylang\Api\CallbackHandler;
+use Supertext\Polylang\Backend\CallbackHandler;
 
 $result = array(
   'code' => 400,

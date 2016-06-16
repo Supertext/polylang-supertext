@@ -53,7 +53,7 @@ Supertext.Polylang = {
 			Supertext.Polylang.injectOfferLinks();
 		}
 
-    if (jquery('#title').val().indexOf(Supertext.i18n.inTranslationText) > -1)
+    if (jQuery('#title').val().indexOf(Supertext.i18n.inTranslationText) > -1)
 
     Supertext.Polylang.disableTranslatingPost();
 	},

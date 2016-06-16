@@ -39,6 +39,10 @@ class ContentProvider
     $result = array();
 
     foreach ($this->contentAccessors as $id => $contentAccessor) {
+      if(!isset($selectedTranslatableFieldGroups[$id])){
+        continue;
+      }
+
       $texts = $contentAccessor->getTexts($post, $selectedTranslatableFieldGroups[$id]);
 
       if(count($texts) === 0){

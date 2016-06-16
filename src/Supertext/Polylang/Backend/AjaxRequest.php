@@ -4,7 +4,6 @@ namespace Supertext\Polylang\Backend;
 
 use Comotive\Util\StringUtils;
 use Supertext\Polylang\Api\Multilang;
-use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Core;
 
 /**
@@ -121,7 +120,7 @@ class AjaxRequest
     // Call the API for prices
     $options = self::getTranslationOptions();
     $library = Core::getInstance()->getLibrary();
-    $post = $options['post_id'];
+    $post = get_post($options['post_id']);
     $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
     $wrapper = $library->getUserWrapper();
     // Call for prices

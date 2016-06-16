@@ -1,6 +1,6 @@
 <?php
 
-namespace Supertext\Polylang\Api;
+namespace Supertext\Polylang\Backend;
 
 use Supertext\Polylang\Core;
 use Supertext\Polylang\Backend\Translation;
