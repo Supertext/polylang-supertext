@@ -11,6 +11,7 @@ use Supertext\Polylang\Backend\Translation;
 use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\CustomFieldsContentAccessor;
+use Supertext\Polylang\Helper\PcfContentAccessor;
 use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostContentAccessor;
 use Supertext\Polylang\Helper\PostMediaContentAccessor;
@@ -198,7 +199,8 @@ class Core
     $contentAccessors = array(
       'post' => new PostContentAccessor($textProcessor),
       'media' => new PostMediaContentAccessor(),
-      'customFields' => new CustomFieldsContentAccessor($textProcessor, $this->library)
+      'customFields' => new CustomFieldsContentAccessor($textProcessor, $this->library),
+      'pcf' => new PcfContentAccessor($textProcessor, $this->library)
     );
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {

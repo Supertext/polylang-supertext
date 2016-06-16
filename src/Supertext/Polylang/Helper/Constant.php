@@ -44,6 +44,10 @@ class Constant
   /**
    * $var string name of the subsetting for acf field definitions
    */
+  const SETTING_PCF_FIELDS = 'pcfFields';
+  /**
+   * $var string name of the subsetting for acf field definitions
+   */
   const SETTING_ACF_FIELDS = 'acfFields';
   /**
    * $var string name of the subsetting for shortcodes

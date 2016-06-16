@@ -30,13 +30,16 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     $translatableFields = array();
 
     foreach($savedCustomFields as $savedCustomField){
-     if(get_post_meta($postId, $savedCustomField, true)){
-       $translatableFields[] = array(
-         'title' => $savedCustomField,
-         'name' => $savedCustomField,
-         'default' => true
-       );
+
+     if(!get_post_meta($postId, $savedCustomField, true)) {
+      continue;
      }
+
+     $translatableFields[] = array(
+       'title' => $savedCustomField,
+       'name' => $savedCustomField,
+       'default' => true
+     );
     }
 
     return $translatableFields;

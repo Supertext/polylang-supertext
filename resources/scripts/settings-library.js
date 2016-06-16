@@ -83,6 +83,42 @@ Supertext.Settings.TranslatableFields = (function ($) {
 
   }());
 
+  var pcfSettings = (function () {
+    var $pcfFieldsTree,
+      $checkedPcfFieldsInput;
+
+    function setCheckedPcfFields() {
+      var checkedNodes = $pcfFieldsTree.jstree("get_checked", false);
+      $checkedPcfFieldsInput.val(checkedNodes.join(','));
+    }
+
+    return {
+      initialize: function (options) {
+        options = options || {};
+
+        $pcfFieldsTree = $('#pcfFieldsTree');
+        $checkedPcfFieldsInput = $('#checkedPcfFieldsInput');
+
+        $pcfFieldsTree
+          .jstree({
+            'core': {
+              'themes': {
+                'name': 'wordpress-dark'
+              }
+            },
+            'plugins': ['checkbox'],
+            'checkbox': {
+              'keep_selected_style': false
+            }
+          });
+
+        $pcfFieldsTree.jstree('select_node', savedPcfFields);
+
+        $('#translatablefieldsSettingsForm').submit(setCheckedPcfFields);
+      }
+    }
+  }());
+
   var acfSettings = (function () {
     var $acfFieldsTree,
       $checkedAcfFieldsInput;
@@ -124,8 +160,8 @@ Supertext.Settings.TranslatableFields = (function ($) {
       options = options || {};
 
       customFieldsSettings.initialize(options);
+      pcfSettings.initialize(options);
       acfSettings.initialize(options);
-
     }
   }
 })(jQuery);

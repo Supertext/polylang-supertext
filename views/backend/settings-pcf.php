@@ -1,17 +1,16 @@
 <?php
 
-function getAcfTree($nodes){
+function getPcfTree($nodes){
   $nodeHtml = '<ul>';
 
-  foreach($nodes as $node){
-    $id = $node['id'];
+  foreach($nodes as $id => $node){
     $icon = $node['type'] === 'field' ? 'jstree-file' : 'jstree-folder';
 
     $nodeHtml .= '<li id="'.$id.'" data-jstree=\'{"icon":"'.$icon.'"}\'>';
     $nodeHtml .= $node['label'];
 
     if(!empty($node['sub_field_definitions']) && count($node['sub_field_definitions']) > 0){
-      $nodeHtml .= getAcfTree($node['sub_field_definitions']);
+      $nodeHtml .= getPcfTree($node['sub_field_definitions']);
     }
 
     $nodeHtml .= '</li>';
@@ -22,22 +21,22 @@ function getAcfTree($nodes){
   return $nodeHtml;
 }
 
-$htmlTree = getAcfTree($context['acfFieldDefinitions']);
+$htmlTree = getPcfTree($context['pcfFieldDefinitions']);
 
 ?>
 <div class="postbox postbox_admin">
   <div class="inside">
-    <h3><?php _e('Advanced Custom Fields (Plugin)', 'polylang-supertext'); ?></h3>
+    <h3><?php _e('Plugin defined custom fields', 'polylang-supertext'); ?></h3>
     <p>
       <?php _e('Please select the custom fields that can be used for translations.', 'polylang-supertext'); ?>
     </p>
-    <div id="acfFieldsTree">
+    <div id="pcfFieldsTree">
       <?php echo $htmlTree; ?>
     </div>
-    <input name="acf[checkedAcfFields]" id="checkedAcfFieldsInput" type="hidden" value="" />
+    <input name="pcf[checkedPcfFields]" id="checkedPcfFieldsInput" type="hidden" value="" />
   </div>
 </div>
 
 <script type="text/javascript">
-  var savedAcfFields = <?php echo json_encode($context['savedAcfFields']); ?>;
+  var savedPcfFields = <?php echo json_encode($context['savedPcfFields']); ?>;
 </script>
