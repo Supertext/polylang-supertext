@@ -3,8 +3,7 @@
 function getAcfTree($nodes){
   $nodeHtml = '<ul>';
 
-  foreach($nodes as $node){
-    $id = $node['id'];
+  foreach($nodes as $id => $node){
     $icon = $node['type'] === 'field' ? 'jstree-file' : 'jstree-folder';
 
     $nodeHtml .= '<li id="'.$id.'" data-jstree=\'{"icon":"'.$icon.'"}\'>';

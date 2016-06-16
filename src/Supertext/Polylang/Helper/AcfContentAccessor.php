@@ -111,8 +111,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
       $fieldGroupId = isset($fieldGroup['ID']) ? $fieldGroup['ID'] : $fieldGroup['id'];
       $fields = function_exists( 'acf_get_fields' ) ? acf_get_fields($fieldGroup) : apply_filters('acf/field_group/get_fields', array(), $fieldGroupId);
 
-      $acfFields[] = array(
-        'id' => 'group_'.$fieldGroupId,
+      $acfFields['group_'.$fieldGroupId] = array(
         'label' => $fieldGroup['title'],
         'type' => 'group',
         'sub_field_definitions' => $this->getFieldDefinitions($fields)
@@ -127,8 +126,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     $group = array();
 
     foreach ($fields as $field) {
-      $group[] = array(
-        'id' => $field['name'],
+      $group[$field['name']] = array(
         'label' => $field['label'],
         'type' => 'field',
         'sub_field_definitions' => isset($field['sub_fields']) ? $this->getFieldDefinitions($field['sub_fields']) : array()
