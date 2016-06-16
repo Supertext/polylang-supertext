@@ -58,6 +58,9 @@ Supertext.Settings.Content = (function ($) {
       var $this = $(this);
       var $newCustomFieldInput = $customFieldInputCopy.clone();
 
+      $newCustomFieldInput.children('.custom-field-remove-input')
+        .on('click', removeCustomFieldInput);
+
       $newCustomFieldInput.insertBefore($this).show();
     }
 
