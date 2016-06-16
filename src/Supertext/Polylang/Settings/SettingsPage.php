@@ -21,11 +21,11 @@ class SettingsPage extends AbstractPage
   private $contentAccessors;
   private $tabs = array();
 
-  public function __construct()
+  public function __construct($contentAccessors)
   {
     parent::__construct();
 
-    $this->contentAccessors = $this->getCore()->getContentAccessors();
+    $this->contentAccessors = $contentAccessors;
 
     // Tabs definitions
     $this->tabs = array();

@@ -11,11 +11,15 @@ use Supertext\Polylang\Settings\SettingsPage;
  */
 class Menu
 {
+  private $settingsPage;
+
   /**
    * Injects the registration of settings menu
    */
-  public function __construct()
+  public function __construct($settingsPage)
   {
+    $this->settingsPage = $settingsPage;
+
     add_action('admin_menu', array($this, 'addBackendMenus'));
   }
 
@@ -24,14 +28,12 @@ class Menu
    */
   public function addBackendMenus()
   {
-    $settingsPage = new SettingsPage();
-
     add_options_page(
       __('Supertext - Settings', 'polylang-supertext'),
       __('Supertext', 'polylang-supertext'),
       'administrator',
       'supertext-polylang-settings',
-      array($settingsPage, 'display')
+      array($this->settingsPage, 'display')
     );
   }
 }

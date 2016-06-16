@@ -16,6 +16,7 @@ use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostContentAccessor;
 use Supertext\Polylang\Helper\PostMediaContentAccessor;
 use Supertext\Polylang\Helper\AcfContentAccessor;
+use Supertext\Polylang\Settings\SettingsPage;
 
 /**
  * Core Class that initializes the plugins features
@@ -60,6 +61,10 @@ class Core
   public function __construct()
   {
     self::$instance = $this;
+
+    $this->library = new Library();
+    $this->contentAccessors = $this->CreateContentAccessors();
+    $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
   }
 
   /**
@@ -76,14 +81,10 @@ class Core
       add_action('init', array($this, 'registerAdminAssets'));
 
       // Load needed subcomponents in admin
-      $this->menu = new Menu();
+      $this->menu = new Menu(new SettingsPage($this->contentAccessors));
       $this->log = new Log();
       $this->translation = new Translation();
     }
-
-    $this->library = new Library();
-    $this->contentAccessors = $this->CreateContentAccessors();
-    $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
 
     $this->checkVersion();
   }

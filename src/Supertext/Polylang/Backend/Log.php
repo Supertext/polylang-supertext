@@ -19,14 +19,6 @@ class Log
   const META_ORDER_ID = 'polylang-supertext-order-id';
 
   /**
-   * Injects the display of the informational metabox, if there is log data
-   */
-  public function __construct()
-  {
-
-  }
-
-  /**
    * @param int $postId post that needs a new entry
    * @param string $message the message to be logged
    * @return bool true, if the log entry was placed
