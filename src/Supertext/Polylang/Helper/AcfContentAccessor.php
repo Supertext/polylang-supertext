@@ -6,6 +6,8 @@ use Comotive\Util\ArrayManipulation;
 
 class AcfContentAccessor implements IContentAccessor, ISettingsAware
 {
+  const KEY_SEPARATOR = '__';
+
   /**
    * @var text processor
    */
@@ -26,10 +28,16 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
   {
     $options = $this->library->getSettingOption();
     $savedAcfFields = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
-    $fields = get_field_objects($postId);
+    $fields = get_field_objects($postId, true, false);
 
     $translatableFields = array();
-    foreach($fields as $field){
+
+    while(($field = array_shift($fields))){
+      if(isset($field['sub_fields'])){
+        $fields = array_merge($fields, $field['sub_fields']);
+        continue;
+      }
+
       if(!in_array($field['name'], $savedAcfFields)){
         continue;
       }
@@ -46,23 +54,39 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
 
   public function getTexts($post, $selectedTranslatableFields)
   {
-    $fields = get_fields($post->ID);
-
     $texts = array();
+    $fields = get_fields($post->ID);
+    $ids = array_keys($selectedTranslatableFields);
 
-    foreach($selectedTranslatableFields as $id => $selected){
-      $texts[$id] = $this->textProcessor->replaceShortcodes($fields[$id]);
-    }
+    $texts = $this->getFieldTexts($fields, '', $texts, $ids);
 
+    print_r($texts);
     return $texts;
   }
 
   public function setTexts($post, $texts)
   {
+    $fields = get_fields($post->ID);
+
     foreach($texts as $id => $text){
+      $keys = explode(self::KEY_SEPARATOR, $id);
+      $lastKeyIndex = count($keys)-1;
       $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
       $decodedContent = $this->textProcessor->replaceShortcodeNodes($decodedContent);
-      update_field($id, $decodedContent, $post->ID);
+
+      $item = &$fields;
+      foreach($keys as $index => $key){
+        if($index === $lastKeyIndex){
+          $item[$key] = $decodedContent;
+          continue;
+        }
+
+        $item = &$item[$key];
+      }
+    }
+
+    foreach($fields as $key => $value){
+      update_field($key, $value, $post->ID);
     }
   }
 
@@ -134,5 +158,25 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     }
 
     return $group;
+  }
+
+  private function getFieldTexts($fields, $idPrefix, $texts, $keysToAdd)
+  {
+    foreach($fields as $key => $value){
+      if(is_array($value)){
+        $newIdPrefix = $idPrefix . $key . self::KEY_SEPARATOR;
+        $texts = array_merge($texts, $this->getFieldTexts($value, $newIdPrefix, $texts, $keysToAdd));
+        continue;
+      }
+
+      if(!in_array($key, $keysToAdd)){
+        continue;
+      }
+
+      $id = $idPrefix . $key;
+      $texts[$id] = $this->textProcessor->replaceShortcodes($value);
+    }
+
+    return $texts;
   }
 }

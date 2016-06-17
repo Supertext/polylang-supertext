@@ -93,7 +93,7 @@ class Translation
    */
   public function addScreenbasedAssets($screen)
   {
-    if ($screen->base == 'post' && ($_GET['action'] == 'edit')) {
+    if ($screen->base == 'post' && isset($_GET['action']) && ($_GET['action'] == 'edit')) {
       // SCripts to inject translation
       wp_enqueue_script(Constant::TRANSLATION_SCRIPT_HANDLE);
 
@@ -169,27 +169,29 @@ class Translation
    */
   public function addLogInfoMetabox()
   {
-    $postId = intval($_GET['post']);
-    $logEntries = Core::getInstance()->getLog()->getLogEntries($postId);
+    if (isset($_GET['post'])) {
+      $postId = intval($_GET['post']);
+      $logEntries = Core::getInstance()->getLog()->getLogEntries($postId);
 
-    // Show info if valid post and there are entries
-    if ($postId > 0 && count($logEntries) > 0) {
-      // Reverse entries, so that the newest is on top
-      $logEntries = array_reverse($logEntries);
-      // Create an html element to display the entries
-      $html = '';
-      foreach ($logEntries as $entry) {
-        $datetime = '
+      // Show info if valid post and there are entries
+      if ($postId > 0 && count($logEntries) > 0) {
+        // Reverse entries, so that the newest is on top
+        $logEntries = array_reverse($logEntries);
+        // Create an html element to display the entries
+        $html = '';
+        foreach ($logEntries as $entry) {
+          $datetime = '
           ' . Date::getTime(Date::EU_DATE, $entry['datetime']) . ',
           ' . Date::getTime(Date::EU_TIME, $entry['datetime']) . '
         ';
-        $html .= '<p><strong>' . $datetime . '</strong>: ' . $entry['message'] . '</p>';
-      }
+          $html .= '<p><strong>' . $datetime . '</strong>: ' . $entry['message'] . '</p>';
+        }
 
-      $helper = Metabox::get('post');
-      // Add a new metabox to show log entries
-      $helper->addMetabox(Log::META_LOG, __('Supertext Plugin Log', 'polylang-supertext'), 'side', 'low');
-      $helper->addHtml('info', Log::META_LOG, $html);
+        $helper = Metabox::get('post');
+        // Add a new metabox to show log entries
+        $helper->addMetabox(Log::META_LOG, __('Supertext Plugin Log', 'polylang-supertext'), 'side', 'low');
+        $helper->addHtml('info', Log::META_LOG, $html);
+      }
     }
   }
 

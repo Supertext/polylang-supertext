@@ -48,7 +48,7 @@ class TextProcessor
 
     $tagName = $matches[2];
     $attributes = shortcode_parse_atts($matches[3]);
-    $savedShortcode = isset($savedShortcodes[$tagName]) ? $savedShortcodes[$tagName] : array('attributes' => array(''));
+    $savedShortcode = isset($savedShortcodes[$tagName]) ? $savedShortcodes[$tagName] : array('attributes' => array());
     $translatableShortcodeAttributes = $savedShortcode['attributes'];
     $forceEnclosingForm = preg_match('/\[\s*\/\s*' . $tagName . '\s*\]/', $matches[0]);
 

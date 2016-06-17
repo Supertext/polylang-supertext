@@ -61,10 +61,6 @@ class Core
   public function __construct()
   {
     self::$instance = $this;
-
-    $this->library = new Library();
-    $this->contentAccessors = $this->CreateContentAccessors();
-    $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
   }
 
   /**
@@ -77,6 +73,10 @@ class Core
 
   public function load()
   {
+    $this->library = new Library();
+    $this->contentAccessors = $this->CreateContentAccessors();
+    $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
+
     if (is_admin()) {
       add_action('init', array($this, 'registerAdminAssets'));
 
