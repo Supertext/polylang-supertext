@@ -60,7 +60,6 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
 
     $texts = $this->getFieldTexts($fields, '', $texts, $ids);
 
-    print_r($texts);
     return $texts;
   }
 
