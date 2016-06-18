@@ -42,7 +42,10 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
      );
     }
 
-    return $translatableFields;
+    return array(
+      'source_name' => __('User defined custom fields', 'polylang-supertext'),
+      'fields' => $translatableFields
+    );
   }
 
   public function getTexts($post, $selectedTranslatableFields)

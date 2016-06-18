@@ -18,7 +18,10 @@ class PostMediaContentAccessor implements IContentAccessor
       'default' => true
     );
 
-    return $translatableFields;
+    return array(
+      'source_name' => __('Media', 'polylang-supertext'),
+      'fields' => $translatableFields
+    );
   }
 
   public function getTexts($post, $selectedTranslatableFields)

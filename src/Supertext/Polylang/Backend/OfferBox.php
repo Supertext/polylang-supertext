@@ -113,61 +113,47 @@ class OfferBox
    * @param array $translatableFields that are translateable
    * @return string html code for checkboxes
    */
-  protected function getCheckboxes($translatableFieldGroups)
+  protected function getCheckboxes($allTranslatableFields)
   {
     $return = '';
-    // Go trough all possible fields
-    $i = 0;
-    foreach ($translatableFieldGroups as $groupId => $translatableFields) {
 
-      foreach ($translatableFields as $translatableField) {
+    foreach ($allTranslatableFields as $sourceId => $translatableFields) {
+      $fields = $translatableFields['fields'];
+      if(count($fields) === 0){
+        continue;
+      }
 
-        $i++;
-        $checkName = $groupId.$translatableField['name'];
+      $return .= '<table class="translatableContentTable" border="0" cellpadding="2" cellspace="0">';
+      $return .= '<thead><tr><th colspan="8">'.$translatableFields['source_name'].'</th></tr></thead>';
+      $return .= '<tbody>';
+      foreach ($fields as $index => $field) {
+        $checkName = $sourceId.$field['name'];
+        $checked = $field['default'] ? ' checked': '';
+        $reminder = $index % 4;
+        $rowStart = $reminder === 0 ? '<tr>' : '';
+        $rowEnd = $reminder === 3 ? '</tr>' : '';
 
-        if ($i == 1) {
-          $return .= '<tr>';
-        }
-
-        $checked = '';
-        if ($translatableField['default'] == true) {
-          $checked = ' checked';
-        }
-
+        $return .= $rowStart;
         $return .= '
-        <td>
-          <input type="checkbox" class="chkTranslationOptions" name="translatable_fields['.$groupId.'][' . $translatableField['name'] . ']" id="' . $checkName . '" ' . $checked . '>
-        </td>
-        <td style="padding-right:10px;">
-          <label for="' . $checkName . '">' . $translatableField['title'] . '</label>
-        </td>
-      ';
-
-        if ($i == 4) {
-          $return .= '</tr>';
-          $i = 0;
-        }
+          <td>
+            <input type="checkbox" class="chkTranslationOptions" name="translatable_fields['.$sourceId.'][' . $field['name'] . ']" id="' . $checkName . '" ' . $checked . '>
+          </td>
+          <td style="padding-right:10px;">
+            <label for="' . $checkName . '">' . $field['title'] . '</label>
+          </td>
+        ';
+        $return .= $rowEnd;
       }
-    }
-
-    // Crazy hadorn code.
-    if ($i !== 0) {
-      for ($index = $i; $index <= 4; $index++) {
-        $return .= '<td></td><td></td>';
-      }
+      $return .= '</tbody></table>';
     }
 
     // If nothing, give a message
-    if (!is_array($translatableFieldGroups) || count($translatableFieldGroups) == 0) {
+    if (!is_array($allTranslatableFields) || count($allTranslatableFields) == 0) {
       $return .= '<tr><td>' . __('There is no content to be translated.', 'polylang-supertext') . '</td></tr>';
     }
 
     // Return the table with checkboxes
-    return '
-      <table border="0" cellpadding="2" cellspace="0">
-        ' . $return . '
-      </table>
-    ';
+    return $return;
   }
 
   private function getTitle()
@@ -256,7 +242,7 @@ class OfferBox
     );
 
     $customFieldSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=content');
-    $translatableFieldGroups = Core::getInstance()->getContentProvider()->getTranslatableFieldGroups($this->postId);
+    $allTranslatableFields = Core::getInstance()->getContentProvider()->getAllTranslatableFields($this->postId);
 
     return '<form
             name="frm_Translation_Options"
@@ -269,10 +255,8 @@ class OfferBox
             <input type="hidden" name="target_lang" id="target_lang" value="' . $this->targetLang . '">
 
             <h3>' . __('Content to be translated', 'polylang-supertext') . '</h3>
-            ' . $this->getCheckboxes($translatableFieldGroups) . '
-            <h3>' . __('Custom fields to be translated', 'polylang-supertext') . '</h3>
             <p>' . sprintf(wp_kses(__('Translatable custom fields can be defined in the <a target="_parent" href="%s">settings</a>.', 'polylang-supertext'), array('a' => array('href' => array(), 'target' => array()))), esc_url($customFieldSettingsUrl)) . '</p>
-
+            ' . $this->getCheckboxes($allTranslatableFields) . '
 
             <h3>' . __('Service and deadline', 'polylang-supertext') . '</h3>
             <p>' . __('Select the translation service and deadline:', 'polylang-supertext') . '</p>

@@ -20,7 +20,7 @@ class ContentProvider
     $this->library = $library;
   }
 
-  public function getTranslatableFieldGroups($postId)
+  public function getAllTranslatableFields($postId)
   {
     $result = array();
 

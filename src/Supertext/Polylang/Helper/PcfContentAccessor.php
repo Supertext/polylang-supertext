@@ -48,7 +48,10 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
       }
     }
 
-    return $translatableFields;
+    return array(
+      'source_name' => __('Plugin defined custom fields', 'polylang-supertext'),
+      'fields' => $translatableFields
+    );
   }
 
   public function getTexts($post, $selectedTranslatableFields)

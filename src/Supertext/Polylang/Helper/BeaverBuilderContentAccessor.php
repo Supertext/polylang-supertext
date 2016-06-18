@@ -18,7 +18,10 @@ class BeaverBuilderContentAccessor implements IContentAccessor
       'default' => true
     );
 
-    return $translatableFields;
+    return array(
+      'source_name' => __('Beaver Builder (Plugin)', 'polylang-supertext'),
+      'fields' => $translatableFields
+    );
   }
 
   public function getTexts($post, $selectedTranslatableFields)

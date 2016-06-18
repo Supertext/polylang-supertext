@@ -30,6 +30,15 @@
 .div_tb_wrap_translation #txtComment{
   width:100%;
 }
+.translatableContentTable{
+  margin-top: 5px;
+}
+.translatableContentTable:first-child{
+  margin-top: 0;
+}
+.translatableContentTable thead th{
+  text-align: left;
+}
 #div_translation_title span{
   float:left;
   padding-right: 10px;
