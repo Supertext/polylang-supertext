@@ -47,15 +47,19 @@ class Multilang
     if (function_exists('pll_get_post')) {
       return pll_get_post($postId, $language);
     }
+
+    return null;
   }
 
   /**
-   * @param int $post_id post id
-   * @param string $lang language code
+   * @param $postId
+   * @param $language
+   * @internal param int $post_id post id
+   * @internal param string $lang language code
    */
   public static function setPostLanguage($postId, $language){
     if (function_exists('pll_set_post_language')) {
-      return pll_set_post_language($postId, $language);
+      pll_set_post_language($postId, $language);
     }
   }
 
@@ -64,7 +68,7 @@ class Multilang
    */
   public static function savePostTranslations($arr){
     if (function_exists('pll_save_post_translations')) {
-      return pll_save_post_translations($arr);
+      pll_save_post_translations($arr);
     }
   }
 } 
