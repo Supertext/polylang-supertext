@@ -1,8 +1,7 @@
 <?php
 namespace Supertext\Polylang\Settings;
 
-use Supertext\Polylang\Core;
-use Supertext\Polylang\Backend\Library;
+use Supertext\Polylang\Helper\Library;
 
 /**
  * Simple abstract class to build backend settings pages

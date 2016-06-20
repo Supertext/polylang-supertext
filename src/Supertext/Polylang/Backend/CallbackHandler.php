@@ -3,8 +3,8 @@
 namespace Supertext\Polylang\Backend;
 
 use Supertext\Polylang\Core;
-use Supertext\Polylang\Backend\Translation;
 use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Api\Multilang;
 use Comotive\Util\ArrayManipulation;
 
 class CallbackHandler

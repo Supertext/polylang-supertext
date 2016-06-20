@@ -3,11 +3,11 @@
 namespace Supertext\Polylang;
 
 use Comotive\Util\WordPress;
-use Supertext\Polylang\Backend\Library;
 use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
+use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\CustomFieldsContentAccessor;
