@@ -241,7 +241,7 @@ class OfferBox
       $this->getLanguageName($this->targetLang)
     );
 
-    $customFieldSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=content');
+    $customFieldSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=translatablefields');
     $allTranslatableFields = Core::getInstance()->getContentProvider()->getAllTranslatableFields($this->postId);
 
     return '<form
