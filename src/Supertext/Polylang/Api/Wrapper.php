@@ -26,10 +26,6 @@ class Wrapper
    */
   protected $host = Constant::API_URL;
   /**
-   * @var Library the library
-   */
-  protected $library;
-  /**
    * @var string the communication language
    */
   protected $communicationLang = 'de-DE';
@@ -48,7 +44,6 @@ class Wrapper
     $this->user = $user;
     $this->apikey = $apikey;
     $this->currency = strtolower($currency);
-    $this->library = Core::getInstance()->getLibrary();
     $this->communicationLang = str_replace('_', '-', get_bloginfo('language'));
   }
 
@@ -95,19 +90,19 @@ class Wrapper
   }
 
   /**
-   * @param string $source polylang source language
-   * @param string $target polylang target language
+   * @param string $sourceLanguage polylang source language
+   * @param string $targetLanguage polylang target language
    * @param array $data data to be quoted for translation
    * @return array
    */
-  public function getQuote($source, $target, $data)
+  public function getQuote($sourceLanguage, $targetLanguage, $data)
   {
     $json = array(
       'ContentType' => 'text/html',
       'Currency' => $this->currency,
       'Groups' => $this->buildSupertextData($data),
-      'SourceLang' => $this->library->mapLanguage($source),
-      'TargetLang' => $this->library->mapLanguage($target)
+      'SourceLang' => $sourceLanguage,
+      'TargetLang' => $targetLanguage
     );
 
     $httpresult = $this->postRequest('translation/quote', json_encode($json), true);
@@ -143,8 +138,8 @@ class Wrapper
   }
 
   /**
-   * @param string $source source language in polylang
-   * @param string $target target language in polylang
+   * @param string $sourceLanguage supertext source language
+   * @param string $targetLanguage supertext target language
    * @param string $title the title of the translations
    * @param string $productId the supertext product id
    * @param array $data data to be translated
@@ -153,7 +148,7 @@ class Wrapper
    * @param string$additionalInfo
    * @return array api result info
    */
-  public function createOrder($source, $target, $title, $productId, $data, $callback, $reference, $additionalInfo)
+  public function createOrder($sourceLanguage, $targetLanguage, $title, $productId, $data, $callback, $reference, $additionalInfo)
   {
     $product = explode(':', $productId);
 
@@ -169,8 +164,8 @@ class Wrapper
       'OrderTypeId' => $product[0],
       'ReferenceData' => $reference,
       'Referrer' => 'WordPress Polylang Plugin',
-      'SourceLang' => $this->library->mapLanguage($source),
-      'TargetLang' => $this->library->mapLanguage($target),
+      'SourceLang' => $sourceLanguage,
+      'TargetLang' => $targetLanguage,
       'AdditionalInformation' => $additionalInfo,
       'Groups' => $this->buildSupertextData($data)
     );

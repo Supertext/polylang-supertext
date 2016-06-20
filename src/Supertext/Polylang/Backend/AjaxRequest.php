@@ -35,8 +35,8 @@ class AjaxRequest
 
     // Create the order
     $orderCreation = $wrapper->createOrder(
-      $options['source_lang'],
-      $options['target_lang'],
+      $library->mapLanguage($options['source_lang']),
+      $library->mapLanguage($options['target_lang']),
       get_bloginfo('name') . ' - ' . $post->post_title,
       $options['product_id'],
       $data,
@@ -125,8 +125,8 @@ class AjaxRequest
     $wrapper = $library->getUserWrapper();
     // Call for prices
     $pricing = $wrapper->getQuote(
-      $options['source_lang'],
-      $options['target_lang'],
+      $library->mapLanguage($options['source_lang']),
+      $library->mapLanguage($options['target_lang']),
       $data
     );
 
