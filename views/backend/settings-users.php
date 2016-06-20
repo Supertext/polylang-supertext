@@ -3,8 +3,7 @@ use Supertext\Polylang\Helper\Constant;
 use Comotive\Util\ArrayManipulation;
 
 /** @var Page $context */
-$library = $context->getCore()->getLibrary();
-$options = $library->getSettingOption();
+$options = $context->getSettingOption();
 $userMap = isset($options[Constant::SETTING_USER_MAP]) ? ArrayManipulation::forceArray($options[Constant::SETTING_USER_MAP]) : array();
 
 // Get all users

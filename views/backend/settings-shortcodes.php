@@ -4,8 +4,7 @@ use Comotive\Util\ArrayManipulation;
 
 global $shortcode_tags;
 
-$library = $context->getCore()->getLibrary();
-$options = $library->getSettingOption();
+$options = $context->getSettingOption();
 $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipulation::forceArray($options[Constant::SETTING_SHORTCODES]) : array();
 
 function getAttributeInput($index, $key, $value){

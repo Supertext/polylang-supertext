@@ -21,9 +21,9 @@ class SettingsPage extends AbstractPage
   private $contentAccessors;
   private $tabs = array();
 
-  public function __construct($contentAccessors)
+  public function __construct($library, $contentAccessors)
   {
-    parent::__construct();
+    parent::__construct($library);
 
     $this->contentAccessors = $contentAccessors;
 
@@ -34,8 +34,8 @@ class SettingsPage extends AbstractPage
     $this->tabs[self::USERS_TAB] = array(
       'name' => __('User and languages', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-users', 'context' => $this),
-        array('view' => 'backend/settings-languages', 'context' => $this)
+        array('view' => 'backend/settings-users', 'context' => $library),
+        array('view' => 'backend/settings-languages', 'context' => $library)
       ),
       'saveFunction' => 'saveUserAndLanguageSettings'
     );
@@ -51,7 +51,7 @@ class SettingsPage extends AbstractPage
     $this->tabs[self::SHORTCODES_TAB] = array(
       'name' => __('Shortcodes', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-shortcodes', 'context' => $this)
+        array('view' => 'backend/settings-shortcodes', 'context' => $library)
       ),
       'saveFunction' => 'saveShortcodesSettings'
     );
@@ -60,7 +60,7 @@ class SettingsPage extends AbstractPage
     $this->tabs[self::WORKFLOW_TAB] = array(
       'name' => __('Workflow', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-workflow', 'context' => $this)
+        array('view' => 'backend/settings-workflow', 'context' => $library)
       ),
       'saveFunction' => 'saveWorkflowSettings'
     );

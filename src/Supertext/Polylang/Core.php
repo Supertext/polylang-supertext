@@ -81,7 +81,7 @@ class Core
       add_action('init', array($this, 'registerAdminAssets'));
 
       // Load needed subcomponents in admin
-      $this->menu = new Menu(new SettingsPage($this->contentAccessors));
+      $this->menu = new Menu(new SettingsPage($this->library, $this->contentAccessors));
       $this->log = new Log();
       $this->translation = new Translation();
     }

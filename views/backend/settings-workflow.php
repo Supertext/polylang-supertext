@@ -2,8 +2,7 @@
 use Supertext\Polylang\Helper\Constant;
 use Comotive\Util\ArrayManipulation;
 
-$library = $context->getCore()->getLibrary();
-$options = $library->getSettingOption();
+$options = $context->getSettingOption();
 $workflowSettings = isset($options[Constant::SETTING_WORKFLOW]) ? ArrayManipulation::forceArray($options[Constant::SETTING_WORKFLOW]) : array();
 
 $publishOnCallbackChecked = $workflowSettings['publishOnCallback'] ? 'checked="checked"' : '';

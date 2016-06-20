@@ -12,10 +12,6 @@ use Supertext\Polylang\Backend\Library;
 abstract class AbstractPage
 {
   /**
-   * @var Core the plugin core
-   */
-  protected $core = NULL;
-  /**
    * @var Library the library
    */
   protected $library = NULL;
@@ -23,19 +19,11 @@ abstract class AbstractPage
   /**
    * Create references to core and library for convenience
    */
-  public function __construct()
+  public function __construct($library)
   {
-    $this->core = Core::getInstance();
-    $this->library = $this->core->getLibrary();
-    add_action('admin_init', array($this, 'control'));
-  }
+    $this->library = $library;
 
-  /**
-   * @return Core the plugin core
-   */
-  public function getCore()
-  {
-    return $this->core;
+    add_action('admin_init', array($this, 'control'));
   }
 
   /**

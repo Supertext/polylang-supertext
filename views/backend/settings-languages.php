@@ -5,8 +5,7 @@ use Supertext\Polylang\Api\Wrapper;
 use Comotive\Util\ArrayManipulation;
 
 /** @var Page $context */
-$library = $context->getCore()->getLibrary();
-$options = $library->getSettingOption();
+$options = $context->getSettingOption();
 $languageMap = isset($options[Constant::SETTING_LANGUAGE_MAP]) ? ArrayManipulation::forceArray($options[Constant::SETTING_LANGUAGE_MAP]) : array();
 
 // Laod Languages from Polylang to match with supertext api
