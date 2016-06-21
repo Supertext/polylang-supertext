@@ -6,6 +6,7 @@ use Comotive\Util\WordPress;
 use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
+use Supertext\Polylang\Backend\OfferBox;
 use Supertext\Polylang\Backend\Translation;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
@@ -56,9 +57,12 @@ class Core
    */
   private $contentProvider = null;
 
+  private $offerBox = null;
+
   private $ajaxRequestHandler = null;
 
   private $callbackHandler = null;
+
 
   /**
    * Creates the instance and saves reference
@@ -128,16 +132,25 @@ class Core
 
   public function getContentProvider()
   {
-    if($this->contentProvider === null){
+    if ($this->contentProvider === null) {
       $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
     }
 
     return $this->contentProvider;
   }
 
+  public function getOfferBox()
+  {
+    if ($this->offerBox === null) {
+      $this->offerBox = new OfferBox();
+    }
+
+    return $this->offerBox;
+  }
+
   public function getAjaxRequestHandler()
   {
-    if($this->ajaxRequestHandler === null){
+    if ($this->ajaxRequestHandler === null) {
       $this->ajaxRequestHandler = new AjaxRequestHandler();
     }
 
@@ -146,7 +159,7 @@ class Core
 
   public function getCallbackHandler()
   {
-    if($this->callbackHandler === null){
+    if ($this->callbackHandler === null) {
       $this->callbackHandler = new CallbackHandler();
     }
 
