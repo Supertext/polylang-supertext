@@ -3,7 +3,6 @@
 namespace Supertext\Polylang\Backend;
 
 use Supertext\Polylang\Api\Multilang;
-use Supertext\Polylang\Core;
 use Supertext\Polylang\Helper\Constant;
 
 /**
@@ -35,16 +34,14 @@ class OfferBox
   protected $targetLang = '';
 
   private $library;
-  private $translation;
   private $contentProvider;
 
   /**
    * Gather various meta information for the upcoming offer
    */
-  public function __construct($library, $translation, $contentProvider)
+  public function __construct($library, $contentProvider)
   {
     $this->library = $library;
-    $this->translation = $translation;
     $this->contentProvider = $contentProvider;
     $this->postId = $_GET['postId'];
     $this->post = get_post($this->postId);
@@ -99,9 +96,6 @@ class OfferBox
         </div>
       </div>
     ';
-
-    // Add JS string translations
-    $this->translation->addTranslations();
   }
 
   /**

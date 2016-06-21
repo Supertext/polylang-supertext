@@ -4,7 +4,6 @@ namespace Supertext\Polylang\Backend;
 
 use Comotive\Util\StringUtils;
 use Supertext\Polylang\Api\Multilang;
-use Supertext\Polylang\Core;
 
 /**
  * Provided ajax request handlers

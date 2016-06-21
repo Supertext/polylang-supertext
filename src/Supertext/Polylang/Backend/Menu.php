@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Supertext\Polylang\Settings\SettingsPage;
 
 /**
  * The menu handler

@@ -38,8 +38,8 @@ Supertext.Polylang = {
 	rowTemplate : '\
 		<tr>\
 		  <td>&nbsp;</td>\
-		  <td><img src="' + Supertext.i18n.resourceUrl + '/wp-content/plugins/polylang-supertext/resources/images/arrow-right.png" style="width:16px; padding-left:5px;"/></td>\
-		  <td colspan="2"><a href="{translationLink}">&nbsp;' + Supertext.i18n.offerTranslation + '</a></td>\
+		  <td><img src="' + supertextTranslationL10n.resourceUrl + '/wp-content/plugins/polylang-supertext/resources/images/arrow-right.png" style="width:16px; padding-left:5px;"/></td>\
+		  <td colspan="2"><a href="{translationLink}">&nbsp;' + supertextTranslationL10n.offerTranslation + '</a></td>\
 		</tr>\
   ',
 	errorTemplate: '<h2 class="error-title">{title}</h2><p class="error-message">{message}<br/>({details})</p>',
@@ -52,10 +52,10 @@ Supertext.Polylang = {
 		if (jQuery('#post-translations').length == 1 && Supertext.Polylang.isWorking()) {
 			Supertext.Polylang.injectOfferLinks();
 		}
-
-    if (jQuery('#title').val().indexOf(Supertext.i18n.inTranslationText) > -1)
-
-    Supertext.Polylang.disableTranslatingPost();
+		
+    if (jQuery('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1){
+			Supertext.Polylang.disableTranslatingPost();
+		}
 	},
 
 	/**
@@ -118,7 +118,7 @@ Supertext.Polylang = {
 		languageId = languageId.replace('tr_lang_', '');
 		// Create params, link and call with a check function
 		var params = '?postId=' + postId + '&targetLang=' + languageId + '&height=800&width=630&TB_iframe=true'
-		var tbLink = Supertext.i18n.resourceUrl + Supertext.Polylang.offerUrl + params;
+		var tbLink = supertextTranslationL10n.resourceUrl + Supertext.Polylang.offerUrl + params;
 		return 'javascript:Supertext.Polylang.checkBeforeTranslating(\'' + tbLink + '\');';
 	},
 
@@ -143,7 +143,7 @@ Supertext.Polylang = {
     jQuery('#post-status-info, #content-html, #content-tmce, .mce-tinymce').hide();
     // Print informational text
     jQuery('#wp-content-editor-container').html(
-      '<div style="margin:10px;">' + Supertext.i18n.inTranslationText + '</div>' +
+      '<div style="margin:10px;">' + supertextTranslationL10n.inTranslationText + '</div>' +
       jQuery('#wp-content-editor-container').html()
     );
 	},
@@ -178,15 +178,15 @@ Supertext.Polylang = {
 		if (!Supertext.Polylang.hasUnsavedChanges()) {
 			canTranslate = true;
 		} else {
-			canTranslate = confirm(Supertext.i18n.confirmUnsavedArticle);
+			canTranslate = confirm(supertextTranslationL10n.confirmUnsavedArticle);
 		}
 		if (canTranslate) {
 			// Can't translate a post in translation
 			if (Supertext.Polylang.inTranslation) {
-				alert(Supertext.i18n.alertUntranslatable)
+				alert(supertextTranslationL10n.alertUntranslatable)
 			} else {
 				// Open the offer box
-				tb_show(Supertext.i18n.offerTranslation, tbLink, false);
+				tb_show(supertextTranslationL10n.offerTranslation, tbLink, false);
 			}
 		}
 	},
@@ -202,7 +202,7 @@ Supertext.Polylang = {
 			+ '&requestCounter=' + Supertext.Polylang.requestCounter;
 
 		jQuery.post(
-			Supertext.i18n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=getOffer',
+			supertextTranslationL10n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=getOffer',
 			postData
 		).done(
 			function(data) {
@@ -218,7 +218,7 @@ Supertext.Polylang = {
 							Supertext.Polylang.handleElementVisibility(false, false);
 							break;
 						default: // error
-							jQuery('#div_translation_price').html(Supertext.i18n.generalError + '<br/>' + data.body.reason).addClass("error-message");
+							jQuery('#div_translation_price').html(supertextTranslationL10n.generalError + '<br/>' + data.body.reason).addClass("error-message");
 							Supertext.Polylang.handleElementVisibility(false, false);
 							break;
 					}
@@ -226,7 +226,7 @@ Supertext.Polylang = {
 			}
 		).fail(
 			function() {
-				jQuery('#div_translation_price').html(Supertext.i18n.generalError).addClass("error-message");
+				jQuery('#div_translation_price').html(supertextTranslationL10n.generalError).addClass("error-message");
 				Supertext.Polylang.handleElementVisibility(false, false);
 			}
 		);
@@ -266,7 +266,7 @@ Supertext.Polylang = {
 
 				// Post to API Endpoint and create order
 				jQuery.post(
-					Supertext.i18n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=createOrder',
+					supertextTranslationL10n.resourceUrl + Supertext.Polylang.ajaxUrl + '?action=createOrder',
 					postData
 				).done(
 					function(data) {
@@ -279,8 +279,8 @@ Supertext.Polylang = {
 								jQuery('#div_translation_order_head').hide();
 								jQuery('#div_translation_order_content').html(
 									Supertext.Polylang.errorTemplate
-										.replace('{title}', Supertext.i18n.generalError)
-										.replace('{message}', Supertext.i18n.translationOrderError)
+										.replace('{title}', supertextTranslationL10n.generalError)
+										.replace('{message}', supertextTranslationL10n.translationOrderError)
 										.replace('{details}', data.body.reason)
 								);
 								break;
@@ -304,8 +304,8 @@ Supertext.Polylang = {
 						jQuery('#div_translation_order_head').hide();
 						jQuery('#div_translation_order_content').html(
 							Supertext.Polylang.errorTemplate
-								.replace('{title}', Supertext.i18n.generalError)
-								.replace('{message}', Supertext.i18n.translationOrderError)
+								.replace('{title}', supertextTranslationL10n.generalError)
+								.replace('{message}', supertextTranslationL10n.translationOrderError)
 								.replace('{details}', errorThrown + ": " + jqXHR.responseText)
 						);
 					}
@@ -330,10 +330,10 @@ Supertext.Polylang = {
 	{
 		// First, create the templated message
 		var message = '' +
-			Supertext.i18n.offerConfirm_Price + '\n' +
-      Supertext.i18n.offerConfirm_Binding + '\n\n' +
-      Supertext.i18n.offerConfirm_EmailInfo + '\n\n' +
-      Supertext.i18n.offerConfirm_Confirm;
+			supertextTranslationL10n.offerConfirm_Price + '\n' +
+      supertextTranslationL10n.offerConfirm_Binding + '\n\n' +
+      supertextTranslationL10n.offerConfirm_EmailInfo + '\n\n' +
+      supertextTranslationL10n.offerConfirm_Confirm;
 
 		// Replace all vars
 		message = message.replace('{deadline}', deadline);

@@ -86,7 +86,7 @@ class Core
 
       // Load needed subcomponents in admin
       $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getContentAccessors()));
-      $this->translation = $this->getTranslation();
+      $this->translation = new Translation($this->getLibrary(), $this->getLog());
     }
 
     $this->checkVersion();
@@ -95,7 +95,7 @@ class Core
   public function getOfferBox()
   {
     if ($this->offerBox === null) {
-      $this->offerBox = new OfferBox($this->getLibrary(), $this->getTranslation(), $this->getContentProvider());
+      $this->offerBox = new OfferBox($this->getLibrary(), $this->getContentProvider());
     }
 
     return $this->offerBox;
@@ -131,6 +131,25 @@ class Core
     wp_register_script(Constant::TRANSLATION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/translation-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION, true);
     wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
     wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree.min.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
+
+    $translation_array = array(
+      'resourceUrl' => get_bloginfo('wpurl'),
+      'addNewUser' => esc_js(__('Add user', 'polylang-supertext')),
+      'inTranslationText' => esc_js(Translation::IN_TRANSLATION_TEXT),
+      'deleteUser' => esc_js(__('Delete user', 'polylang-supertext')),
+      'translationCreation' => esc_js(__('Translation is being initialized. Please wait a moment.', 'polylang-supertext')),
+      'generalError' => esc_js(__('An error occurred.', 'polylang-supertext')),
+      'offerTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
+      'translationOrderError' => esc_js(__('The order couldn\'t be sent to Supertext. Please try again.', 'polylang-supertext')),
+      'confirmUnsavedArticle' => esc_js(__('The article was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'polylang-supertext')),
+      'alertUntranslatable' => esc_js(__('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext')),
+      'offerConfirm_Price' => esc_js(__('You are ordering a translation with the deadline {deadline} and price {price}.', 'polylang-supertext')),
+      'offerConfirm_Binding' => esc_js(__('This order for a translation is binding.', 'polylang-supertext')),
+      'offerConfirm_EmailInfo' => esc_js(__('You will receive an email as soon as the translation of your article is complete.', 'polylang-supertext')),
+      'offerConfirm_Confirm' => esc_js(__('Please confirm your order.', 'polylang-supertext'))
+    );
+
+    wp_localize_script(Constant::TRANSLATION_SCRIPT_HANDLE, 'supertextTranslationL10n', $translation_array);
   }
 
   /**
@@ -184,16 +203,18 @@ class Core
   {
   }
 
-  private function getLibrary(){
-    if($this->library === null){
+  private function getLibrary()
+  {
+    if ($this->library === null) {
       $this->library = new Library();
     }
 
     return $this->library;
   }
 
-  private function getContentAccessors(){
-    if($this->contentAccessors === null){
+  private function getContentAccessors()
+  {
+    if ($this->contentAccessors === null) {
       $this->contentAccessors = $this->CreateContentAccessors();
     }
 
@@ -207,15 +228,6 @@ class Core
     }
 
     return $this->contentProvider;
-  }
-
-  private function getTranslation()
-  {
-    if($this->translation === null){
-      $this->translation = new Translation($this->getLibrary(), $this->getLog());
-    }
-
-    return $this->translation;
   }
 
   /**

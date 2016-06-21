@@ -4,7 +4,6 @@ namespace Supertext\Polylang\Backend;
 
 use Comotive\Helper\Metabox;
 use Comotive\Util\Date;
-use Supertext\Polylang\Core;
 use Supertext\Polylang\Helper\Constant;
 
 /**
@@ -45,7 +44,6 @@ class Translation
     add_action('admin_init', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('current_screen', array($this, 'addScreenbasedAssets'));
-    add_action('admin_footer', array($this, 'addTranslations'));
     add_action('admin_footer', array($this, 'printWorkingState'));
     add_action('media_upload_gallery', array($this, 'disableGalleryInputs'));
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
@@ -113,34 +111,6 @@ class Translation
   public function addBackendAssets()
   {
     wp_enqueue_style(Constant::STYLE_HANDLE);
-  }
-
-  /**
-   * Add JS translations to the i18n Supertext object that has already been loaded now
-   */
-  public function addTranslations()
-  {
-    echo '
-      <script type="text/javascript">
-        var Supertext = Supertext || {};
-        Supertext.i18n = {
-          resourceUrl : "' . get_bloginfo('wpurl') . '",
-          addNewUser : "' . esc_js(__('Add user', 'polylang-supertext')) . '",
-          inTranslationText : "' . esc_js(self::IN_TRANSLATION_TEXT) . '",
-          deleteUser : "' . esc_js(__('Delete user', 'polylang-supertext')) . '",
-          translationCreation : "' . esc_js(__('Translation is being initialized. Please wait a moment.', 'polylang-supertext')) . '",
-          generalError : "' . esc_js(__('An error occurred.', 'polylang-supertext')) . '",
-          offerTranslation : "' . esc_js(__('Order translation', 'polylang-supertext')) . '",
-          translationOrderError : "' . esc_js(__('The order couldn\'t be sent to Supertext. Please try again.', 'polylang-supertext')) . '",
-          confirmUnsavedArticle : "' . esc_js(__('The article was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'polylang-supertext')) . '",
-          alertUntranslatable : "' . esc_js(__('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext')) . '",
-          offerConfirm_Price : "' . esc_js(__('You are ordering a translation with the deadline {deadline} and price {price}.', 'polylang-supertext')) . '",
-          offerConfirm_Binding : "' . esc_js(__('This order for a translation is binding.', 'polylang-supertext')) . '",
-          offerConfirm_EmailInfo : "' . esc_js(__('You will receive an email as soon as the translation of your article is complete.', 'polylang-supertext')) . '",
-          offerConfirm_Confirm : "' . esc_js(__('Please confirm your order.', 'polylang-supertext')) . '"
-        };
-      </script>
-    ';
   }
 
   /**
