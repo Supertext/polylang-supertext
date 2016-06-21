@@ -2,20 +2,18 @@
 
 require_once '../../../../../../wp-load.php';
 
-use Supertext\Polylang\Backend\CallbackHandler;
-
 $result = array(
   'code' => 400,
   'response' => array('message' => '')
 );
 
-$handler = new CallbackHandler();
-
 $requestBody = file_get_contents('php://input');
 $json = json_decode($requestBody);
 
 if($requestBody === true || !empty($json)){
-  $result = $handler->handleRequest($json);
+  $core = Supertext\Polylang\Core::getInstance();
+  $callbackHandler = $core->getCallbackHandler();
+  $result = $callbackHandler->handleRequest($json);
 }else{
   $result = array(
     'code' => 400,

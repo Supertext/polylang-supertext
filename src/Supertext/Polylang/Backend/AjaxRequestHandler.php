@@ -12,22 +12,34 @@ use Supertext\Polylang\Core;
  * @author Michael Hadorn <michael.hadorn@blogwerk.com> (inline code)
  * @author Michael Sebel <michael@comotive.ch> (refactoring)
  */
-class AjaxRequest
+class AjaxRequestHandler
 {
   const TRANSLATION_POST_STATUS = 'draft';
+
+  public function handleRequest($action, $data)
+  {
+    switch ($action) {
+      case 'getOffer':
+        $this->getOffer($data);
+        break;
+      case 'createOrder':
+        $this->createOrder($data);
+        break;
+    }
+  }
 
   /**
    * Creates the order
    */
-  public static function createOrder()
+  public function createOrder($data)
   {
     // Call the API for prices
-    $options = self::getTranslationOptions();
+    $options = self::getTranslationOptions($data);
     $postId = $options['post_id'];
 
     $library = Core::getInstance()->getLibrary();
     $post = get_post($postId);
-    $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
+    $translationData = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
     $wrapper = $library->getUserWrapper();
     $log = Core::getInstance()->getLog();
     $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
@@ -39,7 +51,7 @@ class AjaxRequest
       $library->mapLanguage($options['target_lang']),
       get_bloginfo('name') . ' - ' . $post->post_title,
       $options['product_id'],
-      $data,
+      $translationData,
       SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php',
       $post->ID . '-' . md5($translationReferenceHash . $post->ID),
       $options['additional_information']
@@ -113,21 +125,21 @@ class AjaxRequest
   /**
    * This was built by MHA by reference. No time to fix just yet, but it works.
    */
-  public static function getOffer()
+  public function getOffer($data)
   {
-    $optional = array('requestCounter' => $_POST['requestCounter']);
+    $optional = array('requestCounter' => $data['requestCounter']);
 
     // Call the API for prices
-    $options = self::getTranslationOptions();
+    $options = self::getTranslationOptions($data);
     $library = Core::getInstance()->getLibrary();
     $post = get_post($options['post_id']);
-    $data = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
+    $translationData = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
     $wrapper = $library->getUserWrapper();
     // Call for prices
     $pricing = $wrapper->getQuote(
       $library->mapLanguage($options['source_lang']),
       $library->mapLanguage($options['target_lang']),
-      $data
+      $translationData
     );
 
     if(!empty($pricing['error'])){
@@ -224,16 +236,16 @@ class AjaxRequest
   /**
    * @return array translation info
    */
-  private static function getTranslationOptions()
+  private static function getTranslationOptions($data)
   {
     // Param zusammenstellen
     $options = array(
-      'post_id' => $_POST['post_id'],
-      'translatable_fields' => $_POST['translatable_fields'],
-      'source_lang' => $_POST['source_lang'],
-      'target_lang' => $_POST['target_lang'],
-      'product_id' => isset($_POST['rad_translation_type']) ? $_POST['rad_translation_type'] : 0,
-      'additional_information' => stripslashes($_POST['txt_comment']),
+      'post_id' => $data['post_id'],
+      'translatable_fields' => $data['translatable_fields'],
+      'source_lang' => $data['source_lang'],
+      'target_lang' => $data['target_lang'],
+      'product_id' => isset($data['rad_translation_type']) ? $data['rad_translation_type'] : 0,
+      'additional_information' => stripslashes($data['txt_comment']),
     );
 
     return $options;

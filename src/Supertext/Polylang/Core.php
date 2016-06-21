@@ -7,6 +7,8 @@ use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\Translation;
+use Supertext\Polylang\Backend\AjaxRequestHandler;
+use Supertext\Polylang\Backend\CallbackHandler;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
 use Supertext\Polylang\Helper\Constant;
@@ -28,32 +30,35 @@ class Core
   /**
    * @var Core the current plugin instance
    */
-  private static $instance = NULL;
+  private static $instance = null;
   /**
    * @var Library the library of global functions
    */
-  private $library = NULL;
+  private $library = null;
   /**
    * @var Menu the backend menu handler
    */
-  private $menu = NULL;
+  private $menu = null;
   /**
    * @var Log the backend menu handler
    */
-  private $log = NULL;
+  private $log = null;
   /**
    * @var Translation the translation library
    */
-  private $translation = NULL;
+  private $translation = null;
   /**
    * @var
    */
-  private $contentAccessors;
+  private $contentAccessors = null;
   /**
    * @var ContentProvider the content provider
    */
-  private $contentProvider = NULL;
+  private $contentProvider = null;
 
+  private $ajaxRequestHandler = null;
+
+  private $callbackHandler = null;
 
   /**
    * Creates the instance and saves reference
@@ -73,16 +78,15 @@ class Core
 
   public function load()
   {
+    //Load minimum subcomponents
     $this->library = new Library();
     $this->contentAccessors = $this->CreateContentAccessors();
-    $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
 
     if (is_admin()) {
       add_action('init', array($this, 'registerAdminAssets'));
 
       // Load needed subcomponents in admin
       $this->menu = new Menu(new SettingsPage($this->library, $this->contentAccessors));
-      $this->log = new Log();
       $this->translation = new Translation();
     }
 
@@ -102,7 +106,7 @@ class Core
    */
   public function getLog()
   {
-    if ($this->log === NULL) {
+    if ($this->log === null) {
       $this->log = new Log();
     }
 
@@ -124,7 +128,29 @@ class Core
 
   public function getContentProvider()
   {
+    if($this->contentProvider === null){
+      $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
+    }
+
     return $this->contentProvider;
+  }
+
+  public function getAjaxRequestHandler()
+  {
+    if($this->ajaxRequestHandler === null){
+      $this->ajaxRequestHandler = new AjaxRequestHandler();
+    }
+
+    return $this->ajaxRequestHandler;
+  }
+
+  public function getCallbackHandler()
+  {
+    if($this->callbackHandler === null){
+      $this->callbackHandler = new CallbackHandler();
+    }
+
+    return $this->callbackHandler;
   }
 
   /**

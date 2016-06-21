@@ -382,7 +382,7 @@ msgstr "Un momento. Stiamo calcolando i prezzi."
 msgid "Your comment to Supertext"
 msgstr "Commento per Supertext"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:58
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:58
 msgid ""
 "Could not create a new post for the translation. You need to create the new "
 "post manually using Polylang."
@@ -390,21 +390,21 @@ msgstr ""
 "Non è stato possibile creare il nuovo articolo per la traduzione. Creare "
 "l’articolo manualmente con Polylang."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:70
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:70
 msgid "The order has been placed successfully."
 msgstr "L’ordine è stato concluso con successo."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:71
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:71
 #, php-format
 msgid "Your order number is %s."
 msgstr "Il numero d’ordine è %s."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:73
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:73
 #, php-format
 msgid "The article will be translated by %s."
 msgstr "L’articolo verrà tradotto entro le ore %s."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:81
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:81
 #, php-format
 msgid ""
 "Order for translation of article into %s has been placed successfully. Your "
@@ -413,19 +413,19 @@ msgstr ""
 "L’ordine per la traduzione dell’articolo secondo %s è stato registrato "
 "correttamente. Il numero d’ordine è %s."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:104
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:104
 msgid "Could not create an order with Supertext."
 msgstr "Non è stato possibile creare un ordine per Supertext."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:133
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:133
 msgid "Could not get offers."
 msgstr "Impossibile ottenere offerte."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:145
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:145
 msgid "There are no offers for this translation."
 msgstr "Per questa traduzione non è disponibile nessuna offerta."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequest.php:290
+#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:290
 msgid "The article to be translated has been created."
 msgstr "L’articolo da tradurre è stato creato."
 
