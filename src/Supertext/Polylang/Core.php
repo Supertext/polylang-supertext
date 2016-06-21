@@ -10,6 +10,7 @@ use Supertext\Polylang\Backend\OfferBox;
 use Supertext\Polylang\Backend\Translation;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
+use Supertext\Polylang\Helper\IContentAccessor;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
 use Supertext\Polylang\Helper\Constant;
@@ -24,7 +25,6 @@ use Supertext\Polylang\Settings\SettingsPage;
 /**
  * Core Class that initializes the plugins features
  * @package Supertext\Polylang
- * @author Michael Sebel <michael@comotive.ch>
  */
 class Core
 {
@@ -49,18 +49,24 @@ class Core
    */
   private $translation = null;
   /**
-   * @var
+   * @var IContentAccessor[] the array of content accessors
    */
   private $contentAccessors = null;
   /**
    * @var ContentProvider the content provider
    */
   private $contentProvider = null;
-
+  /**
+   * @var OfferBox the offer box
+   */
   private $offerBox = null;
-
+  /**
+   * @var AjaxRequestHandler the ajax request handler
+   */
   private $ajaxRequestHandler = null;
-
+  /**
+   * @var CallbackHandler the callback handler
+   */
   private $callbackHandler = null;
 
   /**
@@ -79,10 +85,14 @@ class Core
     return self::$instance;
   }
 
+  /**
+   * Loads the plugin (registers needed actions, assets and subcomponents)
+   */
   public function load()
   {
     if (is_admin()) {
       add_action('init', array($this, 'registerAdminAssets'));
+      add_action('init', array($this, 'registerLocalizationScripts'));
 
       // Load needed subcomponents in admin
       $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getContentAccessors()));
@@ -92,6 +102,9 @@ class Core
     $this->checkVersion();
   }
 
+  /**
+   * @return OfferBox the offer box
+   */
   public function getOfferBox()
   {
     if ($this->offerBox === null) {
@@ -101,6 +114,9 @@ class Core
     return $this->offerBox;
   }
 
+  /**
+   * @return AjaxRequestHandler the ajax request handler
+   */
   public function getAjaxRequestHandler()
   {
     if ($this->ajaxRequestHandler === null) {
@@ -110,6 +126,9 @@ class Core
     return $this->ajaxRequestHandler;
   }
 
+  /**
+   * @return CallbackHandler the callback handler
+   */
   public function getCallbackHandler()
   {
     if ($this->callbackHandler === null) {
@@ -132,6 +151,14 @@ class Core
     wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
     wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree.min.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
 
+    $this->registerLocalizationScripts();
+  }
+
+  /**
+   * Registers localization scripts
+   */
+  public function registerLocalizationScripts()
+  {
     $translation_array = array(
       'resourceUrl' => get_bloginfo('wpurl'),
       'addNewUser' => esc_js(__('Add user', 'polylang-supertext')),
@@ -203,6 +230,9 @@ class Core
   {
   }
 
+  /**
+   * @return Library gets the library, might be instantiated only if needed
+   */
   private function getLibrary()
   {
     if ($this->library === null) {
@@ -212,6 +242,9 @@ class Core
     return $this->library;
   }
 
+  /**
+   * @return IContentAccessor[] the array of content accessors, might be instantiated only if needed
+   */
   private function getContentAccessors()
   {
     if ($this->contentAccessors === null) {
@@ -221,6 +254,9 @@ class Core
     return $this->contentAccessors;
   }
 
+  /**
+   * @return ContentProvider the content provider, might be instantiated only if needed
+   */
   private function getContentProvider()
   {
     if ($this->contentProvider === null) {
@@ -242,6 +278,10 @@ class Core
     return $this->log;
   }
 
+  /**
+   * Creates the array of content accessors
+   * @return IContentAccessor[] the array content accessors
+   */
   private function CreateContentAccessors()
   {
     $textProcessor = new TextProcessor($this->getLibrary());

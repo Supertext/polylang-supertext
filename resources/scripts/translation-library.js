@@ -52,7 +52,7 @@ Supertext.Polylang = {
 		if (jQuery('#post-translations').length == 1 && Supertext.Polylang.isWorking()) {
 			Supertext.Polylang.injectOfferLinks();
 		}
-		
+
     if (jQuery('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1){
 			Supertext.Polylang.disableTranslatingPost();
 		}
