@@ -91,18 +91,10 @@ class Core
 
       // Load needed subcomponents in admin
       $this->menu = new Menu(new SettingsPage($this->library, $this->contentAccessors));
-      $this->translation = new Translation();
+      $this->translation = new Translation($this->library);
     }
 
     $this->checkVersion();
-  }
-
-  /**
-   * @return Library the library class
-   */
-  public function getLibrary()
-  {
-    return $this->library;
   }
 
   /**
@@ -142,7 +134,7 @@ class Core
   public function getOfferBox()
   {
     if ($this->offerBox === null) {
-      $this->offerBox = new OfferBox();
+      $this->offerBox = new OfferBox($this->library);
     }
 
     return $this->offerBox;
@@ -151,7 +143,7 @@ class Core
   public function getAjaxRequestHandler()
   {
     if ($this->ajaxRequestHandler === null) {
-      $this->ajaxRequestHandler = new AjaxRequestHandler();
+      $this->ajaxRequestHandler = new AjaxRequestHandler($this->library);
     }
 
     return $this->ajaxRequestHandler;
@@ -160,7 +152,7 @@ class Core
   public function getCallbackHandler()
   {
     if ($this->callbackHandler === null) {
-      $this->callbackHandler = new CallbackHandler();
+      $this->callbackHandler = new CallbackHandler($this->library);
     }
 
     return $this->callbackHandler;

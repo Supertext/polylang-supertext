@@ -16,6 +16,13 @@ class AjaxRequestHandler
 {
   const TRANSLATION_POST_STATUS = 'draft';
 
+  private $library;
+
+  public function __construct($library)
+  {
+    $this->library = $library;
+  }
+
   public function handleRequest($action, $data)
   {
     switch ($action) {
@@ -37,18 +44,17 @@ class AjaxRequestHandler
     $options = self::getTranslationOptions($data);
     $postId = $options['post_id'];
 
-    $library = Core::getInstance()->getLibrary();
     $post = get_post($postId);
     $translationData = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
-    $wrapper = $library->getUserWrapper();
+    $wrapper = $this->library->getUserWrapper();
     $log = Core::getInstance()->getLog();
     $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
     $translationReferenceHash = bin2hex($randomBytes);
 
     // Create the order
     $orderCreation = $wrapper->createOrder(
-      $library->mapLanguage($options['source_lang']),
-      $library->mapLanguage($options['target_lang']),
+      $this->library->mapLanguage($options['source_lang']),
+      $this->library->mapLanguage($options['target_lang']),
       get_bloginfo('name') . ' - ' . $post->post_title,
       $options['product_id'],
       $translationData,
@@ -92,7 +98,7 @@ class AjaxRequestHandler
       // Log the success and the order id
       $message = sprintf(
         __('Order for translation of article into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
-        self::getLanguageName($options['target_lang']),
+        $this->getLanguageName($options['target_lang']),
         $order->Id
       );
       $log->addEntry($post->ID, $message);
@@ -115,7 +121,7 @@ class AjaxRequestHandler
 
       self::setJsonOutput(
         array(
-          'reason' => _('Could not create an order with Supertext.', 'polylang-supertext') .' '. $orderCreation['error'],
+          'reason' => _('Could not create an order with Supertext.', 'polylang-supertext') . ' ' . $orderCreation['error'],
         ),
         'error'
       );
@@ -131,21 +137,20 @@ class AjaxRequestHandler
 
     // Call the API for prices
     $options = self::getTranslationOptions($data);
-    $library = Core::getInstance()->getLibrary();
     $post = get_post($options['post_id']);
     $translationData = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
-    $wrapper = $library->getUserWrapper();
+    $wrapper = $this->library->getUserWrapper();
     // Call for prices
     $pricing = $wrapper->getQuote(
-      $library->mapLanguage($options['source_lang']),
-      $library->mapLanguage($options['target_lang']),
+      $this->library->mapLanguage($options['source_lang']),
+      $this->library->mapLanguage($options['target_lang']),
       $translationData
     );
 
-    if(!empty($pricing['error'])){
+    if (!empty($pricing['error'])) {
       self::setJsonOutput(
         array(
-          'reason' => _('Could not get offers.', 'polylang-supertext') .' '. $pricing['error'],
+          'reason' => _('Could not get offers.', 'polylang-supertext') . ' ' . $pricing['error'],
           'optional' => $optional
         ),
         'error'
@@ -226,10 +231,10 @@ class AjaxRequestHandler
    * @param string $key slug to search
    * @return string name of the $key language
    */
-  private static function getLanguageName($key)
+  private function getLanguageName($key)
   {
     // Get the supertext key
-    $stKey = Core::getInstance()->getLibrary()->mapLanguage($key);
+    $stKey = $this->library->mapLanguage($key);
     return __($stKey, 'polylang-supertext-langs');
   }
 
@@ -352,7 +357,7 @@ class AjaxRequestHandler
         add_post_meta($targetAttachmentId, '_wp_attachment_metadata', $sourceAttachmentMetadata);
         add_post_meta($targetAttachmentId, '_wp_attached_file', $sourceAttachmentLink);
         self::SetLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
-      }else{
+      } else {
         $targetAttachment = get_post($targetAttachmentId);
         $targeAttachment->post_parent = $targetPostId;
         wp_insert_attachment($targetAttachment);
@@ -370,7 +375,7 @@ class AjaxRequestHandler
   {
     global $polylang;
 
-    if(empty($polylang)){
+    if (empty($polylang)) {
       return;
     }
 

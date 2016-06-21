@@ -9,6 +9,13 @@ use Comotive\Util\ArrayManipulation;
 
 class CallbackHandler
 {
+  private $library;
+
+  public function __construct($library)
+  {
+    $this->library = $library;
+  }
+
   public function handleRequest($json)
   {
     $refData = explode('-', $json->ReferenceData, 2);
@@ -35,8 +42,7 @@ class CallbackHandler
 
     // Get the translation post object
     $translationPost = get_post($translationPostId);
-    $library = Core::getInstance()->getLibrary();
-    $options = $library->getSettingOption();
+    $options = $this->library->getSettingOption();
     $workflowSettings = isset($options[Constant::SETTING_WORKFLOW]) ? ArrayManipulation::forceArray($options[Constant::SETTING_WORKFLOW]) : array();
 
     $isPostWritable =

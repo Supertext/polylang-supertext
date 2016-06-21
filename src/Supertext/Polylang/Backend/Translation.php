@@ -30,13 +30,16 @@ class Translation
    * $var string the translation reference hash
    */
   const IN_TRANSLATION_REFERENCE_HASH = '_in_translation_ref_hash';
+  private $library;
 
   /**
    * Various filters to change and/or display things
    */
 
-  public function __construct()
+  public function __construct($library)
   {
+    $this->library = $library;
+
     add_action('admin_init', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('current_screen', array($this, 'addScreenbasedAssets'));
@@ -144,10 +147,9 @@ class Translation
   public function printWorkingState()
   {
     $working = 1;
-    $library = Core::getInstance()->getLibrary();
 
     // See if the plugin is generally working
-    if (!$library->isWorking()) {
+    if (!$this->library->isWorking()) {
       $working = 0;
     }
 

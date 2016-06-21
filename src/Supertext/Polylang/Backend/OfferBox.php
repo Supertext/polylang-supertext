@@ -34,11 +34,14 @@ class OfferBox
    */
   protected $targetLang = '';
 
+  private $library;
+
   /**
    * Gather various meta information for the upcoming offer
    */
-  public function __construct()
+  public function __construct($library)
   {
+    $this->library = $library;
     $this->postId = $_GET['postId'];
     $this->post = get_post($this->postId);
     $this->sourceLang = Multilang::getPostLanguage($this->post->ID);
@@ -104,7 +107,7 @@ class OfferBox
   protected function getLanguageName($key)
   {
     // Get the supertext key
-    $stKey = Core::getInstance()->getLibrary()->mapLanguage($key);
+    $stKey = $this->library->mapLanguage($key);
     return __($stKey, 'polylang-supertext-langs');
   }
 
@@ -177,7 +180,7 @@ class OfferBox
     $messages = '';
 
     // search translation feature and use first result
-    if (!Core::getInstance()->getLibrary()->isWorking()) {
+    if (!$this->library->isWorking()) {
       $messages .= '
         <div id="error_missing_function" class="notice notice-error">
           <p>
