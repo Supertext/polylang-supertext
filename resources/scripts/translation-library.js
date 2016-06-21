@@ -53,7 +53,7 @@ Supertext.Polylang = {
 			Supertext.Polylang.injectOfferLinks();
 		}
 
-    if (jQuery('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1){
+    if (jQuery('#title').length == 1 && jQuery('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1){
 			Supertext.Polylang.disableTranslatingPost();
 		}
 	},
@@ -135,17 +135,7 @@ Supertext.Polylang = {
       post_is_in_translation = true;
 		});
 
-		// Kings discipline: disable the editor
-    // Hide the editor
-    jQuery('#wp-content-editor-container').addClass('input-disabled')
-    jQuery('#content').hide();
-    // Also, hide editor toggle
-    jQuery('#post-status-info, #content-html, #content-tmce, .mce-tinymce').hide();
-    // Print informational text
-    jQuery('#wp-content-editor-container').html(
-      '<div style="margin:10px;">' + supertextTranslationL10n.inTranslationText + '</div>' +
-      jQuery('#wp-content-editor-container').html()
-    );
+    jQuery('#wp-content-wrap').hide();
 	},
 
 	/**
