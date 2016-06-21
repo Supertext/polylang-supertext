@@ -63,7 +63,6 @@ class Core
 
   private $callbackHandler = null;
 
-
   /**
    * Creates the instance and saves reference
    */
@@ -82,59 +81,21 @@ class Core
 
   public function load()
   {
-    //Load minimum subcomponents
-    $this->library = new Library();
-    $this->contentAccessors = $this->CreateContentAccessors();
-
     if (is_admin()) {
       add_action('init', array($this, 'registerAdminAssets'));
 
       // Load needed subcomponents in admin
-      $this->menu = new Menu(new SettingsPage($this->library, $this->contentAccessors));
-      $this->translation = new Translation($this->library);
+      $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getContentAccessors()));
+      $this->translation = $this->getTranslation();
     }
 
     $this->checkVersion();
   }
 
-  /**
-   * @return Log the logger, might be instantiated only if needed
-   */
-  public function getLog()
-  {
-    if ($this->log === null) {
-      $this->log = new Log();
-    }
-
-    return $this->log;
-  }
-
-  /**
-   * @return Translation the translation object
-   */
-  public function getTranslation()
-  {
-    return $this->translation;
-  }
-
-  public function getContentAccessors()
-  {
-    return $this->contentAccessors;
-  }
-
-  public function getContentProvider()
-  {
-    if ($this->contentProvider === null) {
-      $this->contentProvider = new ContentProvider($this->contentAccessors, $this->library);
-    }
-
-    return $this->contentProvider;
-  }
-
   public function getOfferBox()
   {
     if ($this->offerBox === null) {
-      $this->offerBox = new OfferBox($this->library);
+      $this->offerBox = new OfferBox($this->getLibrary(), $this->getTranslation(), $this->getContentProvider());
     }
 
     return $this->offerBox;
@@ -143,7 +104,7 @@ class Core
   public function getAjaxRequestHandler()
   {
     if ($this->ajaxRequestHandler === null) {
-      $this->ajaxRequestHandler = new AjaxRequestHandler($this->library);
+      $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
     }
 
     return $this->ajaxRequestHandler;
@@ -152,7 +113,7 @@ class Core
   public function getCallbackHandler()
   {
     if ($this->callbackHandler === null) {
-      $this->callbackHandler = new CallbackHandler($this->library);
+      $this->callbackHandler = new CallbackHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
     }
 
     return $this->callbackHandler;
@@ -223,19 +184,65 @@ class Core
   {
   }
 
+  private function getLibrary(){
+    if($this->library === null){
+      $this->library = new Library();
+    }
+
+    return $this->library;
+  }
+
+  private function getContentAccessors(){
+    if($this->contentAccessors === null){
+      $this->contentAccessors = $this->CreateContentAccessors();
+    }
+
+    return $this->contentAccessors;
+  }
+
+  private function getContentProvider()
+  {
+    if ($this->contentProvider === null) {
+      $this->contentProvider = new ContentProvider($this->contentAccessors, $this->getLibrary());
+    }
+
+    return $this->contentProvider;
+  }
+
+  private function getTranslation()
+  {
+    if($this->translation === null){
+      $this->translation = new Translation($this->getLibrary(), $this->getLog());
+    }
+
+    return $this->translation;
+  }
+
+  /**
+   * @return Log the logger, might be instantiated only if needed
+   */
+  private function getLog()
+  {
+    if ($this->log === null) {
+      $this->log = new Log();
+    }
+
+    return $this->log;
+  }
+
   private function CreateContentAccessors()
   {
-    $textProcessor = new TextProcessor($this->library);
+    $textProcessor = new TextProcessor($this->getLibrary());
 
     $contentAccessors = array(
       'post' => new PostContentAccessor($textProcessor),
       'media' => new PostMediaContentAccessor(),
-      'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $this->library),
-      'pcf' => new PcfContentAccessor($textProcessor, $this->library)
+      'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $this->getLibrary()),
+      'pcf' => new PcfContentAccessor($textProcessor, $this->getLibrary())
     );
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
-      $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $this->library);
+      $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $this->getLibrary());
     }
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php')) {
@@ -252,5 +259,4 @@ class Core
       update_option(Constant::VERSION_OPTION, SUPERTEXT_PLUGIN_VERSION);
     }
   }
-
 }

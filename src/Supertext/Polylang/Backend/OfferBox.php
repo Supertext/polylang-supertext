@@ -35,13 +35,17 @@ class OfferBox
   protected $targetLang = '';
 
   private $library;
+  private $translation;
+  private $contentProvider;
 
   /**
    * Gather various meta information for the upcoming offer
    */
-  public function __construct($library)
+  public function __construct($library, $translation, $contentProvider)
   {
     $this->library = $library;
+    $this->translation = $translation;
+    $this->contentProvider = $contentProvider;
     $this->postId = $_GET['postId'];
     $this->post = get_post($this->postId);
     $this->sourceLang = Multilang::getPostLanguage($this->post->ID);
@@ -97,7 +101,7 @@ class OfferBox
     ';
 
     // Add JS string translations
-    Core::getInstance()->getTranslation()->addTranslations();
+    $this->translation->addTranslations();
   }
 
   /**
@@ -245,7 +249,7 @@ class OfferBox
     );
 
     $customFieldSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=translatablefields');
-    $allTranslatableFields = Core::getInstance()->getContentProvider()->getAllTranslatableFields($this->postId);
+    $allTranslatableFields = $this->contentProvider->getAllTranslatableFields($this->postId);
 
     return '<form
             name="frm_Translation_Options"

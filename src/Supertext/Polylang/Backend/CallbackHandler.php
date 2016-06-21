@@ -10,10 +10,14 @@ use Comotive\Util\ArrayManipulation;
 class CallbackHandler
 {
   private $library;
+  private $log;
+  private $contentProvider;
 
-  public function __construct($library)
+  public function __construct($library, $log, $contentProvider)
   {
     $this->library = $library;
+    $this->log = $log;
+    $this->contentProvider = $contentProvider;
   }
 
   public function handleRequest($json)
@@ -27,7 +31,7 @@ class CallbackHandler
     // Only if valid, continue
     if ($translationPostId == null) {
       $message = __('Error: the language of the translation from Supertext does not match or the translated post has been deleted', 'polylang-supertext');
-      Core::getInstance()->getLog()->addEntry($postId, $message);
+      $this->log->addEntry($postId, $message);
       return $this->createResult(404, $message);
     }
 
@@ -36,7 +40,7 @@ class CallbackHandler
     // check md5 Secure String
     if (empty($referenceHash) || md5($referenceHash . $postId) !== $secureToken) {
       $message = __('Error: method not allowed', 'polylang-supertext');
-      Core::getInstance()->getLog()->addEntry($postId, $message);
+      $this->log->addEntry($postId, $message);
       return $this->createResult(403, $message);
     }
 
@@ -52,11 +56,11 @@ class CallbackHandler
 
     if (!$isPostWritable) {
       $message = __('Error: translation import only possible for drafted articles', 'polylang-supertext');
-      Core::getInstance()->getLog()->addEntry($translationPostId, $message);
+      $this->log->addEntry($translationPostId, $message);
       return $this->createResult(403, $message);
     }
 
-    Core::getInstance()->getContentProvider()->SaveTranslatedData(get_post($postId), $translationPost, $json);
+    $this->contentProvider->SaveTranslatedData(get_post($postId), $translationPost, $json);
 
     if ($workflowSettings['publishOnCallback']) {
       $translationPost->post_status = 'publish';
@@ -69,7 +73,7 @@ class CallbackHandler
     delete_post_meta($translationPost->ID, Translation::IN_TRANSLATION_FLAG);
 
     $message = __('translation saved successfully', 'polylang-supertext');
-    Core::getInstance()->getLog()->addEntry($translationPostId, $message);
+    $this->log->addEntry($translationPostId, $message);
     return $this->createResult(200, $message);
   }
 

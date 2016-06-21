@@ -31,14 +31,16 @@ class Translation
    */
   const IN_TRANSLATION_REFERENCE_HASH = '_in_translation_ref_hash';
   private $library;
+  private $log;
 
   /**
    * Various filters to change and/or display things
    */
 
-  public function __construct($library)
+  public function __construct($library, $log)
   {
     $this->library = $library;
+    $this->log = $log;
 
     add_action('admin_init', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
@@ -155,7 +157,7 @@ class Translation
 
     // See if the user has credentials
     $userId = get_current_user_id();
-    $cred = $library->getUserCredentials($userId);
+    $cred = $this->library->getUserCredentials($userId);
 
     // Check credentials and api key
     if (strlen($cred['stUser']) == 0 || strlen($cred['stApi']) == 0 || $cred['stUser'] == Constant::DEFAULT_API_USER) {
@@ -173,7 +175,7 @@ class Translation
   {
     if (isset($_GET['post'])) {
       $postId = intval($_GET['post']);
-      $logEntries = Core::getInstance()->getLog()->getLogEntries($postId);
+      $logEntries = $this->log->getLogEntries($postId);
 
       // Show info if valid post and there are entries
       if ($postId > 0 && count($logEntries) > 0) {

@@ -17,10 +17,14 @@ class AjaxRequestHandler
   const TRANSLATION_POST_STATUS = 'draft';
 
   private $library;
+  private $log;
+  private $contentProvider;
 
-  public function __construct($library)
+  public function __construct($library, $log, $contentProvider)
   {
     $this->library = $library;
+    $this->log = $log;
+    $this->contentProvider = $contentProvider;
   }
 
   public function handleRequest($action, $data)
@@ -45,9 +49,8 @@ class AjaxRequestHandler
     $postId = $options['post_id'];
 
     $post = get_post($postId);
-    $translationData = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
+    $translationData = $this->contentProvider->getTranslationData($post, $options['translatable_fields']);
     $wrapper = $this->library->getUserWrapper();
-    $log = Core::getInstance()->getLog();
     $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
     $translationReferenceHash = bin2hex($randomBytes);
 
@@ -69,7 +72,7 @@ class AjaxRequestHandler
       $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
 
       if ($translationPostId == 0) {
-        $translationPost = self::createTranslationPost($postId, $options);
+        $translationPost = $this->createTranslationPost($postId, $options);
 
         if ($translationPost === null) {
           self::setJsonOutput(
@@ -101,9 +104,9 @@ class AjaxRequestHandler
         $this->getLanguageName($options['target_lang']),
         $order->Id
       );
-      $log->addEntry($post->ID, $message);
-      $log->addOrderId($post->ID, $order->Id);
-      $log->addOrderId($translationPostId, $order->Id);
+      $this->log->addEntry($post->ID, $message);
+      $this->log->addOrderId($post->ID, $order->Id);
+      $this->log->addOrderId($translationPostId, $order->Id);
 
       update_post_meta($translationPostId, Translation::IN_TRANSLATION_FLAG, 1);
       update_post_meta($translationPostId, Translation::IN_TRANSLATION_REFERENCE_HASH, $translationReferenceHash);
@@ -117,7 +120,7 @@ class AjaxRequestHandler
 
     } else {
       // Error, couldn't create a correct order
-      $log->addEntry($post->ID, $orderCreation['error']);
+      $this->log->addEntry($post->ID, $orderCreation['error']);
 
       self::setJsonOutput(
         array(
@@ -138,7 +141,7 @@ class AjaxRequestHandler
     // Call the API for prices
     $options = self::getTranslationOptions($data);
     $post = get_post($options['post_id']);
-    $translationData = Core::getInstance()->getContentProvider()->getTranslationData($post, $options['translatable_fields']);
+    $translationData = $this->contentProvider->getTranslationData($post, $options['translatable_fields']);
     $wrapper = $this->library->getUserWrapper();
     // Call for prices
     $pricing = $wrapper->getQuote(
@@ -278,7 +281,7 @@ class AjaxRequestHandler
    * @param $options
    * @return array|null|\WP_Post
    */
-  private static function createTranslationPost($postId, $options)
+  private function createTranslationPost($postId, $options)
   {
     $translationPostId = self::createNewPostFrom($postId);
 
@@ -298,7 +301,7 @@ class AjaxRequestHandler
 
     self::SetLanguage($postId, $translationPostId, $options['source_lang'], $options['target_lang']);
 
-    Core::getInstance()->getLog()->addEntry($translationPostId, __('The article to be translated has been created.', 'polylang-supertext'));
+    $this->log->addEntry($translationPostId, __('The article to be translated has been created.', 'polylang-supertext'));
 
     return $translationPost;
   }
