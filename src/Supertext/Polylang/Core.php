@@ -260,7 +260,7 @@ class Core
   private function getContentProvider()
   {
     if ($this->contentProvider === null) {
-      $this->contentProvider = new ContentProvider($this->contentAccessors, $this->getLibrary());
+      $this->contentProvider = new ContentProvider($this->getContentAccessors(), $this->getLibrary());
     }
 
     return $this->contentProvider;

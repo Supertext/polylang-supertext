@@ -176,6 +176,10 @@ class TextProcessor
    */
   private function getAttributeNodes($attributes, $translatableShortcodeAttributes)
   {
+    if(!is_array($attributes)){
+      return '';
+    }
+
     $attributeNodes = '';
 
     foreach ($attributes as $name => $value) {
