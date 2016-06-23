@@ -53,7 +53,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
       var $newCustomFieldInput = $customFieldInputCopy.clone();
 
       $newCustomFieldInput.children('.custom-field-remove-input')
-        .on('click', removeCustomFieldInput);
+        .click(removeCustomFieldInput);
 
       $newCustomFieldInput.insertBefore($this).show();
     }
@@ -68,10 +68,10 @@ Supertext.Settings.TranslatableFields = (function ($) {
         $customFieldInputCopy = $('#translatablefieldsSettingsForm .custom-field-input').last().clone();
 
         $('#translatablefieldsSettingsForm .custom-field-remove-input')
-          .on('click', removeCustomFieldInput);
+          .click(removeCustomFieldInput);
 
         $('#translatablefieldsSettingsForm .custom-field-add-input')
-          .on('click', addCustomFieldInput);
+          .click(addCustomFieldInput);
       }
     }
 
@@ -185,7 +185,7 @@ Supertext.Settings.Shortcodes = (function ($) {
     });
 
     attributeInputCopy.children('.shortcode-attribute-remove-input')
-      .on('click', removeAttributeInput);
+      .click(removeAttributeInput);
 
     attributeInputCopy.insertBefore($this).show();
   }
@@ -218,10 +218,10 @@ Supertext.Settings.Shortcodes = (function ($) {
       showNotEmptyAttributeInputs();
 
       $('#shortcodesSettingsForm .shortcode-attribute-add-input')
-        .on('click', addAttributeInput);
+        .click(addAttributeInput);
 
       $('#shortcodesSettingsForm .shortcode-attribute-remove-input')
-        .on('click', removeAttributeInput);
+        .click(removeAttributeInput);
 
       $('.shortcode-input-encoding')
         .bind("keydown", function (event) {
