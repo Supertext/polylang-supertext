@@ -1,6 +1,7 @@
 <?php
 
 namespace Supertext\Polylang\Backend;
+use Supertext\Polylang\Helper\IContentAccessor;
 
 /**
  * Processes post content
@@ -9,7 +10,7 @@ namespace Supertext\Polylang\Backend;
 class ContentProvider
 {
   /**
-   * @var array|null the text processors
+   * @var IContentAccessor[] the text accessors
    */
   private $contentAccessors = null;
   private $library;
