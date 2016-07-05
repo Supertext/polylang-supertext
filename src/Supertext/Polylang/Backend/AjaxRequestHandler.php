@@ -381,6 +381,7 @@ class AjaxRequestHandler
       return;
     }
 
+    $polylang->sync->copy_taxonomies($postId, $translationPostId, $target_lang);
     $polylang->sync->copy_post_metas($postId, $translationPostId, $target_lang);
   }
 
