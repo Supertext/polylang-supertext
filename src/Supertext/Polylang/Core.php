@@ -188,6 +188,10 @@ class Core
 
     $options = $library->getSettingOption();
 
+    if (isset($options[Helper\Constant::SETTING_CUSTOM_FIELDS])) {
+      $library->saveSetting(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
+    }
+
     //Migrate options
     if (isset($options[Helper\Constant::SETTING_SHORTCODES])) {
       //Check options state and update if needed

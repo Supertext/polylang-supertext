@@ -54,6 +54,7 @@ Supertext.Polylang = {
 		}
 
     if (jQuery('#title').length == 1 && jQuery('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1){
+			Supertext.Polylang.inTranslation = true;
 			Supertext.Polylang.disableTranslatingPost();
 		}
 	},
