@@ -74,8 +74,4 @@ class PostContentAccessor implements IContentAccessor
       $post->{$id} = $decodedContent;
     }
   }
-
-  public function prepareTranslationPost($post, $translationPost)
-  {
-  }
 }

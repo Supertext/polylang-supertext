@@ -71,7 +71,7 @@ class AjaxRequestHandler
       $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
 
       if ($translationPostId == 0) {
-        $translationPost = $this->createTranslationPost($postId, $options);
+        $translationPost = $this->createTranslationPost($post, $options);
 
         if ($translationPost === null) {
           self::setJsonOutput(
@@ -280,9 +280,9 @@ class AjaxRequestHandler
    * @param $options
    * @return array|null|\WP_Post
    */
-  private function createTranslationPost($postId, $options)
+  private function createTranslationPost($post, $options)
   {
-    $translationPostId = self::createNewPostFrom($postId);
+    $translationPostId = self::createNewPostFrom($post->ID);
 
     if ($translationPostId === 0) {
       return null;
@@ -290,15 +290,17 @@ class AjaxRequestHandler
 
     $translationPost = get_post($translationPostId);
 
-    self::AddImageAttachments($postId, $translationPostId, $options['source_lang'], $options['target_lang']);
+    self::AddImageAttachments($post->ID, $translationPostId, $options['source_lang'], $options['target_lang']);
 
-    self::copyPostMetas($postId, $translationPostId, $options['target_lang']);
+    self::copyPostMetas($post->ID, $translationPostId, $options['target_lang']);
+
+    $this->contentProvider->prepareTranslationPost($post, $translationPost);
 
     self::AddInTranslationTexts($translationPost);
 
     wp_update_post($translationPost);
 
-    self::SetLanguage($postId, $translationPostId, $options['source_lang'], $options['target_lang']);
+    self::SetLanguage($post->ID, $translationPostId, $options['source_lang'], $options['target_lang']);
 
     $this->log->addEntry($translationPostId, __('The article to be translated has been created.', 'polylang-supertext'));
 

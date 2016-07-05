@@ -67,10 +67,6 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     }
   }
 
-  public function prepareTranslationPost($post, $translationPost)
-  {
-  }
-
   public function getSettingsViewBundle()
   {
     $options = $this->library->getSettingOption();

@@ -2,6 +2,7 @@
 
 namespace Supertext\Polylang\Backend;
 use Supertext\Polylang\Helper\IContentAccessor;
+use Supertext\Polylang\Helper\ITranslationAware;
 
 /**
  * Processes post content
@@ -59,13 +60,11 @@ class ContentProvider
     return $result;
   }
 
-  public function SaveTranslatedData($post, $translationPost, $json)
+  public function saveTranslatedData($post, $translationPost, $json)
   {
     foreach ($json->Groups as $translationGroup) {
       if (isset($this->contentAccessors[$translationGroup->GroupId])) {
         $contentAccessors = $this->contentAccessors[$translationGroup->GroupId];
-
-        $contentAccessors->prepareTranslationPost($post, $translationPost);
 
         $texts = array();
 
@@ -74,6 +73,15 @@ class ContentProvider
         }
 
         $contentAccessors->setTexts($translationPost, $texts);
+      }
+    }
+  }
+
+  public function prepareTranslationPost($post, $translationPost)
+  {
+    foreach ($this->contentAccessors as $id => $contentAccessor) {
+      if($contentAccessor instanceof ITranslationAware){
+        $contentAccessor->prepareTranslationPost($post, $translationPost);
       }
     }
   }

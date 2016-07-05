@@ -89,8 +89,4 @@ class PostMediaContentAccessor implements IContentAccessor
       wp_update_post($currentTargetAttachement);
     }
   }
-
-  public function prepareTranslationPost($post, $translationPost)
-  {
-  }
 }
