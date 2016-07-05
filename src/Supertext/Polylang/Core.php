@@ -302,7 +302,7 @@ class Core
     }
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php')) {
-      $contentAccessors['beaver_builder'] = new BeaverBuilderContentAccessor();
+      $contentAccessors['beaver_builder'] = new BeaverBuilderContentAccessor($textProcessor);
     }
 
     return $contentAccessors;

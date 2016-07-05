@@ -8,6 +8,16 @@ class BeaverBuilderContentAccessor implements IContentAccessor
 {
   const KEY_SEPARATOR = '__';
 
+  /**
+   * @var TextProcessor the text processor
+   */
+  private $textProcessor;
+
+  public function __construct($textProcessor)
+  {
+    $this->textProcessor = $textProcessor;
+  }
+
   public function getTranslatableFields($postId)
   {
     $translatableFields = array();
@@ -71,7 +81,7 @@ class BeaverBuilderContentAccessor implements IContentAccessor
         }
 
         $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-        $object->$key = $decodedContent;
+        $object->$key = $this->textProcessor->replaceShortcodeNodes($decodedContent);
       }
     }
 
@@ -98,7 +108,7 @@ class BeaverBuilderContentAccessor implements IContentAccessor
         continue;
       }
 
-      $texts[$key] = $value;
+      $texts[$key] = $this->textProcessor->replaceShortcodes($value);
     }
 
     return $texts;
