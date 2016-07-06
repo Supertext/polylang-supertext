@@ -82,7 +82,7 @@ class ContentProvider
    * @param $translationPost
    * @param $json
    */
-  public function saveTranslatedData($post, $translationPost, $json)
+  public function saveTranslatedData($translationPost, $json)
   {
     foreach ($json->Groups as $translationGroup) {
       if (isset($this->contentAccessors[$translationGroup->GroupId])) {

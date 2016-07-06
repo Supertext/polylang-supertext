@@ -314,8 +314,6 @@ class AjaxRequestHandler
 
     self::copyPostMetas($post->ID, $translationPostId, $options['target_lang']);
 
-    $this->contentProvider->prepareTranslationPost($post, $translationPost);
-
     self::addInTranslationTexts($translationPost);
 
     wp_update_post($translationPost);

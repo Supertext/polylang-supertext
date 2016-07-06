@@ -79,7 +79,8 @@ class CallbackHandler
       return $this->createResult(403, $message);
     }
 
-    $this->contentProvider->SaveTranslatedData(get_post($postId), $translationPost, $json);
+    $this->contentProvider->prepareTranslationPost(get_post($postId), $translationPost);
+    $this->contentProvider->saveTranslatedData($translationPost, $json);
 
     if ($workflowSettings['publishOnCallback']) {
       $translationPost->post_status = 'publish';
