@@ -99,10 +99,10 @@ class TextProcessor
    */
   private function createHtmlDocument($content)
   {
-    $html = '<?xml version="1.0" encoding="utf-8">
+    $html = '<?xml version="1.0" encoding="utf-8"?>
     <html>
         <head>
-        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         </head>
         <body>' . $content . '</body>
     </html>
