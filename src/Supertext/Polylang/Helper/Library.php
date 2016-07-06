@@ -4,6 +4,10 @@ namespace Supertext\Polylang\Helper;
 
 use Supertext\Polylang\Api\Wrapper;
 
+/**
+ * Class Library
+ * @package Supertext\Polylang\Helper
+ */
 class Library
 {
   /**

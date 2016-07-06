@@ -4,26 +4,38 @@ namespace Supertext\Polylang\Helper;
 
 use Comotive\Util\ArrayManipulation;
 
+/**
+ * Class AcfContentAccessor
+ * @package Supertext\Polylang\Helper
+ */
 class AcfContentAccessor implements IContentAccessor, ISettingsAware
 {
   const KEY_SEPARATOR = '__';
 
   /**
-   * @var text processor
+   * @var TextProcessor text processor
    */
   private $textProcessor;
 
   /**
-   * @var library
+   * @var Library library
    */
   private $library;
 
+  /**
+   * @param $textProcessor
+   * @param $library
+   */
   public function __construct($textProcessor, $library)
   {
     $this->textProcessor = $textProcessor;
     $this->library = $library;
   }
 
+  /**
+   * @param $postId
+   * @return array
+   */
   public function getTranslatableFields($postId)
   {
     $options = $this->library->getSettingOption();
@@ -55,6 +67,11 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
+  /**
+   * @param $post
+   * @param $selectedTranslatableFields
+   * @return array
+   */
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
@@ -66,6 +83,10 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     return $texts;
   }
 
+  /**
+   * @param $post
+   * @param $texts
+   */
   public function setTexts($post, $texts)
   {
     $fields = get_fields($post->ID);
@@ -92,6 +113,9 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     }
   }
 
+  /**
+   * @return array
+   */
   public function getSettingsViewBundle()
   {
     $options = $this->library->getSettingOption();
@@ -106,6 +130,9 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
+  /**
+   * @param $postData
+   */
   public function saveSettings($postData)
   {
     $checkedAcfFields = explode(',', $postData['acf']['checkedAcfFields']);
@@ -123,6 +150,9 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     $this->library->saveSetting(Constant::SETTING_ACF_FIELDS, $acfFieldsToSave);
   }
 
+  /**
+   * @return array
+   */
   private function getAcfFieldDefinitions()
   {
     $fieldGroups = function_exists( 'acf_get_field_groups' ) ? acf_get_field_groups() : apply_filters( 'acf/get_field_groups', array() );
@@ -142,6 +172,10 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     return $acfFields;
   }
 
+  /**
+   * @param $fields
+   * @return array
+   */
   private function getFieldDefinitions($fields)
   {
     $group = array();
@@ -157,6 +191,13 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     return $group;
   }
 
+  /**
+   * @param $fields
+   * @param $idPrefix
+   * @param $texts
+   * @param $keysToAdd
+   * @return array
+   */
   private function getFieldTexts($fields, $idPrefix, $texts, $keysToAdd)
   {
     foreach($fields as $key => $value){

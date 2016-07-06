@@ -14,14 +14,26 @@ class ContentProvider
    * @var IContentAccessor[] the text accessors
    */
   private $contentAccessors = null;
+
+  /**
+   * @var \Supertext\Polylang\Helper\Library
+   */
   private $library;
 
+  /**
+   * @param IContentAccessor[] $contentAccessors
+   * @param \Supertext\Polylang\Helper\Library $library
+   */
   public function __construct($contentAccessors, $library)
   {
     $this->contentAccessors = $contentAccessors;
     $this->library = $library;
   }
 
+  /**
+   * @param $postId
+   * @return array|mixed|void
+   */
   public function getAllTranslatableFields($postId)
   {
     $result = array();
@@ -36,6 +48,11 @@ class ContentProvider
     return $result;
   }
 
+  /**
+   * @param $post
+   * @param $selectedTranslatableFieldGroups
+   * @return array|mixed|void
+   */
   public function getTranslationData($post, $selectedTranslatableFieldGroups)
   {
     $result = array();
@@ -60,6 +77,11 @@ class ContentProvider
     return $result;
   }
 
+  /**
+   * @param $post
+   * @param $translationPost
+   * @param $json
+   */
   public function saveTranslatedData($post, $translationPost, $json)
   {
     foreach ($json->Groups as $translationGroup) {
@@ -77,6 +99,10 @@ class ContentProvider
     }
   }
 
+  /**
+   * @param $post
+   * @param $translationPost
+   */
   public function prepareTranslationPost($post, $translationPost)
   {
     foreach ($this->contentAccessors as $id => $contentAccessor) {

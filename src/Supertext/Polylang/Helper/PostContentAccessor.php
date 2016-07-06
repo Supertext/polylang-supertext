@@ -2,19 +2,29 @@
 
 namespace Supertext\Polylang\Helper;
 
-
+/**
+ * Class PostContentAccessor
+ * @package Supertext\Polylang\Helper
+ */
 class PostContentAccessor implements IContentAccessor
 {
   /**
-   * @var the text processor
+   * @var TextProcessor the text processor
    */
   private $textProcessor;
 
+  /**
+   * @param TextProcessor $textProcessor
+   */
   public function __construct($textProcessor)
   {
     $this->textProcessor = $textProcessor;
   }
 
+  /**
+   * @param $postId
+   * @return array
+   */
   public function getTranslatableFields($postId)
   {
     $translatableFields = array();
@@ -43,6 +53,11 @@ class PostContentAccessor implements IContentAccessor
     );
   }
 
+  /**
+   * @param $post
+   * @param $selectedTranslatableFields
+   * @return array
+   */
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
@@ -62,6 +77,10 @@ class PostContentAccessor implements IContentAccessor
     return $texts;
   }
 
+  /**
+   * @param $post
+   * @param $texts
+   */
   public function setTexts($post, $texts)
   {
     foreach ($texts as $id => $text) {

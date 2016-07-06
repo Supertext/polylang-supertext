@@ -4,10 +4,18 @@ namespace Supertext\Polylang\Helper;
 
 use Supertext\Polylang\Api\Multilang;
 
+/**
+ * Class PostMediaContentAccessor
+ * @package Supertext\Polylang\Helper
+ */
 class PostMediaContentAccessor implements IContentAccessor
 {
   const KEY_SEPARATOR = '__';
 
+  /**
+   * @param $postId
+   * @return array
+   */
   public function getTranslatableFields($postId)
   {
     $translatableFields = array();
@@ -24,6 +32,11 @@ class PostMediaContentAccessor implements IContentAccessor
     );
   }
 
+  /**
+   * @param $post
+   * @param $selectedTranslatableFields
+   * @return array
+   */
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
@@ -50,6 +63,10 @@ class PostMediaContentAccessor implements IContentAccessor
     return $texts;
   }
 
+  /**
+   * @param $post
+   * @param $texts
+   */
   public function setTexts($post, $texts)
   {
     $currentTargetAttachement = null;

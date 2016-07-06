@@ -317,6 +317,9 @@ class Core
     return $contentAccessors;
   }
 
+  /**
+   * Check plugin versions and activate again if changed
+   */
   private function checkVersion()
   {
     if (get_option(Constant::VERSION_OPTION) != SUPERTEXT_PLUGIN_VERSION) {

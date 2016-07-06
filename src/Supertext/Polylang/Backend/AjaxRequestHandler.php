@@ -15,10 +15,26 @@ class AjaxRequestHandler
 {
   const TRANSLATION_POST_STATUS = 'draft';
 
+  /**
+   * @var \Supertext\Polylang\Helper\Library
+   */
   private $library;
+
+  /**
+   * @var Log
+   */
   private $log;
+
+  /**
+   * @var ContentProvider
+   */
   private $contentProvider;
 
+  /**
+   * @param \Supertext\Polylang\Helper\Library $library
+   * @param Log $log
+   * @param ContentProvider $contentProvider
+   */
   public function __construct($library, $log, $contentProvider)
   {
     $this->library = $library;
@@ -26,6 +42,10 @@ class AjaxRequestHandler
     $this->contentProvider = $contentProvider;
   }
 
+  /**
+   * @param $action
+   * @param $data
+   */
   public function handleRequest($action, $data)
   {
     switch ($action) {

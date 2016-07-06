@@ -2,9 +2,15 @@
 
 namespace Supertext\Polylang\Helper;
 
-
+/**
+ * Class PluginFieldDefinitions
+ * @package Supertext\Polylang\Helper
+ */
 class PluginFieldDefinitions
 {
+  /**
+   * @return array Yoast SEO field definitions
+   */
   public static function getYoastSeoFieldDefinitions()
   {
     return array(

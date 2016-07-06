@@ -2,7 +2,10 @@
 
 namespace Supertext\Polylang\Helper;
 
-
+/**
+ * Class TextProcessor
+ * @package Supertext\Polylang\Helper
+ */
 class TextProcessor
 {
   const SHORTCODE_TAG = 'div';
@@ -10,8 +13,14 @@ class TextProcessor
   const SHORTCODE_CLOSED_TAG_CLASS = 'polylang-supertext-shortcode-closed';
   const SHORTCODE_ENCLOSED_CONTENT_CLASS = 'polylang-supertext-shortcode-enclosed';
 
+  /**
+   * @var Library
+   */
   private $library;
 
+  /**
+   * @param Library $library
+   */
   public function __construct($library)
   {
     $this->library = $library;

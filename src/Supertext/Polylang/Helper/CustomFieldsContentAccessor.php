@@ -4,24 +4,36 @@ namespace Supertext\Polylang\Helper;
 
 use Comotive\Util\ArrayManipulation;
 
+/**
+ * Class CustomFieldsContentAccessor
+ * @package Supertext\Polylang\Helper
+ */
 class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
 {
   /**
-   * @var text processor
+   * @var TextProcessor text processor
    */
   private $textProcessor;
 
   /**
-   * @var library
+   * @var Library library
    */
   private $library;
 
+  /**
+   * @param TextProcessor $textProcessor
+   * @param Library $library
+   */
   public function __construct($textProcessor, $library)
   {
     $this->textProcessor = $textProcessor;
     $this->library = $library;
   }
 
+  /**
+   * @param $postId
+   * @return array
+   */
   public function getTranslatableFields($postId)
   {
     $options = $this->library->getSettingOption();
@@ -48,6 +60,11 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
+  /**
+   * @param $post
+   * @param $selectedTranslatableFields
+   * @return array
+   */
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
@@ -59,6 +76,10 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     return $texts;
   }
 
+  /**
+   * @param $post
+   * @param $texts
+   */
   public function setTexts($post, $texts)
   {
     foreach($texts as $id => $text){
@@ -67,6 +88,9 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     }
   }
 
+  /**
+   * @return array
+   */
   public function getSettingsViewBundle()
   {
     $options = $this->library->getSettingOption();
@@ -80,6 +104,9 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
+  /**
+   * @param $postData
+   */
   public function saveSettings($postData)
   {
     $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, array_filter($postData['custom-fields']));

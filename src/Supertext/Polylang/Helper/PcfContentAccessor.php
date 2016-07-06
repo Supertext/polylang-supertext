@@ -4,15 +4,19 @@ namespace Supertext\Polylang\Helper;
 
 use Comotive\Util\ArrayManipulation;
 
+/**
+ * Class PcfContentAccessor
+ * @package Supertext\Polylang\Helper
+ */
 class PcfContentAccessor implements IContentAccessor, ISettingsAware
 {
   /**
-   * @var text processor
+   * @var TextProcessor text processor
    */
   private $textProcessor;
 
   /**
-   * @var library
+   * @var Library library
    */
   private $library;
 
@@ -21,22 +25,37 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   private $pcfFieldDefinitions = array();
 
+  /**
+   * @param TextProcessor $textProcessor
+   * @param Library $library
+   */
   public function __construct($textProcessor, $library)
   {
     $this->textProcessor = $textProcessor;
     $this->library = $library;
   }
 
+  /**
+   * @param $plugin
+   * @param $fieldDefinitions
+   */
   public function registerPluginFieldDefinitions($plugin, $fieldDefinitions)
   {
     $this->pcfFieldDefinitions['group_' . $plugin] = $fieldDefinitions;
   }
 
+  /**
+   * @return bool true if has registered plugin field definitions
+   */
   public function hasRegisteredPluginFieldDefinitions()
   {
     return count($this->pcfFieldDefinitions) > 0;
   }
 
+  /**
+   * @param $postId
+   * @return array
+   */
   public function getTranslatableFields($postId)
   {
     $options = $this->library->getSettingOption();
@@ -66,6 +85,11 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
+  /**
+   * @param $post
+   * @param $selectedTranslatableFields
+   * @return array
+   */
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
@@ -77,6 +101,10 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     return $texts;
   }
 
+  /**
+   * @param $post
+   * @param $texts
+   */
   public function setTexts($post, $texts)
   {
     foreach ($texts as $id => $text) {
@@ -85,6 +113,9 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     }
   }
 
+  /**
+   * @return array
+   */
   public function getSettingsViewBundle()
   {
     $options = $this->library->getSettingOption();
@@ -99,6 +130,9 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
+  /**
+   * @param $postData
+   */
   public function saveSettings($postData)
   {
     $checkedPcfFields = explode(',', $postData['pcf']['checkedPcfFields']);

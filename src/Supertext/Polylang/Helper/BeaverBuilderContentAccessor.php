@@ -4,6 +4,10 @@ namespace Supertext\Polylang\Helper;
 
 use FLBuilderModel;
 
+/**
+ * Class BeaverBuilderContentAccessor
+ * @package Supertext\Polylang\Helper
+ */
 class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAware
 {
   const KEY_SEPARATOR = '__';
@@ -13,11 +17,18 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
    */
   private $textProcessor;
 
+  /**
+   * @param TextProcessor $textProcessor
+   */
   public function __construct($textProcessor)
   {
     $this->textProcessor = $textProcessor;
   }
 
+  /**
+   * @param $postId
+   * @return array
+   */
   public function getTranslatableFields($postId)
   {
     $translatableFields = array();
@@ -34,6 +45,11 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
     );
   }
 
+  /**
+   * @param $post
+   * @param $selectedTranslatableFields
+   * @return array
+   */
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
@@ -59,6 +75,10 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
     return $texts;
   }
 
+  /**
+   * @param $post
+   * @param $texts
+   */
   public function setTexts($post, $texts)
   {
     $layoutData = FLBuilderModel::get_layout_data(null, $post->ID);
@@ -88,6 +108,10 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
     FLBuilderModel::update_layout_data($layoutData, null, $post->ID);
   }
 
+  /**
+   * @param $post
+   * @param $translationPost
+   */
   public function prepareTranslationPost($post, $translationPost)
   {
     update_post_meta($translationPost->ID, '_fl_builder_enabled', get_post_meta($post->ID, '_fl_builder_enabled', true));
@@ -99,6 +123,10 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
     FLBuilderModel::update_layout_settings($layoutSettings, null, $translationPost->ID);
   }
 
+  /**
+   * @param $settings
+   * @return array
+   */
   private function getTextProperties($settings)
   {
     $texts = array();
@@ -114,6 +142,11 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
     return $texts;
   }
 
+  /**
+   * @param $settingsTextProperties
+   * @param $keyPrefix
+   * @return array
+   */
   private function flattenArray($settingsTextProperties, $keyPrefix)
   {
     $flatten = array();

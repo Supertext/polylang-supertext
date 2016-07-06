@@ -2,7 +2,10 @@
 
 namespace Supertext\Polylang\Helper;
 
-
+/**
+ * Interface IContentAccessor
+ * @package Supertext\Polylang\Helper
+ */
 interface IContentAccessor
 {
   public function getTranslatableFields($postId);

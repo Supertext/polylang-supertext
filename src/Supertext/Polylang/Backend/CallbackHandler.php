@@ -8,10 +8,26 @@ use Comotive\Util\ArrayManipulation;
 
 class CallbackHandler
 {
+  /**
+   * @var \Supertext\Polylang\Helper\Library
+   */
   private $library;
+
+  /**
+   * @var Log
+   */
   private $log;
+
+  /**
+   * @var ContentProvider
+   */
   private $contentProvider;
 
+  /**
+   * @param \Supertext\Polylang\Helper\Library $library
+   * @param Log $log
+   * @param ContentProvider $contentProvider
+   */
   public function __construct($library, $log, $contentProvider)
   {
     $this->library = $library;
@@ -19,6 +35,10 @@ class CallbackHandler
     $this->contentProvider = $contentProvider;
   }
 
+  /**
+   * @param $json
+   * @return array
+   */
   public function handleRequest($json)
   {
     $refData = explode('-', $json->ReferenceData, 2);
