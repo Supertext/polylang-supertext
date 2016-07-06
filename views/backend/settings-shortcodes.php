@@ -2,8 +2,7 @@
 use Supertext\Polylang\Helper\Constant;
 use Comotive\Util\ArrayManipulation;
 
-global $shortcode_tags;
-
+$shortcodeTags = $context->getShortcodeTags();
 $options = $context->getSettingOption();
 $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipulation::forceArray($options[Constant::SETTING_SHORTCODES]) : array();
 
@@ -26,7 +25,7 @@ function getAttributeInput($index, $key, $value){
       <?php _e('Please define the encoding process for all encoded and enclosed content. Available encoding functions are: rawurl, url and base64', 'polylang-supertext'); ?>
     </p>
     <?php
-    foreach ($shortcode_tags as $key => $function) {
+    foreach ($shortcodeTags as $key => $function) {
       $contentEncoding = '';
       $savedShortcodeAttributes = array();
 

@@ -35,7 +35,7 @@ class TextProcessor
   {
     $options = $this->library->getSettingOption();
     $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
-    $regex = get_shortcode_regex();
+    $regex = $this->library->getShortcodeRegex();
 
     return preg_replace_callback("/$regex/s", function ($m) use ($savedShortcodes) {
       return $this->replaceShortcode($m, $savedShortcodes);

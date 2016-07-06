@@ -2,6 +2,7 @@
 
 namespace Supertext\Polylang\Helper;
 
+use Comotive\Util\WordPress;
 use Supertext\Polylang\Api\Wrapper;
 
 /**
@@ -100,5 +101,25 @@ class Library
       $credentials['stUser'],
       $credentials['stApi']
     );
+  }
+
+  public function getShortcodeTags(){
+    //Support Visual Composer (add shortcodes)
+    if (WordPress::isPluginActive('js_composer/js_composer.php') && method_exists('WPBMap', 'addAllMappedShortcodes')) {
+      \WPBMap::addAllMappedShortcodes();
+    }
+
+    global $shortcode_tags;
+    return $shortcode_tags;
+  }
+
+  public function getShortcodeRegex()
+  {
+    //Support Visual Composer (add shortcodes)
+    if (WordPress::isPluginActive('js_composer/js_composer.php') && method_exists('WPBMap', 'addAllMappedShortcodes')) {
+      \WPBMap::addAllMappedShortcodes();
+    }
+
+    return get_shortcode_regex();
   }
 }
