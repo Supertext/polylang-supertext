@@ -73,7 +73,7 @@ class SettingsPage extends AbstractPage
   {
     $this->addResources();
 
-    $currentTabId = $this->GetCurrentTabId();
+    $currentTabId = $this->getCurrentTabId();
 
     // Display the page with typical entry infos
     echo '
@@ -94,7 +94,7 @@ class SettingsPage extends AbstractPage
    */
   public function control()
   {
-    $currentTabId = $this->GetCurrentTabId();
+    $currentTabId = $this->getCurrentTabId();
 
     if ($currentTabId == null || !isset($_POST['saveStPlSettings'])) {
       return;
@@ -197,7 +197,7 @@ class SettingsPage extends AbstractPage
   /**
    * @return string|void
    */
-  private function GetCurrentTabId()
+  private function getCurrentTabId()
   {
     //Return default tab if none set
     if (empty($_GET['tab'])) {

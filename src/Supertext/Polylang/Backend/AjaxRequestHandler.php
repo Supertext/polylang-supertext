@@ -310,17 +310,17 @@ class AjaxRequestHandler
 
     $translationPost = get_post($translationPostId);
 
-    self::AddImageAttachments($post->ID, $translationPostId, $options['source_lang'], $options['target_lang']);
+    self::addImageAttachments($post->ID, $translationPostId, $options['source_lang'], $options['target_lang']);
 
     self::copyPostMetas($post->ID, $translationPostId, $options['target_lang']);
 
     $this->contentProvider->prepareTranslationPost($post, $translationPost);
 
-    self::AddInTranslationTexts($translationPost);
+    self::addInTranslationTexts($translationPost);
 
     wp_update_post($translationPost);
 
-    self::SetLanguage($post->ID, $translationPostId, $options['source_lang'], $options['target_lang']);
+    self::setLanguage($post->ID, $translationPostId, $options['source_lang'], $options['target_lang']);
 
     $this->log->addEntry($translationPostId, __('The article to be translated has been created.', 'polylang-supertext'));
 
@@ -356,7 +356,7 @@ class AjaxRequestHandler
    * @param $sourceLang
    * @param $targetLang
    */
-  private static function AddImageAttachments($sourcePostId, $targetPostId, $sourceLang, $targetLang)
+  private static function addImageAttachments($sourcePostId, $targetPostId, $sourceLang, $targetLang)
   {
     $sourceAttachments = get_children(array(
         'post_parent' => $sourcePostId,
@@ -380,7 +380,7 @@ class AjaxRequestHandler
         $targetAttachmentId = wp_insert_attachment($targeAttachment);
         add_post_meta($targetAttachmentId, '_wp_attachment_metadata', $sourceAttachmentMetadata);
         add_post_meta($targetAttachmentId, '_wp_attached_file', $sourceAttachmentLink);
-        self::SetLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
+        self::setLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
       } else {
         $targetAttachment = get_post($targetAttachmentId);
         $targeAttachment->post_parent = $targetPostId;
@@ -410,7 +410,7 @@ class AjaxRequestHandler
   /**
    * @param $translationPost
    */
-  private static function AddInTranslationTexts($translationPost)
+  private static function addInTranslationTexts($translationPost)
   {
     $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
   }
@@ -421,7 +421,7 @@ class AjaxRequestHandler
    * @param $sourceLanguage
    * @param $targetLanguage
    */
-  private static function SetLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
+  private static function setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
   {
     Multilang::setPostLanguage($targetPostId, $targetLanguage);
 

@@ -251,7 +251,7 @@ class Core
   private function getContentAccessors()
   {
     if ($this->contentAccessors === null) {
-      $this->contentAccessors = $this->CreateContentAccessors();
+      $this->contentAccessors = $this->createContentAccessors();
     }
 
     return $this->contentAccessors;
@@ -285,7 +285,7 @@ class Core
    * Creates the array of content accessors
    * @return IContentAccessor[] the array content accessors
    */
-  private function CreateContentAccessors()
+  private function createContentAccessors()
   {
     $textProcessor = new TextProcessor($this->getLibrary());
 
