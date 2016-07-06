@@ -91,6 +91,11 @@ Supertext.Settings.TranslatableFields = (function ($) {
         options = options || {};
 
         $pcfFieldsTree = $('#pcfFieldsTree');
+
+        if($pcfFieldsTree.length == 0){
+          return;
+        }
+
         $checkedPcfFieldsInput = $('#checkedPcfFieldsInput');
 
         $pcfFieldsTree
@@ -127,6 +132,11 @@ Supertext.Settings.TranslatableFields = (function ($) {
         options = options || {};
 
         $acfFieldsTree = $('#acfFieldsTree');
+
+        if($acfFieldsTree.length == 0){
+          return;
+        }
+
         $checkedAcfFieldsInput = $('#checkedAcfFieldsInput');
 
         $acfFieldsTree

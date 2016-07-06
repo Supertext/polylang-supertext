@@ -16,6 +16,7 @@ use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\CustomFieldsContentAccessor;
 use Supertext\Polylang\Helper\PcfContentAccessor;
+use Supertext\Polylang\Helper\PluginFieldDefinitions;
 use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostContentAccessor;
 use Supertext\Polylang\Helper\PostMediaContentAccessor;
@@ -291,9 +292,19 @@ class Core
     $contentAccessors = array(
       'post' => new PostContentAccessor($textProcessor),
       'media' => new PostMediaContentAccessor(),
-      'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $this->getLibrary()),
-      'pcf' => new PcfContentAccessor($textProcessor, $this->getLibrary())
+      'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $this->getLibrary())
     );
+
+    $pcfContentAccessor = new PcfContentAccessor($textProcessor, $this->getLibrary());
+
+    if (WordPress::isPluginActive('wordpress-seo/wp-seo.php')) {
+      $pcfContentAccessor->registerPluginFieldDefinitions('yoast_seo', PluginFieldDefinitions::getYoastSeoFieldDefinitions());
+    }
+
+    if($pcfContentAccessor->hasRegisteredPluginFieldDefinitions())
+    {
+      $contentAccessors['pcf'] = $pcfContentAccessor;
+    }
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
       $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $this->getLibrary());

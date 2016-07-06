@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang\Helper;
 
-use Comotive\Util\WordPress;
 use Comotive\Util\ArrayManipulation;
 
 class PcfContentAccessor implements IContentAccessor, ISettingsAware
@@ -17,18 +16,31 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   private $library;
 
+  /**
+   * @var array
+   */
+  private $pcfFieldDefinitions = array();
+
   public function __construct($textProcessor, $library)
   {
     $this->textProcessor = $textProcessor;
     $this->library = $library;
   }
 
+  public function registerPluginFieldDefinitions($plugin, $fieldDefinitions)
+  {
+    $this->pcfFieldDefinitions['group_' . $plugin] = $fieldDefinitions;
+  }
+
+  public function hasRegisteredPluginFieldDefinitions()
+  {
+    return count($this->pcfFieldDefinitions) > 0;
+  }
+
   public function getTranslatableFields($postId)
   {
     $options = $this->library->getSettingOption();
     $savedPcfFields = isset($options[Constant::SETTING_PCF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_PCF_FIELDS]) : array();
-    $pcfFieldDefinitions = $this->getPcfFieldDefinitions();
-
     $translatableFields = array();
 
     foreach ($savedPcfFields as $savedPcfField) {
@@ -36,7 +48,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
         continue;
       }
 
-      foreach ($pcfFieldDefinitions as $pcfFieldDefinition) {
+      foreach ($this->pcfFieldDefinitions as $pcfFieldDefinition) {
         $subFieldDefinition = $pcfFieldDefinition['sub_field_definitions'];
 
         $translatableFields[] = array(
@@ -58,7 +70,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
   {
     $texts = array();
 
-    foreach($selectedTranslatableFields as $id => $selected){
+    foreach ($selectedTranslatableFields as $id => $selected) {
       $texts[$id] = get_post_meta($post->ID, $id, true);
     }
 
@@ -67,7 +79,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
 
   public function setTexts($post, $texts)
   {
-    foreach($texts as $id => $text){
+    foreach ($texts as $id => $text) {
       $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
       update_post_meta($post->ID, $id, $decodedContent);
     }
@@ -81,7 +93,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     return array(
       'view' => 'backend/settings-pcf',
       'context' => array(
-        'pcfFieldDefinitions' => $this->getPcfFieldDefinitions(),
+        'pcfFieldDefinitions' => $this->pcfFieldDefinitions,
         'savedPcfFields' => $savedPcfFields
       )
     );
@@ -102,42 +114,5 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     }
 
     $this->library->saveSetting(Constant::SETTING_PCF_FIELDS, $pcfFieldsToSave);
-  }
-
-  private function getPcfFieldDefinitions()
-  {
-    $pcfFieldDefinitions = array();
-
-    if (WordPress::isPluginActive('wordpress-seo/wp-seo.php')) {
-
-      $pcfFieldDefinitions['group_yoast_seo'] = array(
-        'label' => 'Yoast SEO',
-        'type' => 'group',
-        'sub_field_definitions' => array(
-          '_yoast_wpseo_title' => array(
-            'label' => __('SEO-optimized title', 'polylang-supertext'),
-            'type' => 'field'
-          ),
-          '_yoast_wpseo_metadesc' => array(
-            'label' => __('SEO-optimized description', 'polylang-supertext'),
-            'type' => 'field'
-          ),
-          '_yoast_wpseo_focuskw' => array(
-            'label' => __('Focus keywords', 'polylang-supertext'),
-            'type' => 'field'
-          ),
-          '_yoast_wpseo_opengraph-title' => array(
-            'label' => __('Facebook title', 'polylang-supertext'),
-            'type' => 'field'
-          ),
-          '_yoast_wpseo_opengraph-description' => array(
-            'label' => __('Facebook description', 'polylang-supertext'),
-            'type' => 'field'
-          )
-        )
-      );
-    }
-
-    return $pcfFieldDefinitions;
   }
 }
