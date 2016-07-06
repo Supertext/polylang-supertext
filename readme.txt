@@ -45,6 +45,12 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 1.9 =
+* Added support for Visual Composer
+* Extended Beaver Builder support with shortcode replacement
+* Extended post creation for translation post
+* Various code improvements
+
 = 1.8 =
 * Added support for Beaver Builder
 * Extended custom field settings page (with possibility to add own defined custom fields)

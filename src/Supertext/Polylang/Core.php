@@ -187,7 +187,7 @@ class Core
 
     $options = $library->getSettingOption();
 
-    if (isset($options[Helper\Constant::SETTING_CUSTOM_FIELDS])) {
+    if (isset($options[Helper\Constant::SETTING_CUSTOM_FIELDS]) && SUPERTEXT_PLUGIN_VERSION == 1.8) {
       $library->saveSetting(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
     }
 
