@@ -99,7 +99,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
-  public function SaveSettings($postData)
+  public function saveSettings($postData)
   {
     $checkedPcfFields = explode(',', $postData['pcf']['checkedPcfFields']);
 

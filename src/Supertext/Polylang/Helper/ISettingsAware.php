@@ -7,5 +7,5 @@ interface ISettingsAware
 {
   public function getSettingsViewBundle();
 
-  public function SaveSettings($postData);
+  public function saveSettings($postData);
 }

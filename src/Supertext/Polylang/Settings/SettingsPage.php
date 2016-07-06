@@ -257,7 +257,7 @@ class SettingsPage extends AbstractPage
     foreach($this->contentAccessors as $contentAccessor)
     {
       if($contentAccessor instanceof ISettingsAware){
-        $contentAccessor->SaveSettings($_POST);
+        $contentAccessor->saveSettings($_POST);
       }
     }
   }

@@ -80,7 +80,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
-  public function SaveSettings($postData)
+  public function saveSettings($postData)
   {
     $this->library->saveSetting(Constant::SETTING_CUSTOM_FIELDS, array_filter($postData['custom-fields']));
   }

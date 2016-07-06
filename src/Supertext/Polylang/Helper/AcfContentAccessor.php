@@ -106,7 +106,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     );
   }
 
-  public function SaveSettings($postData)
+  public function saveSettings($postData)
   {
     $checkedAcfFields = explode(',', $postData['acf']['checkedAcfFields']);
 
