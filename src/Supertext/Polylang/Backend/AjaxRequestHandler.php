@@ -4,6 +4,7 @@ namespace Supertext\Polylang\Backend;
 
 use Comotive\Util\StringUtils;
 use Supertext\Polylang\Api\Multilang;
+use Supertext\Polylang\Helper\Constant;
 
 /**
  * Provided ajax request handlers
@@ -127,8 +128,8 @@ class AjaxRequestHandler
       $this->log->addOrderId($post->ID, $order->Id);
       $this->log->addOrderId($translationPostId, $order->Id);
 
-      update_post_meta($translationPostId, Translation::IN_TRANSLATION_FLAG, 1);
-      update_post_meta($translationPostId, Translation::IN_TRANSLATION_REFERENCE_HASH, $translationReferenceHash);
+      update_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, 1);
+      update_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, $translationReferenceHash);
 
       self::setJsonOutput(
         array(
@@ -410,7 +411,7 @@ class AjaxRequestHandler
    */
   private static function addInTranslationTexts($translationPost)
   {
-    $translationPost->post_title = $translationPost->post_title . Translation::IN_TRANSLATION_TEXT;
+    $translationPost->post_title = $translationPost->post_title . Constant::IN_TRANSLATION_TEXT;
   }
 
   /**

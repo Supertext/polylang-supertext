@@ -17,25 +17,20 @@ class Translation
    * @var string the translation column id
    */
   const TRANSLATION_STATUS_COLUMN = 'translation-status';
+
   /**
-   * @var string the text that marks a post as "in translation"
+   * @var \Supertext\Polylang\Helper\Library
    */
-  const IN_TRANSLATION_TEXT = '[in Translation...]';
-  /**
-   * @var string the flag that sets a post in translation
-   */
-  const IN_TRANSLATION_FLAG = '_in_st_translation';
-  /**
-   * $var string the translation reference hash
-   */
-  const IN_TRANSLATION_REFERENCE_HASH = '_in_translation_ref_hash';
   private $library;
+
+  /**
+   * @var Log
+   */
   private $log;
 
   /**
    * Various filters to change and/or display things
    */
-
   public function __construct($library, $log)
   {
     $this->library = $library;
@@ -52,10 +47,6 @@ class Translation
     add_action('manage_posts_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
     add_filter('manage_pages_columns', array($this, 'addTranslationStatusColumn'), 100);
     add_action('manage_pages_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
-
-    // Load translations
-    load_plugin_textdomain('polylang-supertext', false, 'polylang-supertext/resources/languages');
-    load_plugin_textdomain('polylang-supertext-langs', false, 'polylang-supertext/resources/languages');
   }
 
   /**
@@ -68,7 +59,7 @@ class Translation
       $orderId = $this->getOrderId($translationPost, true);
 
       // Show info if there is an order and the article is not translated yet
-      if (intval($orderId) > 0 && get_post_meta($translationPost->ID, Translation::IN_TRANSLATION_FLAG, true) == 1) {
+      if (intval($orderId) > 0 && get_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, true) == 1) {
         echo '
           <div class="updated">
             <p>' . sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
@@ -180,7 +171,7 @@ class Translation
       return;
     }
 
-    if (get_post_meta($postId, Translation::IN_TRANSLATION_FLAG, true) == 1) {
+    if (get_post_meta($postId, Constant::IN_TRANSLATION_FLAG, true) == 1) {
       echo '<span class="dashicons dashicons-clock"></span>';
     }
   }

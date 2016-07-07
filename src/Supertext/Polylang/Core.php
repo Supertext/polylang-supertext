@@ -95,6 +95,10 @@ class Core
       add_action('init', array($this, 'registerAdminAssets'));
       add_action('init', array($this, 'registerLocalizationScripts'));
 
+      // Load translations
+      load_plugin_textdomain('polylang-supertext', false, 'polylang-supertext/resources/languages');
+      load_plugin_textdomain('polylang-supertext-langs', false, 'polylang-supertext/resources/languages');
+
       // Load needed subcomponents in admin
       $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getContentAccessors()));
       $this->translation = new Translation($this->getLibrary(), $this->getLog());
@@ -161,7 +165,7 @@ class Core
     $translation_array = array(
       'resourceUrl' => get_bloginfo('wpurl'),
       'addNewUser' => esc_js(__('Add user', 'polylang-supertext')),
-      'inTranslationText' => esc_js(Translation::IN_TRANSLATION_TEXT),
+      'inTranslationText' => esc_js(Constant::IN_TRANSLATION_TEXT),
       'deleteUser' => esc_js(__('Delete user', 'polylang-supertext')),
       'translationCreation' => esc_js(__('Translation is being initialized. Please wait a moment.', 'polylang-supertext')),
       'generalError' => esc_js(__('An error occurred.', 'polylang-supertext')),
