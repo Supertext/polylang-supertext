@@ -115,8 +115,8 @@ class TextProcessor
 
   /**
    * Parses the child nodes and returns the new content with replaced shortcode nodes
-   * @param $doc the dom document
-   * @param $childNodes the child nodes to process
+   * @param \DOMDocument $doc the dom document
+   * @param \DOMNodeList $childNodes the child nodes to process
    * @param $savedShortcodes
    * @return string the new content
    */
@@ -170,6 +170,18 @@ class TextProcessor
         $shortcodeEnd = empty($enclosedContent) && !$forceEnclosingForm ? '' : $enclosedContent . '[/' . $shortcodeName . ']';
 
         $newContent .= $shortcodeStart . $shortcodeEnd;
+      } else if($childNode->nodeType === XML_ELEMENT_NODE && $childNode->hasChildNodes()){
+        //Extract childnode tags and replace inner html
+        $tagPattern = '/^(<'.$childNode->nodeName.'[^<>]*>)(.*)(<\/'.$childNode->nodeName.'>)$/s';
+        $html = $doc->saveHTML($childNode);
+        $hasMatch = preg_match ($tagPattern, $html, $matches);
+
+        if($hasMatch){
+          $innerContent = $this->replaceShortcodeNodesRecursive($doc, $childNode->childNodes, $savedShortcodes);
+          $newContent = $matches[1] . $innerContent . $matches[3];
+        }else{
+          $newContent .= $doc->saveHTML($childNode);
+        }
       } else {
         $newContent .= $doc->saveHTML($childNode);
       }
