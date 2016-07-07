@@ -101,7 +101,12 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
         }
 
         $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-        $object->$key = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+
+        if (is_array($object)) {
+          $object[$key] = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+        } else if (is_object($object)) {
+          $object->{$key} = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+        }
       }
     }
 
