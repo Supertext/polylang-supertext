@@ -7,7 +7,7 @@ use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\OfferBox;
-use Supertext\Polylang\Backend\Translation;
+use Supertext\Polylang\Backend\AdminExtension;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
 use Supertext\Polylang\Helper\IContentAccessor;
@@ -46,9 +46,9 @@ class Core
    */
   private $log = null;
   /**
-   * @var Translation the translation library
+   * @var AdminExtension the translation library
    */
-  private $translation = null;
+  private $adminExtension = null;
   /**
    * @var IContentAccessor[] the array of content accessors
    */
@@ -101,7 +101,7 @@ class Core
 
       // Load needed subcomponents in admin
       $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getContentAccessors()));
-      $this->translation = new Translation($this->getLibrary(), $this->getLog());
+      $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
     }
 
     $this->checkVersion();

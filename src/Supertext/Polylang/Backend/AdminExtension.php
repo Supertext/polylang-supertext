@@ -11,7 +11,7 @@ use Supertext\Polylang\Helper\Constant;
  * @package Supertext\Polylang\Backend
  * @author Michael Sebel <michael@comotive.ch>
  */
-class Translation
+class AdminExtension
 {
   /**
    * @var string the translation column id
