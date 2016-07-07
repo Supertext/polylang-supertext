@@ -49,8 +49,8 @@ class OfferBox
     $this->targetLang = $_GET['targetLang'];
     $this->hasExistingTranslation = intval(Multilang::getPostInLanguage($this->postId, $this->targetLang)) > 0;
 
-    wp_enqueue_style(Constant::POST_STYLE_HANDLE);
-    wp_enqueue_script(Constant::TRANSLATION_SCRIPT_HANDLE);
+    wp_enqueue_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE);
+    wp_enqueue_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE);
   }
 
   /**

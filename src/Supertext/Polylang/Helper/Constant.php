@@ -68,11 +68,11 @@ class Constant
   /**
    * @var string the style handle
    */
-  const STYLE_HANDLE = 'polylang-supertext-styles';
+  const SETTINGS_STYLE_HANDLE = 'polylang-supertext-styles';
   /**
    * @var string the post style handle
    */
-  const POST_STYLE_HANDLE = 'polylang-supertext-post-styles';
+  const ADMIN_EXTENSION_STYLE_HANDLE = 'polylang-supertext-admin-extension-styles';
   /**
    * @var string the jstree style handle
    */
@@ -80,7 +80,7 @@ class Constant
   /**
    * @var string the translation script handle
    */
-  const TRANSLATION_SCRIPT_HANDLE = 'polylang-supertext-translation-library';
+  const ADMIN_EXTENSION_SCRIPT_HANDLE = 'polylang-supertext-admin-extension-library';
   /**
    * @var string the settings script handle
    */

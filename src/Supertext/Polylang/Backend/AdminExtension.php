@@ -29,6 +29,11 @@ class AdminExtension
   private $log;
 
   /**
+   * @var null|string
+   */
+  private $screenBase = null;
+
+  /**
    * Various filters to change and/or display things
    */
   public function __construct($library, $log)
@@ -36,9 +41,9 @@ class AdminExtension
     $this->library = $library;
     $this->log = $log;
 
-    add_action('admin_init', array($this, 'addBackendAssets'));
+    add_action('current_screen', array($this, 'setScreenBase'));
+    add_action('admin_enqueue_scripts', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
-    add_action('current_screen', array($this, 'addScreenbasedAssets'));
     add_action('admin_footer', array($this, 'printWorkingState'));
     add_action('media_upload_gallery', array($this, 'disableGalleryInputs'));
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
@@ -50,22 +55,54 @@ class AdminExtension
   }
 
   /**
+   * @param \WP_Screen $screen the screen shown
+   */
+  public function setScreenBase($screen)
+  {
+    $this->screenBase = $screen->base;
+  }
+
+  /**
+   * Add the global backend libraries and css
+   */
+  public function addBackendAssets()
+  {
+    //Settings assets
+    if ($this->screenBase == 'settings_page_supertext-polylang-settings') {
+      wp_enqueue_style(Constant::SETTINGS_STYLE_HANDLE);
+      wp_enqueue_style(Constant::JSTREE_STYLE_HANDLE);
+
+      wp_enqueue_script(Constant::SETTINGS_SCRIPT_HANDLE);
+      wp_enqueue_script(Constant::JSTREE_SCRIPT_HANDLE);
+      wp_enqueue_script(Constant::JQUERY_UI_AUTOCOMPLETE);
+    }
+
+    if ($this->screenBase == 'post' || $this->screenBase == 'edit') {
+      wp_enqueue_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE);
+
+      wp_enqueue_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE);
+    }
+  }
+
+  /**
    * Show information about the article translation, if given
    */
   public function showInTranslationMessage()
   {
-    if (isset($_GET['post']) && isset($_GET['action'])) {
-      $translationPost = get_post(intval($_GET['post']));
-      $orderId = $this->getOrderId($translationPost, true);
+    if ($this->screenBase != 'post' && isset($_GET['post'])) {
+      return;
+    }
 
-      // Show info if there is an order and the article is not translated yet
-      if (intval($orderId) > 0 && get_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, true) == 1) {
-        echo '
-          <div class="updated">
-            <p>' . sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
-          </div>
-        ';
-      }
+    $translationPost = get_post(intval($_GET['post']));
+    $orderId = $this->getOrderId($translationPost, true);
+
+    // Show info if there is an order and the article is not translated yet
+    if (intval($orderId) > 0 && get_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, true) == 1) {
+      echo '
+        <div class="updated">
+          <p>' . sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
+        </div>
+      ';
     }
   }
 
@@ -79,29 +116,6 @@ class AdminExtension
     $orderId = is_array($orderIdList) ? end($orderIdList) : 0;
 
     return $orderId;
-  }
-
-  /**
-   * Only includes resources for post translation management
-   * @param \WP_Screen $screen the screen shown
-   */
-  public function addScreenbasedAssets($screen)
-  {
-    if ($screen->base == 'post' && isset($_GET['action']) && ($_GET['action'] == 'edit')) {
-      // SCripts to inject translation
-      wp_enqueue_script(Constant::TRANSLATION_SCRIPT_HANDLE);
-
-      // Styles for post backend and offer page
-      wp_enqueue_style(Constant::POST_STYLE_HANDLE);
-    }
-  }
-
-  /**
-   * Add the global backend libraries and css
-   */
-  public function addBackendAssets()
-  {
-    wp_enqueue_style(Constant::STYLE_HANDLE);
   }
 
   /**

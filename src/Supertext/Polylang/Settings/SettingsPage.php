@@ -71,8 +71,6 @@ class SettingsPage extends AbstractPage
    */
   public function display()
   {
-    $this->addResources();
-
     $currentTabId = $this->getCurrentTabId();
 
     // Display the page with typical entry infos
@@ -119,17 +117,6 @@ class SettingsPage extends AbstractPage
     }
 
     return $viewBundle;
-  }
-
-  /**
-   * Add js/css resources needed on this page
-   */
-  private function addResources()
-  {
-    wp_enqueue_style(Constant::JSTREE_STYLE_HANDLE);
-    wp_enqueue_script(Constant::SETTINGS_SCRIPT_HANDLE);
-    wp_enqueue_script(Constant::JSTREE_SCRIPT_HANDLE);
-    wp_enqueue_script(Constant::JQUERY_UI_AUTOCOMPLETE);
   }
 
   /**
