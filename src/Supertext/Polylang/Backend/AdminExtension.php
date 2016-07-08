@@ -138,7 +138,8 @@ class AdminExtension
 
     $context = array(
       'isPluginWorking' => $isPluginWorking,
-      'screen' => $this->screenBase
+      'screen' => $this->screenBase,
+      'resourceUrl' => get_bloginfo('wpurl')
     );
 
     $contextJson = json_encode($context);

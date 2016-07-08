@@ -65,14 +65,28 @@ class OfferBox
     $warnings = $this->getWarnings();
 
     $orderForm = $this->getOrderForm();
+    $userId = get_current_user_id();
+    $cred = $this->library->getUserCredentials($userId);
 
+    $isPluginWorking =
+      $this->library->isWorking() &&
+      strlen($cred['stUser']) > 0 &&
+      strlen($cred['stApi']) > 0 &&
+      $cred['stUser'] != Constant::DEFAULT_API_USER;
+
+    $context = array(
+      'isPluginWorking' => $isPluginWorking,
+      'screen' => $this->screenBase,
+      'resourceUrl' => get_bloginfo('wpurl')
+    );
+
+    $contextJson = json_encode($context);
     // Print the actual form
     echo '
-      <script type="text/javascript">
-        jQuery(function() {
-          Supertext.Polylang.addOfferEvents();
-        });
-      </script>
+<script type="text/javascript">
+            var Supertext = Supertext || {};
+            Supertext.Context = '.$contextJson.';
+          </script>
       <div id="div_tb_wrap_translation" class="div_tb_wrap_translation">
         <div id="div_translation_order_head">
           ' . $offerBoxTitle . '

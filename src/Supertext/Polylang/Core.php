@@ -163,7 +163,6 @@ class Core
   public function registerLocalizationScripts()
   {
     $translation_array = array(
-      'resourceUrl' => get_bloginfo('wpurl'),
       'addNewUser' => esc_js(__('Add user', 'polylang-supertext')),
       'inTranslationText' => esc_js(Constant::IN_TRANSLATION_TEXT),
       'deleteUser' => esc_js(__('Delete user', 'polylang-supertext')),

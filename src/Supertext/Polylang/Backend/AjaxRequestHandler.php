@@ -89,9 +89,9 @@ class AjaxRequestHandler
     $order = $orderCreation['order'];
 
     if ($orderCreation['success'] && !empty($order->Deadline) && !empty($order->Id)) {
-      $translationPostId = intval(Multilang::getPostInLanguage($postId, $options['target_lang']));
+      $translationPostId = Multilang::getPostInLanguage($postId, $options['target_lang']);
 
-      if ($translationPostId == 0) {
+      if ($translationPostId == null) {
         $translationPost = $this->createTranslationPost($post, $options);
 
         if ($translationPost === null) {

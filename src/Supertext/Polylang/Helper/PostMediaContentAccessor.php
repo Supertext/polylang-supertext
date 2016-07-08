@@ -84,7 +84,7 @@ class PostMediaContentAccessor implements IContentAccessor
         }
 
         $currentSourceAttachmentId = $sourceAttachmentId;
-        $targetAttachmentId = intval(Multilang::getPostInLanguage($sourceAttachmentId, Multilang::getPostLanguage($post->ID)));
+        $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, Multilang::getPostLanguage($post->ID));
         $currentTargetAttachement = get_post($targetAttachmentId);
       }
 

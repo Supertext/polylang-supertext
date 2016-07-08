@@ -45,7 +45,7 @@ class CallbackHandler
     $postId = $refData[0];
     $secureToken = $refData[1];
     $targetLang = substr($json->TargetLang, 0, 2);
-    $translationPostId = intval(Multilang::getPostInLanguage($postId, $targetLang));
+    $translationPostId = Multilang::getPostInLanguage($postId, $targetLang);
 
     // Only if valid, continue
     if ($translationPostId == null) {
