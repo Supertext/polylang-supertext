@@ -26,7 +26,7 @@ foreach (array('Comotive', 'Supertext') as $namespace) {
 
 // Initialize the plugin
 add_action('plugins_loaded', function () {
-  $plugin = new \Supertext\Polylang\Core(__DIR__);
+  $plugin = new \Supertext\Polylang\Core();
   $plugin->load();
 });
 

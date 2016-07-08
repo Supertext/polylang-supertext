@@ -41,117 +41,32 @@ class AjaxRequestHandler
     $this->library = $library;
     $this->log = $log;
     $this->contentProvider = $contentProvider;
+
+    add_action( 'wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
   }
 
   /**
-   * @param $action
+   * Gets translation information about posts
    * @param $data
    */
-  public function handleRequest($action, $data)
+  public function getPostTranslationData()
   {
-    switch ($action) {
-      case 'getOffer':
-        $this->getOffer($data);
-        break;
-      case 'createOrder':
-        $this->createOrder($data);
-        break;
-      case 'getPostTranslationData':
-        $this->getPostTranslationData($data);
-        break;
+    $translationInfo = array();
+    $postIds = $_GET['posts'];
+
+    foreach($postIds as $postId){
+      $translationInfo[] = array(
+        'id' => $postId,
+        'title' => get_post($postId)->post_title,
+        'languageCode' => Multilang::getPostLanguage($postId),
+        'translatableFields' => $this->contentProvider->getAllTranslatableFields($postId)
+      );
     }
-  }
 
-  /**
-   * Creates the order
-   */
-  public function createOrder($data)
-  {
-    // Call the API for prices
-    $options = self::getTranslationOptions($data);
-    $postId = $options['post_id'];
-
-    $post = get_post($postId);
-    $translationData = $this->contentProvider->getTranslationData($post, $options['translatable_fields']);
-    $wrapper = $this->library->getUserWrapper();
-    $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
-    $translationReferenceHash = bin2hex($randomBytes);
-
-    // Create the order
-    $orderCreation = $wrapper->createOrder(
-      $this->library->mapLanguage($options['source_lang']),
-      $this->library->mapLanguage($options['target_lang']),
-      get_bloginfo('name') . ' - ' . $post->post_title,
-      $options['product_id'],
-      $translationData,
-      SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php',
-      $post->ID . '-' . md5($translationReferenceHash . $post->ID),
-      $options['additional_information']
+    self::setJsonOutput(
+      $translationInfo,
+      'success'
     );
-
-    $order = $orderCreation['order'];
-
-    if ($orderCreation['success'] && !empty($order->Deadline) && !empty($order->Id)) {
-      $translationPostId = Multilang::getPostInLanguage($postId, $options['target_lang']);
-
-      if ($translationPostId == null) {
-        $translationPost = $this->createTranslationPost($post, $options);
-
-        if ($translationPost === null) {
-          self::setJsonOutput(
-            array(
-              'reason' => __('Could not create a new post for the translation. You need to create the new post manually using Polylang.', ' polylang-supertext'),
-            ),
-            'error'
-          );
-          return;
-        }
-
-        $translationPostId = $translationPost->ID;
-      }
-
-      $output = '
-        <p>
-          ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
-          ' . sprintf(__('Your order number is %s.', 'polylang-supertext'), $order->Id) . '<br />
-          ' . sprintf(
-          __('The article will be translated by %s.', 'polylang-supertext'),
-          date_i18n('D, d. F H:i', strtotime($order->Deadline))
-        ) . '
-        </p>
-      ';
-
-      // Log the success and the order id
-      $message = sprintf(
-        __('Order for translation of article into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
-        $this->getLanguageName($options['target_lang']),
-        $order->Id
-      );
-      $this->log->addEntry($post->ID, $message);
-      $this->log->addOrderId($post->ID, $order->Id);
-      $this->log->addOrderId($translationPostId, $order->Id);
-
-      update_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, 1);
-      update_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, $translationReferenceHash);
-
-      self::setJsonOutput(
-        array(
-          'html' => $output,
-        ),
-        'success'
-      );
-
-    } else {
-      // Error, couldn't create a correct order
-      $this->log->addEntry($post->ID, $orderCreation['error']);
-
-      self::setJsonOutput(
-        array(
-          'reason' => _('Could not create an order with Supertext.', 'polylang-supertext') . ' ' . $orderCreation['error'],
-        ),
-        'error'
-      );
-    }
   }
 
   /**
@@ -254,6 +169,100 @@ class AjaxRequestHandler
   }
 
   /**
+   * Creates the order
+   */
+  public function createOrder($data)
+  {
+    // Call the API for prices
+    $options = self::getTranslationOptions($data);
+    $postId = $options['post_id'];
+
+    $post = get_post($postId);
+    $translationData = $this->contentProvider->getTranslationData($post, $options['translatable_fields']);
+    $wrapper = $this->library->getUserWrapper();
+    $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
+    $translationReferenceHash = bin2hex($randomBytes);
+
+    // Create the order
+    $orderCreation = $wrapper->createOrder(
+      $this->library->mapLanguage($options['source_lang']),
+      $this->library->mapLanguage($options['target_lang']),
+      get_bloginfo('name') . ' - ' . $post->post_title,
+      $options['product_id'],
+      $translationData,
+      SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php',
+      $post->ID . '-' . md5($translationReferenceHash . $post->ID),
+      $options['additional_information']
+    );
+
+    $order = $orderCreation['order'];
+
+    if ($orderCreation['success'] && !empty($order->Deadline) && !empty($order->Id)) {
+      $translationPostId = Multilang::getPostInLanguage($postId, $options['target_lang']);
+
+      if ($translationPostId == null) {
+        $translationPost = $this->createTranslationPost($post, $options);
+
+        if ($translationPost === null) {
+          self::setJsonOutput(
+            array(
+              'reason' => __('Could not create a new post for the translation. You need to create the new post manually using Polylang.', ' polylang-supertext'),
+            ),
+            'error'
+          );
+          return;
+        }
+
+        $translationPostId = $translationPost->ID;
+      }
+
+      $output = '
+        <p>
+          ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
+          ' . sprintf(__('Your order number is %s.', 'polylang-supertext'), $order->Id) . '<br />
+          ' . sprintf(
+          __('The article will be translated by %s.', 'polylang-supertext'),
+          date_i18n('D, d. F H:i', strtotime($order->Deadline))
+        ) . '
+        </p>
+      ';
+
+      // Log the success and the order id
+      $message = sprintf(
+        __('Order for translation of article into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
+        $this->getLanguageName($options['target_lang']),
+        $order->Id
+      );
+      $this->log->addEntry($post->ID, $message);
+      $this->log->addOrderId($post->ID, $order->Id);
+      $this->log->addOrderId($translationPostId, $order->Id);
+
+      update_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, 1);
+      update_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, $translationReferenceHash);
+
+      self::setJsonOutput(
+        array(
+          'html' => $output,
+        ),
+        'success'
+      );
+
+    } else {
+      // Error, couldn't create a correct order
+      $this->log->addEntry($post->ID, $orderCreation['error']);
+
+      self::setJsonOutput(
+        array(
+          'reason' => _('Could not create an order with Supertext.', 'polylang-supertext') . ' ' . $orderCreation['error'],
+        ),
+        'error'
+      );
+    }
+  }
+
+
+
+  /**
    * @param string $key slug to search
    * @return string name of the $key language
    */
@@ -297,6 +306,7 @@ class AjaxRequestHandler
     );
     header('Content-Type: application/json');
     echo json_encode($json);
+    wp_die();
   }
 
   /**
@@ -440,29 +450,5 @@ class AjaxRequestHandler
     }
 
     Multilang::savePostTranslations($postsLanguageMappings);
-  }
-
-  /**
-   * Gets translation information about posts
-   * @param $data
-   */
-  private function getPostTranslationData($data)
-  {
-    $translationInfo = array();
-    $postIds = $data['posts'];
-
-    foreach($postIds as $postId){
-      $translationInfo[] = array(
-        'id' => $postId,
-        'title' => get_post($postId)->post_title,
-        'languageCode' => Multilang::getPostLanguage($postId),
-        'translatableFields' => $this->contentProvider->getAllTranslatableFields($postId)
-      );
-    }
-
-    self::setJsonOutput(
-      $translationInfo,
-      'success'
-    );
   }
 }

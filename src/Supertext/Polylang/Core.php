@@ -103,6 +103,7 @@ class Core
       // Load needed subcomponents in admin
       $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getContentAccessors()));
       $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
+      $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
     }
 
     $this->checkVersion();
@@ -118,18 +119,6 @@ class Core
     }
 
     return $this->offerBox;
-  }
-
-  /**
-   * @return AjaxRequestHandler the ajax request handler
-   */
-  public function getAjaxRequestHandler()
-  {
-    if ($this->ajaxRequestHandler === null) {
-      $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
-    }
-
-    return $this->ajaxRequestHandler;
   }
 
   /**
@@ -153,7 +142,7 @@ class Core
     wp_register_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/admin-extension.css', array(), SUPERTEXT_PLUGIN_REVISION);
     wp_register_style(Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/themes/wordpress-dark/style.min.css', array(), SUPERTEXT_PLUGIN_REVISION);
 
-    wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/admin-extension-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION, true);
+    wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/admin-extension-library.js', array('jquery', 'jquery-ui-dialog'), SUPERTEXT_PLUGIN_REVISION, true);
     wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
     wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree.min.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
   }

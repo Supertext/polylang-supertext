@@ -46,7 +46,6 @@ class AdminExtension
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('admin_footer', array($this, 'addJavascriptContext'));
     add_action('admin_footer', array($this, 'addTemplates'));
-    add_action('admin_footer', array($this, 'addOrderThickboxView'));
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
 
     add_filter('manage_posts_columns', array($this, 'addTranslationStatusColumn'), 100);
@@ -141,7 +140,8 @@ class AdminExtension
     $context = array(
       'isPluginWorking' => $isPluginWorking,
       'screen' => $this->screenBase,
-      'resourceUrl' => get_bloginfo('wpurl')
+      'resourceUrl' => get_bloginfo('wpurl'),
+      'ajaxUrl' => admin_url( 'admin-ajax.php' )
     );
 
     $contextJson = json_encode($context);
@@ -159,16 +159,6 @@ class AdminExtension
   {
     if ($this->screenBase == 'post' || $this->screenBase == 'edit') {
       include SUPERTEXT_POLYLANG_VIEW_PATH . 'templates/admin-extension-templates.php';
-    }
-  }
-
-  /**
-   * Add order thickbox html
-   */
-  public function addOrderThickboxView()
-  {
-    if ($this->screenBase == 'post' || $this->screenBase == 'edit') {
-      include SUPERTEXT_POLYLANG_VIEW_PATH . 'backend/orderThickbox.php';
     }
   }
 

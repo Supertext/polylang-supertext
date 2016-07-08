@@ -36,11 +36,7 @@ Supertext.Polylang = (function (win, $) {
     /**
      * The offer url to be loaded in thickbox
      */
-    offerUrl = '/wp-content/plugins/polylang-supertext/views/backend/offer.php',
-    /**
-     * The very own ajax url (well, yes. legacy.)
-     */
-    ajaxUrl = '/wp-content/plugins/polylang-supertext/resources/scripts/api/ajax.php';
+    offerUrl = '/wp-content/plugins/polylang-supertext/views/backend/offer.php';
 
   /**
    * Initialize on post screen
@@ -119,7 +115,12 @@ Supertext.Polylang = (function (win, $) {
       posts.push($(this).val());
     });
 
-    checkPostSelection(posts);
+    if(posts.length > 0){
+      checkPostSelection(posts);
+    }else{
+      //TODO show error
+      alert('please select');
+    }
 
     return false;
   }
@@ -131,9 +132,9 @@ Supertext.Polylang = (function (win, $) {
   function checkPostSelection(posts)
   {
     $.get(
-      context.resourceUrl + ajaxUrl,
+      context.ajaxUrl,
       {
-        action: 'getPostTranslationData',
+        action: 'sttr_getPostTranslationData',
         posts: posts
       }
     ).done(
@@ -260,7 +261,7 @@ Supertext.Polylang = (function (win, $) {
       + '&requestCounter=' + requestCounter;
 
     $.post(
-      context.resourceUrl + ajaxUrl + '?action=getOffer',
+      context.ajaxUrl + '?action=getOffer',
       postData
     ).done(
       function (data) {
@@ -316,7 +317,7 @@ Supertext.Polylang = (function (win, $) {
 
       // Post to API Endpoint and create order
       $.post(
-        context.resourceUrl + ajaxUrl + 's?action=createOrder',
+        context.ajaxUrl + 's?action=createOrder',
         postData
       ).done(
         function (data) {
