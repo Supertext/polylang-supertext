@@ -37,21 +37,7 @@ Supertext.Polylang = (function (win, $) {
      */
     ajaxUrl = '/wp-content/plugins/polylang-supertext/resources/scripts/api/ajax.php',
 
-    /**
-     * This can be set to true in order to see a confirmation before purchasing
-     */
-    NEED_CONFIRMATION = false,
 
-    /**
-     * Template for rows between translations
-     */
-    rowTemplate = '\
-		<tr>\
-		  <td>&nbsp;</td>\
-		  <td><img src="{resourceUrl}/wp-content/plugins/polylang-supertext/resources/images/arrow-right.png" style="width:16px; padding-left:5px;"/></td>\
-		  <td colspan="2"><a href="{translationLink}">&nbsp;' + supertextTranslationL10n.offerTranslation + '</a></td>\
-		</tr>\
-  ',
     errorTemplate = '<h2 class="error-title">{title}</h2><p class="error-message">{message}<br/>({details})</p>';
 
   /**
@@ -253,73 +239,63 @@ Supertext.Polylang = (function (win, $) {
       var deadline = radio.parent().next().next().html().trim();
       var price = radio.parent().next().next().next().html().trim();
 
-      // is there a need to confirm?
-      var hasConfirmed = true;
-      if (NEED_CONFIRMATION) {
-        hasConfirmed = confirm(getOfferConfirmMessage(deadline, price))
-      }
 
-      // If the user confirmed, actually create the order
-      if (hasConfirmed) {
-        $('#frm_Translation_Options').hide();
-        $('#warning_draft_state').hide();
-        $('#warning_already_translated').hide();
+      $('#frm_Translation_Options').hide();
+      $('#warning_draft_state').hide();
+      $('#warning_already_translated').hide();
 
-        $('#div_waiting_while_loading').show();
+      $('#div_waiting_while_loading').show();
 
-        var offerForm = $('#frm_Translation_Options');
-        var postData = offerForm.serialize();
+      var offerForm = $('#frm_Translation_Options');
+      var postData = offerForm.serialize();
 
-        // Post to API Endpoint and create order
-        $.post(
-          context.resourceUrl + ajaxUrl + '?action=createOrder',
-          postData
-        ).done(
-          function (data) {
-            $('#div_waiting_while_loading').hide();
-            switch (data.head.status) {
-              case 'success':
-                $('#div_translation_order_content').html(data.body.html);
-                break;
-              default: // error
-                $('#div_translation_order_head').hide();
-                $('#div_translation_order_content').html(
-                  errorTemplate
-                    .replace('{title}', supertextTranslationL10n.generalError)
-                    .replace('{message}', supertextTranslationL10n.translationOrderError)
-                    .replace('{details}', data.body.reason)
-                );
-                break;
-            }
-
-            //set window close button, top right 'x'
-            $(self.parent.document).find('#TB_closeWindowButton').click(function () {
-              self.parent.location.reload();
-            });
-
-            $('#btn_close_translation_order_window').click(function () {
-              self.parent.location.reload();
-            });
-            $('#div_close_translation_order_window').show();
-
-            createOrderRunning = false;
+      // Post to API Endpoint and create order
+      $.post(
+        context.resourceUrl + ajaxUrl + '?action=createOrder',
+        postData
+      ).done(
+        function (data) {
+          $('#div_waiting_while_loading').hide();
+          switch (data.head.status) {
+            case 'success':
+              $('#div_translation_order_content').html(data.body.html);
+              break;
+            default: // error
+              $('#div_translation_order_head').hide();
+              $('#div_translation_order_content').html(
+                errorTemplate
+                  .replace('{title}', supertextTranslationL10n.generalError)
+                  .replace('{message}', supertextTranslationL10n.translationOrderError)
+                  .replace('{details}', data.body.reason)
+              );
+              break;
           }
-        ).fail(
-          function (jqXHR, textStatus, errorThrown) {
-            $('#div_waiting_while_loading').hide();
-            $('#div_translation_order_head').hide();
-            $('#div_translation_order_content').html(
-              errorTemplate
-                .replace('{title}', supertextTranslationL10n.generalError)
-                .replace('{message}', supertextTranslationL10n.translationOrderError)
-                .replace('{details}', errorThrown + ": " + jqXHR.responseText)
-            );
-          }
-        );
 
-      } else {
-        createOrderRunning = false;
-      }
+          //set window close button, top right 'x'
+          $(self.parent.document).find('#TB_closeWindowButton').click(function () {
+            self.parent.location.reload();
+          });
+
+          $('#btn_close_translation_order_window').click(function () {
+            self.parent.location.reload();
+          });
+          $('#div_close_translation_order_window').show();
+
+          createOrderRunning = false;
+        }
+      ).fail(
+        function (jqXHR, textStatus, errorThrown) {
+          $('#div_waiting_while_loading').hide();
+          $('#div_translation_order_head').hide();
+          $('#div_translation_order_content').html(
+            errorTemplate
+              .replace('{title}', supertextTranslationL10n.generalError)
+              .replace('{message}', supertextTranslationL10n.translationOrderError)
+              .replace('{details}', errorThrown + ": " + jqXHR.responseText)
+          );
+        }
+      );
+
     }
 
     // disable native form submit
