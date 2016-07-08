@@ -45,7 +45,6 @@ class AdminExtension
     add_action('admin_enqueue_scripts', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('admin_footer', array($this, 'printWorkingState'));
-    add_action('media_upload_gallery', array($this, 'disableGalleryInputs'));
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
 
     add_filter('manage_posts_columns', array($this, 'addTranslationStatusColumn'), 100);
@@ -212,17 +211,5 @@ class AdminExtension
     }
 
     return $newColumns;
-  }
-
-  /**
-   * Disable gallery inputs (only called if the media viewer is opened
-   */
-  public function disableGalleryInputs()
-  {
-    echo '
-      <script type="text/javascript">
-        Supertext.Polylang.disableGalleryInputs();
-      </script>
-    ';
   }
 } 

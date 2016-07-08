@@ -125,25 +125,6 @@ Supertext.Polylang = (function(win, $){
 	}
 
 	/**
-	 * Disable gallery inputs as well, only if needed (called by php)
-	 */
-	function disableGalleryInputs()
-	{
-		// var arr_ele_name, att_id, post_type;
-		$("#media-items input, #media-items select, #media-items textarea").each(function() {
-			// if the value is the translation text, lock field
-      $(this).attr("readonly", "readonly");
-      $(this).addClass("input-disabled");
-      post_is_in_translation = true;
-		});
-
-    $("#insert-gallery, table.slidetoggle tbody tr td input[type=submit].button").each(function() {
-      $(this).attr('disabled', 'disabled');
-      $(this).addClass("input-disabled");
-    });
-	}
-
-	/**
 	 * Checks translatability before calling the offerbox
 	 * @param tbLink the offer box link that will be fired if everything is ok
 	 */
