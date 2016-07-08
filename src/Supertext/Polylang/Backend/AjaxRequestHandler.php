@@ -370,7 +370,7 @@ class AjaxRequestHandler
       $sourceAttachmentLink = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
       $sourceAttachmentMetadata = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
 
-      $targetAttachmentId = intval(Multilang::getPostInLanguage($sourceAttachmentId, $targetLang));
+      $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, $targetLang);
 
       if ($targetAttachmentId == null) {
         $targeAttachment = $sourceAttachment;
@@ -437,5 +437,29 @@ class AjaxRequestHandler
     }
 
     Multilang::savePostTranslations($postsLanguageMappings);
+  }
+
+  /**
+   * Gets translation information about posts
+   * @param $data
+   */
+  private function getPostTranslationData($data)
+  {
+    $translationInfo = array();
+    $postIds = $data['posts'];
+
+    foreach($postIds as $postId){
+      $translationInfo[] = array(
+        'id' => $postId,
+        'title' => get_post($postId)->post_title,
+        'languageCode' => Multilang::getPostLanguage($postId),
+        'translatableFields' => $this->contentProvider->getAllTranslatableFields($postId)
+      );
+    }
+
+    self::setJsonOutput(
+      $translationInfo,
+      'success'
+    );
   }
 }
