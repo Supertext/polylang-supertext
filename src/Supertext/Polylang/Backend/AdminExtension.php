@@ -44,7 +44,7 @@ class AdminExtension
     add_action('current_screen', array($this, 'setScreenBase'));
     add_action('admin_enqueue_scripts', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
-    add_action('admin_footer', array($this, 'printWorkingState'));
+    add_action('admin_footer', array($this, 'addJavascriptContext'));
     add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
 
     add_filter('manage_posts_columns', array($this, 'addTranslationStatusColumn'), 100);
@@ -88,7 +88,7 @@ class AdminExtension
    */
   public function showInTranslationMessage()
   {
-    if ($this->screenBase != 'post' && isset($_GET['post'])) {
+    if ($this->screenBase != 'post' && !isset($_GET['post'])) {
       return;
     }
 
@@ -118,28 +118,35 @@ class AdminExtension
   }
 
   /**
-   * Print a working state hidden field
+   * Adds the javascript context data
    */
-  public function printWorkingState()
+  public function addJavascriptContext()
   {
-    $working = 1;
-
-    // See if the plugin is generally working
-    if (!$this->library->isWorking()) {
-      $working = 0;
+    if ($this->screenBase != 'post' && $this->screenBase != 'edit') {
+      return;
     }
 
     // See if the user has credentials
     $userId = get_current_user_id();
     $cred = $this->library->getUserCredentials($userId);
 
-    // Check credentials and api key
-    if (strlen($cred['stUser']) == 0 || strlen($cred['stApi']) == 0 || $cred['stUser'] == Constant::DEFAULT_API_USER) {
-      $working = 0;
-    }
+    $isPluginWorking =
+      $this->library->isWorking() &&
+      strlen($cred['stUser']) > 0 &&
+      strlen($cred['stApi']) > 0 &&
+      $cred['stUser'] != Constant::DEFAULT_API_USER;
 
-    // Print the field
-    echo '<input type="hidden" id="supertextPolylangWorking" value="' . $working . '" />';
+    $context = array(
+      'isPluginWorking' => $isPluginWorking,
+      'screen' => $this->screenBase
+    );
+
+    $contextJson = json_encode($context);
+
+    echo '<script type="text/javascript">
+            var Supertext = Supertext || {};
+            Supertext.Context = '.$contextJson.';
+          </script>';
   }
 
   /**

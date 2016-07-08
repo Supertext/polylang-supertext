@@ -6,10 +6,14 @@ var Supertext = Supertext || {};
  */
 Supertext.Polylang = (function(win, $){
 
+  /**
+   * Context data containing information about plugin and environment
+   */
+  var context,
 	/**
 	 * Tells if there is an ajax order being placed
 	 */
-	var createOrderRunning = false,
+	createOrderRunning = false,
 	/**
 	 * Ajax request counter
 	 */
@@ -44,6 +48,48 @@ Supertext.Polylang = (function(win, $){
   ',
 	errorTemplate= '<h2 class="error-title">{title}</h2><p class="error-message">{message}<br/>({details})</p>';
 
+  /**
+   * Initialize on post screen
+   */
+  function initializePostScreen(){
+    if ($('#post-translations').length == 1 && context.isPluginWorking) {
+      injectOfferLinks();
+    }
+
+    if ($('#title').length == 1 && $('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1){
+      inTranslation = true;
+      disableTranslatingPost();
+    }
+  }
+
+  /**
+   * Initialize on edit screen
+   */
+  function initializeEditScreen(){
+    var orderTranslationValue = 'orderTranslation';
+
+    $('<option>').val(orderTranslationValue).text(supertextTranslationL10n.offerTranslation).appendTo("select[name='action']");
+    $('<option>').val(orderTranslationValue).text(supertextTranslationL10n.offerTranslation).appendTo("select[name='action2']");
+
+    $('#doaction, #doaction2').click(function(e){
+      var bulkButtonId = $( this ).attr( 'id' );
+      var selectName = bulkButtonId.substr( 2 );
+
+      if ($( 'select[name="' + selectName + '"]' ).val() === orderTranslationValue) {
+        e.preventDefault();
+
+        var posts = [];
+
+        $('input[name="post[]"]:checked').each(function(){
+          posts.push($(this).val());
+        });
+
+
+      }
+    });
+
+  }
+
 	/**
 	 * Register events for the offer box. Also it fires the inital offer
 	 */
@@ -61,15 +107,6 @@ Supertext.Polylang = (function(win, $){
 		$('#frm_Translation_Options').submit(function() {
 			return createOrder();
 		});
-	}
-
-	/**
-	 * Tells if the plugin is working (Configuration and if user has rights)
-	 * @returns true, if the plugin is working by config/userconfig
-	 */
-	function isWorking()
-	{
-		return ($('#supertextPolylangWorking').val() == 1);
 	}
 
 	/**
@@ -355,14 +392,16 @@ Supertext.Polylang = (function(win, $){
 		 */
 		initialize : function()
 		{
-			if ($('#post-translations').length == 1 && isWorking()) {
-				injectOfferLinks();
-			}
+      context = Supertext.Context || {
+          isPluginWorking: false,
+          screen: ''
+        };
 
-			if ($('#title').length == 1 && $('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1){
-				inTranslation = true;
-				disableTranslatingPost();
-			}
+      if (context.screen == 'post') {
+        initializePostScreen();
+      }else if(context.screen == 'edit'){
+        initializeEditScreen();
+      }
 		},
     checkBeforeTranslating: checkBeforeTranslating,
     addOfferEvents: addOfferEvents
