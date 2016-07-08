@@ -56,6 +56,9 @@ class AjaxRequestHandler
       case 'createOrder':
         $this->createOrder($data);
         break;
+      case 'getPostTranslationData':
+        $this->getPostTranslationData($data);
+        break;
     }
   }
 

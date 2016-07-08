@@ -172,10 +172,7 @@ class Core
       'translationOrderError' => esc_js(__('The order couldn\'t be sent to Supertext. Please try again.', 'polylang-supertext')),
       'confirmUnsavedArticle' => esc_js(__('The article was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'polylang-supertext')),
       'alertUntranslatable' => esc_js(__('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext')),
-      'offerConfirm_Price' => esc_js(__('You are ordering a translation with the deadline {deadline} and price {price}.', 'polylang-supertext')),
-      'offerConfirm_Binding' => esc_js(__('This order for a translation is binding.', 'polylang-supertext')),
-      'offerConfirm_EmailInfo' => esc_js(__('You will receive an email as soon as the translation of your article is complete.', 'polylang-supertext')),
-      'offerConfirm_Confirm' => esc_js(__('Please confirm your order.', 'polylang-supertext'))
+      'alertNotAllSelectedPostInSameLanguage' => esc_js(__('Please select only post in the same language.', 'polylang-supertext'))
     );
 
     wp_localize_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, 'supertextTranslationL10n', $translation_array);

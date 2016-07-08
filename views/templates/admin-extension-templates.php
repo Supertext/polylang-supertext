@@ -84,5 +84,9 @@
 </script>
 
 <script type="text/html" id="tmpl-sttr-error">
-  <h2 class="error-title">{{data.title}}</h2><p class="error-message">{{data.message}}<br/>({{data.details}})</p>
+  <div id="error_missing_function" class="notice notice-error">
+    <p>
+      <h2 class="error-title">{{data.title}}</h2><p class="error-message">{{data.message}}<br/>({{data.details}})</p>
+    </p>
+  </div>
 </script>

@@ -17,6 +17,11 @@ Supertext.Polylang = (function (win, $) {
      */
     orderTranslationBulkActionValue = 'orderTranslation',
     /**
+     * The error template
+     * @type {null}|error template
+     */
+    errorTemplate = null,
+    /**
      * Tells if there is an ajax order being placed
      */
     createOrderRunning = false,
@@ -35,10 +40,7 @@ Supertext.Polylang = (function (win, $) {
     /**
      * The very own ajax url (well, yes. legacy.)
      */
-    ajaxUrl = '/wp-content/plugins/polylang-supertext/resources/scripts/api/ajax.php',
-
-
-    errorTemplate = '<h2 class="error-title">{title}</h2><p class="error-message">{message}<br/>({details})</p>';
+    ajaxUrl = '/wp-content/plugins/polylang-supertext/resources/scripts/api/ajax.php';
 
   /**
    * Initialize on post screen
@@ -52,6 +54,38 @@ Supertext.Polylang = (function (win, $) {
       inTranslation = true;
       disableTranslatingPost();
     }
+  }
+
+  /**
+   * Injects an order link for every not yet made translation
+   */
+  function injectOrderLinks() {
+    $('.pll-translation-column').each(function () {
+      var languageRow = $(this).parent();
+      var languageCode = languageRow
+        .find('.pll-translation-column input')
+        .first()
+        .attr('id')
+        .replace('htr_lang_', '');
+
+      var rowTemplate = wp.template('sttr-order-link-row');
+      languageRow.after(rowTemplate({targetLanguageCode: languageCode}));
+    });
+  }
+
+  /**
+   * Disable a post that is in translation
+   */
+  function disableTranslatingPost() {
+    // Set all default fields to readonly
+    $('#post input, #post select, #post textarea').each(function () {
+      // If the value contains the in translation text, lock fields
+      $(this).attr('readonly', 'readonly');
+      $(this).addClass('input-disabled');
+      post_is_in_translation = true;
+    });
+
+    $('#wp-content-wrap').hide();
   }
 
   /**
@@ -91,10 +125,53 @@ Supertext.Polylang = (function (win, $) {
   }
 
   /**
-   *
+   * Checks that all selected post are valid
    * @param posts
    */
-  function checkPostSelection(posts) {
+  function checkPostSelection(posts)
+  {
+    $.get(
+      context.resourceUrl + ajaxUrl,
+      {
+        action: 'getPostTranslationData',
+        posts: posts
+      }
+    ).done(
+      function (data) {
+        if (data.head.status != 'success') {
+          //TODO show error
+          return;
+        }
+
+        var languageCode = null;
+        var isEachPostInSameLanguage = true;
+        $.each(data.body, function(index, post) {
+          if(index === 0){
+            languageCode = post.languageCode;
+          }else{
+            isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
+          }
+        });
+
+        if(isEachPostInSameLanguage){
+          openTargetLanguageSelectionForm();
+        }else{
+          //TODO show error
+          alert(supertextTranslationL10n.alertNotAllSelectedPostInSameLanguage);
+        }
+      }
+    ).fail(
+      function(jqXHR, textStatus, errorThrown){
+        //TODO show error
+
+      }
+    );
+  }
+
+  /**
+   *
+   */
+  function openTargetLanguageSelectionForm() {
 
   }
 
@@ -117,20 +194,23 @@ Supertext.Polylang = (function (win, $) {
   }
 
   /**
-   * Injects an order link for every not yet made translation
+   * Opens the order form in a thickbox
+   * @param targetLanguageCode
    */
-  function injectOrderLinks() {
-    $('.pll-translation-column').each(function () {
-      var languageRow = $(this).parent();
-      var languageCode = languageRow
-        .find('.pll-translation-column input')
-        .first()
-        .attr('id')
-        .replace('htr_lang_', '');
+  function openOrderForm(targetLanguageCode) {
+    if (hasUnsavedChanges() && !confirm(supertextTranslationL10n.confirmUnsavedArticle)) {
+      return;
+    }
 
-      var rowTemplate = wp.template('sttr-order-link-row');
-      languageRow.after(rowTemplate({targetLanguageCode: languageCode}));
-    });
+    // Can't translate a post in translation
+    if (inTranslation) {
+      alert(supertextTranslationL10n.alertUntranslatable);
+      return;
+    }
+
+    tb_show(supertextTranslationL10n.offerTranslation, '#?TB_inline&width=100%&height=100%&inlineId=sttr-offer-thickbox', false);
+
+
   }
 
   /**
@@ -141,24 +221,9 @@ Supertext.Polylang = (function (win, $) {
   function getTranslationLink(languageCode) {
     var postId = $('#post_ID').val();
     // Create params, link and call with a check function
-    var params = '?postId=' + postId + '&targetLang=' + languageCode + '&height=800&width=630&TB_iframe=true'
+    var params = '?postId=' + postId + '&targetLang=' + languageCode + '&height=800&width=630'
     var tbLink = context.resourceUrl + offerUrl + params;
     return tbLink;
-  }
-
-  /**
-   * Disable a post that is in translation
-   */
-  function disableTranslatingPost() {
-    // Set all default fields to readonly
-    $('#post input, #post select, #post textarea').each(function () {
-      // If the value contains the in translation text, lock fields
-      $(this).attr('readonly', 'readonly');
-      $(this).addClass('input-disabled');
-      post_is_in_translation = true;
-    });
-
-    $('#wp-content-wrap').hide();
   }
 
   /**
@@ -251,7 +316,7 @@ Supertext.Polylang = (function (win, $) {
 
       // Post to API Endpoint and create order
       $.post(
-        context.resourceUrl + ajaxUrl + '?action=createOrder',
+        context.resourceUrl + ajaxUrl + 's?action=createOrder',
         postData
       ).done(
         function (data) {
@@ -263,10 +328,10 @@ Supertext.Polylang = (function (win, $) {
             default: // error
               $('#div_translation_order_head').hide();
               $('#div_translation_order_content').html(
-                errorTemplate
-                  .replace('{title}', supertextTranslationL10n.generalError)
-                  .replace('{message}', supertextTranslationL10n.translationOrderError)
-                  .replace('{details}', data.body.reason)
+                getErrorHtml(
+                  supertextTranslationL10n.generalError,
+                  supertextTranslationL10n.translationOrderError,
+                  data.body.reason)
               );
               break;
           }
@@ -288,10 +353,10 @@ Supertext.Polylang = (function (win, $) {
           $('#div_waiting_while_loading').hide();
           $('#div_translation_order_head').hide();
           $('#div_translation_order_content').html(
-            errorTemplate
-              .replace('{title}', supertextTranslationL10n.generalError)
-              .replace('{message}', supertextTranslationL10n.translationOrderError)
-              .replace('{details}', errorThrown + ": " + jqXHR.responseText)
+            getErrorHtml(
+              supertextTranslationL10n.generalError,
+              supertextTranslationL10n.translationOrderError,
+              errorThrown + ": " + jqXHR.responseText)
           );
         }
       );
@@ -300,27 +365,6 @@ Supertext.Polylang = (function (win, $) {
 
     // disable native form submit
     return false;
-  }
-
-  /**
-   * Create the internationalized and parametrized confirm message for ordering
-   * @param deadline deadline date / time
-   * @param price the price
-   * @param currency the currency
-   */
-  function getOfferConfirmMessage(deadline, price) {
-    // First, create the templated message
-    var message = '' +
-      supertextTranslationL10n.offerConfirm_Price + '\n' +
-      supertextTranslationL10n.offerConfirm_Binding + '\n\n' +
-      supertextTranslationL10n.offerConfirm_EmailInfo + '\n\n' +
-      supertextTranslationL10n.offerConfirm_Confirm;
-
-    // Replace all vars
-    message = message.replace('{deadline}', deadline);
-    message = message.replace('{price}', price);
-
-    return message;
   }
 
   /**
@@ -347,12 +391,12 @@ Supertext.Polylang = (function (win, $) {
    * @returns {boolean} true, if there are changes
    */
   function hasUnsavedChanges() {
-    var bUnsaved = false;
+    var bHasUnsavedChanges = false;
     var mce = typeof(tinyMCE) != 'undefined' ? tinyMCE.activeEditor : false, title, content;
 
     if (mce && !mce.isHidden()) {
       if (mce.isDirty())
-        bUnsaved = true;
+        bHasUnsavedChanges = true;
     } else {
       if (typeof(fullscreen) !== 'undefined' && fullscreen.settings.visible) {
         title = $('#wp-fullscreen-title').val();
@@ -364,11 +408,23 @@ Supertext.Polylang = (function (win, $) {
 
       if (typeof(autosaveLast) !== 'undefined') {
         if ((title || content) && title + content != autosaveLast) {
-          bUnsaved = true;
+          bHasUnsavedChanges = true;
         }
       }
     }
-    return bUnsaved;
+    return bHasUnsavedChanges;
+  }
+
+  function getErrorHtml(title, message, details){
+    if(errorTemplate == null){
+      errorTemplate = wp.template('sttr-error');
+    }
+
+    return errorTemplate({
+      title: title,
+      message: message,
+      details: details
+    });
   }
 
   return {
@@ -386,10 +442,8 @@ Supertext.Polylang = (function (win, $) {
       } else if (context.screen == 'edit') {
         initializeEditScreen();
       }
-
-      addOfferEvents();
     },
-    openOrderForm: checkBeforeTranslating
+    openOrderForm: openOrderForm
   }
 
 })(window, jQuery);
