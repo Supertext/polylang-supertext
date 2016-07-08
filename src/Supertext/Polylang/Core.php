@@ -3,6 +3,7 @@
 namespace Supertext\Polylang;
 
 use Comotive\Util\WordPress;
+use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
@@ -163,6 +164,7 @@ class Core
   public function registerLocalizationScripts()
   {
     $translation_array = array(
+      'languages' => array(),
       'addNewUser' => esc_js(__('Add user', 'polylang-supertext')),
       'inTranslationText' => esc_js(Constant::IN_TRANSLATION_TEXT),
       'deleteUser' => esc_js(__('Delete user', 'polylang-supertext')),
@@ -174,6 +176,12 @@ class Core
       'alertUntranslatable' => esc_js(__('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext')),
       'alertNotAllSelectedPostInSameLanguage' => esc_js(__('Please select only post in the same language.', 'polylang-supertext'))
     );
+
+    $languages = Multilang::getLanguages();
+    $library = $this->getLibrary();
+    foreach($languages as $language){
+      $translation_array['languages'][$language->slug] =  esc_js(__($library->mapLanguage($language->slug), 'polylang-supertext-langs'));
+    }
 
     wp_localize_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, 'supertextTranslationL10n', $translation_array);
   }
