@@ -59,7 +59,7 @@ Supertext.Polylang = (function (win, $) {
    */
   function initializePostScreen() {
     if ($('#post-translations').length == 1 && context.isPluginWorking) {
-      injectOfferLinks();
+      injectOrderLinks();
     }
 
     if ($('#title').length == 1 && $('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1) {
@@ -131,22 +131,19 @@ Supertext.Polylang = (function (win, $) {
   }
 
   /**
-   * Injects an offer link for every not yet made translation
+   * Injects an order link for every not yet made translation
    */
-  function injectOfferLinks() {
+  function injectOrderLinks() {
     $('.pll-translation-column').each(function () {
-      var translationCell = $(this);
-      var langInput = translationCell.find('input').first();
-      var languageRow = translationCell.parent();
+      var languageRow = $(this).parent();
+      var languageCode = languageRow
+        .find('.pll-translation-column input')
+        .first()
+        .attr('id')
+        .replace('htr_lang_', '');
 
-      // Provide link in any case now
-      if (true/*langInput.val() == 0*/) {
-        var template = rowTemplate;
-        var link = getTranslationLink(languageRow);
-        template = template.replace('{translationLink}', link);
-        template = template.replace('{resourceUrl}', context.resourceUrl);
-        languageRow.after(template);
-      }
+      var rowTemplate = wp.template('sttr-order-link-row');
+      languageRow.after(rowTemplate({targetLanguageCode: languageCode}));
     });
   }
 
@@ -155,14 +152,12 @@ Supertext.Polylang = (function (win, $) {
    * @param languageRow the language row, contains vital information
    * @return string the link to translation (actually a JS call)
    */
-  function getTranslationLink(languageRow) {
+  function getTranslationLink(languageCode) {
     var postId = $('#post_ID').val();
-    var languageId = languageRow.find('.tr_lang').attr('id');
-    languageId = languageId.replace('tr_lang_', '');
     // Create params, link and call with a check function
-    var params = '?postId=' + postId + '&targetLang=' + languageId + '&height=800&width=630&TB_iframe=true'
+    var params = '?postId=' + postId + '&targetLang=' + languageCode + '&height=800&width=630&TB_iframe=true'
     var tbLink = context.resourceUrl + offerUrl + params;
-    return 'javascript:Supertext.Polylang.checkBeforeTranslating(\'' + tbLink + '\');';
+    return tbLink;
   }
 
   /**
@@ -184,7 +179,8 @@ Supertext.Polylang = (function (win, $) {
    * Checks translatability before calling the offerbox
    * @param tbLink the offer box link that will be fired if everything is ok
    */
-  function checkBeforeTranslating(tbLink) {
+  function checkBeforeTranslating(languageCode) {
+    var tbLink = getTranslationLink(languageCode);
     var canTranslate = false;
     // Are there changes in fields or editor?
     if (!hasUnsavedChanges()) {
@@ -417,8 +413,7 @@ Supertext.Polylang = (function (win, $) {
 
       addOfferEvents();
     },
-    checkBeforeTranslating: checkBeforeTranslating,
-    addOfferEvents: addOfferEvents
+    openOrderForm: checkBeforeTranslating
   }
 
 })(window, jQuery);
