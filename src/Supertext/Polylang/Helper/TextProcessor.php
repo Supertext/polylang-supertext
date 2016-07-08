@@ -178,7 +178,7 @@ class TextProcessor
 
         if($hasMatch){
           $innerContent = $this->replaceShortcodeNodesRecursive($doc, $childNode->childNodes, $savedShortcodes);
-          $newContent = $matches[1] . $innerContent . $matches[3];
+          $newContent .= $matches[1] . $innerContent . $matches[3];
         }else{
           $newContent .= $doc->saveHTML($childNode);
         }
