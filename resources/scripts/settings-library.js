@@ -4,6 +4,8 @@ Supertext.Settings = {};
 
 //Users tab module
 Supertext.Settings.Users = (function ($) {
+  'use strict';
+
   var $tableBody,
     $rowTemplate;
 
@@ -44,7 +46,7 @@ Supertext.Settings.Users = (function ($) {
 
 //Custom Fields tab module
 Supertext.Settings.TranslatableFields = (function ($) {
-
+  'use strict';
   var customFieldsSettings = (function () {
     var $customFieldInputCopy;
 
@@ -172,6 +174,8 @@ Supertext.Settings.TranslatableFields = (function ($) {
 
 //Shortcodes tab module
 Supertext.Settings.Shortcodes = (function ($) {
+  'use strict';
+
   var availableEncodingFunctions = [
     "rawurl",
     "url",

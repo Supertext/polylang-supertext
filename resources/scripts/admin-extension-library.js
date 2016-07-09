@@ -5,7 +5,7 @@ var Supertext = Supertext || {};
  * @author Michael Sebel <michael@comotive.ch>
  */
 Supertext.Polylang = (function (win, $) {
-
+'use strict';
   /**
    * Context data containing information about plugin and environment
    */
@@ -78,7 +78,6 @@ Supertext.Polylang = (function (win, $) {
       // If the value contains the in translation text, lock fields
       $(this).attr('readonly', 'readonly');
       $(this).addClass('input-disabled');
-      post_is_in_translation = true;
     });
 
     $('#wp-content-wrap').hide();
