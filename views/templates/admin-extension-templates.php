@@ -1,80 +1,3 @@
-<script type="text/html" id="tmpl-sttr-offer-box">
-  <div id="sttr-offer-box">
-    <div id="div_tb_wrap_translation" class="div_tb_wrap_translation">
-      <div id="div_translation_order_head">
-        <div id="div_translation_title">
-          <span><img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/logo_supertext.png'; ?>" width="48" height="48" alt="Supertext" title="Supertext" /></span>
-          <h2><?php _e('Your Supertext translation order', 'polylang-supertext');?></h2>
-          <div class="clear"></div>
-        </div>
-      </div>
-      <div id="div_waiting_while_loading" style="display:none;">
-        <p>
-          <i>
-            <?php _e('One moment please. The translation order is being sent to Supertext.', 'polylang-supertext'); ?><br>
-            <?php _e('Please do not close this window.', 'polylang-supertext'); ?>
-          </i>
-          <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext'); ?>">
-        </p>
-      </div>
-      <div id="div_translation_order_content">
-        <form
-          name="frm_Translation_Options"
-          id="frm_Translation_Options"
-          method="post">
-          <input type="hidden" name="post_id" value="{{data.postId}}">
-          <input type="hidden" name="source_lang" value="{{data.sourceLanguageCode}}">
-          <input type="hidden" name="target_lang" value="{{data.targetLanguageCode}}">
-          <h3><?php _e('Translation of post', 'polylang-supertext'); ?>: {{data.postTitle}}</h3>
-          <?php _e('The article will be translated from <b>{{data.sourceLanguage}}</b> into <b>{{data.targetLanguage}}</b>.', 'polylang-supertext'); ?>
-          <h3><?php _e('Content to be translated', 'polylang-supertext'); ?></h3>
-          <# _.each(data.translatableFields, function(translatableField, sourceId) { #>
-            <# if(translatableField.fields.length){ #>
-              <table class="translatableContentTable" border="0">
-                <thead><tr><th colspan="8">{{translatableField.sourceName}}</th></tr></thead>
-                <tbody>
-                <tr>
-                  <# _.each(translatableField.fields, function(field) { #>
-                    <td>
-                      <# if(field.default){ #>
-                        <input type="checkbox" class="chkTranslationOptions" name="translatable_fields[{{sourceId}}][{{field.name}}]" id="sttr-{{sourceId}}-{{field.name}}"  checked="checked" >
-                        <#} else {#>
-                          <input type="checkbox" class="chkTranslationOptions" name="translatable_fields[{{sourceId}}][{{field.name}}]" id="sttr-{{sourceId}}-{{field.name}}" >
-                          <# } #>
-                    </td>
-                    <td>
-                      <label for="sttr-{{sourceId}}-{{field.name}}">{{field.title}}</label>
-                    </td>
-                    <# }); #>
-                </tr>
-                </tbody>
-              </table>
-              <# } #>
-                <# }); #>
-                  <p><?php printf(wp_kses(__('Translatable custom fields can be defined in the <a target="_parent" href="%s">settings</a>.', 'polylang-supertext'), array('a' => array('href' => array(), 'target' => array()))), esc_url(get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=translatablefields'))); ?></p>
-                  <h3><?php _e('Service and deadline', 'polylang-supertext'); ?></h3>
-                  <p><?php _e('Select the translation service and deadline:', 'polylang-supertext'); ?></p>
-                  <div class="div_translation_price_loading" id="div_translation_price_loading">
-                    <?php _e('The price is being calculated, one moment please.', 'polylang-supertext'); ?>
-                    <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext') ?>" width="16" height="16">
-                  </div>
-                  <div id="div_translation_price" style="display:none;"></div>
-                  <h3><?php _e('Your comment to Supertext', 'polylang-supertext'); ?></h3>
-                  <p><textarea name="txt_comment" id="txt_comment"></textarea></p>
-                  <div class="div_translation_order_buttons">
-                    <button type="button" class="button" onclick="Supertext.Polylang.sendOrderForm()"><?php _e('Order translation', 'polylang-supertext'); ?></button>
-                  </div>
-        </form>
-      </div>
-    </div>
-
-    <div id="div_close_translation_order_window" class="div_translation_order_buttons" style="display:none">
-      <input type="button" id="btn_close_translation_order_window" class="button" value="<?php _e('Close window', 'polylang-supertext'); ?>" />
-    </div>
-
-  </div>
-</script>
-
 <script type="text/html" id="tmpl-sttr-order-link-row">
   <tr class="sttr-order-link-row">
     <td>&nbsp;</td>
@@ -83,10 +6,112 @@
   </tr>
 </script>
 
-<script type="text/html" id="tmpl-sttr-error">
-  <div id="error_missing_function" class="notice notice-error">
-    <p>
-      <h2 class="error-title">{{data.title}}</h2><p class="error-message">{{data.message}}<br/>({{data.details}})</p>
-    </p>
+<script type="text/html" id="tmpl-sttr-modal-error">
+  <div id="sttr-modal-error-{{data.token}}" class="notice notice-error">
+    <h2>{{data.error.title}}</h2>
+    <p class="error-message">{{data.error.message}}<# if(data.details){ #><br/>({{data.error.details}})<# } #></p>
   </div>
+</script>
+
+<script type="text/html" id="tmpl-sttr-modal">
+  <div id="sttr-modal" class="sttr-modal">
+    <div class="sttr-modal-content wp-core-ui">
+      <button class="sttr-modal-close" type="button"><span class="dashicons dashicons-no"></span></button>
+      <div id="sttr-modal-header" class="sttr-modal-header">
+        <div class="logo"><img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/logo_supertext.png'; ?>" width="32" height="32" alt="Supertext" title="Supertext" /></div>
+        <h1>{{data.title}}</h1>
+        <div class="wp-clearfix"></div>
+      </div>
+      <div class="sttr-modal-body">
+        <div id="sttr-modal-notice" class="sttr-modal-notice"></div>
+        <div id="sttr-modal-body-content" class="sttr-modal-body-content">
+          <div class="loader">
+            <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext'); ?>">
+            <?php _e('Loading', 'polylang-supertext'); ?>
+          </div>
+        </div>
+      </div>
+      <div id="sttr-modal-footer" class="sttr-modal-footer">
+        <button type="button" class="button button-secondary"><?php _e('Next', 'polylang-supertext'); ?></button>
+        <div class="wp-clearfix"></div>
+      </div>
+    </div>
+    <div class="sttr-modal-background"> </div>
+  </div>
+</script>
+
+<script type="text/html" id="tmpl-sttr-order-step1">
+  <h2><?php _e('Content to be translated', 'polylang-supertext');?></h2>
+  <p>
+    <?php
+    $adminUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=translatablefields');
+    printf(wp_kses(
+      __('Translatable custom fields can be defined in the <a target="_parent" href="%s">settings</a>.',
+        'polylang-supertext'),
+      array('a' => array('href' => array(), 'target' => array()))),
+      esc_url($adminUrl));
+    ?>
+  </p>
+  <div class="sttr-order-list">
+    <div class="sttr-order-items">
+      <ul>
+        <# _.each(data.posts, function(post) { #>
+          <li>
+            <a href="#sttr-order-translatable-content-{{post.id}}" data-id="{{post.id}}">{{post.title}} ({{post.languageCode}})<span class="dashicons dashicons-no-alt"></span></a>
+          </li>
+        <# }); #>
+      </ul>
+    </div>
+    <div class="sttr-order-item-details">
+      <# _.each(data.posts, function(post) { #>
+        <div id="sttr-order-translatable-content-{{post.id}}" style="display: none;">
+           <span>
+              <?php _e('Please select the content to be translated of <b>{{post.title}}</b>.', 'polylang-supertext');?>
+           </span>
+          <p>
+          <# _.each(post.translatableFields, function(translatableField, sourceId) { #>
+            <table class="translatable-content-table">
+              <thead><tr><th colspan="8">{{translatableField.sourceName}}</th></tr></thead>
+              <tbody>
+              <# if(translatableField.fields.length){ #>
+              <tr>
+                <# _.each(translatableField.fields, function(field) { #>
+                  <td>
+                    <# if(field.default){ #>
+                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" checked="checked">
+                    <#} else {#>
+                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}">
+                    <# } #>
+                  </td>
+                  <td>
+                    <label for="sttr-{{post.id}}-{{sourceId}}-{{field.name}}">{{field.title}}</label>
+                  </td>
+                  <# }); #>
+              </tr>
+              <# } else { #>
+              <tr>
+                <td>- <?php _e('Not present in this post/page', 'polylang-supertext');?></td>
+              </tr>
+              <# } #>
+              </tbody>
+            </table>
+          <# }); #>
+          </p>
+        </div>
+      <# }); #>
+    </div>
+    <div class="wp-clearfix"></div>
+    <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post/page', 'polylang-supertext');?></button>
+    <div class="wp-clearfix"></div>
+  </div>
+  <h2><?php _e('Language', 'polylang-supertext');?></h2>
+  <p>
+    <?php _e('Translate from <b>{{data.sourceLanguage}}</b> into ', 'polylang-supertext');?>
+    <select id="sttr-order-select-target-language">
+      <option><?php _e('Please select', 'polylang-supertext');?>...</option>
+      <# _.each(data.languages, function(language, code) { #>
+        <option value="{{code}}">{{language}}</option>
+      <# }); #>
+    </select>
+  </p>
 </script>

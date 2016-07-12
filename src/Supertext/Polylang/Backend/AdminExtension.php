@@ -34,6 +34,11 @@ class AdminExtension
   private $screenBase = null;
 
   /**
+   * @var null|string
+   */
+  private $screenAction = null;
+
+  /**
    * Various filters to change and/or display things
    */
   public function __construct($library, $log)
@@ -60,6 +65,7 @@ class AdminExtension
   public function setScreenBase($screen)
   {
     $this->screenBase = $screen->base;
+    $this->screenAction = empty($screen->action) ? empty($_GET['action']) ? '' : $_GET['action'] : $screen->action;
   }
 
   /**
@@ -77,7 +83,7 @@ class AdminExtension
       wp_enqueue_script(Constant::JQUERY_UI_AUTOCOMPLETE);
     }
 
-    if ($this->screenBase == 'post' || $this->screenBase == 'edit') {
+    if ($this->isEditPostScreen()|| $this->isPostsScreen()) {
       wp_enqueue_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE);
 
       wp_enqueue_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE);
@@ -89,7 +95,7 @@ class AdminExtension
    */
   public function showInTranslationMessage()
   {
-    if ($this->screenBase != 'post' && !isset($_GET['post'])) {
+    if (!$this->isEditPostScreen()) {
       return;
     }
 
@@ -123,7 +129,7 @@ class AdminExtension
    */
   public function addJavascriptContext()
   {
-    if ($this->screenBase != 'post' && $this->screenBase != 'edit') {
+    if (!$this->isEditPostScreen() && !$this->isPostsScreen()) {
       return;
     }
 
@@ -157,7 +163,7 @@ class AdminExtension
    */
   public function addTemplates()
   {
-    if ($this->screenBase == 'post' || $this->screenBase == 'edit') {
+    if ($this->isEditPostScreen() || $this->isPostsScreen()) {
       include SUPERTEXT_POLYLANG_VIEW_PATH . 'templates/admin-extension-templates.php';
     }
   }
@@ -231,5 +237,13 @@ class AdminExtension
     }
 
     return $newColumns;
+  }
+
+  private function isEditPostScreen(){
+    return $this->screenBase == 'post' && $this->screenAction == 'edit';
+  }
+
+  private function isPostsScreen(){
+    return $this->screenBase == 'edit';
   }
 } 

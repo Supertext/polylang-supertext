@@ -40,7 +40,7 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
     );
 
     return array(
-      'source_name' => __('Beaver Builder (Plugin)', 'polylang-supertext'),
+      'sourceName' => __('Beaver Builder (Plugin)', 'polylang-supertext'),
       'fields' => $translatableFields
     );
   }

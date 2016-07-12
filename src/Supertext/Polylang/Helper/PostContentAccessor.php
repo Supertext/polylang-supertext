@@ -48,7 +48,7 @@ class PostContentAccessor implements IContentAccessor
     );
 
     return array(
-      'source_name' => __('Post', 'polylang-supertext'),
+      'sourceName' => __('Post', 'polylang-supertext'),
       'fields' => $translatableFields
     );
   }

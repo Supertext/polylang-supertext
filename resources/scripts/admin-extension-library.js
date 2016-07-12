@@ -1,26 +1,159 @@
 var Supertext = Supertext || {};
 
+Supertext.Modal = (function (win, doc, $, wp) {
+  'use strict';
+
+  var
+    /**
+     * The modal html element id
+     * @type {string}
+     */
+    modalTemplateId = 'sttr-modal',
+    /**
+     * The error id
+     * @type {string}
+     */
+    errorTemplateId = 'sttr-modal-error',
+    /**
+     * The selectors of different html elements
+     */
+    selectors = {
+      modal: '#' + modalTemplateId,
+      modalBodyContent: '#sttr-modal-body-content',
+      modalNotice: '#sttr-modal-notice',
+      modalErrorNotice: function(token){ return '#' + errorTemplateId + '-' + token }
+    },
+    /**
+     * The modal template
+     * @type {string}
+     */
+    modalTemplate = null,
+    /**
+     * The error template
+     * @type {string}
+     */
+    errorTemplate = null,
+    /**
+     * the modal jquery element
+     * @type {null}
+     */
+    $modal = null,
+    /**
+     * Notice counter
+     * @type {number}
+     */
+    noticeCounter = 0;
+
+  /**
+   * Opens the modal
+   * @param data
+   */
+  function open(data) {
+    var modalHtml = modalTemplate(data);
+    $(doc.body).append(modalHtml);
+
+    $modal = $(selectors.modal);
+    $modal.find('.sttr-modal-close').click(close);
+    $modal.find('.sttr-modal-background').click(close);
+    $modal.show();
+  }
+
+  /**
+   * Closes the modal
+   */
+  function close() {
+    $modal.hide();
+    $modal.remove();
+  }
+
+  /**
+   * Shows some content within the modal
+   * @param html
+   */
+  function showContent(html) {
+    $(selectors.modalBodyContent).html(html);
+  }
+
+  /**
+   * Shows an error
+   * @param error
+   * @returns {number} the error token
+   */
+  function showError(error) {
+    var token = ++noticeCounter;
+    var errorHtml = errorTemplate({
+      token: token,
+      error: error
+    });
+    $(selectors.modalNotice).append(errorHtml);
+    return token;
+  }
+
+  /**
+   * Hides an error
+   * @param {number} the error token
+   */
+  function hideError(token) {
+    if(isNaN(token)){
+      $(selectors.modalNotice).empty();
+    }else{
+      $(selectors.modalErrorNotice(token)).remove();
+    }
+  }
+
+  return {
+    initialize: function () {
+      modalTemplate = wp.template(modalTemplateId);
+      errorTemplate = wp.template(errorTemplateId);
+    },
+    open: open,
+    close: close,
+    showContent: showContent,
+    showError: showError,
+    hideError: hideError
+  }
+})(window, document, jQuery, wp);
+
 /**
  * Polylang translation plugin to inject translation options
- * @author Michael Sebel <michael@comotive.ch>
  */
-Supertext.Polylang = (function (win, $) {
-'use strict';
-  /**
-   * Context data containing information about plugin and environment
-   */
-  var context,
+Supertext.Polylang = (function (win, doc, $, wp) {
+  'use strict';
 
+  var
+    /**
+     * The order step 1 template id
+     * @type {string}
+     */
+    orderStep1TemplateId = 'sttr-order-step1',
+    /**
+     * The selectors of different html elements
+     */
+    selectors = {
+      orderItemList: '.sttr-order-list',
+      orderItemRemoveIcon: '.dashicons-no-alt',
+      orderItemRemoveButton: '#sttr-order-remove-item'
+    },
+    /**
+     * Context data containing information about plugin and environment
+     */
+    context,
+    /**
+     * Modal module
+     */
+    modal,
     /**
      * Order translation bulk action option value
      * @type {string}
      */
     orderTranslationBulkActionValue = 'orderTranslation',
     /**
-     * The error template
-     * @type {null}|error template
+     * Container for current state data
      */
-    errorTemplate = null,
+    state = {
+      posts: [],
+      languageMismatchErrorToken: null,
+    },
     /**
      * Tells if there is an ajax order being placed
      */
@@ -36,7 +169,12 @@ Supertext.Polylang = (function (win, $) {
     /**
      * The offer url to be loaded in thickbox
      */
-    offerUrl = '/wp-content/plugins/polylang-supertext/views/backend/offer.php';
+    offerUrl = '/wp-content/plugins/polylang-supertext/views/backend/offer.php',
+    /**
+     * The order step 1 template
+     * @type {string}
+     */
+    orderStep1Template = null;
 
   /**
    * Initialize on post screen
@@ -109,70 +247,177 @@ Supertext.Polylang = (function (win, $) {
     e.preventDefault();
 
     var posts = [];
-
     $('input[name="post[]"]:checked').each(function () {
       posts.push($(this).val());
     });
 
-    if(posts.length > 0){
-      checkPostSelection(posts);
-    }else{
-      //TODO show error
-      alert('please select');
+    if (posts.length > 0) {
+      loadContentSelectionForm(posts);
+    } else {
+      alert(supertextTranslationL10n.alertPleaseSelect);
     }
 
     return false;
   }
 
   /**
-   * Checks that all selected post are valid
+   * Loads post data and checks that all selected post are valid
    * @param posts
    */
-  function checkPostSelection(posts)
-  {
+  function loadContentSelectionForm(posts) {
+    modal.open({
+      title: supertextTranslationL10n.modalTitle
+    });
+
     $.get(
       context.ajaxUrl,
       {
         action: 'sttr_getPostTranslationData',
         posts: posts
       }
-    ).done(
-      function (data) {
-        if (data.head.status != 'success') {
-          //TODO show error
-          return;
-        }
-
-        var languageCode = null;
-        var isEachPostInSameLanguage = true;
-        $.each(data.body, function(index, post) {
-          if(index === 0){
-            languageCode = post.languageCode;
-          }else{
-            isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
-          }
+    ).done(addContentSelectionForm).fail(
+      function (jqXHR, textStatus, errorThrown) {
+        modal.showContent('');
+        modal.showError({
+          title: supertextTranslationL10n.generalError,
+          message: jqXHR.status + ' ' + textStatus,
+          details: errorThrown
         });
-
-        if(isEachPostInSameLanguage){
-          openTargetLanguageSelectionForm();
-        }else{
-          //TODO show error
-          alert(supertextTranslationL10n.alertNotAllSelectedPostInSameLanguage);
-        }
-      }
-    ).fail(
-      function(jqXHR, textStatus, errorThrown){
-        //TODO show error
-
       }
     );
   }
 
   /**
-   *
+   * Add the content selection form to the modal content
+   * @param data
    */
-  function openTargetLanguageSelectionForm() {
+  function addContentSelectionForm(data) {
+    if (data.head.status != 'success') {
+      modal.showContent('');
+      modal.showError({
+        title: supertextTranslationL10n.generalError,
+        message: data.body.reason
+      });
+      return;
+    }
 
+    state.posts = data.body;
+
+    modal.showContent(orderStep1Template({
+      sourceLanguage: supertextTranslationL10n.languages[state.posts[0].languageCode],
+      languages: supertextTranslationL10n.languages,
+      posts: state.posts
+    }));
+
+    initializeOrderItemList();
+
+    checkPostLanguageMatch();
+  }
+
+  /**
+   * Initializes the order item list
+   */
+  function initializeOrderItemList() {
+    var $itemAnchors = $(selectors.orderItemList + ' li a');
+    $itemAnchors.click(onOrderItemAnchorClick);
+    $itemAnchors.find(selectors.orderItemRemoveIcon).click(onOrderItemRemoveIconClick);
+    $(selectors.orderItemRemoveButton).click(onOrderItemRemoveButtonClick);
+
+    activateOrderItem.call($(selectors.orderItemList + ' li:first a'));
+  }
+
+  /**
+   * Checks if all posts are in same language
+   */
+  function checkPostLanguageMatch(){
+    var languageCode = null;
+    var isEachPostInSameLanguage = true;
+    $.each(state.posts, function (index, post) {
+      if (index === 0) {
+        languageCode = post.languageCode;
+      } else {
+        isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
+      }
+    });
+
+    if (isEachPostInSameLanguage && state.languageMismatchErrorToken !== null) {
+      modal.hideError(state.languageMismatchErrorToken);
+      state.languageMismatchErrorToken = null;
+    }else if(!isEachPostInSameLanguage && state.languageMismatchErrorToken === null) {
+      state.languageMismatchErrorToken = modal.showError({
+        title: supertextTranslationL10n.errorTitleNotAllPostInSameLanguage,
+        message: supertextTranslationL10n.errorMessageNotAllPostInSameLanguage
+      });
+    }
+  }
+
+  /**
+   * Order item anchor click event handler
+   * @param e
+   */
+  function onOrderItemAnchorClick(e) {
+    e.preventDefault();
+    activateOrderItem.call(this);
+  }
+
+  /**
+   * Activate order item
+   */
+  function activateOrderItem() {
+    var $clickedItemAnchor = $(this);
+    var $activeItemAnchor = $(selectors.orderItemList + ' li.active a');
+
+    if ($activeItemAnchor.length > 0) {
+      $($activeItemAnchor.attr('href')).hide();
+      $activeItemAnchor.parent().removeClass('active');
+    }
+
+    $($clickedItemAnchor.attr('href')).show();
+    $clickedItemAnchor.parent().addClass('active');
+  }
+
+  /**
+   * Order item remove icon click event handler
+   * @param e
+   */
+  function onOrderItemRemoveIconClick(e) {
+    e.preventDefault();
+    removeOrderItem.call($(this).parent());
+  }
+
+  /**
+   * Order item remove button click event handler
+   * @param e
+   */
+  function onOrderItemRemoveButtonClick(e) {
+    e.preventDefault();
+    removeOrderItem.call($(selectors.orderItemList + ' li.active a'));
+    activateOrderItem.call($(selectors.orderItemList + ' li:first a'));
+  }
+
+  /**
+   * Removes an order item
+   */
+  function removeOrderItem(){
+    var orderItemCount = $(selectors.orderItemList + ' li').length;
+    if (orderItemCount == 1) {
+      return;
+    }
+
+    var $itemAnchor = $(this);
+    $($itemAnchor.attr('href')).remove();
+    $itemAnchor.parent().remove();
+
+    if(orderItemCount-1 == 1){
+      $(selectors.orderItemRemoveButton).hide();
+    }
+
+    var postIdToRemove = $itemAnchor.data('id');
+    state.posts = state.posts.filter(function(post){
+      return post.id != postIdToRemove;
+    });
+
+    checkPostLanguageMatch();
   }
 
   /**
@@ -415,27 +660,20 @@ Supertext.Polylang = (function (win, $) {
     return bHasUnsavedChanges;
   }
 
-  function getErrorHtml(title, message, details){
-    if(errorTemplate == null){
-      errorTemplate = wp.template('sttr-error');
-    }
-
-    return errorTemplate({
-      title: title,
-      message: message,
-      details: details
-    });
-  }
-
   return {
     /**
      * Loading the module
      */
-    initialize: function () {
-      context = Supertext.Context || {
-          isPluginWorking: false,
-          screen: ''
-        };
+    initialize: function (externals) {
+      context = externals.context;
+      modal = externals.modal;
+
+      if (!context.isPluginWorking) {
+        //TODO show error
+        return;
+      }
+
+      orderStep1Template = wp.template(orderStep1TemplateId);
 
       if (context.screen == 'post') {
         initializePostScreen();
@@ -446,9 +684,16 @@ Supertext.Polylang = (function (win, $) {
     openOrderForm: openOrderForm
   }
 
-})(window, jQuery);
+})(window, document, jQuery, wp);
 
 // Load on load. yass.
 jQuery(document).ready(function () {
-  Supertext.Polylang.initialize();
+  Supertext.Modal.initialize();
+
+  Supertext.Polylang.initialize({
+    context: Supertext.Context || {
+      isPluginWorking: false
+    },
+    modal: Supertext.Modal
+  });
 });

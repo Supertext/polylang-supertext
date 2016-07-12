@@ -142,7 +142,7 @@ class Core
     wp_register_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/admin-extension.css', array(), SUPERTEXT_PLUGIN_REVISION);
     wp_register_style(Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/themes/wordpress-dark/style.min.css', array(), SUPERTEXT_PLUGIN_REVISION);
 
-    wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/admin-extension-library.js', array('jquery', 'jquery-ui-dialog'), SUPERTEXT_PLUGIN_REVISION, true);
+    wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/admin-extension-library.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION, true);
     wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
     wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree.min.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
   }
@@ -163,7 +163,10 @@ class Core
       'translationOrderError' => esc_js(__('The order couldn\'t be sent to Supertext. Please try again.', 'polylang-supertext')),
       'confirmUnsavedArticle' => esc_js(__('The article was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'polylang-supertext')),
       'alertUntranslatable' => esc_js(__('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext')),
-      'alertNotAllSelectedPostInSameLanguage' => esc_js(__('Please select only post in the same language.', 'polylang-supertext'))
+      'errorTitleNotAllPostInSameLanguage' => esc_js(__('Language mismatch', 'polylang-supertext')),
+      'errorMessageNotAllPostInSameLanguage' => esc_js(__('Please select only post in the same language.', 'polylang-supertext')),
+      'modalTitle' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
+      'alertPleaseSelect' => esc_js(__('Please select', 'polylang-supertext'))
     );
 
     $languages = Multilang::getLanguages();

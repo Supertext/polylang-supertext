@@ -1,6 +1,266 @@
-.column-translation-status{
-  width:20px;
+.column-translation-status {
+  width: 20px;
 }
+
+.sttr-modal {
+  position: relative;
+  display: none;
+}
+
+.sttr-modal-background {
+  position: fixed;
+  z-index: 159900;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.7);
+  overflow: auto;
+}
+
+.sttr-modal-content {
+  position: fixed;
+  z-index: 160000;
+  left: 10%;
+  top: 50px;
+  right: 10%;
+  bottom: 50px;
+  border: 1px solid #888;
+  background-color: #fcfcfc;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -webkit-animation-name: sttr-fromtop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: sttr-fromtop;
+  animation-duration: 0.4s;
+}
+
+@-webkit-keyframes sttr-fromtop {
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes sttr-fromtop {
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
+}
+
+.sttr-modal-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  padding:0;
+  margin:0;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #666;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.sttr-modal-close:hover,
+.sttr-modal-close:focus {
+  color: #00a0d2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sttr-modal-close .dashicons{
+  padding:5px;
+  margin:0;
+}
+
+.sttr-modal-header {
+  height: 50px;
+  overflow: hidden;
+}
+
+.sttr-modal-header h1 {
+  float: left;
+  margin: 0;
+  padding: 0 16px;
+  font-size: 22px;
+  line-height: 50px;
+}
+
+.sttr-modal-header .logo{
+  float: left;
+  padding: 9px 0 9px 10px;
+}
+
+.sttr-modal-body {
+  position: absolute;
+  left: 0;
+  top:50px;
+  right:0;
+  bottom: 61px;
+  margin: 0;
+  padding: 0 16px;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+  overflow: auto;
+}
+
+.sttr-modal-body .loader{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 200px;
+  height: 200px;
+  line-height: 200px;
+  margin-left: -100px;
+  margin-top: -100px;
+  text-align: center;
+}
+
+.sttr-modal-body .notice{
+  margin: 0;
+}
+
+.sttr-modal input, .sttr-modal select{
+  font-size: 13px;
+}
+
+.sttr-order-list{
+  margin-left: 300px;
+  border: 1px solid #ddd;
+}
+
+.sttr-order-items {
+  float: left;
+  width: 299px;
+  margin-top: -1px;
+  margin-left: -300px;
+  margin-bottom: -1px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+}
+
+@media screen and (max-width: 1024px) {
+  .sttr-modal-content {
+    left: 5%;
+    right: 5%;
+  }
+
+  .sttr-order-list {
+    margin-left: 200px;
+  }
+
+  .sttr-order-items{
+    width: 199px;
+    margin-left: -200px;
+  }
+}
+
+@media screen and (max-width: 782px) {
+  .sttr-modal-content {
+    left: 0;
+    right: 0;
+  }
+
+  .sttr-order-list {
+    margin-left: 150px;
+  }
+
+  .sttr-order-items{
+    width: 149px;
+    margin-left: -150px;
+  }
+}
+
+.sttr-order-items ul,
+.sttr-order-items li{
+  margin:0;
+  padding:0;
+}
+
+.sttr-order-items li a {
+  display: block;
+  padding: 5px 10px;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #fff;
+  border-right: none;
+}
+
+.sttr-order-items li.active a,
+.sttr-order-items li a:active,
+.sttr-order-items li a:focus{
+  background-color: #fff;
+  margin-right: -1px;
+  border-color: #ddd;
+  box-shadow: none;
+}
+
+.sttr-order-items li a .dashicons-no-alt{
+  float: right;
+  display: none;
+}
+
+.sttr-order-items li a:hover .dashicons-no-alt{
+  display: block;
+}
+
+.sttr-order-items li.active a:hover .dashicons-no-alt{
+  display: none;
+}
+
+.sttr-order-item-details{
+  overflow: hidden;
+  padding: 16px;
+}
+
+.sttr-order-item-details .translatable-content-table thead th{
+  text-align: left;
+  padding: 5px 0;
+}
+
+.sttr-order-list .remove-item{
+  float:right;
+  margin: 0 16px 16px 0;
+}
+
+.sttr-order-list .remove-item .dashicons{
+  margin-top: 4px;
+}
+
+.sttr-modal-footer {
+  position:absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
+  margin: 0;
+  padding: 0 16px;
+  overflow: hidden;
+}
+
+.sttr-modal-footer .button{
+  float: right;
+  margin-top: 15px;
+}
+
+
+
+/*
 .multilang-tax-table {
   width:99%;
 }
@@ -109,4 +369,4 @@
   height: 338px;
   overflow-y: scroll;
 }
-.ab-column>ul>li>input[type="checkbox"]:checked+ul { display: none !important; }
+.ab-column>ul>li>input[type="checkbox"]:checked+ul { display: none !important; }*/

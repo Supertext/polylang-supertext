@@ -55,7 +55,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     }
 
     return array(
-      'source_name' => __('User defined custom fields', 'polylang-supertext'),
+      'sourceName' => __('User defined custom fields', 'polylang-supertext'),
       'fields' => $translatableFields
     );
   }

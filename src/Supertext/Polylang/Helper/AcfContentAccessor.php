@@ -62,7 +62,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     }
 
     return array(
-      'source_name' => __('Advanced Custom Field (Plugin)', 'polylang-supertext'),
+      'sourceName' => __('Advanced Custom Field (Plugin)', 'polylang-supertext'),
       'fields' => $translatableFields
     );
   }

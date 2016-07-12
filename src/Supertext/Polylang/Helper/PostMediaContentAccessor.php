@@ -27,7 +27,7 @@ class PostMediaContentAccessor implements IContentAccessor
     );
 
     return array(
-      'source_name' => __('Media', 'polylang-supertext'),
+      'sourceName' => __('Media', 'polylang-supertext'),
       'fields' => $translatableFields
     );
   }

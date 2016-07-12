@@ -80,7 +80,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     }
 
     return array(
-      'source_name' => __('Plugin defined custom fields', 'polylang-supertext'),
+      'sourceName' => __('Plugin defined custom fields', 'polylang-supertext'),
       'fields' => $translatableFields
     );
   }
