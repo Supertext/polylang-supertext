@@ -929,7 +929,6 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       modal = externals.modal;
 
       if (!context.isPluginWorking) {
-        //TODO show error
         return;
       }
 

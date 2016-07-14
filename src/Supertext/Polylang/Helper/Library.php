@@ -3,6 +3,7 @@
 namespace Supertext\Polylang\Helper;
 
 use Comotive\Util\WordPress;
+use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 
 /**
@@ -24,7 +25,7 @@ class Library
       }
     }
 
-    return false;
+    return null;
   }
 
   /**
@@ -76,8 +77,17 @@ class Library
    */
   public function isWorking()
   {
+    if (!WordPress::isPluginActive('polylang/polylang.php')) {
+      return false;
+    }
+
     $options = $this->getSettingOption();
-    return (isset($options[Constant::SETTING_WORKING]) && $options[Constant::SETTING_WORKING] == 1);
+
+    return
+      isset($options[Constant::SETTING_USER_MAP]) &&
+      count($options[Constant::SETTING_USER_MAP]) > 0 &&
+      isset($options[Constant::SETTING_LANGUAGE_MAP]) &&
+      count($options[Constant::SETTING_LANGUAGE_MAP]) == count(Multilang::getLanguages());
   }
 
   /**
@@ -103,7 +113,8 @@ class Library
     );
   }
 
-  public function getShortcodeTags(){
+  public function getShortcodeTags()
+  {
     //Support Visual Composer (add shortcodes)
     if (WordPress::isPluginActive('js_composer/js_composer.php') && method_exists('WPBMap', 'addAllMappedShortcodes')) {
       \WPBMap::addAllMappedShortcodes();

@@ -218,25 +218,18 @@ class SettingsPage extends AbstractPage
       }
     }
 
-    // Crappily create the language array
     $languageMap = array();
-    foreach ($_POST as $postField => $stLanguage) {
-      if (substr($postField, 0, strlen('sel_st_language_')) == 'sel_st_language_') {
-        $language = substr($postField, strlen('sel_st_language_'));
-        $languageMap[$language] = $stLanguage;
+    foreach (Multilang::getLanguages() as $language) {
+      if(empty($_POST['sel_st_language_'.$language->slug])){
+        continue;
       }
+
+      $languageMap[$language->slug] = $_POST['sel_st_language_'.$language->slug];
     }
 
     // Put into the options
     $this->library->saveSetting(Constant::SETTING_USER_MAP, $userMap);
     $this->library->saveSetting(Constant::SETTING_LANGUAGE_MAP, $languageMap);
-
-    // Set the plugin to working mode, if both arrays are saved
-    if (count($userMap) > 0 && count($languageMap) == count(Multilang::getLanguages())) {
-      $this->library->saveSetting(Constant::SETTING_WORKING, 1);
-    } else {
-      $this->library->saveSetting(Constant::SETTING_WORKING, 0);
-    }
   }
 
   private function saveTranslatableFieldsSettings()

@@ -171,10 +171,12 @@ class Core
       'alertPleaseSelect' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
     );
 
-    $languages = Multilang::getLanguages();
     $library = $this->getLibrary();
-    foreach($languages as $language){
-      $translation_array['languages'][$language->slug] =  esc_js(__($library->mapLanguage($language->slug), 'polylang-supertext-langs'));
+    if($library->isWorking()){
+      $languages = Multilang::getLanguages();
+      foreach($languages as $language){
+        $translation_array['languages'][$language->slug] =  esc_js(__($library->mapLanguage($language->slug), 'polylang-supertext-langs'));
+      }
     }
 
     wp_localize_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, 'supertextTranslationL10n', $translation_array);
