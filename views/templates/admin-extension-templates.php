@@ -8,6 +8,7 @@
 
 <script type="text/html" id="tmpl-sttr-modal-error">
   <div id="sttr-modal-error-{{data.token}}" class="notice notice-error">
+    <button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>
     <h2>{{data.error.title}}</h2>
     <p class="error-message">
       <# if(_.isArray(data.error.message)) { #>
@@ -21,6 +22,7 @@
 
 <script type="text/html" id="tmpl-sttr-modal">
   <div id="sttr-modal" class="sttr-modal">
+    <div id="sttr-modal-notice" class="sttr-modal-notice"></div>
     <div class="sttr-modal-content wp-core-ui">
       <button class="sttr-modal-icon-close" type="button"><span class="dashicons dashicons-no"></span></button>
       <div id="sttr-modal-header" class="sttr-modal-header">
@@ -29,7 +31,6 @@
         <div class="wp-clearfix"></div>
       </div>
       <div class="sttr-modal-body">
-        <div id="sttr-modal-notice" class="sttr-modal-notice"></div>
         <div id="sttr-modal-body-content" class="sttr-modal-body-content">
           <div class="loader">
             <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext'); ?>">

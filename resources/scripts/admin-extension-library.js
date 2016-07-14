@@ -26,6 +26,7 @@ Supertext.Modal = (function (win, doc, $, wp) {
       modalNextStepButton: '#sttr-modal-next-step',
       modalPreviousStepButton: '#sttr-modal-previous-step',
       modalCloseButton: '#sttr-modal-close',
+      modalNoticeDismissIcon: '#sttr-modal-notice .notice-dismiss',
       modalErrorNotice: function (token) {
         return '#' + errorTemplateId + '-' + token
       }
@@ -57,7 +58,8 @@ Supertext.Modal = (function (win, doc, $, wp) {
       /**
        * The callback to call on click on next button
        */
-      nextCallback: function (e) {}
+      nextCallback: function (e) {
+      }
     };
 
 
@@ -112,6 +114,10 @@ Supertext.Modal = (function (win, doc, $, wp) {
       error: error
     });
     $(selectors.modalNotice).append(errorHtml);
+    $(selectors.modalNoticeDismissIcon).click(function (e) {
+      e.preventDefault();
+      hideError(token);
+    });
     return token;
   }
 
@@ -187,7 +193,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
      * The validation rules
      */
     validationRules = {
-      posts: function(pass, fail){
+      posts: function (pass, fail) {
         var validationKey = 'posts';
 
         if (!isEachPostInSameLanguage()) {
@@ -197,7 +203,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
 
         pass(validationKey);
       },
-      targetLanguage: function(pass, fail){
+      targetLanguage: function (pass, fail) {
         var validationKey = 'targetLanguage';
 
         if ($(selectors.orderTargetLanguageSelect).val() == '') {
@@ -216,43 +222,43 @@ Supertext.Polylang = (function (win, doc, $, wp) {
         errors = {},
         lastCheckedRuleKey = '';
 
-      function pass(key){
+      function pass(key) {
         lastCheckedRuleKey = key;
 
-        if(!errors.hasOwnProperty(key)){
+        if (!errors.hasOwnProperty(key)) {
           return;
         }
 
         delete errors[key];
       }
 
-      function fail(key, message){
+      function fail(key, message) {
         lastCheckedRuleKey = key;
 
-        if(errors.hasOwnProperty(key)){
+        if (errors.hasOwnProperty(key)) {
           return;
         }
 
         errors[key] = message;
       }
 
-      function check(rule){
+      function check(rule) {
         rule(pass, fail);
         return result();
       }
 
-      function result(){
+      function result() {
         return {
-          fail: function(onFail){
-            if(!errors.hasOwnProperty(lastCheckedRuleKey)){
+          fail: function (onFail) {
+            if (!errors.hasOwnProperty(lastCheckedRuleKey)) {
               return this;
             }
 
             onFail([errors[lastCheckedRuleKey]]);
             return this;
           },
-          pass: function(onPass){
-            if(errors.hasOwnProperty(lastCheckedRuleKey)){
+          pass: function (onPass) {
+            if (errors.hasOwnProperty(lastCheckedRuleKey)) {
               return this;
             }
 
@@ -262,9 +268,9 @@ Supertext.Polylang = (function (win, doc, $, wp) {
         }
       }
 
-      function checkAll(rules){
-        $.each(rules, function(key, rule){
-          if(!rules.hasOwnProperty(key)){
+      function checkAll(rules) {
+        $.each(rules, function (key, rule) {
+          if (!rules.hasOwnProperty(key)) {
             return;
           }
 
@@ -274,17 +280,17 @@ Supertext.Polylang = (function (win, doc, $, wp) {
         return results();
       }
 
-      function results(){
+      function results() {
         return {
           fail: function (onFail) {
-            if($.isEmptyObject(errors)){
+            if ($.isEmptyObject(errors)) {
               return this;
             }
 
             var errorMessages = [];
 
-            $.each(errors, function(key, error){
-              if(!errors.hasOwnProperty(key)){
+            $.each(errors, function (key, error) {
+              if (!errors.hasOwnProperty(key)) {
                 return;
               }
 
@@ -481,7 +487,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       posts: state.posts
     }));
 
-    modal.onNextCall(function(){
+    modal.onNextCall(function () {
       validation
         .checkAll(validationRules)
         .fail(showValidationErrors)
