@@ -26,7 +26,7 @@ Supertext.Modal = (function (win, doc, $, wp) {
       modalNextStepButton: '#sttr-modal-next-step',
       modalPreviousStepButton: '#sttr-modal-previous-step',
       modalCloseButton: '#sttr-modal-close',
-      modalNoticeDismissIcon: '#sttr-modal-notice .notice-dismiss',
+      modalNoticeDismissIcon: '.notice-dismiss',
       modalErrorNotice: function (token) {
         return '#' + errorTemplateId + '-' + token
       }
@@ -113,8 +113,8 @@ Supertext.Modal = (function (win, doc, $, wp) {
       token: token,
       error: error
     });
-    $(selectors.modalNotice).append(errorHtml);
-    $(selectors.modalNoticeDismissIcon).click(function (e) {
+    state.$modal.find(selectors.modalNotice).append(errorHtml);
+    state.$modal.find(selectors.modalNoticeDismissIcon).click(function (e) {
       e.preventDefault();
       hideError(token);
     });

@@ -31,10 +31,28 @@
   border: 1px solid #888;
   background-color: #fcfcfc;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  -webkit-animation-name: sttr-fromtop;
+  -webkit-animation-name: sttr-appear;
   -webkit-animation-duration: 0.4s;
-  animation-name: sttr-fromtop;
+  animation-name: sttr-appear;
   animation-duration: 0.4s;
+}
+
+@-webkit-keyframes sttr-appear {
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes sttr-appear {
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
 }
 
 .sttr-modal-notice {
@@ -50,9 +68,13 @@
   margin: 0;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+  -webkit-animation-name: sttr-appear;
+  -webkit-animation-duration: 0.3s;
+  animation-name: sttr-appear;
+  animation-duration: 0.3s;
 }
 
-@-webkit-keyframes sttr-fromtop {
+@-webkit-keyframes sttr-appear {
   from {
     opacity: 0
   }
@@ -61,7 +83,7 @@
   }
 }
 
-@keyframes sttr-fromtop {
+@keyframes sttr-appear {
   from {
     opacity: 0
   }
