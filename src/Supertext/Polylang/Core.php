@@ -158,15 +158,17 @@ class Core
       'inTranslationText' => esc_js(Constant::IN_TRANSLATION_TEXT),
       'deleteUser' => esc_js(__('Delete user', 'polylang-supertext')),
       'translationCreation' => esc_js(__('Translation is being initialized. Please wait a moment.', 'polylang-supertext')),
-      'generalError' => esc_js(__('An error occurred.', 'polylang-supertext')),
+      'generalError' => esc_js(__('An error occurred', 'polylang-supertext')),
+      'validationError' => esc_js(__('Validation error', 'polylang-supertext')),
       'offerTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
       'translationOrderError' => esc_js(__('The order couldn\'t be sent to Supertext. Please try again.', 'polylang-supertext')),
       'confirmUnsavedArticle' => esc_js(__('The article was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'polylang-supertext')),
       'alertUntranslatable' => esc_js(__('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext')),
       'errorTitleNotAllPostInSameLanguage' => esc_js(__('Language mismatch', 'polylang-supertext')),
       'errorMessageNotAllPostInSameLanguage' => esc_js(__('Please select only post in the same language.', 'polylang-supertext')),
+      'errorValidationSelectTargetLanguage' => esc_js(__('Please select the target language.', 'polylang-supertext')),
       'modalTitle' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
-      'alertPleaseSelect' => esc_js(__('Please select', 'polylang-supertext'))
+      'alertPleaseSelect' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
     );
 
     $languages = Multilang::getLanguages();

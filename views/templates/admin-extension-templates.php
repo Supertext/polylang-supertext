@@ -9,14 +9,20 @@
 <script type="text/html" id="tmpl-sttr-modal-error">
   <div id="sttr-modal-error-{{data.token}}" class="notice notice-error">
     <h2>{{data.error.title}}</h2>
-    <p class="error-message">{{data.error.message}}<# if(data.details){ #><br/>({{data.error.details}})<# } #></p>
+    <p class="error-message">
+      <# if(_.isArray(data.error.message)) { #>
+      {{{data.error.message.join('<br>')}}}
+      <# }else{ #>
+      {{data.error.message}}
+      <# } if(data.details){ #><br/>({{data.error.details}})<# } #>
+    </p>
   </div>
 </script>
 
 <script type="text/html" id="tmpl-sttr-modal">
   <div id="sttr-modal" class="sttr-modal">
     <div class="sttr-modal-content wp-core-ui">
-      <button class="sttr-modal-close" type="button"><span class="dashicons dashicons-no"></span></button>
+      <button class="sttr-modal-icon-close" type="button"><span class="dashicons dashicons-no"></span></button>
       <div id="sttr-modal-header" class="sttr-modal-header">
         <div class="logo"><img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/logo_supertext.png'; ?>" width="32" height="32" alt="Supertext" title="Supertext" /></div>
         <h1>{{data.title}}</h1>
@@ -32,7 +38,9 @@
         </div>
       </div>
       <div id="sttr-modal-footer" class="sttr-modal-footer">
-        <button type="button" class="button button-secondary"><?php _e('Next', 'polylang-supertext'); ?></button>
+        <button id="sttr-modal-next-step" type="button" class="button button-secondary"><?php _e('Next', 'polylang-supertext'); ?></button>
+        <button id="sttr-modal-previous-step" type="button" class="button button-secondary"><?php _e('Previous', 'polylang-supertext'); ?></button>
+        <button id="sttr-modal-close" type="button" class="button button-secondary"><?php _e('Close', 'polylang-supertext'); ?></button>
         <div class="wp-clearfix"></div>
       </div>
     </div>
@@ -40,7 +48,8 @@
   </div>
 </script>
 
-<script type="text/html" id="tmpl-sttr-order-step1">
+<script type="text/html" id="tmpl-sttr-order-step-1">
+  <form id="sttr-order-step-1-form">
   <h2><?php _e('Content to be translated', 'polylang-supertext');?></h2>
   <p>
     <?php
@@ -78,9 +87,9 @@
                 <# _.each(translatableField.fields, function(field) { #>
                   <td>
                     <# if(field.default){ #>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" checked="checked">
+                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" name="translatableContent[{{post.id}}][{{sourceId}}][{{field.name}}]" checked="checked">
                     <#} else {#>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}">
+                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" name="translatableContent[{{post.id}}][{{sourceId}}][{{field.name}}]">
                     <# } #>
                   </td>
                   <td>
@@ -107,11 +116,12 @@
   <h2><?php _e('Language', 'polylang-supertext');?></h2>
   <p>
     <?php _e('Translate from <b>{{data.sourceLanguage}}</b> into ', 'polylang-supertext');?>
-    <select id="sttr-order-select-target-language">
-      <option><?php _e('Please select', 'polylang-supertext');?>...</option>
+    <select name="orderTargetLanguage" id="sttr-order-target-language">
+      <option value=""><?php _e('Please select', 'polylang-supertext');?>...</option>
       <# _.each(data.languages, function(language, code) { #>
         <option value="{{code}}">{{language}}</option>
       <# }); #>
     </select>
   </p>
+  </form>
 </script>

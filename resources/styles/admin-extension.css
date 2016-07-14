@@ -55,7 +55,7 @@
   }
 }
 
-.sttr-modal-close {
+.sttr-modal-icon-close {
   position: absolute;
   top: 0;
   right: 0;
@@ -75,14 +75,14 @@
   outline: none;
 }
 
-.sttr-modal-close:hover,
-.sttr-modal-close:focus {
+.sttr-modal-icon-close:hover,
+.sttr-modal-icon-close:focus {
   color: #00a0d2;
   text-decoration: none;
   cursor: pointer;
 }
 
-.sttr-modal-close .dashicons{
+.sttr-modal-icon-close .dashicons{
   padding:5px;
   margin:0;
 }
