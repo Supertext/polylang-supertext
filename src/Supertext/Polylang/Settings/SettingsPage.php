@@ -29,13 +29,19 @@ class SettingsPage extends AbstractPage
 
     // Tabs definitions
     $this->tabs = array();
+  }
+
+  public function initTabs(){
+    if(count($this->tabs)){
+      return;
+    }
 
     // User and language settings tab
     $this->tabs[self::USERS_TAB] = array(
       'name' => __('User and languages', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-users', 'context' => $library),
-        array('view' => 'backend/settings-languages', 'context' => $library)
+        array('view' => 'backend/settings-users', 'context' => $this->library),
+        array('view' => 'backend/settings-languages', 'context' => $this->library)
       ),
       'saveFunction' => 'saveUserAndLanguageSettings'
     );
@@ -51,7 +57,7 @@ class SettingsPage extends AbstractPage
     $this->tabs[self::SHORTCODES_TAB] = array(
       'name' => __('Shortcodes', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-shortcodes', 'context' => $library)
+        array('view' => 'backend/settings-shortcodes', 'context' => $this->library)
       ),
       'saveFunction' => 'saveShortcodesSettings'
     );
@@ -60,7 +66,7 @@ class SettingsPage extends AbstractPage
     $this->tabs[self::WORKFLOW_TAB] = array(
       'name' => __('Workflow', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-workflow', 'context' => $library)
+        array('view' => 'backend/settings-workflow', 'context' => $this->library)
       ),
       'saveFunction' => 'saveWorkflowSettings'
     );
@@ -71,6 +77,8 @@ class SettingsPage extends AbstractPage
    */
   public function display()
   {
+    $this->initTabs();
+
     $currentTabId = $this->getCurrentTabId();
 
     // Display the page with typical entry infos
