@@ -3,7 +3,8 @@
 function getAcfTree($nodes){
   $nodeHtml = '<ul>';
 
-  foreach($nodes as $id => $node){
+  foreach($nodes as $node){
+    $id = $node['id'];
     $icon = $node['type'] === 'field' ? 'jstree-file' : 'jstree-folder';
 
     $nodeHtml .= '<li id="'.$id.'" data-jstree=\'{"icon":"'.$icon.'"}\'>';
@@ -38,5 +39,5 @@ $htmlTree = getAcfTree($context['acfFieldDefinitions']);
 </div>
 
 <script type="text/javascript">
-  var savedAcfFields = <?php echo json_encode($context['savedAcfFields']); ?>;
+  var savedAcfFieldIds = <?php echo json_encode($context['savedAcfFieldIds']); ?>;
 </script>

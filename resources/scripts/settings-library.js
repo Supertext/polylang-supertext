@@ -154,7 +154,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
             }
           });
 
-        $acfFieldsTree.jstree('select_node', savedAcfFields);
+        $acfFieldsTree.jstree('select_node', savedAcfFieldIds);
 
         $('#translatablefieldsSettingsForm').submit(setCheckedAcfFields);
       }

@@ -10,8 +10,6 @@ use Comotive\Util\ArrayManipulation;
  */
 class AcfContentAccessor implements IContentAccessor, ISettingsAware
 {
-  const KEY_SEPARATOR = '__';
-
   /**
    * @var TextProcessor text processor
    */
@@ -38,27 +36,22 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function getTranslatableFields($postId)
   {
+    $postCustomFields = get_post_meta($postId);
     $options = $this->library->getSettingOption();
-    $savedAcfFields = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
-    $fields = get_field_objects($postId, true, false);
+    $savedAcfFieldDefinitions = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
 
     $translatableFields = array();
 
-    while(($field = array_shift($fields))){
-      if(isset($field['sub_fields'])){
-        $fields = array_merge($fields, $field['sub_fields']);
-        continue;
-      }
+    $meta_keys = array_keys($postCustomFields);
 
-      if(!in_array($field['name'], $savedAcfFields)){
-        continue;
+    foreach ($savedAcfFieldDefinitions as $savedAcfFieldDefinition) {
+      if (count(preg_grep('/^' . $savedAcfFieldDefinition['meta_key_regex'] . '$/', $meta_keys)) > 0) {
+        $translatableFields[] = array(
+          'title' => $savedAcfFieldDefinition['label'],
+          'name' => $savedAcfFieldDefinition['meta_key_regex'],
+          'default' => true
+        );
       }
-
-      $translatableFields[] = array(
-        'title' => $field['label'],
-        'name' => $field['name'],
-        'default' => true
-      );
     }
 
     return array(
@@ -75,10 +68,18 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
-    $fields = get_fields($post->ID);
-    $ids = array_keys($selectedTranslatableFields);
 
-    $texts = $this->getFieldTexts($fields, '', $texts, $ids);
+    $postCustomFields = get_post_meta($post->ID);
+
+    foreach($postCustomFields as $meta_key => $value){
+      foreach($selectedTranslatableFields as $meta_key_regex => $selected){
+        if (!preg_match('/^' . $meta_key_regex . '$/', $meta_key)) {
+          continue;
+        }
+
+        $texts[$meta_key] = $value[0];
+      }
+    }
 
     return $texts;
   }
@@ -89,27 +90,9 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function setTexts($post, $texts)
   {
-    $fields = get_fields($post->ID);
-
-    foreach($texts as $id => $text){
-      $keys = explode(self::KEY_SEPARATOR, $id);
-      $lastKeyIndex = count($keys)-1;
+    foreach ($texts as $id => $text) {
       $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-      $decodedContent = $this->textProcessor->replaceShortcodeNodes($decodedContent);
-
-      $item = &$fields;
-      foreach($keys as $index => $key){
-        if($index === $lastKeyIndex){
-          $item[$key] = $decodedContent;
-          continue;
-        }
-
-        $item = &$item[$key];
-      }
-    }
-
-    foreach($fields as $key => $value){
-      update_field($key, $value, $post->ID);
+      update_post_meta($post->ID, $id, $decodedContent);
     }
   }
 
@@ -119,13 +102,18 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
   public function getSettingsViewBundle()
   {
     $options = $this->library->getSettingOption();
-    $savedAcfFields = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
+    $savedAcfFieldDefinitions = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
+
+    $savedAcfFieldIds = array();
+    foreach($savedAcfFieldDefinitions as $savedAcfFieldDefinition){
+      $savedAcfFieldIds[] = $savedAcfFieldDefinition['id'];
+    }
 
     return array(
       'view' => 'backend/settings-acf',
       'context' => array(
         'acfFieldDefinitions' => $this->getAcfFieldDefinitions(),
-        'savedAcfFields' => $savedAcfFields
+        'savedAcfFieldIds' => $savedAcfFieldIds
       )
     );
   }
@@ -135,19 +123,25 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function saveSettings($postData)
   {
-    $checkedAcfFields = explode(',', $postData['acf']['checkedAcfFields']);
+    $checkedAcfFieldIds = explode(',', $postData['acf']['checkedAcfFields']);
+    $acfFieldDefinitionsToSave = array();
 
-    $acfFieldsToSave = array();
+    $fieldDefinitions = $this->getAcfFieldDefinitions();
 
-    foreach($checkedAcfFields as $checkedAcfField){
-      if(strpos($checkedAcfField, 'group_') === 0){
+    while (($field = array_shift($fieldDefinitions))) {
+      if (count($field['sub_field_definitions']) > 0) {
+        $fieldDefinitions = array_merge($fieldDefinitions, $field['sub_field_definitions']);
         continue;
       }
 
-      $acfFieldsToSave[] = $checkedAcfField;
+      if (in_array($field['id'], $checkedAcfFieldIds) && isset($field['meta_key_regex'])) {
+        $fieldToSave = $field;
+        unset($fieldToSave['sub_field_definitions']);
+        $acfFieldDefinitionsToSave[] = $fieldToSave;
+      }
     }
 
-    $this->library->saveSetting(Constant::SETTING_ACF_FIELDS, $acfFieldsToSave);
+    $this->library->saveSetting(Constant::SETTING_ACF_FIELDS, $acfFieldDefinitionsToSave);
   }
 
   /**
@@ -156,65 +150,44 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
   private function getAcfFieldDefinitions()
   {
     $fieldGroups = function_exists( 'acf_get_field_groups' ) ? acf_get_field_groups() : apply_filters( 'acf/get_field_groups', array() );
-    $acfFields = array();
+    $acfFieldDefinition = array();
 
     foreach ($fieldGroups as $fieldGroup) {
       $fieldGroupId = isset($fieldGroup['ID']) ? $fieldGroup['ID'] : $fieldGroup['id'];
       $fields = function_exists( 'acf_get_fields' ) ? acf_get_fields($fieldGroup) : apply_filters('acf/field_group/get_fields', array(), $fieldGroupId);
 
-      $acfFields['group_'.$fieldGroupId] = array(
+      $acfFieldDefinition[] = array(
+        'id' => 'group_'.$fieldGroupId,
         'label' => $fieldGroup['title'],
         'type' => 'group',
         'sub_field_definitions' => $this->getFieldDefinitions($fields)
       );
     }
 
-    return $acfFields;
+    return $acfFieldDefinition;
   }
 
   /**
    * @param $fields
    * @return array
    */
-  private function getFieldDefinitions($fields)
+  private function getFieldDefinitions($fields, $metaKeyPrefix = '')
   {
     $group = array();
 
     foreach ($fields as $field) {
-      $group[$field['name']] = array(
+      $metaKey = $metaKeyPrefix . $field['name'];
+      $fieldId = isset($field['ID']) ? $field['ID'] : $field['id'];
+
+      $group[] = array(
+        'id' => 'field_'.$fieldId,
         'label' => $field['label'],
         'type' => 'field',
-        'sub_field_definitions' => isset($field['sub_fields']) ? $this->getFieldDefinitions($field['sub_fields']) : array()
+        'meta_key_regex' => $metaKey,
+        'sub_field_definitions' => isset($field['sub_fields']) ? $this->getFieldDefinitions($field['sub_fields'], $metaKey . '_\\d+_') : array()
       );
     }
 
     return $group;
-  }
-
-  /**
-   * @param $fields
-   * @param $idPrefix
-   * @param $texts
-   * @param $keysToAdd
-   * @return array
-   */
-  private function getFieldTexts($fields, $idPrefix, $texts, $keysToAdd)
-  {
-    foreach($fields as $key => $value){
-      if(is_array($value)){
-        $newIdPrefix = $idPrefix . $key . self::KEY_SEPARATOR;
-        $texts = array_merge($texts, $this->getFieldTexts($value, $newIdPrefix, $texts, $keysToAdd));
-        continue;
-      }
-
-      if(!in_array($key, $keysToAdd)){
-        continue;
-      }
-
-      $id = $idPrefix . $key;
-      $texts[$id] = $this->textProcessor->replaceShortcodes($value);
-    }
-
-    return $texts;
   }
 }

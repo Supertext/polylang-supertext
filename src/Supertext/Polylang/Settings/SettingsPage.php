@@ -100,6 +100,8 @@ class SettingsPage extends AbstractPage
    */
   public function control()
   {
+    $this->initTabs();
+
     $currentTabId = $this->getCurrentTabId();
 
     if ($currentTabId == null || !isset($_POST['saveStPlSettings'])) {
