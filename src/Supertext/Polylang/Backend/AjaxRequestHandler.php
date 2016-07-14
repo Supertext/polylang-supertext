@@ -43,11 +43,11 @@ class AjaxRequestHandler
     $this->contentProvider = $contentProvider;
 
     add_action( 'wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
+    add_action( 'wp_ajax_sttr_getOffer', array($this, 'getOffer'));
   }
 
   /**
    * Gets translation information about posts
-   * @param $data
    */
   public function getPostTranslationData()
   {
@@ -70,14 +70,28 @@ class AjaxRequestHandler
   }
 
   /**
-   * This was built by MHA by reference. No time to fix just yet, but it works.
+   * Gets the offer
    */
-  public function getOffer($data)
+  public function getOffer()
   {
-    $optional = array('requestCounter' => $data['requestCounter']);
+    $translatableContents = $_POST['translatableContents'];
+    $translationData = array();
 
-    // Call the API for prices
-    $options = self::getTranslationOptions($data);
+    foreach($translatableContents as $postId => $translatableContent){
+      $post = get_post($postId);
+      $translationData[$postId] = $this->contentProvider->getTranslationData($post, $translatableContent);
+    }
+
+    $wrapper = $this->library->getUserWrapper();
+    // Call for prices
+    $pricing = $wrapper->getQuote(
+      $this->library->mapLanguage($_POST['orderSourceLanguage']),
+      $this->library->mapLanguage($_POST['orderTargetLanguage']),
+      $translationData
+    );
+
+    print_r($pricing);
+/*
     $post = get_post($options['post_id']);
     $translationData = $this->contentProvider->getTranslationData($post, $options['translatable_fields']);
     $wrapper = $this->library->getUserWrapper();
@@ -165,7 +179,7 @@ class AjaxRequestHandler
         'optional' => $optional,
       ),
       'success'
-    );
+    );*/
   }
 
   /**

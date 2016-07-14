@@ -174,7 +174,10 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       orderItemRemoveIcon: '.dashicons-no-alt',
       orderItemRemoveButton: '#sttr-order-remove-item',
       firstOrderStepForm: '#sttr-order-step-1-form',
-      orderTargetLanguageSelect: '#sttr-order-target-language'
+      orderSourceLanguageInput: '#sttr-order-source-language',
+      orderSourceLanguageLabel: '#sttr-order-source-language-label',
+      orderTargetLanguageSelect: '#sttr-order-target-language',
+      orderTargetLanguageSelectOptions: '#sttr-order-target-language option'
     },
     /**
      * Context data containing information about plugin and environment
@@ -196,7 +199,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       posts: function (pass, fail) {
         var validationKey = 'posts';
 
-        if (!isEachPostInSameLanguage()) {
+        if (!isEachPostInSameLanguage(state.posts)) {
           fail(validationKey, supertextTranslationL10n.errorMessageNotAllPostInSameLanguage);
           return;
         }
@@ -405,8 +408,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
    * @returns {boolean}
    */
   function onBulkActionApply(e) {
-    var bulkButtonId = $(this).attr('id');
-    var selectName = bulkButtonId.substr(2);
+    var selectName = $(this).attr('id').substr(2);
 
     if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue) {
       return true;
@@ -421,7 +423,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
 
     if (posts.length > 0) {
       openModal();
-      loadFirstOrderStepForm(posts);
+      loadFirstOrderStep(posts);
     } else {
       alert(supertextTranslationL10n.alertPleaseSelect);
     }
@@ -439,10 +441,10 @@ Supertext.Polylang = (function (win, doc, $, wp) {
   }
 
   /**
-   * Loads post data for order step one form
+   * Loads post data for order step one
    * @param posts
    */
-  function loadFirstOrderStepForm(posts) {
+  function loadFirstOrderStep(posts) {
     $.get(
       context.ajaxUrl,
       {
@@ -460,7 +462,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
           return;
         }
 
-        addFirstOrderStepForm(data);
+        addFirstOrderStep(data);
       }
     ).fail(
       function (jqXHR, textStatus, errorThrown) {
@@ -475,14 +477,14 @@ Supertext.Polylang = (function (win, doc, $, wp) {
   }
 
   /**
-   * Add the first order step form to the modal content
+   * Add the first order step to the modal content
    * @param data
    */
-  function addFirstOrderStepForm(data) {
+  function addFirstOrderStep(data) {
     state.posts = data.body;
 
     modal.showContent(orderStepOneTemplate({
-      sourceLanguage: supertextTranslationL10n.languages[state.posts[0].languageCode],
+      sourceLanguage: isEachPostInSameLanguage(state.posts) ? supertextTranslationL10n.languages[state.posts[0].languageCode] : '-',
       languages: supertextTranslationL10n.languages,
       posts: state.posts
     }));
@@ -491,7 +493,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       validation
         .checkAll(validationRules)
         .fail(showValidationErrors)
-        .pass(loadSecondOrderStepForm);
+        .pass(loadSecondOrderStep);
     });
 
     initializeOrderItemList();
@@ -502,8 +504,34 @@ Supertext.Polylang = (function (win, doc, $, wp) {
   /**
    * Loads post data for order step two form
    */
-  function loadSecondOrderStepForm() {
-    alert('ok');
+  function loadSecondOrderStep() {
+    var formData = $(selectors.firstOrderStepForm).serializeArray();
+    $.post(
+      context.ajaxUrl + '?action=sttr_getOffer',
+      formData
+    ).done(
+      function (data) {
+        if (data.head.status != 'success') {
+          modal.showContent('');
+          modal.showError({
+            title: supertextTranslationL10n.generalError,
+            message: data.body.reason
+          });
+          return;
+        }
+
+
+      }
+    ).fail(
+      function (jqXHR, textStatus, errorThrown) {
+        modal.showContent('');
+        modal.showError({
+          title: supertextTranslationL10n.generalError,
+          message: jqXHR.status + ' ' + textStatus,
+          details: errorThrown
+        });
+      }
+    );
   }
 
   /**
@@ -525,7 +553,8 @@ Supertext.Polylang = (function (win, doc, $, wp) {
     validation
       .check(validationRules.posts)
       .fail(showValidationErrors)
-      .pass(hideValidationError);
+      .pass(hideValidationError)
+      .pass(setLanguages);
 
     if (state.posts.length == 1) {
       $(selectors.orderItemRemoveButton).hide();
@@ -533,13 +562,28 @@ Supertext.Polylang = (function (win, doc, $, wp) {
   }
 
   /**
+   * Sets the languages to the form
+   */
+  function setLanguages() {
+    var sourceLanguageCode = state.posts[0].languageCode;
+    $(selectors.orderSourceLanguageLabel).html(supertextTranslationL10n.languages[sourceLanguageCode]);
+    $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
+
+    $(selectors.orderTargetLanguageSelectOptions).each(function(){
+      if($(this).val() === sourceLanguageCode){
+        $(this).hide();
+      }
+    });
+  }
+
+  /**
    * Check whether all posts are in same language
    * @returns {boolean}
    */
-  function isEachPostInSameLanguage() {
+  function isEachPostInSameLanguage(posts) {
     var languageCode = null;
     var isEachPostInSameLanguage = true;
-    $.each(state.posts, function (index, post) {
+    $.each(posts, function (index, post) {
       if (index === 0) {
         languageCode = post.languageCode;
       } else {

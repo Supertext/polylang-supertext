@@ -88,9 +88,9 @@
                 <# _.each(translatableField.fields, function(field) { #>
                   <td>
                     <# if(field.default){ #>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" name="translatableContent[{{post.id}}][{{sourceId}}][{{field.name}}]" checked="checked">
+                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{sourceId}}][{{field.name}}]" checked="checked">
                     <#} else {#>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" name="translatableContent[{{post.id}}][{{sourceId}}][{{field.name}}]">
+                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{sourceId}}][{{field.name}}]">
                     <# } #>
                   </td>
                   <td>
@@ -116,7 +116,8 @@
   </div>
   <h2><?php _e('Language', 'polylang-supertext');?></h2>
   <p>
-    <?php _e('Translate from <b>{{data.sourceLanguage}}</b> into ', 'polylang-supertext');?>
+    <?php _e('Translate from <b id="sttr-order-source-language-label">{{data.sourceLanguage}}</b> into ', 'polylang-supertext');?>
+    <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language" />
     <select name="orderTargetLanguage" id="sttr-order-target-language">
       <option value=""><?php _e('Please select', 'polylang-supertext');?>...</option>
       <# _.each(data.languages, function(language, code) { #>
