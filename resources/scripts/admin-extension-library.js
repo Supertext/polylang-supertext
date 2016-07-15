@@ -1,33 +1,70 @@
 var Supertext = Supertext || {};
 Supertext.Template = (function (win, doc, $, wp) {
-
-  
-})(window, document, jQuery, wp);
-
-Supertext.Modal = (function (win, doc, $, wp) {
   'use strict';
 
   var
     /**
-     * The modal html element id
+     * The order link row template id
+     * @type {string}
+     */
+    orderLinkRowTemplateId = 'sttr-order-link-row',
+    /**
+     * The modal template id
      * @type {string}
      */
     modalTemplateId = 'sttr-modal',
     /**
-     * The error id
+     * The error template id
      * @type {string}
      */
     errorTemplateId = 'sttr-modal-error',
     /**
-     * The button id
+     * The button template id
      * @type {string}
      */
     buttonTemplateId = 'sttr-modal-button',
     /**
+     * The order step 1 template id
+     * @type {string}
+     */
+    orderStepOneTemplateId = 'sttr-order-step-1',
+    /**
+     * The order step 2 template id
+     * @type {string}
+     */
+    orderStepTwoTemplateId = 'sttr-order-step-2',
+    /**
+     * All templates
+     */
+    templates = {};
+
+  function getHtml(templateId, data){
+    if(!templates.hasOwnProperty(templateId)){
+      templates[templateId] = wp.template(templateId);
+    }
+
+    return templates[templateId](data);
+  }
+
+  return {
+    orderLinkRow: function(data){ return getHtml(orderLinkRowTemplateId, data)},
+    modal: function(data){ return getHtml(modalTemplateId, data)},
+    modalError: function(data){ return getHtml(errorTemplateId, data)},
+    modalButton: function(data){ return getHtml(buttonTemplateId, data)},
+    orderStep1: function(data){ return getHtml(orderStepOneTemplateId, data)},
+    orderStep2: function(data){ return getHtml(orderStepTwoTemplateId, data)}
+  }
+})(window, document, jQuery, wp);
+
+Supertext.Modal = (function (win, doc, $) {
+  'use strict';
+
+  var
+    /**
      * The selectors of different html elements
      */
     selectors = {
-      modal: '#' + modalTemplateId,
+      modal: '#sttr-modal',
       modalBodyContent: '#sttr-modal-body-content',
       modalNotice: '#sttr-modal-notice',
       modalCloseIcon: '.sttr-modal-icon-close',
@@ -35,23 +72,13 @@ Supertext.Modal = (function (win, doc, $, wp) {
       modalFooter: '.sttr-modal-footer',
       modalNoticeDismissIcon: '.notice-dismiss',
       modalErrorNotice: function (token) {
-        return '#' + errorTemplateId + '-' + token
+        return '#sttr-modal-error-' + token
       }
     },
     /**
-     * The modal template
-     * @type {string}
+     * Template module
      */
-    modalTemplate = null,
-    /**
-     * The error template
-     * @type {string}
-     */
-    errorTemplate = null,
-    /**
-     * State
-     */
-    buttonTemplate = null,
+    template,
     /**
      * State
      */
@@ -74,7 +101,7 @@ Supertext.Modal = (function (win, doc, $, wp) {
    * @param data
    */
   function open(data) {
-    var modalHtml = modalTemplate(data);
+    var modalHtml = template.modal(data);
     $(doc.body).append(modalHtml);
 
     state.$modal = $(selectors.modal);
@@ -115,7 +142,7 @@ Supertext.Modal = (function (win, doc, $, wp) {
    */
   function showError(error) {
     var token = ++state.noticeCounter;
-    var errorHtml = errorTemplate({
+    var errorHtml = template.modalError({
       token: token,
       error: error
     });
@@ -146,17 +173,15 @@ Supertext.Modal = (function (win, doc, $, wp) {
    */
   function addButton(innerHtml, onClickEventHandler, type)
   {
-    $(selectors.modalFooter).append(buttonTemplate({
+    $(selectors.modalFooter).append(template.modalButton({
       innerHtml: innerHtml,
       type: type
     }));
   }
 
   return {
-    initialize: function () {
-      modalTemplate = wp.template(modalTemplateId);
-      errorTemplate = wp.template(errorTemplateId);
-      buttonTemplate = wp.template(buttonTemplateId);
+    initialize: function(externals){
+      template = externals.template;
     },
     open: open,
     close: close,
@@ -165,7 +190,7 @@ Supertext.Modal = (function (win, doc, $, wp) {
     hideError: hideError,
     addButton: addButton
   }
-})(window, document, jQuery, wp);
+})(window, document, jQuery);
 
 /**
  * Polylang translation plugin to inject translation options
@@ -174,16 +199,6 @@ Supertext.Polylang = (function (win, doc, $, wp) {
   'use strict';
 
   var
-    /**
-     * The order step 1 template id
-     * @type {string}
-     */
-    orderStepOneTemplateId = 'sttr-order-step-1',
-    /**
-     * The order step 2 template id
-     * @type {string}
-     */
-    orderStepTwoTemplateId = 'sttr-order-step-2',
     /**
      * Order translation bulk action option value
      * @type {string}
@@ -211,15 +226,9 @@ Supertext.Polylang = (function (win, doc, $, wp) {
      */
     modal,
     /**
-     * The order step 1 template
-     * @type {string}
+     * Template module
      */
-    orderStepOneTemplate = null,
-    /**
-     * The order step 1 template
-     * @type {string}
-     */
-    orderStepTwoTemplate = null,
+    template,
     /**
      * The validation rules
      */
@@ -401,8 +410,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
         .attr('id')
         .replace('htr_lang_', '');
 
-      var rowTemplate = wp.template('sttr-order-link-row');
-      languageRow.after(rowTemplate({targetLanguageCode: languageCode}));
+      languageRow.after(template.orderLinkRow({targetLanguageCode: languageCode}));
     });
   }
 
@@ -511,7 +519,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
   function addFirstOrderStep(data) {
     state.posts = data.body;
 
-    modal.showContent(orderStepOneTemplate({
+    modal.showContent(template.orderStep1({
       sourceLanguage: isEachPostInSameLanguage(state.posts) ? supertextTranslationL10n.languages[state.posts[0].languageCode] : '-',
       languages: supertextTranslationL10n.languages,
       posts: state.posts
@@ -571,7 +579,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
   {
     var options = data.body.options;
 
-    modal.showContent(orderStepTwoTemplate({
+    modal.showContent(template.orderStep2({
       options: options
     }));
 
@@ -834,13 +842,11 @@ Supertext.Polylang = (function (win, doc, $, wp) {
     initialize: function (externals) {
       context = externals.context;
       modal = externals.modal;
+      template = externals.template;
 
       if (!context.isPluginWorking) {
         return;
       }
-
-      orderStepOneTemplate = wp.template(orderStepOneTemplateId);
-      orderStepTwoTemplate = wp.template(orderStepTwoTemplateId);
 
       if (context.screen == 'post') {
         initializePostScreen();
@@ -855,12 +861,15 @@ Supertext.Polylang = (function (win, doc, $, wp) {
 
 // Load on load. yass.
 jQuery(document).ready(function () {
-  Supertext.Modal.initialize();
+  Supertext.Modal.initialize({
+    template: Supertext.Template
+  });
 
   Supertext.Polylang.initialize({
     context: Supertext.Context || {
       isPluginWorking: false
     },
-    modal: Supertext.Modal
+    modal: Supertext.Modal,
+    template: Supertext.Template
   });
 });
