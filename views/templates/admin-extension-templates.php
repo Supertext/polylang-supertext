@@ -127,3 +127,46 @@
   </p>
   </form>
 </script>
+
+<script type="text/html" id="tmpl-sttr-order-step-2">
+  <form id="sttr-order-step-2-form">
+    <h2><?php _e('Service and deadline', 'polylang-supertext'); ?></h2>
+    <p><?php _e('Select the translation service and deadline:', 'polylang-supertext'); ?></p>
+    <div class="sttr-order-item-quote">
+      <table cellspacing="0" cellpadding="2" border="0">
+        <tbody>
+        <# _.each(data.options, function(option) { #>
+          <tr class="first-group-row">
+            <td class="quality-group-cell" rowspan="6">
+              <b>{{option.name}}</b>
+            </td>
+            <td class="selection-cell">&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+          <# _.each(option.items, function(item) { #>
+            <tr>
+              <td class="selection-cell">
+                <input type="radio" value="{{option.id}}:{{item.id}}" id="sttr-rad-translation-type-{{option.id}}-{{item.id}}" name="radTranslationType">
+              </td>
+              <td>
+                <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.name}}</label>
+              </td>
+              <td align="right" class="ti-deadline">
+                <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.date}}</label>
+              </td>
+              <td align="right" class="ti-deadline">
+                <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.price}}</label>
+              </td>
+            </tr>
+            <# }); #>
+              <tr class="last-group-row"></tr>
+              <# }); #>
+        </tbody>
+      </table>
+    </div>
+    <h2><?php _e('Your comment to Supertext', 'polylang-supertext'); ?></h2>
+    <p><textarea name="orderComment" id="sttr-order-comment"></textarea></p>
+  </form>
+</script>

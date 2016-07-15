@@ -275,6 +275,56 @@
   margin-top: 4px;
 }
 
+.sttr-order-item-quote table{
+
+}
+
+.sttr-order-item-quote table tbody tr input{
+  padding-right: 0;
+  margin-right: 0;
+}
+.sttr-order-item-quote table tbody tr label{
+  padding: 2px 10px;
+  display: block;
+}
+.sttr-order-item-quote table tbody tr:not(.first-group-row):not(.last-group-row):hover,
+.sttr-order-item-quote table tbody tr:not(.first-group-row):not(.last-group-row):focus{
+  background-color: rgba(0, 0, 0, 0.08);
+  cursor: pointer
+}
+.sttr-order-item-quote table thead td{
+  padding: 0px 10px;
+}
+.sttr-order-item-quote table tbody td{
+  padding: 0;
+  margin: 0;
+}
+.sttr-order-item-quote table tbody tr.first-group-row td {
+  padding-top: 5px;
+}
+.sttr-order-item-quote table tbody tr + tr.first-group-row td{
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 8px;
+}
+.sttr-order-item-quote table tbody tr.last-group-row,
+.sttr-order-item-quote table tbody tr.last-group-row td {
+  height: 8px;
+  overflow: hidden;
+}
+.sttr-order-item-quote table tbody .quality-group-cell{
+  vertical-align: top;
+  padding-right: 10px;
+}
+.sttr-order-item-quote table .selection-cell{
+  margin:0;
+  padding-right: 2px;
+  overflow: hidden;
+}
+
+#sttr-order-comment {
+  width: 100%;
+}
+
 .sttr-modal-footer {
   position:absolute;
   left: 0;
@@ -290,116 +340,3 @@
   float: right;
   margin-top: 15px;
 }
-
-
-
-/*
-.multilang-tax-table {
-  width:99%;
-}
-.multilang-tax-table-add {
-  margin-left:20px;
-  width:95%
-}
-.multilang-tax-table td {
-  padding: 1px 0px 5px 1px !important;
-}
-.multilang-tax-table-add td {
-  padding: 1px 0px 5px 1px !important;
-}
-#wp-admin-bar-top-secondary {
-  float:right;
-}
-.tbl_align_top tr {
-  vertical-align: top;
-}
-.div_tb_wrap_translation {
-  margin-top: -30px;
-  padding: 15px;
-}
-.div_tb_wrap_translation .notice{
-  margin: 20px 10px 20px 20px;
-}
-.div_tb_wrap_translation h3{
-  margin:1.5em 0 0.8em 0;
-}
-.div_tb_wrap_translation #txtComment{
-  width:100%;
-}
-.translatableContentTable{
-  margin-top: 5px;
-}
-.translatableContentTable:first-child{
-  margin-top: 0;
-}
-.translatableContentTable thead th{
-  text-align: left;
-}
-#div_translation_title span{
-  float:left;
-  padding-right: 10px;
-}
-#div_translation_price table tbody tr input{
-  padding-right: 0;
-  margin-right: 0;
-}
-#div_translation_price table tbody tr label{
-  padding: 2px 10px;
-  display: block;
-}
-#div_translation_price table tbody tr:not(.firstGroupRow):not(.lastGroupRow):hover,
-#div_translation_price table tbody tr:not(.firstGroupRow):not(.lastGroupRow):focus{
-  background-color: rgba(0, 0, 0, 0.08);
-  cursor: pointer
-}
-#div_translation_price table thead td{
-  padding: 0px 10px;
-}
-#div_translation_price table tbody td{
-  padding: 0;
-  margin: 0;
-}
-#div_translation_price table tbody tr.firstGroupRow td {
-  padding-top: 5px;
-}
-#div_translation_price table tbody tr + tr.firstGroupRow td{
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding-top: 8px;
-}
-#div_translation_price table tbody tr.lastGroupRow,
-#div_translation_price table tbody tr.lastGroupRow td {
-  height: 8px;
-  overflow: hidden;
-}
-#div_translation_price table tbody .qualityGroupCell{
-  vertical-align: top;
-  padding-right: 10px;
-}
-#div_translation_price table .selectionCell{
-  margin:0;
-  padding-right: 2px;
-  overflow: hidden;
-}
-.div_translation_price_loading {
-  margin-left: 20px;
-  font-style: italic;
-  color: #555;
-}
-.div_translation_order_buttons{
-  text-align: right;
-}
-.input-disabled {
-  background-color: #f1f1f1!important;
-  color: #666 !important;
-  cursor: default !important;
-}
-.input-only-read {
-  background-color: #f6f6f6!important;
-  color: #333 !important;
-  cursor: default !important;
-}
-.tinyMce-only-read {
-  height: 338px;
-  overflow-y: scroll;
-}
-.ab-column>ul>li>input[type="checkbox"]:checked+ul { display: none !important; }*/

@@ -162,6 +162,11 @@ Supertext.Polylang = (function (win, doc, $, wp) {
      */
     orderStepOneTemplateId = 'sttr-order-step-1',
     /**
+     * The order step 2 template id
+     * @type {string}
+     */
+    orderStepTwoTemplateId = 'sttr-order-step-2',
+    /**
      * Order translation bulk action option value
      * @type {string}
      */
@@ -192,6 +197,11 @@ Supertext.Polylang = (function (win, doc, $, wp) {
      * @type {string}
      */
     orderStepOneTemplate = null,
+    /**
+     * The order step 1 template
+     * @type {string}
+     */
+    orderStepTwoTemplate = null,
     /**
      * The validation rules
      */
@@ -493,6 +503,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       validation
         .checkAll(validationRules)
         .fail(showValidationErrors)
+        .pass(hideValidationError)
         .pass(loadSecondOrderStep);
     });
 
@@ -520,7 +531,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
           return;
         }
 
-        console.log(data.body);
+        addSecondOrderStep(data);
       }
     ).fail(
       function (jqXHR, textStatus, errorThrown) {
@@ -532,6 +543,23 @@ Supertext.Polylang = (function (win, doc, $, wp) {
         });
       }
     );
+  }
+
+  /**
+   * Add the first order step to the modal content
+   * @param data
+   */
+  function addSecondOrderStep(data)
+  {
+    var options = data.body.options;
+
+    modal.showContent(orderStepTwoTemplate({
+      options: options
+    }));
+
+    modal.onNextCall(function () {
+
+    });
   }
 
   /**
@@ -569,8 +597,8 @@ Supertext.Polylang = (function (win, doc, $, wp) {
     $(selectors.orderSourceLanguageLabel).html(supertextTranslationL10n.languages[sourceLanguageCode]);
     $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
 
-    $(selectors.orderTargetLanguageSelectOptions).each(function(){
-      if($(this).val() === sourceLanguageCode){
+    $(selectors.orderTargetLanguageSelectOptions).each(function () {
+      if ($(this).val() === sourceLanguageCode) {
         $(this).hide();
       }
     });
@@ -797,6 +825,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       }
 
       orderStepOneTemplate = wp.template(orderStepOneTemplateId);
+      orderStepTwoTemplate = wp.template(orderStepTwoTemplateId);
 
       if (context.screen == 'post') {
         initializePostScreen();
