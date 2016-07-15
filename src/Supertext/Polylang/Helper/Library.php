@@ -3,6 +3,7 @@
 namespace Supertext\Polylang\Helper;
 
 use Comotive\Util\WordPress;
+use Supertext\Polylang\Api\ApiConnection;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 
@@ -91,11 +92,11 @@ class Library
   }
 
   /**
-   * Get an API wrapper as an authenticated user
+   * Get an API connection as an authenticated user
    * @param int $userId
-   * @return Wrapper prepared api wrapper
+   * @return ApiConnection the api connection of the user
    */
-  public function getUserWrapper($userId = 0)
+  public function getApiConnection($userId = 0)
   {
     // Get currently logged in user, if no user given
     if ($userId == 0) {
@@ -107,9 +108,11 @@ class Library
     $credentials = $this->getUserCredentials($userId);
 
     // Get the ready to call instance
-    return Wrapper::getInstance(
+    return ApiConnection::getInstance(
+      Constant::API_URL,
       $credentials['stUser'],
-      $credentials['stApi']
+      $credentials['stApi'],
+      str_replace('_', '-', get_locale())
     );
   }
 

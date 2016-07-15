@@ -14,124 +14,74 @@ use Supertext\Polylang\Helper\Constant;
 class Wrapper
 {
   /**
-   * @var string given user
+   * Separator used to concatenate array keys in order to flatten data array
    */
-  protected $user;
-  /**
-   * @var string users API key
-   */
-  protected $apikey;
-  /**
-   * @var string the API endpoint
-   */
-  protected $host = Constant::API_URL;
-  /**
-   * @var string the communication language
-   */
-  protected $communicationLang = 'de-DE';
-  /**
-   * @var array Open api connections per user
-   */
-  static private $apiConnections = array();
+  const KEY_SEPARATOR = '__';
 
   /**
-   * @param string $user the supertext user name
-   * @param string $apikey the supertext api key
-   * @param string $currency the currency
-   */
-  protected function __construct($user, $apikey, $currency = 'eur')
-  {
-    $this->user = $user;
-    $this->apikey = $apikey;
-    $this->currency = strtolower($currency);
-    $this->communicationLang = str_replace('_', '-', get_bloginfo('language'));
-  }
-
-  /**
-   * @param string $user
-   * @param string $apikey
-   * @param string $currency
-   * @return Wrapper
-   */
-  public static function getInstance($user = Constant::DEFAULT_API_USER, $apikey = '', $currency = 'eur')
-  {
-    // Open connection for every user
-    if (!isset(self::$apiConnections[$user])) {
-      self::$apiConnections[$user] = new self($user, $apikey, $currency);
-    }
-    return self::$apiConnections[$user];
-  }
-
-  /**
+   * @param ApiConnection $connection
    * @param string $lang polylang language code
    * @return array mappings for this language code
+   * @throws ApiConnectionException
+   * @throws ApiDataException
    */
-  public function getLanguageMapping($lang)
+  public static function getLanguageMapping($connection, $lang)
   {
-    $httpResult = $this->postRequest('translation/LanguageMapping/' . $lang);
-    $json = json_decode($httpResult['body']);
+    $httpResult = $connection->postRequest('translation/LanguageMapping/' . $lang);
+    $json = json_decode($httpResult);
+
+    if(empty($json->Languages)){
+      throw new ApiDataException(sprintf(__('Languages mapped to <b>%s</b> missing', 'polylang-supertext'), $lang));
+    }
+
     $result = array();
 
-    if ($httpResult['success'] && !empty($json->Languages)) {
-      foreach ($json->Languages as $entry) {
-        $result[(string)$entry->Code] = (string)$entry->Name;
-      }
-    } else {
-      echo '
-      <div id="message" class="updated fade">
-        <p>
-          '.__('An error occurred.', ' polylang-supertext').'<br/>
-          '.$httpResult['error'].'
-        </p>
-      </div>';
+    foreach ($json->Languages as $entry) {
+      $result[(string)$entry->Code] = (string)$entry->Name;
     }
 
     return $result;
   }
 
   /**
+   * @param ApiConnection $connection
    * @param string $sourceLanguage polylang source language
    * @param string $targetLanguage polylang target language
    * @param array $data data to be quoted for translation
+   * @throws ApiConnectionException
    * @return array
    */
-  public function getQuote($sourceLanguage, $targetLanguage, $data)
+  public static function getQuote($connection, $sourceLanguage, $targetLanguage, $data)
   {
     $json = array(
       'ContentType' => 'text/html',
-      'Currency' => $this->currency,
-      'Groups' => $this->buildSupertextData($data),
+      'Currency' => 'eur', //not used by Supertext API, API returns prices in currency of authenticated user
+      'Groups' => self::buildSupertextData($data),
       'SourceLang' => $sourceLanguage,
       'TargetLang' => $targetLanguage
     );
 
-    $httpresult = $this->postRequest('translation/quote', json_encode($json), true);
-    $json = json_decode($httpresult['body']);
-    $result = array(
-      'currency' => $json->Currency,
-      'currencyName' => $json->CurrencySymbol,
-      'options' => array(),
-      'error' => $httpresult['error']
-    );
+    $httpResult = $connection->postRequest('translation/quote', json_encode($json), true);
+    $json = json_decode($httpResult);
 
-    if ($httpresult['success'] && !empty($json->Options)) {
-      foreach ($json->Options as $o) {
-        $deliveryOptions = array();
+    $result = array();
 
-        foreach ($o->DeliveryOptions as $do) {
-          $deliveryOptions[] = array(
-              'id' => $do->DeliveryId,
-              'name' => $do->Name,
-              'price' =>  $do->Price,
-              'date' =>  $do->DeliveryDate);
-        }
+    foreach ($json->Options as $option) {
+      $deliveryOptions = array();
 
-        $result['options'][] = array(
-            'id' => $o->OrderTypeId,
-            'name' => $o->Name,
-            'items' => $deliveryOptions
-        );
+      foreach ($option->DeliveryOptions as $do) {
+        $deliveryOptions[] = array(
+          'id' => $do->DeliveryId,
+          'name' => $do->Name,
+          'price' => $do->Price,
+          'date' => $do->DeliveryDate);
       }
+
+      $result['options'][] = array(
+        'id' => $option->OrderTypeId,
+        'name' => $option->Name,
+        'items' => $deliveryOptions
+      );
     }
 
     return $result;
@@ -148,7 +98,7 @@ class Wrapper
    * @param string$additionalInfo
    * @return array api result info
    */
-  public function createOrder($sourceLanguage, $targetLanguage, $title, $productId, $data, $callback, $reference, $additionalInfo)
+  /*public function createOrder($sourceLanguage, $targetLanguage, $title, $productId, $data, $callback, $reference, $additionalInfo)
   {
     $product = explode(':', $productId);
 
@@ -177,114 +127,47 @@ class Wrapper
       'success' => $httpResult['success'],
       'error' => $httpResult['error']
     );
-  }
+  }*/
 
-  /**
-   * @param string $path url to be posted to
-   * @param string $data data to be posted
-   * @param bool $auth if true, authenticate via api auth
-   * @return string api plain text result
-   */
-  protected function postRequest($path, $data = '', $auth = false)
-  {
-    $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, $this->host . $path);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'WordPress-Polylang-Plugin/HTTP');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-      'Content-Type: application/json; charset=UTF-8',
-      'Accept-Language: ' . $this->communicationLang
-    ));
-
-    if ($data != '') {
-      curl_setopt($ch, CURLOPT_POST, TRUE);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-    }
-
-    if ($auth == true) {
-      curl_setopt($ch, CURLOPT_USERPWD, $this->user . ':' . $this->apikey);
-    }
-
-    $body = curl_exec($ch);
-
-    $error = $this->getError($ch);
-
-    curl_close($ch);
-
-    return array(
-      'success' => empty($error),
-      'error' => $error,
-      'body' => $body
-    );
-  }
 
   /**
    * Convert the given data to supertext specific arrays
    * @param array $data
    * @return string
    */
-  protected function buildSupertextData($data)
+  public static function buildSupertextData($data)
   {
     $result = array();
-    foreach ($data as $key => $value) {
-      $group = array(
-        'GroupId' => $key,
-        'Items' => array()
-      );
-      if (is_array($value)) {
-        foreach ($value as $k => $v) {
-          $dataItem = array(
-            'Content' => $v,
-            'Id' => (string)$k
-          );
-          $group['Items'][] = $dataItem;
-        }
-      } else {
-        $group['Items'][] = array(
-          'Content' => $value,
-          'Id' => '0'
+    foreach ($data as $postId => $groups) {
+      foreach ($groups as $groupId => $group) {
+        $result[] = array(
+          'GroupId' => $postId . self::KEY_SEPARATOR . $groupId,
+          'Items' => self::getGroupItems($group, '')
         );
       }
-      $result[] = $group;
     }
+
     return $result;
   }
 
-  /**
-   * @param $ch
-   * @return string
-   */
-  protected function getError($ch)
+
+  private static function getGroupItems($group, $keyPrefix)
   {
-    $info = curl_getinfo($ch);
-    $errno = curl_errno($ch);
-    $error = '';
+    $items = array();
 
-    if ($errno) {
-      $error .= curl_strerror($errno);
+    foreach($group as $key => $value){
+      if(is_array($value)){
+        $items = array_merge($items, self::getGroupItems($value, $keyPrefix.$key.self::KEY_SEPARATOR));
+        continue;
+      }
+
+      $items[] = array(
+        'content' => $value,
+        'id' => $keyPrefix.$key
+      );
     }
 
-    //Should always be 200
-    switch($info['http_code']){
-      case 0:
-      case 200:
-        break;
-
-      case 401:
-        $error .= __('The Supertext Translation plugin could not login into the Supertext API. Please verify the entered account username and API-Key in the plugin settings.', 'polylang-supertext');
-        break;
-
-      default:
-        $error .= __('HTTP-Request error occurred. Details: ', 'polylang-supertext') .
-          $info['url'] .
-          ' returned code ' .
-          $info['http_code'];
-        break;
-    }
-
-    return $error;
+    return $items;
   }
 }

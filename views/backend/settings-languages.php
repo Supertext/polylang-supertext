@@ -4,18 +4,29 @@ use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Comotive\Util\ArrayManipulation;
 
-/** @var Page $context */
+/** @var \Supertext\Polylang\Helper\Library $context */
 $options = $context->getSettingOption();
 $languageMap = isset($options[Constant::SETTING_LANGUAGE_MAP]) ? ArrayManipulation::forceArray($options[Constant::SETTING_LANGUAGE_MAP]) : array();
 
 // Laod Languages from Polylang to match with supertext api
 $htmlLanguageDropdown = '';
+$languages = Multilang::getLanguages();
 
 // Create the language matcher dropdown
-foreach (Multilang::getLanguages() as $language) {
+foreach ($languages as $language) {
   // Get anonymous wrapper to get languages
-  $api = Wrapper::getInstance();
-  $stMapping = $api->getLanguageMapping($language->slug);
+  try{
+    $stMapping = Wrapper::getLanguageMapping($context->getApiConnection(), $language->slug);
+  }catch (Exception $e){
+    echo '
+        <div class="updated fade error">
+        <p>
+        '.$e->getMessage().'
+        </p>
+        </div>
+      ';
+    continue;
+  }
 
   $languageDropdown = '';
   foreach ($stMapping as $languageCode => $languageName) {
@@ -39,7 +50,7 @@ foreach (Multilang::getLanguages() as $language) {
 }
 
 // Wenn gar keine Mehrsprachigkeit vorhanden ist melden
-if (strlen($languageDropdown) > 0) {
+if (count($languages) > 0) {
   echo '
     <div class="postbox postbox_admin">
       <div class="inside">

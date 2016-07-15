@@ -3,7 +3,10 @@
 namespace Supertext\Polylang\Backend;
 
 use Comotive\Util\StringUtils;
+use Supertext\Polylang\Api\AbstractApiException;
+use Supertext\Polylang\Api\ApiConnectionException;
 use Supertext\Polylang\Api\Multilang;
+use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Helper\Constant;
 
 /**
@@ -42,8 +45,8 @@ class AjaxRequestHandler
     $this->log = $log;
     $this->contentProvider = $contentProvider;
 
-    add_action( 'wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
-    add_action( 'wp_ajax_sttr_getOffer', array($this, 'getOffer'));
+    add_action('wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
+    add_action('wp_ajax_sttr_getOffer', array($this, 'getOffer'));
   }
 
   /**
@@ -54,7 +57,7 @@ class AjaxRequestHandler
     $translationInfo = array();
     $postIds = $_GET['posts'];
 
-    foreach($postIds as $postId){
+    foreach ($postIds as $postId) {
       $translationInfo[] = array(
         'id' => $postId,
         'title' => get_post($postId)->post_title,
@@ -63,10 +66,7 @@ class AjaxRequestHandler
       );
     }
 
-    self::setJsonOutput(
-      $translationInfo,
-      'success'
-    );
+    self::setJsonOutput('success', $translationInfo);
   }
 
   /**
@@ -77,109 +77,23 @@ class AjaxRequestHandler
     $translatableContents = $_POST['translatableContents'];
     $translationData = array();
 
-    foreach($translatableContents as $postId => $translatableContent){
+    foreach ($translatableContents as $postId => $translatableContent) {
       $post = get_post($postId);
       $translationData[$postId] = $this->contentProvider->getTranslationData($post, $translatableContent);
     }
 
-    $wrapper = $this->library->getUserWrapper();
-    // Call for prices
-    $pricing = $wrapper->getQuote(
-      $this->library->mapLanguage($_POST['orderSourceLanguage']),
-      $this->library->mapLanguage($_POST['orderTargetLanguage']),
-      $translationData
-    );
-
-    print_r($pricing);
-/*
-    $post = get_post($options['post_id']);
-    $translationData = $this->contentProvider->getTranslationData($post, $options['translatable_fields']);
-    $wrapper = $this->library->getUserWrapper();
-    // Call for prices
-    $pricing = $wrapper->getQuote(
-      $this->library->mapLanguage($options['source_lang']),
-      $this->library->mapLanguage($options['target_lang']),
-      $translationData
-    );
-
-    if (!empty($pricing['error'])) {
-      self::setJsonOutput(
-        array(
-          'reason' => _('Could not get offers.', 'polylang-supertext') . ' ' . $pricing['error'],
-          'optional' => $optional
-        ),
-        'error'
+    try{
+      $result = Wrapper::getQuote(
+        $this->library->getApiConnection(),
+        $this->library->mapLanguage($_POST['orderSourceLanguage']),
+        $this->library->mapLanguage($_POST['orderTargetLanguage']),
+        $translationData
       );
-      return;
+
+      self::setJsonOutput('success', $result);
+    }catch (\Exception $e){
+      $this->setJsonOutput('error', $e->getMessage());
     }
-
-    //Check if there are no offers
-    if (empty($pricing['options'])) {
-      self::setJsonOutput(
-        array(
-          'html' => __('There are no offers for this translation.', ' polylang-supertext'),
-          'optional' => $optional,
-        ),
-        'no_data'
-      );
-      return;
-    }
-
-    // generate html output
-    $rows = '';
-    $checked = 'checked="checked"';
-    foreach ($pricing['options'] as $option) {
-      $itemsCount = count($option['items']);
-
-      $rows .= '<tr class="firstGroupRow">
-                    <td class="qualityGroupCell" rowspan="' . ($itemsCount + 1) . '"><strong>' . $option['name'] . '</strong></td>
-                    <td class="selectionCell">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>';
-
-      foreach ($option['items'] as $groupRowNumber => $item) {
-        $radioInputId = $option['id'] . "_" . $item['id'];
-        $radioInputValue = $option['id'] . ":" . $item['id'];
-
-        $rows .= '
-          <tr>
-            <td class="selectionCell">
-              <input type="radio" data-currency="' . $pricing['currency'] . '" name="rad_translation_type" id="rad_translation_type_' . $radioInputId . '" value="' . $radioInputValue . '" ' . $checked . '>
-            </td>
-            <td>
-              <label for="rad_translation_type_' . $radioInputId . '">' . $item['name'] . '</label>
-            </td>
-            <td align="right" class="ti_deadline">
-              <label for="rad_translation_type_' . $radioInputId . '">' . date_i18n('D, d. F H:i', strtotime($item['date'])) . '</label>
-            </td>
-            <td align="right" class="ti_price">
-              <label for="rad_translation_type_' . $radioInputId . '">' . $pricing['currency'] . ' ' . StringUtils::numberFormat($item['price'], 2) . '</label>
-            </td>
-          </tr>
-        ';
-
-        $checked = '';
-      }
-
-      $rows .= '<tr class="lastGroupRow"></tr>';
-    }
-
-    $output =
-      '<table border="0" cellpadding="2" cellspacing="0">
-            <tbody>
-                ' . $rows . '
-            </tbody>
-          </table>';
-
-    self::setJsonOutput(
-      array(
-        'html' => $output,
-        'optional' => $optional,
-      ),
-      'success'
-    );*/
   }
 
   /**
@@ -219,10 +133,9 @@ class AjaxRequestHandler
 
         if ($translationPost === null) {
           self::setJsonOutput(
-            array(
+            'error', array(
               'reason' => __('Could not create a new post for the translation. You need to create the new post manually using Polylang.', ' polylang-supertext'),
-            ),
-            'error'
+            )
           );
           return;
         }
@@ -255,10 +168,9 @@ class AjaxRequestHandler
       update_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, $translationReferenceHash);
 
       self::setJsonOutput(
-        array(
+        'success', array(
           'html' => $output,
-        ),
-        'success'
+        )
       );
 
     } else {
@@ -266,14 +178,12 @@ class AjaxRequestHandler
       $this->log->addEntry($post->ID, $orderCreation['error']);
 
       self::setJsonOutput(
-        array(
+        'error', array(
           'reason' => _('Could not create an order with Supertext.', 'polylang-supertext') . ' ' . $orderCreation['error'],
-        ),
-        'error'
+        )
       );
     }
   }
-
 
 
   /**
@@ -306,16 +216,13 @@ class AjaxRequestHandler
   }
 
   /**
+   * @param string $responseType the response type
    * @param array $data data to be sent in body
-   * @param string $state the state
-   * @param string $info additional request information
    */
-  private static function setJsonOutput($data, $state = 'success')
+  private static function setJsonOutput($responseType, $data)
   {
     $json = array(
-      'head' => array(
-        'status' => $state
-      ),
+      'responseType' => $responseType,
       'body' => $data
     );
     header('Content-Type: application/json');
