@@ -25,3 +25,26 @@ $overridePublishedPostsChecked = $workflowSettings['overridePublishedPosts'] ? '
     </table>
   </div>
 </div>
+<pre>
+  <?php
+
+  $pmca = new \Supertext\Polylang\Helper\PostMediaContentAccessor();
+
+  $translatableFields = $pmca->getTranslatableFields(1);
+
+  $selectedFields = array();
+  foreach($translatableFields['fields'] as $field){
+    $selectedFields[$field['name']] = 'on';
+  }
+
+  $texts = $pmca->getTexts(get_post(1), $selectedFields);
+
+  $texts[26]['post_title'] = $texts[26]['post_title'].'new';
+  $texts[26]['post_content'] = $texts[26]['post_content'].'new';
+  $texts[26]['post_excerpt'] = $texts[26]['post_excerpt'].'new';
+  $texts[26]['image_alt'] = $texts[26]['image_alt'].'new';
+
+  $pmca->setTexts(get_post(1), $texts);
+
+  ?>
+</pre>

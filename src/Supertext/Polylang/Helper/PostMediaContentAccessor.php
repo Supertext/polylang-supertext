@@ -10,8 +10,6 @@ use Supertext\Polylang\Api\Multilang;
  */
 class PostMediaContentAccessor implements IContentAccessor
 {
-  const KEY_SEPARATOR = '__';
-
   /**
    * @param $postId
    * @return array
@@ -52,11 +50,12 @@ class PostMediaContentAccessor implements IContentAccessor
       );
 
       foreach ($attachments as $attachment) {
-        $base_name = 'attachment' . self::KEY_SEPARATOR . $attachment->ID . self::KEY_SEPARATOR;
-        $texts[$base_name . 'post_title'] = $attachment->post_title;
-        $texts[$base_name . 'post_content'] = $attachment->post_content;
-        $texts[$base_name . 'post_excerpt'] = $attachment->post_excerpt;
-        $texts[$base_name . 'image_alt'] = get_post_meta($attachment->ID, '_wp_attachment_image_alt', true);
+        $texts[$attachment->ID] = array(
+          'post_title' => $attachment->post_title,
+          'post_content' => $attachment->post_content,
+          'post_excerpt' => $attachment->post_excerpt,
+          'image_alt' => get_post_meta($attachment->ID, '_wp_attachment_image_alt', true)
+        );
       }
     }
 
@@ -69,41 +68,25 @@ class PostMediaContentAccessor implements IContentAccessor
    */
   public function setTexts($post, $texts)
   {
-    $currentTargetAttachement = null;
-    $currentSourceAttachmentId = null;
-
     foreach ($texts as $id => $text) {
-      $keys = explode(self::KEY_SEPARATOR, $id);
 
-      $sourceAttachmentId = intval($keys[1]);
+      $targetAttachmentId = Multilang::getPostInLanguage($id, Multilang::getPostLanguage($post->ID));
+      $targetAttachement = get_post($targetAttachmentId);
 
-      if ($sourceAttachmentId !== $currentSourceAttachmentId) {
-
-        if (isset($currentTargetAttachement)) {
-          wp_update_post($currentTargetAttachement);
+      foreach($text as $key => $value){
+        if ($key === 'image_alt') {
+          update_post_meta(
+            $targetAttachement->ID,
+            '_wp_attachment_image_alt',
+            addslashes(html_entity_decode($value, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
+          );
+          continue;
         }
 
-        $currentSourceAttachmentId = $sourceAttachmentId;
-        $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, Multilang::getPostLanguage($post->ID));
-        $currentTargetAttachement = get_post($targetAttachmentId);
+        $targetAttachement->{$key} = html_entity_decode($value, ENT_COMPAT | ENT_HTML401, 'UTF-8');
       }
 
-      $postAttribute = $keys[2];
-
-      if ($postAttribute === 'image_alt') {
-        update_post_meta(
-          $currentTargetAttachement->ID,
-          '_wp_attachment_image_alt',
-          addslashes(html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
-        );
-        continue;
-      }
-
-      $currentTargetAttachement->{$postAttribute} = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-    }
-
-    if (isset($currentTargetAttachement)) {
-      wp_update_post($currentTargetAttachement);
+      wp_update_post($targetAttachement);
     }
   }
 }
