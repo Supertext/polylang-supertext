@@ -65,6 +65,10 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
 
       $settingsTextProperties = $this->getTextProperties($layoutObject->settings);
 
+      if(!count($settingsTextProperties)){
+        continue;
+      }
+
       $texts[$key]['settings'] = $settingsTextProperties;
     }
 
