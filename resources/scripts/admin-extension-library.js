@@ -1,4 +1,8 @@
 var Supertext = Supertext || {};
+Supertext.Template = (function (win, doc, $, wp) {
+
+  
+})(window, document, jQuery, wp);
 
 Supertext.Modal = (function (win, doc, $, wp) {
   'use strict';
@@ -15,6 +19,11 @@ Supertext.Modal = (function (win, doc, $, wp) {
      */
     errorTemplateId = 'sttr-modal-error',
     /**
+     * The button id
+     * @type {string}
+     */
+    buttonTemplateId = 'sttr-modal-button',
+    /**
      * The selectors of different html elements
      */
     selectors = {
@@ -23,9 +32,7 @@ Supertext.Modal = (function (win, doc, $, wp) {
       modalNotice: '#sttr-modal-notice',
       modalCloseIcon: '.sttr-modal-icon-close',
       modalBackground: '.sttr-modal-background',
-      modalNextStepButton: '#sttr-modal-next-step',
-      modalPreviousStepButton: '#sttr-modal-previous-step',
-      modalCloseButton: '#sttr-modal-close',
+      modalFooter: '.sttr-modal-footer',
       modalNoticeDismissIcon: '.notice-dismiss',
       modalErrorNotice: function (token) {
         return '#' + errorTemplateId + '-' + token
@@ -44,6 +51,10 @@ Supertext.Modal = (function (win, doc, $, wp) {
     /**
      * State
      */
+    buttonTemplate = null,
+    /**
+     * State
+     */
     state = {
       /**
        * the modal jquery element
@@ -54,12 +65,7 @@ Supertext.Modal = (function (win, doc, $, wp) {
        * Notice counter
        * @type {number}
        */
-      noticeCounter: 0,
-      /**
-       * The callback to call on click on next button
-       */
-      nextCallback: function (e) {
-      }
+      noticeCounter: 0
     };
 
 
@@ -133,19 +139,31 @@ Supertext.Modal = (function (win, doc, $, wp) {
     }
   }
 
+  /**
+   *
+   * @param innerHtml
+   * @param onClickEventHandler
+   */
+  function addButton(innerHtml, onClickEventHandler, type)
+  {
+    $(selectors.modalFooter).append(buttonTemplate({
+      innerHtml: innerHtml,
+      type: type
+    }));
+  }
+
   return {
     initialize: function () {
       modalTemplate = wp.template(modalTemplateId);
       errorTemplate = wp.template(errorTemplateId);
+      buttonTemplate = wp.template(buttonTemplateId);
     },
     open: open,
     close: close,
     showContent: showContent,
     showError: showError,
     hideError: hideError,
-    onNextCall: function (callback) {
-      state.nextCallback = callback;
-    }
+    addButton: addButton
   }
 })(window, document, jQuery, wp);
 
@@ -499,13 +517,13 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       posts: state.posts
     }));
 
-    modal.onNextCall(function () {
+    /*modal.onNextCall(function () {
       validation
         .checkAll(validationRules)
         .fail(showValidationErrors)
         .pass(hideValidationError)
         .pass(loadSecondOrderStep);
-    });
+    });*/
 
     initializeOrderItemList();
 
@@ -557,9 +575,6 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       options: options
     }));
 
-    modal.onNextCall(function () {
-
-    });
   }
 
   /**

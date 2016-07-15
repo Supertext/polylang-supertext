@@ -39,14 +39,15 @@
         </div>
       </div>
       <div id="sttr-modal-footer" class="sttr-modal-footer">
-        <button id="sttr-modal-next-step" type="button" class="button button-secondary"><?php _e('Next', 'polylang-supertext'); ?></button>
-        <button id="sttr-modal-previous-step" type="button" class="button button-secondary"><?php _e('Previous', 'polylang-supertext'); ?></button>
-        <button id="sttr-modal-close" type="button" class="button button-secondary"><?php _e('Close', 'polylang-supertext'); ?></button>
         <div class="wp-clearfix"></div>
       </div>
     </div>
     <div class="sttr-modal-background"> </div>
   </div>
+</script>
+
+<script type="text/html" id="tmpl-sttr-modal-button">
+  <button type="button" class="button button-{{data.type}}">{{{data.innerHtml}}}</button>
 </script>
 
 <script type="text/html" id="tmpl-sttr-order-step-1">
