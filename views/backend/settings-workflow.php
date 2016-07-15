@@ -25,4 +25,3 @@ $overridePublishedPostsChecked = $workflowSettings['overridePublishedPosts'] ? '
     </table>
   </div>
 </div>
-

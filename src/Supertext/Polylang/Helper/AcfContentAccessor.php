@@ -77,7 +77,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
           continue;
         }
 
-        $texts[$meta_key] = $value[0];
+        $texts[$meta_key] = $this->textProcessor->replaceShortcodes($value[0]);
       }
     }
 
@@ -92,6 +92,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
   {
     foreach ($texts as $id => $text) {
       $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+      $decodedContent = $this->textProcessor->replaceShortcodeNodes($decodedContent);
       update_post_meta($post->ID, $id, $decodedContent);
     }
   }
