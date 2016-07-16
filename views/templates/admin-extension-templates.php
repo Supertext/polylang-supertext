@@ -6,20 +6,6 @@
   </tr>
 </script>
 
-<script type="text/html" id="tmpl-sttr-modal-error">
-  <div id="sttr-modal-error-{{data.token}}" class="notice notice-error">
-    <button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>
-    <h2>{{data.error.title}}</h2>
-    <p class="error-message">
-      <# if(_.isArray(data.error.message)) { #>
-      {{{data.error.message.join('<br>')}}}
-      <# }else{ #>
-      {{data.error.message}}
-      <# } if(data.details){ #><br/>({{data.error.details}})<# } #>
-    </p>
-  </div>
-</script>
-
 <script type="text/html" id="tmpl-sttr-modal">
   <div id="sttr-modal" class="sttr-modal">
     <div id="sttr-modal-notice" class="sttr-modal-notice"></div>
@@ -46,8 +32,44 @@
   </div>
 </script>
 
+<script type="text/html" id="tmpl-sttr-modal-error">
+  <div id="sttr-modal-error-{{data.token}}" class="notice notice-error">
+    <button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>
+    <h2>{{data.error.title}}</h2>
+    <p class="error-message">
+      <# if(_.isArray(data.error.message)) { #>
+        {{{data.error.message.join('<br>')}}}
+        <# }else{ #>
+          {{data.error.message}}
+          <# } if(data.details){ #><br/>({{data.error.details}})<# } #>
+    </p>
+  </div>
+</script>
+
 <script type="text/html" id="tmpl-sttr-modal-button">
-  <button type="button" class="button button-{{data.type}}">{{{data.innerHtml}}}</button>
+  <button type="button" id="sttr-modal-button-{{data.token}}" class="button button-{{data.type}}">{{{data.innerHtml}}}</button>
+</script>
+
+<script type="text/html" id="tmpl-sttr-order-process-skeleton">
+  <div id="sttr-order-process">
+    <div class="checkout-wrap">
+      <ul class="checkout-bar">
+
+        <li class="visited">
+          Login
+        </li>
+
+        <li class="visited">Shipping & Billing</li>
+
+        <li class="active">Shipping Options</li>
+
+        <li>Review & Payment</li>
+
+        <li>Complete</li>
+
+      </ul>
+    </div>
+  </div>
 </script>
 
 <script type="text/html" id="tmpl-sttr-order-step-1">

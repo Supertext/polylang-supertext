@@ -9,6 +9,11 @@ Supertext.Template = (function (win, doc, $, wp) {
      */
     orderLinkRowTemplateId = 'sttr-order-link-row',
     /**
+     * The order process skeleton template id
+     * @type {string}
+     */
+    orderProcessSkeleton = 'sttr-order-process-skeleton',
+    /**
      * The modal template id
      * @type {string}
      */
@@ -38,8 +43,8 @@ Supertext.Template = (function (win, doc, $, wp) {
      */
     templates = {};
 
-  function getHtml(templateId, data){
-    if(!templates.hasOwnProperty(templateId)){
+  function getHtml(templateId, data) {
+    if (!templates.hasOwnProperty(templateId)) {
       templates[templateId] = wp.template(templateId);
     }
 
@@ -47,12 +52,27 @@ Supertext.Template = (function (win, doc, $, wp) {
   }
 
   return {
-    orderLinkRow: function(data){ return getHtml(orderLinkRowTemplateId, data)},
-    modal: function(data){ return getHtml(modalTemplateId, data)},
-    modalError: function(data){ return getHtml(errorTemplateId, data)},
-    modalButton: function(data){ return getHtml(buttonTemplateId, data)},
-    orderStep1: function(data){ return getHtml(orderStepOneTemplateId, data)},
-    orderStep2: function(data){ return getHtml(orderStepTwoTemplateId, data)}
+    orderLinkRow: function (data) {
+      return getHtml(orderLinkRowTemplateId, data)
+    },
+    orderProcessSkeleton: function (data) {
+      return getHtml(orderProcessSkeleton, data)
+    },
+    modal: function (data) {
+      return getHtml(modalTemplateId, data)
+    },
+    modalError: function (data) {
+      return getHtml(errorTemplateId, data)
+    },
+    modalButton: function (data) {
+      return getHtml(buttonTemplateId, data)
+    },
+    orderStep1: function (data) {
+      return getHtml(orderStepOneTemplateId, data)
+    },
+    orderStep2: function (data) {
+      return getHtml(orderStepTwoTemplateId, data)
+    }
   }
 })(window, document, jQuery, wp);
 
@@ -73,6 +93,9 @@ Supertext.Modal = (function (win, doc, $) {
       modalNoticeDismissIcon: '.notice-dismiss',
       modalErrorNotice: function (token) {
         return '#sttr-modal-error-' + token
+      },
+      modalButton: function (token) {
+        return '#sttr-modal-button-' + token
       }
     },
     /**
@@ -92,7 +115,12 @@ Supertext.Modal = (function (win, doc, $) {
        * Notice counter
        * @type {number}
        */
-      noticeCounter: 0
+      noticeCounter: 0,
+      /**
+       * Button counter
+       * @type {number}
+       */
+      buttonCounter: 0
     };
 
 
@@ -169,18 +197,41 @@ Supertext.Modal = (function (win, doc, $) {
   /**
    *
    * @param innerHtml
+   * @param type
    * @param onClickEventHandler
    */
-  function addButton(innerHtml, onClickEventHandler, type)
-  {
+  function addButton(innerHtml, type, onClickEventHandler) {
+    var token = ++state.buttonCounter;
+
     $(selectors.modalFooter).append(template.modalButton({
+      token: token,
       innerHtml: innerHtml,
       type: type
     }));
+
+    $(selectors.modalButton(token)).click(onClickEventHandler);
+
+    return token;
+  }
+
+  /**
+   * Disables a button
+   * @param token
+   */
+  function disableButton(token){
+    $(selectors.modalButton(token)).addClass('button-disabled');
+  }
+
+  /**
+   * Enables a button
+   * @param token
+   */
+  function enableButton(token){
+    $(selectors.modalButton(token)).removeClass('button-disabled');
   }
 
   return {
-    initialize: function(externals){
+    initialize: function (externals) {
       template = externals.template;
     },
     open: open,
@@ -188,7 +239,9 @@ Supertext.Modal = (function (win, doc, $) {
     showContent: showContent,
     showError: showError,
     hideError: hideError,
-    addButton: addButton
+    addButton: addButton,
+    disableButton: disableButton,
+    enableButton: enableButton
   }
 })(window, document, jQuery);
 
@@ -381,7 +434,8 @@ Supertext.Polylang = (function (win, doc, $, wp) {
     state = {
       posts: [],
       languageMismatchErrorToken: null,
-      validationErrorToken: null
+      validationErrorToken: null,
+      orderTranslationButtonToken: null
     };
 
   /**
@@ -459,7 +513,9 @@ Supertext.Polylang = (function (win, doc, $, wp) {
 
     if (posts.length > 0) {
       openModal();
-      loadFirstOrderStep(posts);
+      addOrderProcessSkeleton();
+      addButtons();
+      //loadFirstOrderStep(posts);
     } else {
       alert(supertextTranslationL10n.alertPleaseSelect);
     }
@@ -474,6 +530,36 @@ Supertext.Polylang = (function (win, doc, $, wp) {
     modal.open({
       title: supertextTranslationL10n.modalTitle
     });
+  }
+
+  /**
+   *
+   */
+  function addOrderProcessSkeleton(){
+    modal.showContent(template.orderProcessSkeleton({
+
+    }));
+  }
+
+  /**
+   * Adds the buttons
+   */
+  function addButtons() {
+    state.orderTranslationButtonToken = modal.addButton(
+      supertextTranslationL10n.orderTranslation,
+      'primary',
+      function(){}
+    );
+
+    //modal.disableButton(state.orderTranslationButtonToken);
+
+    modal.addButton(
+      supertextTranslationL10n.cancel,
+      'secondary',
+      function(){
+        modal.close();
+      }
+    );
   }
 
   /**
@@ -526,12 +612,12 @@ Supertext.Polylang = (function (win, doc, $, wp) {
     }));
 
     /*modal.onNextCall(function () {
-      validation
-        .checkAll(validationRules)
-        .fail(showValidationErrors)
-        .pass(hideValidationError)
-        .pass(loadSecondOrderStep);
-    });*/
+     validation
+     .checkAll(validationRules)
+     .fail(showValidationErrors)
+     .pass(hideValidationError)
+     .pass(loadSecondOrderStep);
+     });*/
 
     initializeOrderItemList();
 
@@ -575,8 +661,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
    * Add the first order step to the modal content
    * @param data
    */
-  function addSecondOrderStep(data)
-  {
+  function addSecondOrderStep(data) {
     var options = data.body.options;
 
     modal.showContent(template.orderStep2({

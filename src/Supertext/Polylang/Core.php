@@ -168,6 +168,8 @@ class Core
       'errorMessageNotAllPostInSameLanguage' => esc_js(__('Please select only post in the same language.', 'polylang-supertext')),
       'errorValidationSelectTargetLanguage' => esc_js(__('Please select the target language.', 'polylang-supertext')),
       'modalTitle' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
+      'orderTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
+      'cancel' => esc_js(__('Cancel', 'polylang-supertext')),
       'alertPleaseSelect' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
     );
 
