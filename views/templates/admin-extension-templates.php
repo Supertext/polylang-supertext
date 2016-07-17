@@ -52,21 +52,15 @@
 
 <script type="text/html" id="tmpl-sttr-order-process-skeleton">
   <div id="sttr-order-process">
-    <div class="checkout-wrap">
-      <ul class="checkout-bar">
-
+    <div class="sttr-order-progress-bar">
+      <ul>
         <li class="visited">
           Login
         </li>
-
         <li class="visited">Shipping & Billing</li>
-
         <li class="active">Shipping Options</li>
-
         <li>Review & Payment</li>
-
         <li>Complete</li>
-
       </ul>
     </div>
   </div>

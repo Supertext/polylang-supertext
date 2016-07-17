@@ -248,7 +248,7 @@ Supertext.Modal = (function (win, doc, $) {
 /**
  * Polylang translation plugin to inject translation options
  */
-Supertext.Polylang = (function (win, doc, $, wp) {
+Supertext.Polylang = (function (win, doc, $) {
   'use strict';
 
   var
@@ -551,7 +551,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
       function(){}
     );
 
-    //modal.disableButton(state.orderTranslationButtonToken);
+    modal.disableButton(state.orderTranslationButtonToken);
 
     modal.addButton(
       supertextTranslationL10n.cancel,
@@ -942,7 +942,7 @@ Supertext.Polylang = (function (win, doc, $, wp) {
     openOrderForm: openOrderForm
   }
 
-})(window, document, jQuery, wp);
+})(window, document, jQuery);
 
 // Load on load. yass.
 jQuery(document).ready(function () {
