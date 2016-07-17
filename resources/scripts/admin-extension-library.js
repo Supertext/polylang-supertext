@@ -4,44 +4,61 @@ Supertext.Template = (function (win, doc, $, wp) {
 
   var
     /**
-     * The order link row template id
-     * @type {string}
+     * All template ids
      */
-    orderLinkRowTemplateId = 'sttr-order-link-row',
-    /**
-     * The order process skeleton template id
-     * @type {string}
-     */
-    orderProcessSkeleton = 'sttr-order-process-skeleton',
-    /**
-     * The modal template id
-     * @type {string}
-     */
-    modalTemplateId = 'sttr-modal',
-    /**
-     * The error template id
-     * @type {string}
-     */
-    errorTemplateId = 'sttr-modal-error',
-    /**
-     * The button template id
-     * @type {string}
-     */
-    buttonTemplateId = 'sttr-modal-button',
-    /**
-     * The order step 1 template id
-     * @type {string}
-     */
-    orderStepOneTemplateId = 'sttr-order-step-1',
-    /**
-     * The order step 2 template id
-     * @type {string}
-     */
-    orderStepTwoTemplateId = 'sttr-order-step-2',
+    templateIds = {
+      /**
+       * The order link row template id
+       * @type {string}
+       */
+      orderLinkRow: 'sttr-order-link-row',
+      /**
+       * The order process skeleton template id
+       * @type {string}
+       */
+      orderProcessSkeleton: 'sttr-order-process-skeleton',
+      /**
+       * The modal template
+       * @type {string}
+       */
+      modal: 'sttr-modal',
+      /**
+       * The error template id
+       * @type {string}
+       */
+      modalError: 'sttr-modal-error',
+      /**
+       * The button template id
+       * @type {string}
+       */
+      modalButton: 'sttr-modal-button',
+      /**
+       * The order step 1 template id
+       * @type {string}
+       */
+      orderStep1: 'sttr-order-step-1',
+      /**
+       * The order step 2 template id
+       * @type {string}
+       */
+      orderStep2: 'sttr-order-step-2'
+    },
     /**
      * All templates
      */
-    templates = {};
+    templates = {},
+    /**
+     * return object
+     */
+    returnObject = {
+      initialize: function () {
+        $.each(templateIds, function (key, name) {
+          returnObject[key] = function (data) {
+            return getHtml(name, data);
+          };
+        });
+      }
+    };
 
   function getHtml(templateId, data) {
     if (!templates.hasOwnProperty(templateId)) {
@@ -51,29 +68,7 @@ Supertext.Template = (function (win, doc, $, wp) {
     return templates[templateId](data);
   }
 
-  return {
-    orderLinkRow: function (data) {
-      return getHtml(orderLinkRowTemplateId, data)
-    },
-    orderProcessSkeleton: function (data) {
-      return getHtml(orderProcessSkeleton, data)
-    },
-    modal: function (data) {
-      return getHtml(modalTemplateId, data)
-    },
-    modalError: function (data) {
-      return getHtml(errorTemplateId, data)
-    },
-    modalButton: function (data) {
-      return getHtml(buttonTemplateId, data)
-    },
-    orderStep1: function (data) {
-      return getHtml(orderStepOneTemplateId, data)
-    },
-    orderStep2: function (data) {
-      return getHtml(orderStepTwoTemplateId, data)
-    }
-  }
+  return returnObject;
 })(window, document, jQuery, wp);
 
 Supertext.Modal = (function (win, doc, $) {
@@ -218,7 +213,7 @@ Supertext.Modal = (function (win, doc, $) {
    * Disables a button
    * @param token
    */
-  function disableButton(token){
+  function disableButton(token) {
     $(selectors.modalButton(token)).addClass('button-disabled');
   }
 
@@ -226,7 +221,7 @@ Supertext.Modal = (function (win, doc, $) {
    * Enables a button
    * @param token
    */
-  function enableButton(token){
+  function enableButton(token) {
     $(selectors.modalButton(token)).removeClass('button-disabled');
   }
 
@@ -411,14 +406,6 @@ Supertext.Polylang = (function (win, doc, $) {
       }
     })(),
     /**
-     * Tells if there is an ajax order being placed
-     */
-    createOrderRunning = false,
-    /**
-     * Ajax request counter
-     */
-    requestCounter = 0,
-    /**
      * May be overridden to true on load
      */
     inTranslation = false,
@@ -426,8 +413,6 @@ Supertext.Polylang = (function (win, doc, $) {
      * The offer url to be loaded in thickbox
      */
     offerUrl = '/wp-content/plugins/polylang-supertext/views/backend/offer.php',
-
-
     /**
      * Container for current state data
      */
@@ -535,10 +520,8 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    *
    */
-  function addOrderProcessSkeleton(){
-    modal.showContent(template.orderProcessSkeleton({
-
-    }));
+  function addOrderProcessSkeleton() {
+    modal.showContent(template.orderProcessSkeleton({}));
   }
 
   /**
@@ -548,7 +531,8 @@ Supertext.Polylang = (function (win, doc, $) {
     state.orderTranslationButtonToken = modal.addButton(
       supertextTranslationL10n.orderTranslation,
       'primary',
-      function(){}
+      function () {
+      }
     );
 
     modal.disableButton(state.orderTranslationButtonToken);
@@ -556,7 +540,7 @@ Supertext.Polylang = (function (win, doc, $) {
     modal.addButton(
       supertextTranslationL10n.cancel,
       'secondary',
-      function(){
+      function () {
         modal.close();
       }
     );
@@ -946,6 +930,8 @@ Supertext.Polylang = (function (win, doc, $) {
 
 // Load on load. yass.
 jQuery(document).ready(function () {
+  Supertext.Template.initialize();
+
   Supertext.Modal.initialize({
     template: Supertext.Template
   });
