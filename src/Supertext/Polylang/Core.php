@@ -170,6 +170,7 @@ class Core
       'modalTitle' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
       'orderTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
       'cancel' => esc_js(__('Cancel', 'polylang-supertext')),
+      'next' => esc_js(__('Next', 'polylang-supertext')),
       'alertPleaseSelect' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
     );
 

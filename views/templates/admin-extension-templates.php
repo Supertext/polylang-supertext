@@ -51,19 +51,18 @@
 </script>
 
 <script type="text/html" id="tmpl-sttr-order-progress-bar">
-  <div class="sttr-order-progress-bar">
+  <div id="sttr-order-progress-bar" class="sttr-order-progress-bar">
     <ul>
-      <li class="active"><?php _e('Select content', 'polylang-supertext'); ?></li>
+      <li><?php _e('Select content', 'polylang-supertext'); ?></li>
       <li><?php _e('Choose target language', 'polylang-supertext'); ?></li>
-      <li><?php _e('Get offer and order', 'polylang-supertext'); ?></li>
+      <li><?php _e('Choose quote and order', 'polylang-supertext'); ?></li>
       <li><?php _e('Confirmation', 'polylang-supertext'); ?></li>
     </ul>
   </div>
+  <div id="sttr-order-step" class="sttr-order-step"></div>
 </script>
 
-<script type="text/html" id="tmpl-sttr-order-step-1">
-  <form id="sttr-order-step-1-form">
-  <h2><?php _e('Content to be translated', 'polylang-supertext');?></h2>
+<script type="text/html" id="tmpl-sttr-content-step">
   <p>
     <?php
     $adminUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=translatablefields');
@@ -79,7 +78,7 @@
       <ul>
         <# _.each(data.posts, function(post) { #>
           <li>
-            <a href="#sttr-order-translatable-content-{{post.id}}" data-id="{{post.id}}">{{post.title}} ({{post.languageCode}})<span class="dashicons dashicons-no-alt"></span></a>
+            <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}">{{post.title}} ({{post.languageCode}})<span class="dashicons dashicons-no-alt"></span></a>
           </li>
         <# }); #>
       </ul>
@@ -97,12 +96,12 @@
               <tbody>
               <# if(translatableField.fields.length){ #>
               <tr>
-                <# _.each(translatableField.fields, function(field) { #>
+                <# _.each(translatableField.fields, function(field, index) { #>
                   <td>
                     <# if(field.default){ #>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{sourceId}}][{{field.name}}]" checked="checked">
+                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" data-post-id="{{post.id}}" data-source-id="{{sourceId}}" data-field-id="{{index}}" checked="checked">
                     <#} else {#>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{sourceId}}][{{field.name}}]">
+                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" data-post-id="{{post.id}}" data-source-id="{{sourceId}}" data-field-id="{{index}}">
                     <# } #>
                   </td>
                   <td>
@@ -126,22 +125,22 @@
     <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post/page', 'polylang-supertext');?></button>
     <div class="clearfix"></div>
   </div>
-  <h2><?php _e('Language', 'polylang-supertext');?></h2>
-  <p>
-    <?php _e('Translate from <b id="sttr-order-source-language-label">{{data.sourceLanguage}}</b> into ', 'polylang-supertext');?>
-    <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language" />
-    <select name="orderTargetLanguage" id="sttr-order-target-language">
-      <option value=""><?php _e('Please select', 'polylang-supertext');?>...</option>
-      <# _.each(data.languages, function(language, code) { #>
-        <option value="{{code}}">{{language}}</option>
-      <# }); #>
-    </select>
-  </p>
-  </form>
 </script>
 
-<script type="text/html" id="tmpl-sttr-order-step-2">
-  <form id="sttr-order-step-2-form">
+<script type="text/html" id="tmpl-sttr-language-step">
+  <h2><?php _e('Language', 'polylang-supertext');?></h2>
+  <p>
+  <?php _e('Translate from <b id="sttr-order-source-language-label">{{data.sourceLanguage}}</b> into ', 'polylang-supertext');?>
+    <select id="sttr-order-target-language">
+    <option value=""><?php _e('Please select', 'polylang-supertext');?>...</option>
+    <# _.each(data.languages, function(language, code) { #>
+      <option value="{{code}}">{{language}}</option>
+    <# }); #>
+  </select>
+  </p>
+</script>
+
+<script type="text/html" id="tmpl-sttr-quote-step">
     <h2><?php _e('Service and deadline', 'polylang-supertext'); ?></h2>
     <p><?php _e('Select the translation service and deadline:', 'polylang-supertext'); ?></p>
     <div class="sttr-order-item-quote">
@@ -160,7 +159,7 @@
           <# _.each(option.items, function(item) { #>
             <tr>
               <td class="selection-cell">
-                <input type="radio" value="{{option.id}}:{{item.id}}" id="sttr-rad-translation-type-{{option.id}}-{{item.id}}" name="radTranslationType">
+                <input type="radio" value="{{option.id}}:{{item.id}}" id="sttr-rad-translation-type-{{option.id}}-{{item.id}}">
               </td>
               <td>
                 <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.name}}</label>
@@ -179,6 +178,5 @@
       </table>
     </div>
     <h2><?php _e('Your comment to Supertext', 'polylang-supertext'); ?></h2>
-    <p><textarea name="orderComment" id="sttr-order-comment"></textarea></p>
-  </form>
+    <p><textarea id="sttr-order-comment"></textarea></p>
 </script>

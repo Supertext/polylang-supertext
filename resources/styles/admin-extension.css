@@ -178,6 +178,93 @@
   font-size: 13px;
 }
 
+.sttr-order-progress-bar {
+  margin: 40px auto;
+}
+
+.sttr-order-progress-bar ul {
+  height: 5px;
+  margin: 0 auto;
+  padding: 0;
+  background-size: 35px 35px;
+  background-color: #EcEcEc;
+  border-radius: 15px;
+}
+
+.sttr-order-progress-bar ul li {
+  position: relative;
+  display: inline-block;
+  margin: 35px 0 0;
+  padding: 0;
+  color: #ccc;
+  text-align: center;
+  width: 19%;
+}
+
+.sttr-order-progress-bar ul li.active {
+  color: #0085ba;
+  font-weight: bold;
+}
+
+.sttr-order-progress-bar ul li.visited {
+  font-weight: bold;
+  color: #888;
+  z-index: 99999;
+}
+
+.sttr-order-progress-bar ul li:before {
+  position: absolute;
+  background: #ddd;
+  border: 2px solid #FFF;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  height: 40px;
+  left: 40%;
+  line-height: 40px;
+  top: -55px;
+  width: 40px;
+  z-index: 99;
+}
+
+.sttr-order-progress-bar ul li.active:before {
+  background: #0085ba;
+  z-index: 99999;
+}
+
+.sttr-order-progress-bar ul li.visited:before {
+  background-color: #888;
+  z-index: 99999;
+}
+
+.sttr-order-progress-bar ul li:nth-child(1):before {
+  content: "1";
+}
+
+.sttr-order-progress-bar ul li:nth-child(2):before {
+  content: "2";
+}
+
+.sttr-order-progress-bar ul li:nth-child(3):before {
+  content: "3";
+}
+
+.sttr-order-progress-bar ul li:nth-child(4):before {
+  content: "4";
+}
+
+.sttr-order-progress-bar ul li:nth-child(5):before {
+  content: "5";
+}
+
+.sttr-order-progress-bar ul li:nth-child(6):before {
+  content: "6";
+}
+
+.sttr-order-step {
+  margin-top: 70px;
+}
+
 .sttr-order-list{
   margin-left: 300px;
   border: 1px solid #ddd;
@@ -346,91 +433,4 @@
   float: right;
   margin-top: 15px;
   margin-left: 10px;
-}
-
-.sttr-order-progress-bar {
-  margin: 40px auto;
-  max-width: 1200px;
-  position: relative;
-}
-
-.sttr-order-progress-bar ul {
-  background-size: 35px 35px;
-  background-color: #EcEcEc;
-  border-radius: 15px;
-  height: 5px;
-  margin: 0 auto;
-  padding: 0;
-  position: absolute;
-  width: 100%;
-}
-
-.sttr-order-progress-bar ul li {
-  position: relative;
-  display: inline-block;
-  margin: 35px 0 0;
-  padding: 0;
-  color: #ccc;
-  text-align: center;
-  width: 19%;
-}
-
-.sttr-order-progress-bar ul li.active {
-  color: #0085ba;
-  font-weight: bold;
-}
-
-.sttr-order-progress-bar ul li.visited {
-  font-weight: bold;
-  color: #888;
-  z-index: 99999;
-}
-
-.sttr-order-progress-bar ul li:before {
-  position: absolute;
-  background: #ddd;
-  border: 2px solid #FFF;
-  border-radius: 50%;
-  color: #fff;
-  text-align: center;
-  height: 40px;
-  left: 40%;
-  line-height: 40px;
-  top: -55px;
-  width: 40px;
-  z-index: 99;
-}
-
-.sttr-order-progress-bar ul li.active:before {
-  background: #0085ba;
-  z-index: 99999;
-}
-
-.sttr-order-progress-bar ul li.visited:before {
-  background-color: #888;
-  z-index: 99999;
-}
-
-.sttr-order-progress-bar ul li:nth-child(1):before {
-  content: "1";
-}
-
-.sttr-order-progress-bar ul li:nth-child(2):before {
-  content: "2";
-}
-
-.sttr-order-progress-bar ul li:nth-child(3):before {
-  content: "3";
-}
-
-.sttr-order-progress-bar ul li:nth-child(4):before {
-  content: "4";
-}
-
-.sttr-order-progress-bar ul li:nth-child(5):before {
-  content: "5";
-}
-
-.sttr-order-progress-bar ul li:nth-child(6):before {
-  content: "6";
 }

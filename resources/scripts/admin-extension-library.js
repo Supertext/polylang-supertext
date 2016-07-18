@@ -9,39 +9,28 @@ Supertext.Template = (function (win, doc, $, wp) {
     templateIds = {
       /**
        * The order link row template id
-       * @type {string}
        */
       orderLinkRow: 'sttr-order-link-row',
       /**
-       * The order process skeleton template id
-       * @type {string}
+       * The order progress bar  template id
        */
       orderProgressBar: 'sttr-order-progress-bar',
       /**
        * The modal template
-       * @type {string}
        */
       modal: 'sttr-modal',
       /**
        * The error template id
-       * @type {string}
        */
       modalError: 'sttr-modal-error',
       /**
        * The button template id
-       * @type {string}
        */
       modalButton: 'sttr-modal-button',
       /**
-       * The order step 1 template id
-       * @type {string}
+       * The content step id
        */
-      orderStep1: 'sttr-order-step-1',
-      /**
-       * The order step 2 template id
-       * @type {string}
-       */
-      orderStep2: 'sttr-order-step-2'
+      contentStep: 'sttr-content-step'
     },
     /**
      * All templates
@@ -130,7 +119,6 @@ Supertext.Modal = (function (win, doc, $) {
     state.$modal = $(selectors.modal);
     state.$modal.find(selectors.modalCloseIcon).click(close);
     state.$modal.find(selectors.modalBackground).click(close);
-    state.$modal.find(selectors.modalNextStepButton).click(onNextStepClick);
     state.$modal.show();
   }
 
@@ -140,14 +128,6 @@ Supertext.Modal = (function (win, doc, $) {
   function close() {
     state.$modal.hide();
     state.$modal.remove();
-  }
-
-  /**
-   * Call the next step callback;
-   * @param e
-   */
-  function onNextStepClick(e) {
-    state.nextCallback(e);
   }
 
   /**
@@ -198,7 +178,7 @@ Supertext.Modal = (function (win, doc, $) {
   function addButton(innerHtml, type, onClickEventHandler) {
     var token = ++state.buttonCounter;
 
-    $(selectors.modalFooter).append(template.modalButton({
+    $(selectors.modalFooter).prepend(template.modalButton({
       token: token,
       innerHtml: innerHtml,
       type: type
@@ -259,9 +239,9 @@ Supertext.Polylang = (function (win, doc, $) {
       orderItemList: '.sttr-order-list',
       orderItemRemoveIcon: '.dashicons-no-alt',
       orderItemRemoveButton: '#sttr-order-remove-item',
-      firstOrderStepForm: '#sttr-order-step-1-form',
-      orderSourceLanguageInput: '#sttr-order-source-language',
-      orderSourceLanguageLabel: '#sttr-order-source-language-label',
+      orderStep: '#sttr-order-step',
+      contentCheckboxes: '#sttr-order-step input[type="checkbox"]',
+      orderProgressBarSteps: '#sttr-order-progress-bar li',
       orderTargetLanguageSelect: '#sttr-order-target-language',
       orderTargetLanguageSelectOptions: '#sttr-order-target-language option'
     },
@@ -419,8 +399,7 @@ Supertext.Polylang = (function (win, doc, $) {
     state = {
       posts: [],
       languageMismatchErrorToken: null,
-      validationErrorToken: null,
-      orderTranslationButtonToken: null
+      validationErrorToken: null
     };
 
   /**
@@ -499,8 +478,8 @@ Supertext.Polylang = (function (win, doc, $) {
     if (posts.length > 0) {
       openModal();
       addOrderProgressBar();
-      addButtons();
-      //loadFirstOrderStep(posts);
+      addCancelButton();
+      loadContentStep(posts);
     } else {
       alert(supertextTranslationL10n.alertPleaseSelect);
     }
@@ -527,16 +506,7 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Adds the buttons
    */
-  function addButtons() {
-    state.orderTranslationButtonToken = modal.addButton(
-      supertextTranslationL10n.orderTranslation,
-      'primary',
-      function () {
-      }
-    );
-
-    modal.disableButton(state.orderTranslationButtonToken);
-
+  function addCancelButton() {
     modal.addButton(
       supertextTranslationL10n.cancel,
       'secondary',
@@ -550,7 +520,7 @@ Supertext.Polylang = (function (win, doc, $) {
    * Loads post data for order step one
    * @param posts
    */
-  function loadFirstOrderStep(posts) {
+  function loadContentStep(posts) {
     $.get(
       context.ajaxUrl,
       {
@@ -568,7 +538,7 @@ Supertext.Polylang = (function (win, doc, $) {
           return;
         }
 
-        addFirstOrderStep(data);
+        addContentStep(data);
       }
     ).fail(
       function (jqXHR, textStatus, errorThrown) {
@@ -586,26 +556,52 @@ Supertext.Polylang = (function (win, doc, $) {
    * Add the first order step to the modal content
    * @param data
    */
-  function addFirstOrderStep(data) {
+  function addContentStep(data) {
     state.posts = data.body;
 
-    modal.showContent(template.orderStep1({
-      sourceLanguage: isEachPostInSameLanguage(state.posts) ? supertextTranslationL10n.languages[state.posts[0].languageCode] : '-',
-      languages: supertextTranslationL10n.languages,
+    $(selectors.orderStep).html(template.contentStep({
       posts: state.posts
     }));
 
-    /*modal.onNextCall(function () {
-     validation
-     .checkAll(validationRules)
-     .fail(showValidationErrors)
-     .pass(hideValidationError)
-     .pass(loadSecondOrderStep);
-     });*/
+    $(selectors.contentCheckboxes).change(onContentCheckboxChanged);
+
+    $(selectors.orderProgressBarSteps).each(function(index, step){
+      if(index == 0){
+        $(step).addClass('active');
+        return;
+      }
+      $(step).removeClass('active');
+    });
+
+    modal.addButton(
+      supertextTranslationL10n.next,
+      'secondary',
+      function () {
+        validation
+          .checkAll(validationRules)
+          .fail(showValidationErrors)
+          .pass(hideValidationError)
+          .pass(loadSecondOrderStep);
+      }
+    );
 
     initializeOrderItemList();
 
     checkOrderItems();
+  }
+
+  function onContentCheckboxChanged(){
+    var $checkbox = $(this);
+    var postId = $checkbox.data('post-id');
+    var sourceId = $checkbox.data('source-id');
+    var fieldId = $checkbox.data('field-id');
+    $.each(state.posts, function(index, post){
+      if(post.id != postId){
+        return;
+      }
+
+      post.translatableFields[sourceId].fields[fieldId].default = $checkbox.prop( "checked" );
+    });
   }
 
   /**
@@ -769,7 +765,7 @@ Supertext.Polylang = (function (win, doc, $) {
     $($itemAnchor.attr('href')).remove();
     $itemAnchor.parent().remove();
 
-    var postIdToRemove = $itemAnchor.data('id');
+    var postIdToRemove = $itemAnchor.data('post-id');
     state.posts = state.posts.filter(function (post) {
       return post.id != postIdToRemove;
     });
