@@ -16,7 +16,7 @@ Supertext.Template = (function (win, doc, $, wp) {
        * The order process skeleton template id
        * @type {string}
        */
-      orderProcessSkeleton: 'sttr-order-process-skeleton',
+      orderProgressBar: 'sttr-order-progress-bar',
       /**
        * The modal template
        * @type {string}
@@ -498,7 +498,7 @@ Supertext.Polylang = (function (win, doc, $) {
 
     if (posts.length > 0) {
       openModal();
-      addOrderProcessSkeleton();
+      addOrderProgressBar();
       addButtons();
       //loadFirstOrderStep(posts);
     } else {
@@ -518,10 +518,10 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
-   *
+   * Adds the order progress bar
    */
-  function addOrderProcessSkeleton() {
-    modal.showContent(template.orderProcessSkeleton({}));
+  function addOrderProgressBar() {
+    modal.showContent(template.orderProgressBar({}));
   }
 
   /**

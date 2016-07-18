@@ -14,7 +14,7 @@
       <div id="sttr-modal-header" class="sttr-modal-header">
         <div class="logo"><img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/logo_supertext.png'; ?>" width="32" height="32" alt="Supertext" title="Supertext" /></div>
         <h1>{{data.title}}</h1>
-        <div class="wp-clearfix"></div>
+        <div class="clearfix"></div>
       </div>
       <div class="sttr-modal-body">
         <div id="sttr-modal-body-content" class="sttr-modal-body-content">
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div id="sttr-modal-footer" class="sttr-modal-footer">
-        <div class="wp-clearfix"></div>
+        <div class="clearfix"></div>
       </div>
     </div>
     <div class="sttr-modal-background"> </div>
@@ -50,19 +50,14 @@
   <button type="button" id="sttr-modal-button-{{data.token}}" class="button button-{{data.type}}">{{{data.innerHtml}}}</button>
 </script>
 
-<script type="text/html" id="tmpl-sttr-order-process-skeleton">
-  <div id="sttr-order-process">
-    <div class="sttr-order-progress-bar">
-      <ul>
-        <li class="visited">
-          Login
-        </li>
-        <li class="visited">Shipping & Billing</li>
-        <li class="active">Shipping Options</li>
-        <li>Review & Payment</li>
-        <li>Complete</li>
-      </ul>
-    </div>
+<script type="text/html" id="tmpl-sttr-order-progress-bar">
+  <div class="sttr-order-progress-bar">
+    <ul>
+      <li class="active"><?php _e('Select content', 'polylang-supertext'); ?></li>
+      <li><?php _e('Choose target language', 'polylang-supertext'); ?></li>
+      <li><?php _e('Get offer and order', 'polylang-supertext'); ?></li>
+      <li><?php _e('Confirmation', 'polylang-supertext'); ?></li>
+    </ul>
   </div>
 </script>
 
@@ -127,9 +122,9 @@
         </div>
       <# }); #>
     </div>
-    <div class="wp-clearfix"></div>
+    <div class="clearfix"></div>
     <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post/page', 'polylang-supertext');?></button>
-    <div class="wp-clearfix"></div>
+    <div class="clearfix"></div>
   </div>
   <h2><?php _e('Language', 'polylang-supertext');?></h2>
   <p>
