@@ -90,22 +90,22 @@
               <?php _e('Please select the content to be translated of <b>{{post.title}}</b>.', 'polylang-supertext');?>
            </span>
           <p>
-          <# _.each(post.translatableFields, function(translatableField, sourceId) { #>
+          <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
             <table class="translatable-content-table">
-              <thead><tr><th colspan="8">{{translatableField.sourceName}}</th></tr></thead>
+              <thead><tr><th colspan="8">{{translatableFieldGroup.name}}</th></tr></thead>
               <tbody>
-              <# if(translatableField.fields.length){ #>
+              <# if(translatableFieldGroup.fields.length){ #>
               <tr>
-                <# _.each(translatableField.fields, function(field, index) { #>
+                <# _.each(translatableFieldGroup.fields, function(field, fieldId) { #>
                   <td>
                     <# if(field.default){ #>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" data-post-id="{{post.id}}" data-source-id="{{sourceId}}" data-field-id="{{index}}" checked="checked">
+                      <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" data-post-id="{{post.id}}" data-group-id="{{groupId}}" data-field-id="{{fieldId}}" checked="checked">
                     <#} else {#>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{sourceId}}-{{field.name}}" data-post-id="{{post.id}}" data-source-id="{{sourceId}}" data-field-id="{{index}}">
+                      <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" data-post-id="{{post.id}}" data-group-id="{{groupId}}" data-field-id="{{fieldId}}">
                     <# } #>
                   </td>
                   <td>
-                    <label for="sttr-{{post.id}}-{{sourceId}}-{{field.name}}">{{field.title}}</label>
+                    <label for="sttr-{{post.id}}-{{groupId}}-{{field.name}}">{{field.title}}</label>
                   </td>
                   <# }); #>
               </tr>

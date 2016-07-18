@@ -22,6 +22,15 @@ class PostContentAccessor implements IContentAccessor
   }
 
   /**
+   * Gets the content accessors name
+   * @return string
+   */
+  public function getName()
+  {
+    return __('Post', 'polylang-supertext');
+  }
+
+  /**
    * @param $postId
    * @return array
    */
@@ -47,10 +56,7 @@ class PostContentAccessor implements IContentAccessor
       'default' => true
     );
 
-    return array(
-      'sourceName' => __('Post', 'polylang-supertext'),
-      'fields' => $translatableFields
-    );
+    return $translatableFields;
   }
 
   /**

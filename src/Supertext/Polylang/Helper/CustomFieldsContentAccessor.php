@@ -31,6 +31,15 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
   }
 
   /**
+   * Gets the content accessors name
+   * @return string
+   */
+  public function getName()
+  {
+    return __('User defined custom fields', 'polylang-supertext');
+  }
+
+  /**
    * @param $postId
    * @return array
    */
@@ -54,10 +63,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
      );
     }
 
-    return array(
-      'sourceName' => __('User defined custom fields', 'polylang-supertext'),
-      'fields' => $translatableFields
-    );
+    return $translatableFields;
   }
 
   /**

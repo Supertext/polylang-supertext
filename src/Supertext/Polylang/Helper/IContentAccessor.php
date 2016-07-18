@@ -8,6 +8,8 @@ namespace Supertext\Polylang\Helper;
  */
 interface IContentAccessor
 {
+  public function getName();
+
   public function getTranslatableFields($postId);
 
   public function getTexts($post, $selectedTranslatableFields);

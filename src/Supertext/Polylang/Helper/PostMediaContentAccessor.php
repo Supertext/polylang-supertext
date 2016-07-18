@@ -11,6 +11,15 @@ use Supertext\Polylang\Api\Multilang;
 class PostMediaContentAccessor implements IContentAccessor
 {
   /**
+   * Gets the content accessors name
+   * @return string
+   */
+  public function getName()
+  {
+    return __('Media', 'polylang-supertext');
+  }
+
+  /**
    * @param $postId
    * @return array
    */
@@ -24,10 +33,7 @@ class PostMediaContentAccessor implements IContentAccessor
       'default' => true
     );
 
-    return array(
-      'sourceName' => __('Media', 'polylang-supertext'),
-      'fields' => $translatableFields
-    );
+    return $translatableFields;
   }
 
   /**

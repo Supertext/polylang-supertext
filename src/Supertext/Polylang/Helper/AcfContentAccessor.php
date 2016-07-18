@@ -31,6 +31,14 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
   }
 
   /**
+   * Gets the content accessors name
+   * @return string
+   */
+  public function getName(){
+    return __('Advanced Custom Field (Plugin)', 'polylang-supertext');
+  }
+
+  /**
    * @param $postId
    * @return array
    */
@@ -54,10 +62,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
       }
     }
 
-    return array(
-      'sourceName' => __('Advanced Custom Field (Plugin)', 'polylang-supertext'),
-      'fields' => $translatableFields
-    );
+    return $translatableFields;
   }
 
   /**

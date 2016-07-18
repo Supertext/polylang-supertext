@@ -2,9 +2,8 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Comotive\Util\StringUtils;
+
 use Supertext\Polylang\Api\AbstractApiException;
-use Supertext\Polylang\Api\ApiConnectionException;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Helper\Constant;
@@ -62,7 +61,7 @@ class AjaxRequestHandler
         'id' => $postId,
         'title' => get_post($postId)->post_title,
         'languageCode' => Multilang::getPostLanguage($postId),
-        'translatableFields' => $this->contentProvider->getAllTranslatableFields($postId)
+        'translatableFieldGroups' => $this->contentProvider->getTranslatableFieldGroups($postId)
       );
     }
 

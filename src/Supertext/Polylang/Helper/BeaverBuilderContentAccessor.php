@@ -24,6 +24,15 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
   }
 
   /**
+   * Gets the content accessors name
+   * @return string
+   */
+  public function getName()
+  {
+    return __('Beaver Builder (Plugin)', 'polylang-supertext');
+  }
+
+  /**
    * @param $postId
    * @return array
    */
@@ -37,10 +46,7 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
       'default' => true
     );
 
-    return array(
-      'sourceName' => __('Beaver Builder (Plugin)', 'polylang-supertext'),
-      'fields' => $translatableFields
-    );
+    return $translatableFields;
   }
 
   /**

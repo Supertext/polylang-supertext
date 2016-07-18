@@ -593,14 +593,14 @@ Supertext.Polylang = (function (win, doc, $) {
   function onContentCheckboxChanged(){
     var $checkbox = $(this);
     var postId = $checkbox.data('post-id');
-    var sourceId = $checkbox.data('source-id');
+    var groupId = $checkbox.data('group-id');
     var fieldId = $checkbox.data('field-id');
     $.each(state.posts, function(index, post){
       if(post.id != postId){
         return;
       }
 
-      post.translatableFields[sourceId].fields[fieldId].default = $checkbox.prop( "checked" );
+      post.translatableFieldGroups[groupId].fields[fieldId].default = $checkbox.prop( "checked" );
     });
   }
 

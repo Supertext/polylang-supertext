@@ -34,12 +34,15 @@ class ContentProvider
    * @param $postId
    * @return array|mixed|void
    */
-  public function getAllTranslatableFields($postId)
+  public function getTranslatableFieldGroups($postId)
   {
     $result = array();
 
     foreach ($this->contentAccessors as $id => $contentAccessor) {
-      $result[$id] = $contentAccessor->getTranslatableFields($postId);
+      $result[$id] = array(
+        'name' => $contentAccessor->getName(),
+        'fields' => $contentAccessor->getTranslatableFields($postId)
+      );
     }
 
     // Let developers add their own translatable items
@@ -62,7 +65,7 @@ class ContentProvider
         continue;
       }
 
-      $texts = $contentAccessor->getTexts($post, $selectedTranslatableFieldGroups[$id]);
+      $texts = $contentAccessor->getTexts($post, $selectedTranslatableFieldGroups['fields'][$id]);
 
       if(count($texts) === 0){
         continue;

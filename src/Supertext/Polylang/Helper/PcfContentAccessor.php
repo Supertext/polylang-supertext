@@ -53,6 +53,15 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
   }
 
   /**
+   * Gets the content accessors name
+   * @return string
+   */
+  public function getName()
+  {
+    return __('Plugin defined custom fields', 'polylang-supertext');
+  }
+
+  /**
    * @param $postId
    * @return array
    */
@@ -79,10 +88,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
       }
     }
 
-    return array(
-      'sourceName' => __('Plugin defined custom fields', 'polylang-supertext'),
-      'fields' => $translatableFields
-    );
+    return $translatableFields;
   }
 
   /**
