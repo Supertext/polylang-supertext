@@ -76,9 +76,9 @@ class AjaxRequestHandler
     $translatableContents = $_POST['translatableContents'];
     $translationData = array();
 
-    foreach ($translatableContents as $postId => $translatableContent) {
+    foreach ($translatableContents as $postId => $translatableFieldGroups) {
       $post = get_post($postId);
-      $translationData[$postId] = $this->contentProvider->getTranslationData($post, $translatableContent);
+      $translationData[$postId] = $this->contentProvider->getTranslationData($post, $translatableFieldGroups);
     }
 
     try{

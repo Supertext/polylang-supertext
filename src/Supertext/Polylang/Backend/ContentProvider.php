@@ -53,19 +53,19 @@ class ContentProvider
 
   /**
    * @param $post
-   * @param $selectedTranslatableFieldGroups
+   * @param $translatableFieldGroups
    * @return array|mixed|void
    */
-  public function getTranslationData($post, $selectedTranslatableFieldGroups)
+  public function getTranslationData($post, $translatableFieldGroups)
   {
     $result = array();
 
     foreach ($this->contentAccessors as $id => $contentAccessor) {
-      if(!isset($selectedTranslatableFieldGroups[$id])){
+      if(!isset($translatableFieldGroups[$id])){
         continue;
       }
 
-      $texts = $contentAccessor->getTexts($post, $selectedTranslatableFieldGroups['fields'][$id]);
+      $texts = $contentAccessor->getTexts($post, $translatableFieldGroups[$id]['fields']);
 
       if(count($texts) === 0){
         continue;

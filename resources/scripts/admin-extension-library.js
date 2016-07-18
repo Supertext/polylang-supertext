@@ -28,6 +28,10 @@ Supertext.Template = (function (win, doc, $, wp) {
        */
       modalButton: 'sttr-modal-button',
       /**
+       * The loader template
+       */
+      stepLoader: 'sttr-step-loader',
+      /**
        * The content step id
        */
       contentStep: 'sttr-content-step'
@@ -240,7 +244,7 @@ Supertext.Polylang = (function (win, doc, $) {
       orderItemRemoveIcon: '.dashicons-no-alt',
       orderItemRemoveButton: '#sttr-order-remove-item',
       orderStep: '#sttr-order-step',
-      contentCheckboxes: '#sttr-order-step input[type="checkbox"]',
+      contentStepForm: '#sttr-content-step-form',
       orderProgressBarSteps: '#sttr-order-progress-bar li',
       orderTargetLanguageSelect: '#sttr-order-target-language',
       orderTargetLanguageSelectOptions: '#sttr-order-target-language option'
@@ -479,6 +483,7 @@ Supertext.Polylang = (function (win, doc, $) {
       openModal();
       addOrderProgressBar();
       addCancelButton();
+      addStepLoader();
       loadContentStep(posts);
     } else {
       alert(supertextTranslationL10n.alertPleaseSelect);
@@ -517,10 +522,20 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
+   * Adds the step loader
+   */
+  function addStepLoader(){
+    $(selectors.orderStep).html(template.stepLoader({}));
+  }
+
+  /**
    * Loads post data for order step one
    * @param posts
    */
   function loadContentStep(posts) {
+    updateOrderProgress(1);
+    addStepLoader();
+
     $.get(
       context.ajaxUrl,
       {
@@ -563,16 +578,6 @@ Supertext.Polylang = (function (win, doc, $) {
       posts: state.posts
     }));
 
-    $(selectors.contentCheckboxes).change(onContentCheckboxChanged);
-
-    $(selectors.orderProgressBarSteps).each(function(index, step){
-      if(index == 0){
-        $(step).addClass('active');
-        return;
-      }
-      $(step).removeClass('active');
-    });
-
     modal.addButton(
       supertextTranslationL10n.next,
       'secondary',
@@ -581,7 +586,7 @@ Supertext.Polylang = (function (win, doc, $) {
           .checkAll(validationRules)
           .fail(showValidationErrors)
           .pass(hideValidationError)
-          .pass(loadSecondOrderStep);
+          .pass(moveToLanguageStep);
       }
     );
 
@@ -590,28 +595,29 @@ Supertext.Polylang = (function (win, doc, $) {
     checkOrderItems();
   }
 
-  function onContentCheckboxChanged(){
-    var $checkbox = $(this);
-    var postId = $checkbox.data('post-id');
-    var groupId = $checkbox.data('group-id');
-    var fieldId = $checkbox.data('field-id');
-    $.each(state.posts, function(index, post){
-      if(post.id != postId){
+  function updateOrderProgress(stepNumber){
+    $(selectors.orderProgressBarSteps).each(function(index, step){
+      if(index == stepNumber-1){
+        $(step).addClass('active');
         return;
       }
-
-      post.translatableFieldGroups[groupId].fields[fieldId].default = $checkbox.prop( "checked" );
+      $(step).removeClass('active');
     });
+  }
+
+  function moveToLanguageStep(){
+    loadLanguageStep($(selectors.contentStepForm).serializeArray());
   }
 
   /**
    * Loads post data for order step two form
    */
-  function loadSecondOrderStep() {
-    var formData = $(selectors.firstOrderStepForm).serializeArray();
+  function loadLanguageStep(completeContentStepData) {
+    updateOrderProgress(2);
+    addStepLoader();
     $.post(
       context.ajaxUrl + '?action=sttr_getOffer',
-      formData
+      completeContentStepData
     ).done(
       function (data) {
         if (data.responseType != 'success') {

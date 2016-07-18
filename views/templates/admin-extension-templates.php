@@ -18,10 +18,6 @@
       </div>
       <div class="sttr-modal-body">
         <div id="sttr-modal-body-content" class="sttr-modal-body-content">
-          <div class="loader">
-            <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext'); ?>">
-            <?php _e('Loading', 'polylang-supertext'); ?>
-          </div>
         </div>
       </div>
       <div id="sttr-modal-footer" class="sttr-modal-footer">
@@ -29,6 +25,13 @@
       </div>
     </div>
     <div class="sttr-modal-background"> </div>
+  </div>
+</script>
+
+<script type="text/html" id="tmpl-sttr-step-loader">
+  <div class="loader">
+    <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext'); ?>">
+    <?php _e('Loading', 'polylang-supertext'); ?>
   </div>
 </script>
 
@@ -63,68 +66,70 @@
 </script>
 
 <script type="text/html" id="tmpl-sttr-content-step">
-  <p>
-    <?php
-    $adminUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=translatablefields');
-    printf(wp_kses(
-      __('Translatable custom fields can be defined in the <a target="_parent" href="%s">settings</a>.',
-        'polylang-supertext'),
-      array('a' => array('href' => array(), 'target' => array()))),
-      esc_url($adminUrl));
-    ?>
-  </p>
-  <div class="sttr-order-list">
-    <div class="sttr-order-items">
-      <ul>
-        <# _.each(data.posts, function(post) { #>
-          <li>
-            <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}">{{post.title}} ({{post.languageCode}})<span class="dashicons dashicons-no-alt"></span></a>
-          </li>
-        <# }); #>
-      </ul>
-    </div>
-    <div class="sttr-order-item-details">
-      <# _.each(data.posts, function(post) { #>
-        <div id="sttr-order-translatable-content-{{post.id}}" style="display: none;">
-           <span>
-              <?php _e('Please select the content to be translated of <b>{{post.title}}</b>.', 'polylang-supertext');?>
-           </span>
-          <p>
-          <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
-            <table class="translatable-content-table">
-              <thead><tr><th colspan="8">{{translatableFieldGroup.name}}</th></tr></thead>
-              <tbody>
-              <# if(translatableFieldGroup.fields.length){ #>
-              <tr>
-                <# _.each(translatableFieldGroup.fields, function(field, fieldId) { #>
-                  <td>
-                    <# if(field.default){ #>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" data-post-id="{{post.id}}" data-group-id="{{groupId}}" data-field-id="{{fieldId}}" checked="checked">
-                    <#} else {#>
-                      <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" data-post-id="{{post.id}}" data-group-id="{{groupId}}" data-field-id="{{fieldId}}">
-                    <# } #>
-                  </td>
-                  <td>
-                    <label for="sttr-{{post.id}}-{{groupId}}-{{field.name}}">{{field.title}}</label>
-                  </td>
-                  <# }); #>
-              </tr>
-              <# } else { #>
-              <tr>
-                <td>- <?php _e('Not present in this post/page', 'polylang-supertext');?></td>
-              </tr>
-              <# } #>
-              </tbody>
-            </table>
+  <form id="sttr-content-step-form">
+    <p>
+      <?php
+      $adminUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&tab=translatablefields');
+      printf(wp_kses(
+        __('Translatable custom fields can be defined in the <a target="_parent" href="%s">settings</a>.',
+          'polylang-supertext'),
+        array('a' => array('href' => array(), 'target' => array()))),
+        esc_url($adminUrl));
+      ?>
+    </p>
+    <div class="sttr-order-list">
+      <div class="sttr-order-items">
+        <ul>
+          <# _.each(data.posts, function(post) { #>
+            <li>
+              <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}">{{post.title}} ({{post.languageCode}})<span class="dashicons dashicons-no-alt"></span></a>
+            </li>
           <# }); #>
-          </p>
-        </div>
-      <# }); #>
+        </ul>
+      </div>
+      <div class="sttr-order-item-details">
+        <# _.each(data.posts, function(post) { #>
+          <div id="sttr-order-translatable-content-{{post.id}}" style="display: none;">
+             <span>
+                <?php _e('Please select the content to be translated of <b>{{post.title}}</b>.', 'polylang-supertext');?>
+             </span>
+            <p>
+            <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
+              <table class="translatable-content-table">
+                <thead><tr><th colspan="8">{{translatableFieldGroup.name}}</th></tr></thead>
+                <tbody>
+                <# if(translatableFieldGroup.fields.length){ #>
+                <tr>
+                  <# _.each(translatableFieldGroup.fields, function(field) { #>
+                    <td>
+                      <# if(field.default){ #>
+                        <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{groupId}}][fields][{{field.name}}]" checked="checked">
+                      <#} else {#>
+                        <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{groupId}}][fields][{{field.name}}]">
+                      <# } #>
+                    </td>
+                    <td>
+                      <label for="sttr-{{post.id}}-{{groupId}}-{{field.name}}">{{field.title}}</label>
+                    </td>
+                    <# }); #>
+                </tr>
+                <# } else { #>
+                <tr>
+                  <td>- <?php _e('Not present in this post/page', 'polylang-supertext');?></td>
+                </tr>
+                <# } #>
+                </tbody>
+              </table>
+            <# }); #>
+            </p>
+          </div>
+        <# }); #>
+      </div>
+      <div class="clearfix"></div>
+      <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post/page', 'polylang-supertext');?></button>
+      <div class="clearfix"></div>
     </div>
-    <div class="clearfix"></div>
-    <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post/page', 'polylang-supertext');?></button>
-    <div class="clearfix"></div>
-  </div>
+  </form>
 </script>
 
 <script type="text/html" id="tmpl-sttr-language-step">
