@@ -125,7 +125,7 @@
                 </tr>
                 <# } else { #>
                 <tr>
-                  <td>- <?php _e('Not present in this post/page', 'polylang-supertext');?></td>
+                  <td>- <?php _e('Not present in this item', 'polylang-supertext');?></td>
                 </tr>
                 <# } #>
                 </tbody>
@@ -135,7 +135,7 @@
         <# }); #>
       </div>
       <div class="clearfix"></div>
-      <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post/page', 'polylang-supertext');?></button>
+      <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this item', 'polylang-supertext');?></button>
       <div class="clearfix"></div>
     </div>
     <h2><?php _e('Language', 'polylang-supertext');?></h2>

@@ -174,7 +174,7 @@ class Core
       'cancel' => esc_js(__('Cancel', 'polylang-supertext')),
       'back' => esc_js(__('Back', 'polylang-supertext')),
       'next' => esc_js(__('Next', 'polylang-supertext')),
-      'alertPleaseSelect' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
+      'alertPleaseSelect' => esc_js(__('Please select at least one item', 'polylang-supertext')),
     );
 
     $library = $this->getLibrary();
