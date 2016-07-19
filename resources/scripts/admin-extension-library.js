@@ -683,13 +683,6 @@ Supertext.Polylang = (function (win, doc, $) {
       options: options
     }));
 
-    /*state.backButtonToken = modal.addButton(
-      supertextTranslationL10n.back,
-      'secondary',
-      function () {
-      }
-    );*/
-
     state.nextButtonToken = modal.addButton(
       supertextTranslationL10n.orderTranslation,
       'primary',
@@ -706,10 +699,10 @@ Supertext.Polylang = (function (win, doc, $) {
   function loadConfirmationStep(){
     state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
 
-    /*modal.removeButton(state.nextButtonToken);
+    modal.removeButton(state.nextButtonToken);
 
     updateOrderProgress(3);
-    addStepLoader();*/
+    addStepLoader();
 
     $.post(
       context.ajaxUrl + '?action=sttr_createOrder',
