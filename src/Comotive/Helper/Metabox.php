@@ -148,7 +148,7 @@ class Metabox
     $html = '';
 
     // Error messages?
-    if (is_array($_SESSION['metabox_errors_' . $this->posttype][$id['args']])) {
+    if (isset($_SESSION) && is_array($_SESSION['metabox_errors_' . $this->posttype][$id['args']])) {
       $html .= '<ul class="mbh-error-list">';
       foreach ($_SESSION['metabox_errors_' . $this->posttype][$id['args']] as $message) {
         $html .= '<li>' . $message . '</li>';
@@ -1383,9 +1383,17 @@ class Metabox
     if (isset($args['required']) && $args['required']) {
       $args['title'] .= ' <span class="required">*</span>';
     }
+
+    if(!isset($args['class'])){
+      $args['class'] = '';
+    }
+
     // provide a css class defaulted to the key argument (non-unique)
     $args['class'] .= ' ' . $args['key'];
 
+    if(!isset($args['title'])){
+      $args['title'] = '';
+    }
 
     // Put in the title
     $html = str_replace('{title}', $args['title'], $html);
