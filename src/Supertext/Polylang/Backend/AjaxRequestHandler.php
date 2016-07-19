@@ -58,6 +58,7 @@ class AjaxRequestHandler
         'id' => $postId,
         'title' => get_post($postId)->post_title,
         'languageCode' => Multilang::getPostLanguage($postId),
+        'isInTranslation' => get_post_meta($postId, Constant::IN_TRANSLATION_FLAG, true) == 1,
         'translatableFieldGroups' => $this->contentProvider->getTranslatableFieldGroups($postId)
       );
     }

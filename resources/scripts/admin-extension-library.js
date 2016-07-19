@@ -278,8 +278,26 @@ Supertext.Polylang = (function (win, doc, $) {
         posts: function (pass, fail) {
           var validationKey = 'posts';
 
-          if (!isEachPostInSameLanguage(state.posts)) {
-            fail(validationKey, supertextTranslationL10n.errorMessageNotAllPostInSameLanguage);
+          var languageCode = null;
+          var isEachPostInSameLanguage = true;
+          var isAPostInTranslation = false;
+          $.each(state.posts, function (index, post) {
+            if (index === 0) {
+              languageCode = post.languageCode;
+            } else {
+              isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
+            }
+
+            isAPostInTranslation = isAPostInTranslation || post.isInTranslation;
+          });
+
+          if(isAPostInTranslation) {
+            fail(validationKey, supertextTranslationL10n.errorValidationSomePostInTranslation);
+            return;
+          }
+
+          if (!isEachPostInSameLanguage) {
+            fail(validationKey, supertextTranslationL10n.errorValidationNotAllPostInSameLanguage);
             return;
           }
 
@@ -329,11 +347,6 @@ Supertext.Polylang = (function (win, doc, $) {
 
       function fail(key, message) {
         lastCheckedRuleKey = key;
-
-        if (errors.hasOwnProperty(key)) {
-          return;
-        }
-
         errors[key] = message;
       }
 
@@ -773,23 +786,6 @@ Supertext.Polylang = (function (win, doc, $) {
         text: language
       }));
     });
-  }
-
-  /**
-   * Check whether all posts are in same language
-   * @returns {boolean}
-   */
-  function isEachPostInSameLanguage(posts) {
-    var languageCode = null;
-    var isEachPostInSameLanguage = true;
-    $.each(posts, function (index, post) {
-      if (index === 0) {
-        languageCode = post.languageCode;
-      } else {
-        isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
-      }
-    });
-    return isEachPostInSameLanguage;
   }
 
   /**

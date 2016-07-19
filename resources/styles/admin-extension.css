@@ -360,9 +360,12 @@
   padding: 16px;
 }
 
+.sttr-order-item-details .translatable-content-table{
+  margin: 15px 0;
+}
+
 .sttr-order-item-details .translatable-content-table thead th{
   text-align: left;
-  padding: 5px 0;
 }
 
 .sttr-order-list .remove-item{

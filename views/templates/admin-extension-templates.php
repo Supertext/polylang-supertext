@@ -94,7 +94,6 @@
              <span>
                 <?php _e('Please select the content to be translated of <b>{{post.title}}</b>.', 'polylang-supertext');?>
              </span>
-            <p>
             <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
               <table class="translatable-content-table">
                 <thead><tr><th colspan="8">{{translatableFieldGroup.name}}</th></tr></thead>
@@ -122,7 +121,9 @@
                 </tbody>
               </table>
             <# }); #>
-            </p>
+            <# if(post.isInTranslation){ #>
+            <p class="error-message"><?php _e('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext');?></p>
+            <# } #>
           </div>
         <# }); #>
       </div>
