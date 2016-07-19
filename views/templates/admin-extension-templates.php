@@ -91,9 +91,18 @@
       <div class="sttr-order-item-details">
         <# _.each(data.posts, function(post) { #>
           <div id="sttr-order-translatable-content-{{post.id}}" style="display: none;">
-             <span>
-                <?php _e('Please select the content to be translated of <b>{{post.title}}</b>.', 'polylang-supertext');?>
-             </span>
+            <# if(post.isInTranslation){ #>
+            <p class="notice notice-error">
+              <span class="error-message"><?php _e('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext');?></span>
+            </p>
+            <# }else if(post.isDraft){ #>
+            <p class="notice notice-warning">
+              <span><?php _e('The articles status is <b>draft</b>. Are you sure you want to order a translation for this article?', 'polylang-supertext');?></span>
+            </p>
+            <# } #>
+            <span>
+              <?php _e('Please select the content to be translated of <b>{{post.title}}</b>.', 'polylang-supertext');?>
+            </span>
             <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
               <table class="translatable-content-table">
                 <thead><tr><th colspan="8">{{translatableFieldGroup.name}}</th></tr></thead>
@@ -121,9 +130,6 @@
                 </tbody>
               </table>
             <# }); #>
-            <# if(post.isInTranslation){ #>
-            <p class="error-message"><?php _e('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext');?></p>
-            <# } #>
           </div>
         <# }); #>
       </div>

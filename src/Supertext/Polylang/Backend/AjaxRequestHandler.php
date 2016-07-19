@@ -54,11 +54,13 @@ class AjaxRequestHandler
     $postIds = $_GET['posts'];
 
     foreach ($postIds as $postId) {
+      $post = get_post($postId);
       $translationInfo[] = array(
         'id' => $postId,
-        'title' => get_post($postId)->post_title,
+        'title' => $post->post_title,
         'languageCode' => Multilang::getPostLanguage($postId),
         'isInTranslation' => get_post_meta($postId, Constant::IN_TRANSLATION_FLAG, true) == 1,
+        'isDraft' => $post->post_status == 'draft',
         'translatableFieldGroups' => $this->contentProvider->getTranslatableFieldGroups($postId)
       );
     }
