@@ -61,6 +61,7 @@
       <li><?php _e('Confirmation', 'polylang-supertext'); ?></li>
     </ul>
     <div class="clearfix"></div>
+    <hr />
   </div>
   <div id="sttr-order-step" class="sttr-order-step"></div>
 </script>
