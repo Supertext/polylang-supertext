@@ -191,3 +191,8 @@
     <p><textarea name="orderComment" id="sttr-order-comment"></textarea></p>
   </form>
 </script>
+
+<script type="text/html" id="tmpl-sttr-confirmation-step">
+  <h2><?php _e('Confirmation', 'polylang-supertext'); ?></h2>
+  {{{data.message}}}
+</script>

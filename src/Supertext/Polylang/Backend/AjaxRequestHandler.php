@@ -124,7 +124,14 @@ class AjaxRequestHandler
         'postIds' => $postIds
       ));
 
-      self::setJsonOutput('success', $order);
+      $result = array(
+        'message' => '
+          ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
+          ' . sprintf(__('Your order number is %s.', 'polylang-supertext'), $order->Id) . '<br />
+          ' . sprintf(__('The article will be translated by %s.', 'polylang-supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
+      );
+
+      self::setJsonOutput('success', $result);
     }catch (\Exception $e){
       foreach($postIds as $postId){
         $this->log->addEntry($postId, $e->getMessage());

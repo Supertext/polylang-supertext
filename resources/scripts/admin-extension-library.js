@@ -38,7 +38,11 @@ Supertext.Template = (function (win, doc, $, wp) {
       /**
        * The quote step id
        */
-      quoteStep: 'sttr-quote-step'
+      quoteStep: 'sttr-quote-step',
+      /**
+       * The confirmation step id
+       */
+      confirmationStep: 'sttr-confirmation-step'
     },
     /**
      * All templates
@@ -677,10 +681,8 @@ Supertext.Polylang = (function (win, doc, $) {
    * @param data
    */
   function addQuoteStep(data) {
-    var options = data.body.options;
-
     $(selectors.orderStep).html(template.quoteStep({
-      options: options
+      options: data.body.options
     }));
 
     state.nextButtonToken = modal.addButton(
@@ -731,7 +733,9 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   function addConfirmationStep(data){
-
+    $(selectors.orderStep).html(template.confirmationStep({
+      message: data.body.message
+    }));
   }
 
   /**
@@ -866,24 +870,6 @@ Supertext.Polylang = (function (win, doc, $) {
   function hideValidationError() {
     modal.hideError(state.validationErrorToken);
     state.validationErrorToken = null;
-  }
-
-  /**
-   * Register events for the offer box. Also it fires the inital offer
-   */
-  function addOfferEvents() {
-    // On load directly get an offer for default config
-    getOffer();
-
-    // Register to reload offer on checkbox click
-    $('.chkTranslationOptions').change(function () {
-      getOffer();
-    });
-
-    // Create order on form submit
-    $('#frm_Translation_Options').submit(function () {
-      return createOrder();
-    });
   }
 
   /**
