@@ -1,4 +1,5 @@
 var Supertext = Supertext || {};
+
 Supertext.Template = (function (win, doc, $, wp) {
   'use strict';
 
@@ -234,6 +235,102 @@ Supertext.Modal = (function (win, doc, $) {
   }
 })(window, document, jQuery);
 
+Supertext.Validation = (function (win, doc, $) {
+  var
+    errors = {},
+    lastCheckedRuleKey = '';
+
+  function pass(key) {
+    lastCheckedRuleKey = key;
+
+    if (!errors.hasOwnProperty(key)) {
+      return;
+    }
+
+    delete errors[key];
+  }
+
+  function fail(key, message) {
+    lastCheckedRuleKey = key;
+    errors[key] = message;
+  }
+
+  function check(rule) {
+    rule(pass, fail);
+    return result();
+  }
+
+  function result() {
+    return {
+      fail: function (onFail) {
+        if (!errors.hasOwnProperty(lastCheckedRuleKey)) {
+          return this;
+        }
+
+        onFail([errors[lastCheckedRuleKey]]);
+        return this;
+      },
+      pass: function (onPass) {
+        if (errors.hasOwnProperty(lastCheckedRuleKey)) {
+          return this;
+        }
+
+        onPass();
+        return this;
+      }
+    }
+  }
+
+  function checkAll(rules) {
+    $.each(rules, function (key, rule) {
+      if (!rules.hasOwnProperty(key)) {
+        return;
+      }
+
+      rule(pass, fail);
+    });
+
+    return results();
+  }
+
+  function results() {
+    return {
+      fail: function (onFail) {
+        if ($.isEmptyObject(errors)) {
+          return this;
+        }
+
+        var errorMessages = [];
+
+        $.each(errors, function (key, error) {
+          if (!errors.hasOwnProperty(key)) {
+            return;
+          }
+
+          errorMessages.push(error);
+        });
+
+        onFail(errorMessages);
+        return this;
+      },
+      pass: function (onPass) {
+        if (!$.isEmptyObject(errors)) {
+          return this;
+        }
+
+        onPass();
+        return this;
+      }
+    }
+  }
+
+  return {
+    check: check,
+    checkAll: checkAll,
+    results: results
+  }
+})(window, document, jQuery);
+
 /**
  * Polylang translation plugin to inject translation options
  */
@@ -274,6 +371,10 @@ Supertext.Polylang = (function (win, doc, $) {
      * Template module
      */
     template,
+    /**
+     * Validation module
+     */
+    validation,
     /**
      * The validation rules
      */
@@ -332,111 +433,9 @@ Supertext.Polylang = (function (win, doc, $) {
       }
     },
     /**
-     * Nested validation module
-     */
-    validation = (function () {
-      var
-        errors = {},
-        lastCheckedRuleKey = '';
-
-      function pass(key) {
-        lastCheckedRuleKey = key;
-
-        if (!errors.hasOwnProperty(key)) {
-          return;
-        }
-
-        delete errors[key];
-      }
-
-      function fail(key, message) {
-        lastCheckedRuleKey = key;
-        errors[key] = message;
-      }
-
-      function check(rule) {
-        rule(pass, fail);
-        return result();
-      }
-
-      function result() {
-        return {
-          fail: function (onFail) {
-            if (!errors.hasOwnProperty(lastCheckedRuleKey)) {
-              return this;
-            }
-
-            onFail([errors[lastCheckedRuleKey]]);
-            return this;
-          },
-          pass: function (onPass) {
-            if (errors.hasOwnProperty(lastCheckedRuleKey)) {
-              return this;
-            }
-
-            onPass();
-            return this;
-          }
-        }
-      }
-
-      function checkAll(rules) {
-        $.each(rules, function (key, rule) {
-          if (!rules.hasOwnProperty(key)) {
-            return;
-          }
-
-          rule(pass, fail);
-        });
-
-        return results();
-      }
-
-      function results() {
-        return {
-          fail: function (onFail) {
-            if ($.isEmptyObject(errors)) {
-              return this;
-            }
-
-            var errorMessages = [];
-
-            $.each(errors, function (key, error) {
-              if (!errors.hasOwnProperty(key)) {
-                return;
-              }
-
-              errorMessages.push(error);
-            });
-
-            onFail(errorMessages);
-            return this;
-          },
-          pass: function (onPass) {
-            if (!$.isEmptyObject(errors)) {
-              return this;
-            }
-
-            onPass();
-            return this;
-          }
-        }
-      }
-
-      return {
-        check: check,
-        checkAll: checkAll,
-        results: results
-      }
-    })(),
-    /**
      * May be overridden to true on load
      */
     inTranslation = false,
-    /**
-     * The offer url to be loaded in thickbox
-     */
-    offerUrl = '/wp-content/plugins/polylang-supertext/views/backend/offer.php',
     /**
      * Container for current state data
      */
@@ -893,19 +892,6 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
-   * Creates the translation link for the current post
-   * @param languageRow the language row, contains vital information
-   * @return string the link to translation (actually a JS call)
-   */
-  function getTranslationLink(languageCode) {
-    var postId = $('#post_ID').val();
-    // Create params, link and call with a check function
-    var params = '?postId=' + postId + '&targetLang=' + languageCode + '&height=800&width=630'
-    var tbLink = context.resourceUrl + offerUrl + params;
-    return tbLink;
-  }
-
-  /**
    * Checks translatability before calling the offerbox
    * @param tbLink the offer box link that will be fired if everything is ok
    */
@@ -966,6 +952,7 @@ Supertext.Polylang = (function (win, doc, $) {
       context = externals.context;
       modal = externals.modal;
       template = externals.template;
+      validation = externals.validation;
 
       if (!context.isPluginWorking) {
         return;
@@ -995,6 +982,7 @@ jQuery(document).ready(function () {
       isPluginWorking: false
     },
     modal: Supertext.Modal,
-    template: Supertext.Template
+    template: Supertext.Template,
+    validation: Supertext.Validation
   });
 });
