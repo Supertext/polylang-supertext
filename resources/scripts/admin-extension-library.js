@@ -34,7 +34,11 @@ Supertext.Template = (function (win, doc, $, wp) {
       /**
        * The content step id
        */
-      contentStep: 'sttr-content-step'
+      contentStep: 'sttr-content-step',
+      /**
+       * The quote step id
+       */
+      quoteStep: 'sttr-quote-step'
     },
     /**
      * All templates
@@ -94,11 +98,6 @@ Supertext.Modal = (function (win, doc, $) {
      * State
      */
     state = {
-      /**
-       * the modal jquery element
-       * @type {null}
-       */
-      $modal: null,
       /**
        * Notice counter
        * @type {number}
@@ -174,7 +173,7 @@ Supertext.Modal = (function (win, doc, $) {
   }
 
   /**
-   *
+   * Adds a button
    * @param innerHtml
    * @param type
    * @param onClickEventHandler
@@ -191,6 +190,14 @@ Supertext.Modal = (function (win, doc, $) {
     $(selectors.modalButton(token)).click(onClickEventHandler);
 
     return token;
+  }
+
+  /**
+   * Removes a button
+   * @param token
+   */
+  function removeButton(token){
+    $(selectors.modalButton(token)).remove();
   }
 
   /**
@@ -219,8 +226,7 @@ Supertext.Modal = (function (win, doc, $) {
     showError: showError,
     hideError: hideError,
     addButton: addButton,
-    disableButton: disableButton,
-    enableButton: enableButton
+    removeButton: removeButton
   }
 })(window, document, jQuery);
 
@@ -246,8 +252,11 @@ Supertext.Polylang = (function (win, doc, $) {
       orderStep: '#sttr-order-step',
       contentStepForm: '#sttr-content-step-form',
       orderProgressBarSteps: '#sttr-order-progress-bar li',
+      orderSourceLanguageInput: '#sttr-order-source-language',
+      orderSourceLanguageLabel: '#sttr-order-source-language-label',
       orderTargetLanguageSelect: '#sttr-order-target-language',
-      orderTargetLanguageSelectOptions: '#sttr-order-target-language option'
+      checkedQuote: 'input[name="translationType"]:checked',
+      quoteStepForm: '#quote-step-form'
     },
     /**
      * Context data containing information about plugin and environment
@@ -265,25 +274,39 @@ Supertext.Polylang = (function (win, doc, $) {
      * The validation rules
      */
     validationRules = {
-      posts: function (pass, fail) {
-        var validationKey = 'posts';
+      contentStep:{
+        posts: function (pass, fail) {
+          var validationKey = 'posts';
 
-        if (!isEachPostInSameLanguage(state.posts)) {
-          fail(validationKey, supertextTranslationL10n.errorMessageNotAllPostInSameLanguage);
-          return;
+          if (!isEachPostInSameLanguage(state.posts)) {
+            fail(validationKey, supertextTranslationL10n.errorMessageNotAllPostInSameLanguage);
+            return;
+          }
+
+          pass(validationKey);
+        },
+        targetLanguage: function (pass, fail) {
+          var validationKey = 'targetLanguage';
+
+          if ($(selectors.orderTargetLanguageSelect).val() == '') {
+            fail(validationKey, supertextTranslationL10n.errorValidationSelectTargetLanguage);
+            return;
+          }
+
+          pass(validationKey);
         }
-
-        pass(validationKey);
       },
-      targetLanguage: function (pass, fail) {
-        var validationKey = 'targetLanguage';
+      quoteStep: {
+        quote: function(pass, fail) {
+          var validationKey = 'quote';
 
-        if ($(selectors.orderTargetLanguageSelect).val() == '') {
-          fail(validationKey, supertextTranslationL10n.errorValidationSelectTargetLanguage);
-          return;
+          if($(selectors.checkedQuote).length === 0){
+            fail(validationKey, supertextTranslationL10n.errorValidationSelectQuote);
+            return;
+          }
+
+          pass(validationKey);
         }
-
-        pass(validationKey);
       }
     },
     /**
@@ -400,11 +423,7 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Container for current state data
      */
-    state = {
-      posts: [],
-      languageMismatchErrorToken: null,
-      validationErrorToken: null
-    };
+    state = {};
 
   /**
    * Initialize on post screen
@@ -545,7 +564,6 @@ Supertext.Polylang = (function (win, doc, $) {
     ).done(
       function (data) {
         if (data.responseType != 'success') {
-          modal.showContent('');
           modal.showError({
             title: supertextTranslationL10n.generalError,
             message: data.body
@@ -557,7 +575,6 @@ Supertext.Polylang = (function (win, doc, $) {
       }
     ).fail(
       function (jqXHR, textStatus, errorThrown) {
-        modal.showContent('');
         modal.showError({
           title: supertextTranslationL10n.generalError,
           message: jqXHR.status + ' ' + textStatus,
@@ -578,15 +595,15 @@ Supertext.Polylang = (function (win, doc, $) {
       posts: state.posts
     }));
 
-    modal.addButton(
+    state.nextButtonToken = modal.addButton(
       supertextTranslationL10n.next,
       'secondary',
       function () {
         validation
-          .checkAll(validationRules)
+          .checkAll(validationRules.contentStep)
           .fail(showValidationErrors)
           .pass(hideValidationError)
-          .pass(moveToLanguageStep);
+          .pass(loadQuoteStep);
       }
     );
 
@@ -605,23 +622,23 @@ Supertext.Polylang = (function (win, doc, $) {
     });
   }
 
-  function moveToLanguageStep(){
-    loadLanguageStep($(selectors.contentStepForm).serializeArray());
-  }
 
   /**
    * Loads post data for order step two form
    */
-  function loadLanguageStep(completeContentStepData) {
+  function loadQuoteStep() {
+    state.contentFormData = $(selectors.contentStepForm).serializeArray();
+    modal.removeButton(state.nextButtonToken);
+
     updateOrderProgress(2);
     addStepLoader();
+
     $.post(
       context.ajaxUrl + '?action=sttr_getOffer',
-      completeContentStepData
+      state.contentFormData
     ).done(
       function (data) {
         if (data.responseType != 'success') {
-          modal.showContent('');
           modal.showError({
             title: supertextTranslationL10n.generalError,
             message: data.body
@@ -629,11 +646,10 @@ Supertext.Polylang = (function (win, doc, $) {
           return;
         }
 
-        addSecondOrderStep(data);
+        addQuoteStep(data);
       }
     ).fail(
       function (jqXHR, textStatus, errorThrown) {
-        modal.showContent('');
         modal.showError({
           title: supertextTranslationL10n.generalError,
           message: jqXHR.status + ' ' + textStatus,
@@ -647,12 +663,68 @@ Supertext.Polylang = (function (win, doc, $) {
    * Add the first order step to the modal content
    * @param data
    */
-  function addSecondOrderStep(data) {
+  function addQuoteStep(data) {
     var options = data.body.options;
 
-    modal.showContent(template.orderStep2({
+    $(selectors.orderStep).html(template.quoteStep({
       options: options
     }));
+
+    /*state.backButtonToken = modal.addButton(
+      supertextTranslationL10n.back,
+      'secondary',
+      function () {
+      }
+    );*/
+
+    state.nextButtonToken = modal.addButton(
+      supertextTranslationL10n.orderTranslation,
+      'primary',
+      function () {
+        validation
+          .checkAll(validationRules.quoteStep)
+          .fail(showValidationErrors)
+          .pass(hideValidationError)
+          .pass(loadConfirmationStep);
+      }
+    );
+  }
+
+  function loadConfirmationStep(){
+    state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
+
+    /*modal.removeButton(state.nextButtonToken);
+
+    updateOrderProgress(3);
+    addStepLoader();*/
+
+    $.post(
+      context.ajaxUrl + '?action=sttr_createOrder',
+      state.contentFormData.concat(state.quoteFormData)
+    ).done(
+      function (data) {
+        if (data.responseType != 'success') {
+          modal.showError({
+            title: supertextTranslationL10n.generalError,
+            message: data.body
+          });
+          return;
+        }
+
+        addConfirmationStep(data);
+      }
+    ).fail(
+      function (jqXHR, textStatus, errorThrown) {
+        modal.showError({
+          title: supertextTranslationL10n.generalError,
+          message: jqXHR.status + ' ' + textStatus,
+          details: errorThrown
+        });
+      }
+    );
+  }
+
+  function addConfirmationStep(data){
 
   }
 
@@ -673,7 +745,7 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function checkOrderItems() {
     validation
-      .check(validationRules.posts)
+      .check(validationRules.contentStep.posts)
       .fail(showValidationErrors)
       .pass(hideValidationError)
       .pass(setLanguages);
@@ -691,10 +763,15 @@ Supertext.Polylang = (function (win, doc, $) {
     $(selectors.orderSourceLanguageLabel).html(supertextTranslationL10n.languages[sourceLanguageCode]);
     $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
 
-    $(selectors.orderTargetLanguageSelectOptions).each(function () {
-      if ($(this).val() === sourceLanguageCode) {
-        $(this).hide();
+    $.each(supertextTranslationL10n.languages, function(code, language){
+      if (code === sourceLanguageCode) {
+        return;
       }
+
+      $(selectors.orderTargetLanguageSelect).append($('<option>', {
+        value: code,
+        text: language
+      }));
     });
   }
 

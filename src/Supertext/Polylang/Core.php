@@ -167,9 +167,11 @@ class Core
       'errorTitleNotAllPostInSameLanguage' => esc_js(__('Language mismatch', 'polylang-supertext')),
       'errorMessageNotAllPostInSameLanguage' => esc_js(__('Please select only post in the same language.', 'polylang-supertext')),
       'errorValidationSelectTargetLanguage' => esc_js(__('Please select the target language.', 'polylang-supertext')),
+      'errorValidationSelectQuote' => esc_js(__('Please choose a quote.', 'polylang-supertext')),
       'modalTitle' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
       'orderTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
       'cancel' => esc_js(__('Cancel', 'polylang-supertext')),
+      'back' => esc_js(__('Back', 'polylang-supertext')),
       'next' => esc_js(__('Next', 'polylang-supertext')),
       'alertPleaseSelect' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
     );

@@ -46,6 +46,7 @@ class AjaxRequestHandler
 
     add_action('wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
     add_action('wp_ajax_sttr_getOffer', array($this, 'getOffer'));
+    add_action('wp_ajax_sttr_createOrder', array($this, 'createOrder'));
   }
 
   /**
@@ -82,45 +83,63 @@ class AjaxRequestHandler
     }
 
     try{
-      $result = Wrapper::getQuote(
+      $quote = Wrapper::getQuote(
         $this->library->getApiConnection(),
         $this->library->mapLanguage($_POST['orderSourceLanguage']),
         $this->library->mapLanguage($_POST['orderTargetLanguage']),
         $translationData
       );
 
-      self::setJsonOutput('success', $result);
+      self::setJsonOutput('success', $quote);
     }catch (\Exception $e){
-      $this->setJsonOutput('error', $e->getMessage());
+      self::setJsonOutput('error', $e->getMessage());
     }
   }
 
   /**
    * Creates the order
    */
-  public function createOrder($data)
+  public function createOrder()
   {
-    // Call the API for prices
-    $options = self::getTranslationOptions($data);
-    $postId = $options['post_id'];
+    $translatableContents = $_POST['translatableContents'];
+    $translationData = array();
+    $postIds = '';
 
-    $post = get_post($postId);
-    $translationData = $this->contentProvider->getTranslationData($post, $options['translatable_fields']);
-    $wrapper = $this->library->getUserWrapper();
-    $randomBytes = openssl_random_pseudo_bytes(32, $cstrong);
-    $translationReferenceHash = bin2hex($randomBytes);
+    foreach ($translatableContents as $postId => $translatableFieldGroups) {
+      $post = get_post($postId);
+      $translationData[$postId] = $this->contentProvider->getTranslationData($post, $translatableFieldGroups);
+      $postIds .= '_'.$postId;
+    }
 
-    // Create the order
-    $orderCreation = $wrapper->createOrder(
-      $this->library->mapLanguage($options['source_lang']),
-      $this->library->mapLanguage($options['target_lang']),
-      get_bloginfo('name') . ' - ' . $post->post_title,
-      $options['product_id'],
-      $translationData,
-      SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php',
-      $post->ID . '-' . md5($translationReferenceHash . $post->ID),
-      $options['additional_information']
-    );
+    try{
+      $randomSalt = bin2hex(openssl_random_pseudo_bytes(32));
+      $referenceHash = hash('sha256', $postIds . $randomSalt);
+
+      $order = Wrapper::createOrder(
+        $this->library->getApiConnection(),
+        get_bloginfo('name') . ' - ' . $postIds,
+        $this->library->mapLanguage($_POST['orderSourceLanguage']),
+        $this->library->mapLanguage($_POST['orderTargetLanguage']),
+        $translationData,
+        $_POST['translationType'],
+        $_POST['comment'],
+        $referenceHash,
+        SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php'
+      );
+
+
+      /*if(empty($order->Deadline) || empty($order->Id)){
+        self::setJsonOutput('error', _('Could not create an order with Supertext.', 'polylang-supertext'));
+        $this->log->addEntry($post->ID, _('Could not create an order with Supertext.', 'polylang-supertext'));
+        return;
+      }*/
+
+      self::setJsonOutput('success', $order);
+    }catch (\Exception $e){
+      self::setJsonOutput('error', $e->getMessage());
+    }
+
+    /*
 
     $order = $orderCreation['order'];
 
@@ -181,7 +200,7 @@ class AjaxRequestHandler
           'reason' => _('Could not create an order with Supertext.', 'polylang-supertext') . ' ' . $orderCreation['error'],
         )
       );
-    }
+    }*/
   }
 
 
@@ -315,7 +334,7 @@ class AjaxRequestHandler
         self::setLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
       } else {
         $targetAttachment = get_post($targetAttachmentId);
-        $targeAttachment->post_parent = $targetPostId;
+        $targetAttachment->post_parent = $targetPostId;
         wp_insert_attachment($targetAttachment);
       }
     }

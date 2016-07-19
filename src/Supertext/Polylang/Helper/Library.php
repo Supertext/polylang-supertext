@@ -74,6 +74,27 @@ class Library
   }
 
   /**
+   * @param $hash
+   * @return array full settings array
+   */
+  public function getReferenceData($hash)
+  {
+    $references = get_option(Constant::REFERENCE_OPTION, array());
+    return $references[$hash];
+  }
+
+  /**
+   * @param $hash
+   * @param $data
+   */
+  public function saveReferenceData($hash, $data)
+  {
+    $references = get_option(Constant::REFERENCE_OPTION, array());
+    $references[$hash] = $data;
+    update_option(Constant::REFERENCE_OPTION, $references);
+  }
+
+  /**
    * @return bool true if workingly configured
    */
   public function isWorking()

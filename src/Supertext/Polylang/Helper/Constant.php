@@ -30,6 +30,10 @@ class Constant
    */
   const VERSION_OPTION = 'polylang_supertext_version';
   /**
+   * @var string the version option
+   */
+  const REFERENCE_OPTION = 'polylang_supertext_reference';
+  /**
    * @var string name of the subsetting for user mapping
    */
   const SETTING_USER_MAP = 'userMap';

@@ -73,8 +73,8 @@ class Wrapper
         $deliveryOptions[] = array(
           'id' => $do->DeliveryId,
           'name' => $do->Name,
-          'price' => $do->Price,
-          'date' => $do->DeliveryDate);
+          'price' => $json->CurrencySymbol . ' ' . number_format($do->Price, 2, '.', "'"),
+          'date' => date_i18n('D, d. F H:i', strtotime($do->DeliveryDate)));
       }
 
       $result['options'][] = array(
@@ -91,16 +91,16 @@ class Wrapper
    * @param string $sourceLanguage supertext source language
    * @param string $targetLanguage supertext target language
    * @param string $title the title of the translations
-   * @param string $productId the supertext product id
+   * @param string $translationType the supertext product id
    * @param array $data data to be translated
    * @param string $callback the callback url
    * @param string $reference
    * @param string$additionalInfo
    * @return array api result info
    */
-  /*public function createOrder($sourceLanguage, $targetLanguage, $title, $productId, $data, $callback, $reference, $additionalInfo)
+  public static function createOrder($connection, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $comment, $reference, $callback)
   {
-    $product = explode(':', $productId);
+    $product = explode(':', $translationType);
 
     $json = array(
       'PluginName' => 'polylang-supertext',
@@ -108,7 +108,7 @@ class Wrapper
       'InstallationName' => get_bloginfo('name'),
       'CallbackUrl' => $callback,
       'ContentType' => 'text/html',
-      'Currency' => $this->currency,
+      'Currency' => 'eur',
       'DeliveryId' => $product[1],
       'OrderName' => $title,
       'OrderTypeId' => $product[0],
@@ -116,18 +116,18 @@ class Wrapper
       'Referrer' => 'WordPress Polylang Plugin',
       'SourceLang' => $sourceLanguage,
       'TargetLang' => $targetLanguage,
-      'AdditionalInformation' => $additionalInfo,
-      'Groups' => $this->buildSupertextData($data)
+      'AdditionalInformation' => $comment,
+      'Groups' => self::buildSupertextData($data)
     );
 
-    $httpResult = $this->postRequest('translation/order', json_encode($json), true);
+    $httpResult = $connection->postRequest('translation/order', json_encode($json), true);
 
     return array(
       'order' => json_decode($httpResult['body']),
       'success' => $httpResult['success'],
       'error' => $httpResult['error']
     );
-  }*/
+  }
 
 
 
