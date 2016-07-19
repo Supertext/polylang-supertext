@@ -54,8 +54,6 @@ class Multilang
   /**
    * @param $postId
    * @param $language
-   * @internal param int $post_id post id
-   * @internal param string $lang language code
    */
   public static function setPostLanguage($postId, $language){
     if (function_exists('pll_set_post_language')) {

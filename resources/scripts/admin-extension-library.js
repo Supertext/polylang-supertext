@@ -256,7 +256,7 @@ Supertext.Polylang = (function (win, doc, $) {
       orderSourceLanguageLabel: '#sttr-order-source-language-label',
       orderTargetLanguageSelect: '#sttr-order-target-language',
       checkedQuote: 'input[name="translationType"]:checked',
-      quoteStepForm: '#quote-step-form'
+      quoteStepForm: '#sttr-quote-step-form'
     },
     /**
      * Context data containing information about plugin and environment

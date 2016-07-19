@@ -95,6 +95,16 @@ class Library
   }
 
   /**
+   * @param $hash
+   */
+  public function removeReferenceData($hash)
+  {
+    $references = get_option(Constant::REFERENCE_OPTION, array());
+    unset($references[$hash]);
+    update_option(Constant::REFERENCE_OPTION, $references);
+  }
+
+  /**
    * @return bool true if workingly configured
    */
   public function isWorking()

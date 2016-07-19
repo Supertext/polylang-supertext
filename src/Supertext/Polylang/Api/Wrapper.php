@@ -88,15 +88,18 @@ class Wrapper
   }
 
   /**
+   * @param ApiConnection $connection
+   * @param string $title the title of the translations
    * @param string $sourceLanguage supertext source language
    * @param string $targetLanguage supertext target language
-   * @param string $title the title of the translations
-   * @param string $translationType the supertext product id
    * @param array $data data to be translated
-   * @param string $callback the callback url
+   * @param string $translationType the supertext product id
+   * @param string $comment
    * @param string $reference
-   * @param string$additionalInfo
-   * @return array api result info
+   * @param string $callback the callback url
+   * @return array|object api result info
+   * @throws ApiConnectionException
+   * @throws ApiDataException
    */
   public static function createOrder($connection, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $comment, $reference, $callback)
   {
@@ -121,15 +124,14 @@ class Wrapper
     );
 
     $httpResult = $connection->postRequest('translation/order', json_encode($json), true);
+    $json = json_decode($httpResult);
 
-    return array(
-      'order' => json_decode($httpResult['body']),
-      'success' => $httpResult['success'],
-      'error' => $httpResult['error']
-    );
+    if (empty($json->Deadline) || empty($json->Id)) {
+      throw new ApiDataException(_('Could not create an order with Supertext.', 'polylang-supertext'));
+    }
+
+    return $json;
   }
-
-
 
   /**
    * Convert the given data to supertext specific arrays
@@ -152,6 +154,12 @@ class Wrapper
   }
 
 
+  /**
+   * Gets the items
+   * @param $group
+   * @param $keyPrefix
+   * @return array
+   */
   private static function getGroupItems($group, $keyPrefix)
   {
     $items = array();

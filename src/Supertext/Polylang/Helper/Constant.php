@@ -101,8 +101,4 @@ class Constant
    * @var string the flag that sets a post in translation
    */
   const IN_TRANSLATION_FLAG = '_in_st_translation';
-  /**
-   * $var string the translation reference hash
-   */
-  const IN_TRANSLATION_REFERENCE_HASH = '_in_translation_ref_hash';
 }

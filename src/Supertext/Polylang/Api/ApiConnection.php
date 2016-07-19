@@ -24,24 +24,18 @@ class ApiConnection
    * @var string the communication language
    */
   private $communicationLang;
-  /**
-   * @var string currency
-   */
-  private $currency;
 
   /**
    * @param string $host the host to connect to
    * @param string $user the supertext user name
    * @param string $apiKey the supertext api key
-   * @param string $currency the currency
    */
-  private function __construct($host, $user, $apiKey, $communicationLanguage, $currency)
+  private function __construct($host, $user, $apiKey, $communicationLanguage)
   {
     $this->host = $host;
     $this->user = $user;
     $this->apiKey = $apiKey;
     $this->communicationLang = $communicationLanguage;
-    $this->currency = strtolower($currency);
   }
 
   /**
@@ -49,16 +43,15 @@ class ApiConnection
    * @param string $user
    * @param string $apiKey
    * @param string $communicationLanguage
-   * @param string $currency
    * @return Wrapper
    */
-  public static function getInstance($host, $user, $apiKey, $communicationLanguage = 'de-CH', $currency = 'eur')
+  public static function getInstance($host, $user, $apiKey, $communicationLanguage = 'de-CH')
   {
     $connectionKey = $host . $user;
 
     // Open connection for every user
     if (!isset(self::$apiConnections[$connectionKey])) {
-      self::$apiConnections[$connectionKey] = new self($host, $user, $apiKey, $communicationLanguage, $currency);
+      self::$apiConnections[$connectionKey] = new self($host, $user, $apiKey, $communicationLanguage);
     }
     return self::$apiConnections[$connectionKey];
   }
