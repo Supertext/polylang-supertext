@@ -28,13 +28,6 @@
   </div>
 </script>
 
-<script type="text/html" id="tmpl-sttr-step-loader">
-  <div class="loader">
-    <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext'); ?>">
-    <?php _e('Loading', 'polylang-supertext'); ?>
-  </div>
-</script>
-
 <script type="text/html" id="tmpl-sttr-modal-error">
   <div id="sttr-modal-error-{{data.token}}" class="notice notice-error">
     <button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>
@@ -51,6 +44,13 @@
 
 <script type="text/html" id="tmpl-sttr-modal-button">
   <button type="button" id="sttr-modal-button-{{data.token}}" class="button button-{{data.type}}">{{{data.innerHtml}}}</button>
+</script>
+
+<script type="text/html" id="tmpl-sttr-step-loader">
+  <div class="loader">
+    <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext'); ?>">
+    <?php _e('Loading', 'polylang-supertext'); ?>
+  </div>
 </script>
 
 <script type="text/html" id="tmpl-sttr-order-progress-bar">

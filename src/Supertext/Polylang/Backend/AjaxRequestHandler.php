@@ -51,7 +51,7 @@ class AjaxRequestHandler
   public function getPostTranslationData()
   {
     $translationInfo = array();
-    $postIds = $_GET['posts'];
+    $postIds = $_GET['postIds'];
 
     foreach ($postIds as $postId) {
       $post = get_post($postId);

@@ -201,16 +201,8 @@ Supertext.Modal = (function (win, doc, $) {
    * Removes a button
    * @param token
    */
-  function removeButton(token){
+  function removeButton(token) {
     $(selectors.modalButton(token)).remove();
-  }
-
-  /**
-   * Disables a button
-   * @param token
-   */
-  function disableButton(token) {
-    $(selectors.modalButton(token)).addClass('button-disabled');
   }
 
   /**
@@ -218,7 +210,19 @@ Supertext.Modal = (function (win, doc, $) {
    * @param token
    */
   function enableButton(token) {
-    $(selectors.modalButton(token)).removeClass('button-disabled');
+    $(selectors.modalButton(token))
+      .removeClass('button-disabled')
+      .prop('disabled', false);
+  }
+
+  /**
+   * Disables a button
+   * @param token
+   */
+  function disableButton(token) {
+    $(selectors.modalButton(token))
+      .addClass('button-disabled')
+      .prop('disabled', true);
   }
 
   return {
@@ -231,7 +235,9 @@ Supertext.Modal = (function (win, doc, $) {
     showError: showError,
     hideError: hideError,
     addButton: addButton,
-    removeButton: removeButton
+    removeButton: removeButton,
+    enableButton: enableButton,
+    disableButton: disableButton
   }
 })(window, document, jQuery);
 
@@ -376,70 +382,346 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     validation,
     /**
-     * The validation rules
-     */
-    validationRules = {
-      contentStep:{
-        posts: function (pass, fail) {
-          var validationKey = 'posts';
-
-          var languageCode = null;
-          var isEachPostInSameLanguage = true;
-          var isAPostInTranslation = false;
-          $.each(state.posts, function (index, post) {
-            if (index === 0) {
-              languageCode = post.languageCode;
-            } else {
-              isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
-            }
-
-            isAPostInTranslation = isAPostInTranslation || post.isInTranslation;
-          });
-
-          if(isAPostInTranslation) {
-            fail(validationKey, supertextTranslationL10n.errorValidationSomePostInTranslation);
-            return;
-          }
-
-          if (!isEachPostInSameLanguage) {
-            fail(validationKey, supertextTranslationL10n.errorValidationNotAllPostInSameLanguage);
-            return;
-          }
-
-          pass(validationKey);
-        },
-        targetLanguage: function (pass, fail) {
-          var validationKey = 'targetLanguage';
-
-          if ($(selectors.orderTargetLanguageSelect).val() == '') {
-            fail(validationKey, supertextTranslationL10n.errorValidationSelectTargetLanguage);
-            return;
-          }
-
-          pass(validationKey);
-        }
-      },
-      quoteStep: {
-        quote: function(pass, fail) {
-          var validationKey = 'quote';
-
-          if($(selectors.checkedQuote).length === 0){
-            fail(validationKey, supertextTranslationL10n.errorValidationSelectQuote);
-            return;
-          }
-
-          pass(validationKey);
-        }
-      }
-    },
-    /**
      * May be overridden to true on load
      */
     inTranslation = false,
     /**
+     * Order process steps
+     * @type {Array}
+     */
+    steps = [],
+    /**
      * Container for current state data
      */
-    state = {};
+    state = {
+      currentStepNumber: 0
+    };
+
+  function Step() {
+    this.validationRules = {};
+    this.load = function () {};
+    this.save = function () {};
+  }
+
+  var contentStep = $.extend(new Step(), (function () {
+    var validationRules = {
+      posts: function (pass, fail) {
+        var validationKey = 'posts';
+
+        var languageCode = null;
+        var isEachPostInSameLanguage = true;
+        var isAPostInTranslation = false;
+        $.each(state.posts, function (index, post) {
+          if (index === 0) {
+            languageCode = post.languageCode;
+          } else {
+            isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
+          }
+
+          isAPostInTranslation = isAPostInTranslation || post.isInTranslation;
+        });
+
+        if (isAPostInTranslation) {
+          fail(validationKey, supertextTranslationL10n.errorValidationSomePostInTranslation);
+          return;
+        }
+
+        if (!isEachPostInSameLanguage) {
+          fail(validationKey, supertextTranslationL10n.errorValidationNotAllPostInSameLanguage);
+          return;
+        }
+
+        pass(validationKey);
+      },
+      targetLanguage: function (pass, fail) {
+        var validationKey = 'targetLanguage';
+
+        if ($(selectors.orderTargetLanguageSelect).val() == '') {
+          fail(validationKey, supertextTranslationL10n.errorValidationSelectTargetLanguage);
+          return;
+        }
+
+        pass(validationKey);
+      }
+    };
+
+    /**
+     * Loads the content step
+     */
+    function load() {
+      $.get(
+        context.ajaxUrl,
+        {
+          action: 'sttr_getPostTranslationData',
+          postIds: state.postIds
+        }
+      ).done(
+        function (data) {
+          if (data.responseType != 'success') {
+            modal.showError({
+              title: supertextTranslationL10n.generalError,
+              message: data.body
+            });
+            return;
+          }
+
+          addContentStep(data);
+        }
+      ).fail(
+        function (jqXHR, textStatus, errorThrown) {
+          modal.showError({
+            title: supertextTranslationL10n.generalError,
+            message: jqXHR.status + ' ' + textStatus,
+            details: errorThrown
+          });
+        }
+      );
+    }
+
+    /**
+     * Saves content step data
+     */
+    function save() {
+      state.contentFormData = $(selectors.contentStepForm).serializeArray();
+    }
+
+    /**
+     * Add the first order step to the modal content
+     * @param data
+     */
+    function addContentStep(data) {
+      state.posts = data.body;
+
+      $(selectors.orderStep).html(template.contentStep({
+        posts: state.posts
+      }));
+
+      initializeOrderItemList();
+
+      checkOrderItems();
+    }
+
+    /**
+     * Initializes the order item list
+     */
+    function initializeOrderItemList() {
+      var $itemAnchors = $(selectors.orderItemList + ' li a');
+      $itemAnchors.click(onOrderItemAnchorClick);
+      $itemAnchors.find(selectors.orderItemRemoveIcon).click(onOrderItemRemoveIconClick);
+      $(selectors.orderItemRemoveButton).click(onOrderItemRemoveButtonClick);
+
+      activateOrderItem.call($(selectors.orderItemList + ' li:first a'));
+    }
+
+    /**
+     * Check order items
+     */
+    function checkOrderItems() {
+      validation
+        .check(validationRules.posts)
+        .fail(showValidationErrors)
+        .pass(hideValidationError)
+        .pass(setLanguages);
+
+      if (state.posts.length == 1) {
+        $(selectors.orderItemRemoveButton).hide();
+      }
+    }
+
+    /**
+     * Activate order item
+     */
+    function activateOrderItem() {
+      var $clickedItemAnchor = $(this);
+      var $activeItemAnchor = $(selectors.orderItemList + ' li.active a');
+
+      if ($activeItemAnchor.length > 0) {
+        $($activeItemAnchor.attr('href')).hide();
+        $activeItemAnchor.parent().removeClass('active');
+      }
+
+      $($clickedItemAnchor.attr('href')).show();
+      $clickedItemAnchor.parent().addClass('active');
+    }
+
+    /**
+     * Order item anchor click event handler
+     * @param e
+     */
+    function onOrderItemAnchorClick(e) {
+      e.preventDefault();
+      activateOrderItem.call(this);
+    }
+
+    /**
+     * Order item remove icon click event handler
+     * @param e
+     */
+    function onOrderItemRemoveIconClick(e) {
+      e.preventDefault();
+      removeOrderItem.call($(this).parent());
+    }
+
+    /**
+     * Order item remove button click event handler
+     * @param e
+     */
+    function onOrderItemRemoveButtonClick(e) {
+      e.preventDefault();
+      removeOrderItem.call($(selectors.orderItemList + ' li.active a'));
+      activateOrderItem.call($(selectors.orderItemList + ' li:first a'));
+    }
+
+    /**
+     * Removes an order item
+     */
+    function removeOrderItem() {
+      if (state.posts.length == 1) {
+        return;
+      }
+
+      var $itemAnchor = $(this);
+      $($itemAnchor.attr('href')).remove();
+      $itemAnchor.parent().remove();
+
+      var postIdToRemove = $itemAnchor.data('post-id');
+      state.posts = state.posts.filter(function (post) {
+        return post.id != postIdToRemove;
+      });
+
+      checkOrderItems();
+    }
+
+    /**
+     * Sets the languages to the form
+     */
+    function setLanguages() {
+      var sourceLanguageCode = state.posts[0].languageCode;
+      $(selectors.orderSourceLanguageLabel).html(supertextTranslationL10n.languages[sourceLanguageCode]);
+      $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
+
+      $.each(supertextTranslationL10n.languages, function (code, language) {
+        if (code === sourceLanguageCode) {
+          return;
+        }
+
+        $(selectors.orderTargetLanguageSelect).append($('<option>', {
+          value: code,
+          text: language
+        }));
+      });
+    }
+
+    return {
+      validationRules: validationRules,
+      load: load,
+      save: save
+    }
+  })());
+
+  var quoteStep = $.extend(new Step(), (function () {
+    var validationRules = {
+      quote: function (pass, fail) {
+        var validationKey = 'quote';
+
+        if ($(selectors.checkedQuote).length === 0) {
+          fail(validationKey, supertextTranslationL10n.errorValidationSelectQuote);
+          return;
+        }
+
+        pass(validationKey);
+      }
+    };
+
+    /**
+     * Loads post data for order step two form
+     */
+    function load() {
+      $.post(
+        context.ajaxUrl + '?action=sttr_getOffer',
+        state.contentFormData
+      ).done(
+        function (data) {
+          if (data.responseType != 'success') {
+            modal.showError({
+              title: supertextTranslationL10n.generalError,
+              message: data.body
+            });
+            return;
+          }
+
+          addQuoteStep(data);
+        }
+      ).fail(
+        function (jqXHR, textStatus, errorThrown) {
+          modal.showError({
+            title: supertextTranslationL10n.generalError,
+            message: jqXHR.status + ' ' + textStatus,
+            details: errorThrown
+          });
+        }
+      );
+    }
+
+    function save(){
+      state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
+    }
+
+    /**
+     * Add the first order step to the modal content
+     * @param data
+     */
+    function addQuoteStep(data) {
+      $(selectors.orderStep).html(template.quoteStep({
+        options: data.body.options
+      }));
+    }
+
+    return {
+      validationRules: validationRules,
+      load: load,
+      save: save
+    }
+  })());
+
+  var confirmationStep = $.extend(new Step(), (function (){
+    function load() {
+      $.post(
+        context.ajaxUrl + '?action=sttr_createOrder',
+        state.contentFormData.concat(state.quoteFormData)
+      ).done(
+        function (data) {
+          if (data.responseType != 'success') {
+            modal.showError({
+              title: supertextTranslationL10n.generalError,
+              message: data.body
+            });
+            return;
+          }
+
+          addConfirmationStep(data);
+        }
+      ).fail(
+        function (jqXHR, textStatus, errorThrown) {
+          modal.showError({
+            title: supertextTranslationL10n.generalError,
+            message: jqXHR.status + ' ' + textStatus,
+            details: errorThrown
+          });
+        }
+      );
+    }
+
+    function addConfirmationStep(data) {
+      $(selectors.orderStep).html(template.confirmationStep({
+        message: data.body.message
+      }));
+    }
+
+    return {
+      load: load
+    }
+  })());
 
   /**
    * Initialize on post screen
@@ -502,24 +784,24 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function onBulkActionApply(e) {
     var selectName = $(this).attr('id').substr(2);
-
     if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue) {
       return true;
     }
 
     e.preventDefault();
 
-    var posts = [];
+    var postIds = [];
     $('input[name="post[]"]:checked').each(function () {
-      posts.push($(this).val());
+      postIds.push($(this).val());
     });
 
-    if (posts.length > 0) {
+    if (postIds.length > 0) {
+      state.postIds = postIds;
       openModal();
       addOrderProgressBar();
       addCancelButton();
-      addStepLoader();
-      loadContentStep(posts);
+      addStepButtons();
+      loadStep(1);
     } else {
       alert(supertextTranslationL10n.alertPleaseSelect);
     }
@@ -544,10 +826,10 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
-   * Adds the buttons
+   * Adds the cancel button
    */
   function addCancelButton() {
-    modal.addButton(
+    state.cancelButtonToken = modal.addButton(
       supertextTranslationL10n.cancel,
       'secondary',
       function () {
@@ -557,295 +839,110 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
+   * Adds the close button
+   */
+  function addCloseButton() {
+    modal.addButton(
+      supertextTranslationL10n.close,
+      'secondary',
+      function () {
+        modal.close();
+      }
+    );
+  }
+
+  /**
+   * Adds the buttons
+   */
+  function addStepButtons() {
+    state.backButtonToken = modal.addButton(
+      supertextTranslationL10n.back,
+      'secondary',
+      moveToPreviousStep
+    );
+
+    state.nextButtonToken = modal.addButton(
+      supertextTranslationL10n.next,
+      'primary',
+      moveToNextStep
+    );
+  }
+
+  /**
+   * Moves to next step
+   */
+  function moveToNextStep() {
+    validation.checkAll(steps[state.currentStepNumber - 1].validationRules)
+      .fail(showValidationErrors)
+      .pass(hideValidationError)
+      .pass(function () {
+        steps[state.currentStepNumber-1].save();
+        loadStep(state.currentStepNumber + 1)
+      });
+  }
+
+  /**
+   * Moves to previous step
+   */
+  function moveToPreviousStep() {
+  }
+
+  /**
+   * Loads a step
+   * @param stepNumber
+   * @param data
+   */
+  function loadStep(stepNumber) {
+    updateButtonStates(stepNumber);
+    updateOrderProgressBar(stepNumber);
+    addStepLoader();
+
+    steps[stepNumber - 1].load();
+
+    state.currentStepNumber = stepNumber;
+  }
+
+  /**
+   * Updates the step button states according to step number and amount steps
+   * @param stepNumber
+   */
+  function updateButtonStates(stepNumber) {
+    if (stepNumber < steps.length) {
+      modal.enableButton(state.nextButtonToken);
+    } else {
+      modal.removeButton(state.nextButtonToken);
+      modal.removeButton(state.backButtonToken);
+      modal.removeButton(state.cancelButtonToken);
+      addCloseButton();
+      return;
+    }
+
+    if (stepNumber > 1) {
+      modal.enableButton(state.backButtonToken);
+    } else {
+      modal.disableButton(state.backButtonToken);
+    }
+  }
+
+  /**
    * Adds the step loader
    */
-  function addStepLoader(){
+  function addStepLoader() {
     $(selectors.orderStep).html(template.stepLoader({}));
   }
 
   /**
-   * Loads post data for order step one
-   * @param posts
+   * Updates the order progress bar
+   * @param stepNumber
    */
-  function loadContentStep(posts) {
-    updateOrderProgress(1);
-    addStepLoader();
-
-    $.get(
-      context.ajaxUrl,
-      {
-        action: 'sttr_getPostTranslationData',
-        posts: posts
-      }
-    ).done(
-      function (data) {
-        if (data.responseType != 'success') {
-          modal.showError({
-            title: supertextTranslationL10n.generalError,
-            message: data.body
-          });
-          return;
-        }
-
-        addContentStep(data);
-      }
-    ).fail(
-      function (jqXHR, textStatus, errorThrown) {
-        modal.showError({
-          title: supertextTranslationL10n.generalError,
-          message: jqXHR.status + ' ' + textStatus,
-          details: errorThrown
-        });
-      }
-    );
-  }
-
-  /**
-   * Add the first order step to the modal content
-   * @param data
-   */
-  function addContentStep(data) {
-    state.posts = data.body;
-
-    $(selectors.orderStep).html(template.contentStep({
-      posts: state.posts
-    }));
-
-    state.nextButtonToken = modal.addButton(
-      supertextTranslationL10n.next,
-      'secondary',
-      function () {
-        validation
-          .checkAll(validationRules.contentStep)
-          .fail(showValidationErrors)
-          .pass(hideValidationError)
-          .pass(loadQuoteStep);
-      }
-    );
-
-    initializeOrderItemList();
-
-    checkOrderItems();
-  }
-
-  function updateOrderProgress(stepNumber){
-    $(selectors.orderProgressBarSteps).each(function(index, step){
-      if(index == stepNumber-1){
+  function updateOrderProgressBar(stepNumber) {
+    $(selectors.orderProgressBarSteps).each(function (index, step) {
+      if (index == stepNumber - 1) {
         $(step).addClass('active');
         return;
       }
       $(step).removeClass('active');
     });
-  }
-
-
-  /**
-   * Loads post data for order step two form
-   */
-  function loadQuoteStep() {
-    state.contentFormData = $(selectors.contentStepForm).serializeArray();
-    modal.removeButton(state.nextButtonToken);
-
-    updateOrderProgress(2);
-    addStepLoader();
-
-    $.post(
-      context.ajaxUrl + '?action=sttr_getOffer',
-      state.contentFormData
-    ).done(
-      function (data) {
-        if (data.responseType != 'success') {
-          modal.showError({
-            title: supertextTranslationL10n.generalError,
-            message: data.body
-          });
-          return;
-        }
-
-        addQuoteStep(data);
-      }
-    ).fail(
-      function (jqXHR, textStatus, errorThrown) {
-        modal.showError({
-          title: supertextTranslationL10n.generalError,
-          message: jqXHR.status + ' ' + textStatus,
-          details: errorThrown
-        });
-      }
-    );
-  }
-
-  /**
-   * Add the first order step to the modal content
-   * @param data
-   */
-  function addQuoteStep(data) {
-    $(selectors.orderStep).html(template.quoteStep({
-      options: data.body.options
-    }));
-
-    state.nextButtonToken = modal.addButton(
-      supertextTranslationL10n.orderTranslation,
-      'primary',
-      function () {
-        validation
-          .checkAll(validationRules.quoteStep)
-          .fail(showValidationErrors)
-          .pass(hideValidationError)
-          .pass(loadConfirmationStep);
-      }
-    );
-  }
-
-  function loadConfirmationStep(){
-    state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
-
-    modal.removeButton(state.nextButtonToken);
-
-    updateOrderProgress(3);
-    addStepLoader();
-
-    $.post(
-      context.ajaxUrl + '?action=sttr_createOrder',
-      state.contentFormData.concat(state.quoteFormData)
-    ).done(
-      function (data) {
-        if (data.responseType != 'success') {
-          modal.showError({
-            title: supertextTranslationL10n.generalError,
-            message: data.body
-          });
-          return;
-        }
-
-        addConfirmationStep(data);
-      }
-    ).fail(
-      function (jqXHR, textStatus, errorThrown) {
-        modal.showError({
-          title: supertextTranslationL10n.generalError,
-          message: jqXHR.status + ' ' + textStatus,
-          details: errorThrown
-        });
-      }
-    );
-  }
-
-  function addConfirmationStep(data){
-    $(selectors.orderStep).html(template.confirmationStep({
-      message: data.body.message
-    }));
-  }
-
-  /**
-   * Initializes the order item list
-   */
-  function initializeOrderItemList() {
-    var $itemAnchors = $(selectors.orderItemList + ' li a');
-    $itemAnchors.click(onOrderItemAnchorClick);
-    $itemAnchors.find(selectors.orderItemRemoveIcon).click(onOrderItemRemoveIconClick);
-    $(selectors.orderItemRemoveButton).click(onOrderItemRemoveButtonClick);
-
-    activateOrderItem.call($(selectors.orderItemList + ' li:first a'));
-  }
-
-  /**
-   * Check order items
-   */
-  function checkOrderItems() {
-    validation
-      .check(validationRules.contentStep.posts)
-      .fail(showValidationErrors)
-      .pass(hideValidationError)
-      .pass(setLanguages);
-
-    if (state.posts.length == 1) {
-      $(selectors.orderItemRemoveButton).hide();
-    }
-  }
-
-  /**
-   * Sets the languages to the form
-   */
-  function setLanguages() {
-    var sourceLanguageCode = state.posts[0].languageCode;
-    $(selectors.orderSourceLanguageLabel).html(supertextTranslationL10n.languages[sourceLanguageCode]);
-    $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
-
-    $.each(supertextTranslationL10n.languages, function(code, language){
-      if (code === sourceLanguageCode) {
-        return;
-      }
-
-      $(selectors.orderTargetLanguageSelect).append($('<option>', {
-        value: code,
-        text: language
-      }));
-    });
-  }
-
-  /**
-   * Order item anchor click event handler
-   * @param e
-   */
-  function onOrderItemAnchorClick(e) {
-    e.preventDefault();
-    activateOrderItem.call(this);
-  }
-
-  /**
-   * Activate order item
-   */
-  function activateOrderItem() {
-    var $clickedItemAnchor = $(this);
-    var $activeItemAnchor = $(selectors.orderItemList + ' li.active a');
-
-    if ($activeItemAnchor.length > 0) {
-      $($activeItemAnchor.attr('href')).hide();
-      $activeItemAnchor.parent().removeClass('active');
-    }
-
-    $($clickedItemAnchor.attr('href')).show();
-    $clickedItemAnchor.parent().addClass('active');
-  }
-
-  /**
-   * Order item remove icon click event handler
-   * @param e
-   */
-  function onOrderItemRemoveIconClick(e) {
-    e.preventDefault();
-    removeOrderItem.call($(this).parent());
-  }
-
-  /**
-   * Order item remove button click event handler
-   * @param e
-   */
-  function onOrderItemRemoveButtonClick(e) {
-    e.preventDefault();
-    removeOrderItem.call($(selectors.orderItemList + ' li.active a'));
-    activateOrderItem.call($(selectors.orderItemList + ' li:first a'));
-  }
-
-  /**
-   * Removes an order item
-   */
-  function removeOrderItem() {
-    if (state.posts.length == 1) {
-      return;
-    }
-
-    var $itemAnchor = $(this);
-    $($itemAnchor.attr('href')).remove();
-    $itemAnchor.parent().remove();
-
-    var postIdToRemove = $itemAnchor.data('post-id');
-    state.posts = state.posts.filter(function (post) {
-      return post.id != postIdToRemove;
-    });
-
-    checkOrderItems();
   }
 
   /**
@@ -957,6 +1054,8 @@ Supertext.Polylang = (function (win, doc, $) {
       if (!context.isPluginWorking) {
         return;
       }
+
+      steps = [contentStep, quoteStep, confirmationStep];
 
       if (context.screen == 'post') {
         initializePostScreen();
