@@ -241,101 +241,36 @@ Supertext.Modal = (function (win, doc, $) {
   }
 })(window, document, jQuery);
 
-Supertext.Validation = (function (win, doc, $) {
-  var
-    errors = {},
-    lastCheckedRuleKey = '';
-
-  function pass(key) {
-    lastCheckedRuleKey = key;
-
-    if (!errors.hasOwnProperty(key)) {
-      return;
-    }
-
-    delete errors[key];
-  }
-
-  function fail(key, message) {
-    lastCheckedRuleKey = key;
-    errors[key] = message;
-  }
+Supertext.Validation = (function ($) {
 
   function check(rule) {
-    rule(pass, fail);
-    return result();
-  }
-
-  function result() {
-    return {
-      fail: function (onFail) {
-        if (!errors.hasOwnProperty(lastCheckedRuleKey)) {
-          return this;
-        }
-
-        onFail([errors[lastCheckedRuleKey]]);
-        return this;
-      },
-      pass: function (onPass) {
-        if (errors.hasOwnProperty(lastCheckedRuleKey)) {
-          return this;
-        }
-
-        onPass();
-        return this;
-      }
-    }
+    return checkAll([rule]);
   }
 
   function checkAll(rules) {
-    $.each(rules, function (key, rule) {
-      if (!rules.hasOwnProperty(key)) {
+    return $.Deferred(function(defer){
+      var errors = [];
+
+      $.each(rules, function(index, rule){
+        rule(function(error){
+          errors.push(error);
+        });
+      });
+
+      if(errors.length > 0){
+        defer.reject(errors);
         return;
       }
 
-      rule(pass, fail);
-    });
-
-    return results();
-  }
-
-  function results() {
-    return {
-      fail: function (onFail) {
-        if ($.isEmptyObject(errors)) {
-          return this;
-        }
-
-        var errorMessages = [];
-
-        $.each(errors, function (key, error) {
-          if (!errors.hasOwnProperty(key)) {
-            return;
-          }
-
-          errorMessages.push(error);
-        });
-
-        onFail(errorMessages);
-        return this;
-      },
-      pass: function (onPass) {
-        if (!$.isEmptyObject(errors)) {
-          return this;
-        }
-
-        onPass();
-        return this;
-      }
-    }
+      defer.resolve();
+    }).promise();
   }
 
   return {
     check: check,
-    checkAll: checkAll,
-    results: results
+    checkAll: checkAll
   }
-})(window, document, jQuery);
+})(jQuery);
 
 /**
  * Polylang translation plugin to inject translation options
@@ -405,9 +340,7 @@ Supertext.Polylang = (function (win, doc, $) {
 
   var contentStep = $.extend(new Step(), (function () {
     var validationRules = {
-      posts: function (pass, fail) {
-        var validationKey = 'posts';
-
+      posts: function (fail) {
         var languageCode = null;
         var isEachPostInSameLanguage = true;
         var isAPostInTranslation = false;
@@ -422,26 +355,18 @@ Supertext.Polylang = (function (win, doc, $) {
         });
 
         if (isAPostInTranslation) {
-          fail(validationKey, supertextTranslationL10n.errorValidationSomePostInTranslation);
+          fail(supertextTranslationL10n.errorValidationSomePostInTranslation);
           return;
         }
 
         if (!isEachPostInSameLanguage) {
-          fail(validationKey, supertextTranslationL10n.errorValidationNotAllPostInSameLanguage);
-          return;
+          fail(supertextTranslationL10n.errorValidationNotAllPostInSameLanguage);
         }
-
-        pass(validationKey);
       },
-      targetLanguage: function (pass, fail) {
-        var validationKey = 'targetLanguage';
-
+      targetLanguage: function (fail) {
         if ($(selectors.orderTargetLanguageSelect).val() == '') {
-          fail(validationKey, supertextTranslationL10n.errorValidationSelectTargetLanguage);
-          return;
+          fail(supertextTranslationL10n.errorValidationSelectTargetLanguage);
         }
-
-        pass(validationKey);
       }
     };
 
@@ -520,8 +445,8 @@ Supertext.Polylang = (function (win, doc, $) {
       validation
         .check(validationRules.posts)
         .fail(showValidationErrors)
-        .pass(hideValidationError)
-        .pass(setLanguages);
+        .done(hideValidationError)
+        .done(setLanguages);
 
       if (state.posts.length == 1) {
         $(selectors.orderItemRemoveButton).hide();
@@ -621,15 +546,10 @@ Supertext.Polylang = (function (win, doc, $) {
 
   var quoteStep = $.extend(new Step(), (function () {
     var validationRules = {
-      quote: function (pass, fail) {
-        var validationKey = 'quote';
-
+      quote: function (fail) {
         if ($(selectors.checkedQuote).length === 0) {
-          fail(validationKey, supertextTranslationL10n.errorValidationSelectQuote);
-          return;
-        }
-
-        pass(validationKey);
+          fail(supertextTranslationL10n.errorValidationSelectQuote);
+        };
       }
     };
 
@@ -874,8 +794,8 @@ Supertext.Polylang = (function (win, doc, $) {
   function moveToNextStep() {
     validation.checkAll(steps[state.currentStepNumber - 1].validationRules)
       .fail(showValidationErrors)
-      .pass(hideValidationError)
-      .pass(function () {
+      .done(hideValidationError)
+      .done(function () {
         steps[state.currentStepNumber-1].save();
         loadStep(state.currentStepNumber + 1)
       });
