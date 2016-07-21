@@ -318,6 +318,10 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     validation,
     /**
+     * Localization data
+     */
+    l10n,
+    /**
      * May be overridden to true on load
      */
     inTranslation = false,
@@ -366,16 +370,16 @@ Supertext.Polylang = (function (win, doc, $) {
         });
 
         if (isAPostInTranslation) {
-          fail(supertextTranslationL10n.errorValidationSomePostInTranslation);
+          fail(l10n.errorValidationSomePostInTranslation);
         }
 
         if (!isEachPostInSameLanguage) {
-          fail(supertextTranslationL10n.errorValidationNotAllPostInSameLanguage);
+          fail(l10n.errorValidationNotAllPostInSameLanguage);
         }
       },
       targetLanguage: function (fail) {
         if ($(selectors.orderTargetLanguageSelect).val() == '') {
-          fail(supertextTranslationL10n.errorValidationSelectTargetLanguage);
+          fail(l10n.errorValidationSelectTargetLanguage);
         }
       }
     };
@@ -511,10 +515,10 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     function setLanguages() {
       var sourceLanguageCode = state.posts[0].languageCode;
-      $(selectors.orderSourceLanguageLabel).html(supertextTranslationL10n.languages[sourceLanguageCode]);
+      $(selectors.orderSourceLanguageLabel).html(l10n.languages[sourceLanguageCode]);
       $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
 
-      $.each(supertextTranslationL10n.languages, function (code, language) {
+      $.each(l10n.languages, function (code, language) {
         if (code === sourceLanguageCode) {
           return;
         }
@@ -533,7 +537,7 @@ Supertext.Polylang = (function (win, doc, $) {
     self.validationRules = {
       quote: function (fail) {
         if ($(selectors.checkedQuote).length === 0) {
-          fail(supertextTranslationL10n.errorValidationSelectQuote);
+          fail(l10n.errorValidationSelectQuote);
         }
       }
     };
@@ -588,7 +592,9 @@ Supertext.Polylang = (function (win, doc, $) {
       injectOrderLinks();
     }
 
-    if ($('#title').length == 1 && $('#title').val().indexOf(supertextTranslationL10n.inTranslationText) > -1) {
+    var $title = $('#title');
+
+    if ($title.length == 1 && $title.val().indexOf(l10n.inTranslationText) > -1) {
       inTranslation = true;
       disableTranslatingPost();
     }
@@ -628,8 +634,8 @@ Supertext.Polylang = (function (win, doc, $) {
    * Initialize on edit screen
    */
   function initializeEditScreen() {
-    $('<option>').val(orderTranslationBulkActionValue).text(supertextTranslationL10n.offerTranslation).appendTo("select[name='action']");
-    $('<option>').val(orderTranslationBulkActionValue).text(supertextTranslationL10n.offerTranslation).appendTo("select[name='action2']");
+    $('<option>').val(orderTranslationBulkActionValue).text(l10n.offerTranslation).appendTo("select[name='action']");
+    $('<option>').val(orderTranslationBulkActionValue).text(l10n.offerTranslation).appendTo("select[name='action2']");
 
     $('#doaction, #doaction2').click(onBulkActionApply);
   }
@@ -660,7 +666,7 @@ Supertext.Polylang = (function (win, doc, $) {
       addStepButtons();
       loadStep(1);
     } else {
-      alert(supertextTranslationL10n.alertPleaseSelect);
+      alert(l10n.alertPleaseSelect);
     }
 
     return false;
@@ -671,7 +677,7 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function openModal() {
     modal.open({
-      title: supertextTranslationL10n.modalTitle
+      title: l10n.modalTitle
     });
   }
 
@@ -687,7 +693,7 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function addCancelButton() {
     state.cancelButtonToken = modal.addButton(
-      supertextTranslationL10n.cancel,
+      l10n.cancel,
       'secondary',
       function () {
         modal.close();
@@ -700,7 +706,7 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function addCloseButton() {
     modal.addButton(
-      supertextTranslationL10n.close,
+      l10n.close,
       'secondary',
       function () {
         modal.close();
@@ -713,13 +719,13 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function addStepButtons() {
     state.backButtonToken = modal.addButton(
-      supertextTranslationL10n.back,
+      l10n.back,
       'secondary',
       moveToPreviousStep
     );
 
     state.nextButtonToken = modal.addButton(
-      supertextTranslationL10n.next,
+      l10n.next,
       'primary',
       moveToNextStep
     );
@@ -747,7 +753,6 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Loads a step
    * @param stepNumber
-   * @param data
    */
   function loadStep(stepNumber) {
     updateButtonStates(stepNumber);
@@ -812,7 +817,7 @@ Supertext.Polylang = (function (win, doc, $) {
     }
 
     state.validationErrorToken = modal.showError({
-      title: supertextTranslationL10n.validationError,
+      title: l10n.validationError,
       message: errors
     });
   }
@@ -844,7 +849,7 @@ Supertext.Polylang = (function (win, doc, $) {
         function (responseData) {
           if (responseData.responseType != 'success') {
             modal.showError({
-              title: supertextTranslationL10n.generalError,
+              title: l10n.generalError,
               message: responseData.body
             });
             return;
@@ -874,7 +879,7 @@ Supertext.Polylang = (function (win, doc, $) {
         function (responseData) {
           if (responseData.responseType != 'success') {
             modal.showError({
-              title: supertextTranslationL10n.generalError,
+              title: l10n.generalError,
               message: responseData.body
             });
             return;
@@ -897,7 +902,7 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function showAjaxError(jqXHR, textStatus, errorThrown) {
     modal.showError({
-      title: supertextTranslationL10n.networkError,
+      title: l10n.networkError,
       message: jqXHR.status + ' ' + textStatus,
       details: errorThrown
     });
@@ -908,17 +913,17 @@ Supertext.Polylang = (function (win, doc, $) {
    * @param targetLanguageCode
    */
   function openOrderForm(targetLanguageCode) {
-    if (hasUnsavedChanges() && !confirm(supertextTranslationL10n.confirmUnsavedArticle)) {
+    if (hasUnsavedChanges() && !confirm(l10n.confirmUnsavedArticle)) {
       return;
     }
 
     // Can't translate a post in translation
     if (inTranslation) {
-      alert(supertextTranslationL10n.alertUntranslatable);
+      alert(l10n.alertUntranslatable);
       return;
     }
 
-    tb_show(supertextTranslationL10n.offerTranslation, '#?TB_inline&width=100%&height=100%&inlineId=sttr-offer-thickbox', false);
+    tb_show(l10n.offerTranslation, '#?TB_inline&width=100%&height=100%&inlineId=sttr-offer-thickbox', false);
 
 
   }
@@ -934,15 +939,15 @@ Supertext.Polylang = (function (win, doc, $) {
     if (!hasUnsavedChanges()) {
       canTranslate = true;
     } else {
-      canTranslate = confirm(supertextTranslationL10n.confirmUnsavedArticle);
+      canTranslate = confirm(l10n.confirmUnsavedArticle);
     }
     if (canTranslate) {
       // Can't translate a post in translation
       if (inTranslation) {
-        alert(supertextTranslationL10n.alertUntranslatable)
+        alert(l10n.alertUntranslatable)
       } else {
         // Open the offer box
-        tb_show(supertextTranslationL10n.offerTranslation, tbLink, false);
+        tb_show(l10n.offerTranslation, tbLink, false);
       }
     }
   }
@@ -985,6 +990,7 @@ Supertext.Polylang = (function (win, doc, $) {
       modal = externals.modal;
       template = externals.template;
       validation = externals.validation;
+      l10n = externals.l10n;
 
       if (!context.isPluginWorking) {
         return;
@@ -1017,6 +1023,7 @@ jQuery(document).ready(function () {
     },
     modal: Supertext.Modal,
     template: Supertext.Template,
-    validation: Supertext.Validation
+    validation: Supertext.Validation,
+    l10n: supertextTranslationL10n
   });
 });
