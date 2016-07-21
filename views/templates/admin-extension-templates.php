@@ -147,6 +147,9 @@
       <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language" />
       <select name="orderTargetLanguage" id="sttr-order-target-language">
         <option value=""><?php _e('Please select', 'polylang-supertext');?>...</option>
+        <# _.each(data.languages, function(language, code) { #>
+          <option value="{{code}}" style="display: none">{{language}}</option>
+        <# }); #>
       </select>
     </p>
   </form>
@@ -196,6 +199,8 @@
 </script>
 
 <script type="text/html" id="tmpl-sttr-confirmation-step">
-  <h2><?php _e('Confirmation', 'polylang-supertext'); ?></h2>
-  {{{data.message}}}
+  <div id="sttr-confirmation-step">
+    <h2><?php _e('Confirmation', 'polylang-supertext'); ?></h2>
+    {{{data.message}}}
+  </div>
 </script>

@@ -298,6 +298,7 @@ Supertext.Polylang = (function (win, doc, $) {
       orderSourceLanguageInput: '#sttr-order-source-language',
       orderSourceLanguageLabel: '#sttr-order-source-language-label',
       orderTargetLanguageSelect: '#sttr-order-target-language',
+      orderTargetLanguageOptions: '#sttr-order-target-language option',
       checkedQuote: 'input[name="translationType"]:checked',
       quoteStepForm: '#sttr-quote-step-form'
     },
@@ -338,16 +339,39 @@ Supertext.Polylang = (function (win, doc, $) {
     };
 
   function Step() {
+    this.savedStepElements = [];
+    this.validationRules = {};
   }
 
   Step.prototype = {
-    validationRules: {},
     load: function () {
+      if (this.savedStepElements.length > 0) {
+        return this.loadSavedStepElements();
+      }
+
+      return this.firstLoad();
+    },
+    loadSavedStepElements: function () {
+      var self = this;
+      return $.Deferred(function (defer) {
+        $(selectors.orderStep).empty();
+        $(selectors.orderStep).append(self.savedStepElements);
+        self.init();
+        defer.resolve();
+      }).promise();
+    },
+    firstLoad: function () {
+    },
+    init: function () {
     },
     validate: function () {
       return validation.checkAll(this.validationRules);
     },
     save: function () {
+      this.savedStepElements = $(selectors.orderStep).children();
+      this.saveData();
+    },
+    saveData: function () {
     }
   };
 
@@ -387,7 +411,7 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Loads the content step
      */
-    self.load = function () {
+    self.firstLoad = function () {
       return doGetRequest(
         context.ajaxUrl, {
           action: 'sttr_getPostTranslationData',
@@ -397,9 +421,17 @@ Supertext.Polylang = (function (win, doc, $) {
     };
 
     /**
+     * Initializes step
+     */
+    self.init = function () {
+      initializeOrderItemList();
+      checkOrderItems();
+    };
+
+    /**
      * Saves content step data
      */
-    self.save = function () {
+    self.saveData = function () {
       state.contentFormData = $(selectors.contentStepForm).serializeArray();
     };
 
@@ -411,12 +443,11 @@ Supertext.Polylang = (function (win, doc, $) {
       state.posts = data.body;
 
       $(selectors.orderStep).html(template.contentStep({
-        posts: state.posts
+        posts: state.posts,
+        languages: l10n.languages
       }));
 
-      initializeOrderItemList();
-
-      checkOrderItems();
+      self.init();
     }
 
     /**
@@ -518,15 +549,14 @@ Supertext.Polylang = (function (win, doc, $) {
       $(selectors.orderSourceLanguageLabel).html(l10n.languages[sourceLanguageCode]);
       $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
 
-      $.each(l10n.languages, function (code, language) {
-        if (code === sourceLanguageCode) {
+      $(selectors.orderTargetLanguageOptions).each(function (index, option) {
+        var $options = $(option);
+        if ($options.val() === sourceLanguageCode) {
+          $options.hide();
           return;
         }
 
-        $(selectors.orderTargetLanguageSelect).append($('<option>', {
-          value: code,
-          text: language
-        }));
+        $(option).show();
       });
     }
   });
@@ -545,14 +575,17 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Loads post data for order step two form
      */
-    self.load = function () {
+    self.firstLoad = function () {
       return doPostRequest(
         context.ajaxUrl + '?action=sttr_getOffer',
         state.contentFormData
       ).done(addQuoteStep);
     };
 
-    self.save = function () {
+    /**
+     * Saves quote step data
+     */
+    self.saveData = function () {
       state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
     };
 
@@ -570,13 +603,19 @@ Supertext.Polylang = (function (win, doc, $) {
   var confirmationStep = $.extend(new Step(), new function () {
     var self = this;
 
-    self.load = function () {
+    /**
+     * Loads confirmation step
+     */
+    self.firstLoad = function () {
       return doPostRequest(
         context.ajaxUrl + '?action=sttr_createOrder',
         state.contentFormData.concat(state.quoteFormData)
       ).done(addConfirmationStep);
     };
 
+    /**
+     * Adds confirmation step content
+     */
     function addConfirmationStep(data) {
       $(selectors.orderStep).html(template.confirmationStep({
         message: data.body.message
@@ -750,6 +789,7 @@ Supertext.Polylang = (function (win, doc, $) {
    * Moves to previous step
    */
   function moveToPreviousStep() {
+    loadStep(state.currentStepNumber - 1);
   }
 
   /**
@@ -763,7 +803,7 @@ Supertext.Polylang = (function (win, doc, $) {
 
     steps[stepNumber - 1]
       .load()
-      .always(function(){
+      .always(function () {
         updateButtonsInLoadedState(stepNumber);
       });
 
@@ -780,7 +820,7 @@ Supertext.Polylang = (function (win, doc, $) {
       modal.removeButton(state.backButtonToken);
       modal.removeButton(state.cancelButtonToken);
       addCloseButton();
-    }else{
+    } else {
       modal.disableButton(state.nextButtonToken);
       modal.disableButton(state.backButtonToken);
     }
@@ -799,7 +839,7 @@ Supertext.Polylang = (function (win, doc, $) {
       modal.enableButton(state.backButtonToken);
     }
 
-    if(state.closeButtonToken){
+    if (state.closeButtonToken) {
       modal.enableButton(state.closeButtonToken);
     }
   }
