@@ -13,6 +13,8 @@ use Supertext\Polylang\Api\Wrapper;
  */
 class Library
 {
+  private $pluginStatus = null;
+
   /**
    * @param string $language polylang language code
    * @return string equivalent supertext language code
@@ -105,13 +107,25 @@ class Library
   }
 
   /**
-   * @return bool true if workingly configured
+   * @return bool
    */
-  public function isWorking()
+  public function isPolylangActivated()
   {
-    if (!WordPress::isPluginActive('polylang/polylang.php')) {
-      return false;
-    }
+    return WordPress::isPluginActive('polylang/polylang.php');
+  }
+
+  /**
+   * @return bool
+   */
+  public function isCurlActivated(){
+    return function_exists('curl_exec');
+  }
+
+  /**
+   * @return bool
+   */
+  public function isPluginConfiguredProperly(){
+    return false;
 
     $options = $this->getSettingOption();
 
@@ -120,6 +134,35 @@ class Library
       count($options[Constant::SETTING_USER_MAP]) > 0 &&
       isset($options[Constant::SETTING_LANGUAGE_MAP]) &&
       count($options[Constant::SETTING_LANGUAGE_MAP]) == count(Multilang::getLanguages());
+  }
+
+  /**
+   * @return bool
+   */
+  public function isCurrentUserConfigured(){
+    $userId = get_current_user_id();
+    $cred = $this->getUserCredentials($userId);
+
+    return
+      strlen($cred['stUser']) > 0 &&
+      strlen($cred['stApi']) > 0 &&
+      $cred['stUser'] != Constant::DEFAULT_API_USER;
+  }
+
+  /**
+   * Gets the plugin status
+   * @return null|\stdClass
+   */
+  public function getPluginStatus(){
+    if($this->pluginStatus == null){
+      $this->pluginStatus =  new \stdClass();
+      $this->pluginStatus->isPolylangActivated = $this->isPolylangActivated();
+      $this->pluginStatus->isCurlActivated = $this->isCurlActivated();
+      $this->pluginStatus->isPluginConfiguredProperly = $this->isPluginConfiguredProperly();
+      $this->pluginStatus->isCurrentUserConfigured = $this->isCurrentUserConfigured();
+    };
+
+    return $this->pluginStatus;
   }
 
   /**
@@ -147,6 +190,9 @@ class Library
     );
   }
 
+  /**
+   * @return array
+   */
   public function getShortcodeTags()
   {
     //Support Visual Composer (add shortcodes)
@@ -158,6 +204,9 @@ class Library
     return $shortcode_tags;
   }
 
+  /**
+   * @return string
+   */
   public function getShortcodeRegex()
   {
     //Support Visual Composer (add shortcodes)

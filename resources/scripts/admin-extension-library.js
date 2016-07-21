@@ -1076,7 +1076,7 @@ Supertext.Polylang = (function (win, doc, $) {
       validation = externals.validation;
       l10n = externals.l10n;
 
-      if (!context.pluginStatus.isWorking) {
+      if (!context.enable) {
         return;
       }
 
@@ -1101,7 +1101,7 @@ jQuery(document).ready(function () {
 
   Supertext.Polylang.initialize({
     context: Supertext.Context || {
-      isPluginWorking: false
+      enable: false
     },
     modal: Supertext.Modal,
     template: Supertext.Template,

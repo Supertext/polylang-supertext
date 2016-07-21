@@ -48,6 +48,7 @@ class AdminExtension
 
     add_action('current_screen', array($this, 'setScreenBase'));
     add_action('admin_enqueue_scripts', array($this, 'addBackendAssets'));
+    add_action('admin_notices', array($this, 'showPluginStatusMessages'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('admin_footer', array($this, 'addJavascriptContext'));
     add_action('admin_footer', array($this, 'addTemplates'));
@@ -87,6 +88,41 @@ class AdminExtension
       wp_enqueue_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE);
 
       wp_enqueue_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE);
+    }
+  }
+
+  /**
+   * Show plugin informations
+   */
+  public function showPluginStatusMessages(){
+    if (!$this->isEditPostScreen() && !$this->isPostsScreen()) {
+      return;
+    }
+
+    $pluginStatus = $this->library->getPluginStatus();
+
+    if (!$pluginStatus->isCurlActivated) {
+      echo '
+        <div class="notice notice-warning is-dismissible">
+          <p>' . __('The PHP function <em>curl_exec</em> is disabled. Please enable it in order to be able to send requests to Supertext.', 'polylang-supertext') . '</p>
+        </div>
+      ';
+    }
+
+    if(!$pluginStatus->isPolylangActivated){
+      echo '
+        <div class="notice notice-warning is-dismissible">
+          <p>' . __('The Supertext plugin cannot be used. Polylang is not installed or hasn\'t been activated.', 'polylang-supertext') . '</p>
+        </div>
+      ';
+    }
+
+    if(!$pluginStatus->isPluginConfiguredProperly){
+      echo '
+        <div class="notice notice-warning is-dismissible">
+          <p>' . __('The Supertext plugin cannot be used. It hasn\'t been configured correctly.', 'polylang-supertext') . '</p>
+        </div>
+      ';
     }
   }
 
@@ -133,10 +169,10 @@ class AdminExtension
       return;
     }
 
-    $pluginStatus = $this->getPluginStatus();
+    $pluginStatus = $this->library->getPluginStatus();
 
     $context = array(
-      'pluginStatus' => $pluginStatus,
+      'enable' => $pluginStatus->isPolylangActivated && $pluginStatus->isCurlActivated && $pluginStatus->isPluginConfiguredProperly && $pluginStatus->isCurrentUserConfigured,
       'screen' => $this->screenBase,
       'resourceUrl' => get_bloginfo('wpurl'),
       'ajaxUrl' => admin_url( 'admin-ajax.php' )
@@ -237,36 +273,5 @@ class AdminExtension
 
   private function isPostsScreen(){
     return $this->screenBase == 'edit';
-  }
-
-  /**
-   * Gets the plugin status
-   * @return array
-   */
-  private function getPluginStatus()
-  {
-    // See if the user has credentials
-    $userId = get_current_user_id();
-    $cred = $this->library->getUserCredentials($userId);
-
-    $isConfiguredProperly =
-      $this->library->isWorking() &&
-      strlen($cred['stUser']) > 0 &&
-      strlen($cred['stApi']) > 0 &&
-      $cred['stUser'] != Constant::DEFAULT_API_USER;
-
-    $isCurlEnabled = function_exists('curl_exec');
-
-    $errors = array(
-      $isCurlEnabled ? '' : __('The PHP function <em>curl_exec</em> is disabled. Please enable it in order to be able to send requests to Supertext.', 'polylang-supertext'),
-      $isConfiguredProperly ? '' : __('The Supertext plugin hasn\'t been configured correctly.', 'polylang-supertext')
-    );
-
-    $pluginStatus = array(
-      'isWorking' => $isConfiguredProperly && $isCurlEnabled,
-      'error' => implode(' ', $errors)
-    );
-
-    return $pluginStatus;
   }
 } 
