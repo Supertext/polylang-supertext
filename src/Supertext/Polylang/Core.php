@@ -159,6 +159,7 @@ class Core
       'deleteUser' => esc_js(__('Delete user', 'polylang-supertext')),
       'translationCreation' => esc_js(__('Translation is being initialized. Please wait a moment.', 'polylang-supertext')),
       'generalError' => esc_js(__('An error occurred', 'polylang-supertext')),
+      'networkError' => esc_js(__('A network error occurred', 'polylang-supertext')),
       'validationError' => esc_js(__('Validation error', 'polylang-supertext')),
       'offerTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
       'translationOrderError' => esc_js(__('The order couldn\'t be sent to Supertext. Please try again.', 'polylang-supertext')),

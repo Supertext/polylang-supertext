@@ -35,9 +35,12 @@
     <p class="error-message">
       <# if(_.isArray(data.error.message)) { #>
         {{{data.error.message.join('<br>')}}}
-        <# }else{ #>
-          {{data.error.message}}
-          <# } if(data.details){ #><br/>({{data.error.details}})<# } #>
+      <# }else{ #>
+        {{data.error.message}}
+      <# } #>
+      <# if(data.error.details){ #>
+        <br/>({{data.error.details}})
+      <# } #>
     </p>
   </div>
 </script>

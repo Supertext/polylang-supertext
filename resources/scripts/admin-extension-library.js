@@ -338,11 +338,13 @@ Supertext.Polylang = (function (win, doc, $) {
 
   Step.prototype = {
     validationRules: {},
-    load: function () {},
+    load: function () {
+    },
     validate: function () {
       return validation.checkAll(this.validationRules);
     },
-    save: function () {}
+    save: function () {
+    }
   };
 
   var contentStep = $.extend(new Step(), new function () {
@@ -382,33 +384,12 @@ Supertext.Polylang = (function (win, doc, $) {
      * Loads the content step
      */
     self.load = function () {
-      $.get(
-        context.ajaxUrl,
-        {
+      doGetRequest(
+        context.ajaxUrl, {
           action: 'sttr_getPostTranslationData',
           postIds: state.postIds
         }
-      ).done(
-        function (data) {
-          if (data.responseType != 'success') {
-            modal.showError({
-              title: supertextTranslationL10n.generalError,
-              message: data.body
-            });
-            return;
-          }
-
-          addContentStep(data);
-        }
-      ).fail(
-        function (jqXHR, textStatus, errorThrown) {
-          modal.showError({
-            title: supertextTranslationL10n.generalError,
-            message: jqXHR.status + ' ' + textStatus,
-            details: errorThrown
-          });
-        }
-      );
+      ).done(addContentStep);
     };
 
     /**
@@ -561,30 +542,10 @@ Supertext.Polylang = (function (win, doc, $) {
      * Loads post data for order step two form
      */
     self.load = function () {
-      $.post(
+      doPostRequest(
         context.ajaxUrl + '?action=sttr_getOffer',
         state.contentFormData
-      ).done(
-        function (data) {
-          if (data.responseType != 'success') {
-            modal.showError({
-              title: supertextTranslationL10n.generalError,
-              message: data.body
-            });
-            return;
-          }
-
-          addQuoteStep(data);
-        }
-      ).fail(
-        function (jqXHR, textStatus, errorThrown) {
-          modal.showError({
-            title: supertextTranslationL10n.generalError,
-            message: jqXHR.status + ' ' + textStatus,
-            details: errorThrown
-          });
-        }
-      );
+      ).done(addQuoteStep);
     };
 
     self.save = function () {
@@ -606,30 +567,10 @@ Supertext.Polylang = (function (win, doc, $) {
     var self = this;
 
     self.load = function () {
-      $.post(
+      doPostRequest(
         context.ajaxUrl + '?action=sttr_createOrder',
         state.contentFormData.concat(state.quoteFormData)
-      ).done(
-        function (data) {
-          if (data.responseType != 'success') {
-            modal.showError({
-              title: supertextTranslationL10n.generalError,
-              message: data.body
-            });
-            return;
-          }
-
-          addConfirmationStep(data);
-        }
-      ).fail(
-        function (jqXHR, textStatus, errorThrown) {
-          modal.showError({
-            title: supertextTranslationL10n.generalError,
-            message: jqXHR.status + ' ' + textStatus,
-            details: errorThrown
-          });
-        }
-      );
+      ).done(addConfirmationStep);
     };
 
     function addConfirmationStep(data) {
@@ -862,11 +803,11 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
-   *
+   * Shows validation errors
    * @param errors string[]
    */
   function showValidationErrors(errors) {
-    if (state.validationErrorToken !== null) {
+    if (state.validationErrorToken) {
       hideValidationError();
     }
 
@@ -877,11 +818,89 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
-   *
+   * Hides the validation errors
    */
   function hideValidationError() {
+    if (!state.validationErrorToken) {
+      return;
+    }
+
     modal.hideError(state.validationErrorToken);
     state.validationErrorToken = null;
+  }
+
+  /**
+   * Does post request
+   * @param url
+   * @param data
+   * @returns {*}
+   */
+  function doGetRequest(url, data) {
+    return $.Deferred(function (defer) {
+      $.get(
+        url,
+        data
+      ).done(
+        function (responseData) {
+          if (responseData.responseType != 'success') {
+            modal.showError({
+              title: supertextTranslationL10n.generalError,
+              message: responseData.body
+            });
+            return;
+          }
+          defer.resolve(responseData);
+        }
+      ).fail(
+        showAjaxError
+      ).fail(
+        defer.reject
+      );
+    }).promise();
+  }
+
+  /**
+   * Does post request
+   * @param url
+   * @param data
+   * @returns {*}
+   */
+  function doPostRequest(url, data) {
+    return $.Deferred(function (defer) {
+      $.post(
+        url,
+        data
+      ).done(
+        function (responseData) {
+          if (responseData.responseType != 'success') {
+            modal.showError({
+              title: supertextTranslationL10n.generalError,
+              message: responseData.body
+            });
+            return;
+          }
+          defer.resolve(responseData);
+        }
+      ).fail(
+        showAjaxError
+      ).fail(
+        defer.reject
+      );
+    }).promise();
+  }
+
+  /**
+   * Shows an ajax error
+   * @param jqXHR
+   * @param textStatus
+   * @param errorThrown
+   */
+  function showAjaxError(jqXHR, textStatus, errorThrown) {
+    modal.showError({
+      title: supertextTranslationL10n.networkError,
+      message: jqXHR.status + ' ' + textStatus,
+      details: errorThrown
+    });
   }
 
   /**
