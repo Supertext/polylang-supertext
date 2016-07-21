@@ -299,6 +299,7 @@ Supertext.Polylang = (function (win, doc, $) {
       orderSourceLanguageLabel: '#sttr-order-source-language-label',
       orderTargetLanguageSelect: '#sttr-order-target-language',
       orderTargetLanguageOptions: '#sttr-order-target-language option',
+      contentCheckboxes: '.translatable-content-table input[type="checkbox"]',
       checkedQuote: 'input[name="translationType"]:checked',
       quoteStepForm: '#sttr-quote-step-form'
     },
@@ -322,10 +323,6 @@ Supertext.Polylang = (function (win, doc, $) {
      * Localization data
      */
     l10n,
-    /**
-     * May be overridden to true on load
-     */
-    inTranslation = false,
     /**
      * Order process steps
      * @type {Array}
@@ -417,6 +414,21 @@ Supertext.Polylang = (function (win, doc, $) {
         if (!isEachPostInSameLanguage) {
           fail(l10n.errorValidationNotAllPostInSameLanguage);
         }
+      },
+      content: function(fail){
+        var anyChecked = false;
+        $(selectors.contentCheckboxes).each(function(index, checkbox){
+          if($(checkbox).prop('checked')){
+            anyChecked = true;
+            return false;
+          }
+        });
+
+        if(anyChecked){
+          return;
+        }
+
+        fail(l10n.errorValidationSelectContent);
       },
       targetLanguage: function (fail) {
         if ($(selectors.orderTargetLanguageSelect).val() == '') {
@@ -657,7 +669,6 @@ Supertext.Polylang = (function (win, doc, $) {
     var $title = $('#title');
 
     if ($title.length == 1 && $title.val().indexOf(l10n.inTranslationText) > -1) {
-      inTranslation = true;
       disableTranslatingPost();
     }
   }
@@ -722,17 +733,24 @@ Supertext.Polylang = (function (win, doc, $) {
 
     if (postIds.length > 0) {
       state.postIds = postIds;
-      steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
-      openModal();
-      addOrderProgressBar();
-      addCancelButton();
-      addStepButtons();
-      loadStep(1);
+      startOrderProcess();
     } else {
       alert(l10n.alertPleaseSelect);
     }
 
     return false;
+  }
+
+  /**
+   * Starts the order process
+   */
+  function startOrderProcess(){
+    steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
+    openModal();
+    addOrderProgressBar();
+    addCancelButton();
+    addStepButtons();
+    loadStep(1);
   }
 
   /**
@@ -1001,15 +1019,9 @@ Supertext.Polylang = (function (win, doc, $) {
       return;
     }
 
-    // Can't translate a post in translation
-    if (inTranslation) {
-      alert(l10n.alertUntranslatable);
-      return;
-    }
+    state.postIds = [$('#post_ID').val()];
 
-    tb_show(l10n.offerTranslation, '#?TB_inline&width=100%&height=100%&inlineId=sttr-offer-thickbox', false);
-
-
+    startOrderProcess();
   }
 
   /**

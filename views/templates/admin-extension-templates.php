@@ -158,6 +158,7 @@
 <script type="text/html" id="tmpl-sttr-quote-step">
   <form id="sttr-quote-step-form">
     <h2><?php _e('Service and deadline', 'polylang-supertext'); ?></h2>
+    <# if(data.options.length > 0) { #>
     <p><?php _e('Select the translation service and deadline:', 'polylang-supertext'); ?></p>
     <div class="sttr-order-item-quote">
       <table cellspacing="0" cellpadding="2" border="0">
@@ -193,6 +194,9 @@
         </tbody>
       </table>
     </div>
+    <# } else { #>
+      <p><?php _e('There is no content to be translated.', 'polylang-supertext'); ?></p>
+    <# } #>
     <h2><?php _e('Your comment to Supertext', 'polylang-supertext'); ?></h2>
     <p><textarea name="orderComment" id="sttr-order-comment"></textarea></p>
   </form>

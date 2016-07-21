@@ -64,6 +64,10 @@ class Wrapper
     $httpResult = $connection->postRequest('translation/quote', json_encode($json), true);
     $json = json_decode($httpResult);
 
+    if($json->WordCount == 0){
+      return array('options' => array());
+    }
+
     $result = array();
 
     foreach ($json->Options as $option) {
