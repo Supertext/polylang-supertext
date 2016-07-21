@@ -333,20 +333,19 @@ Supertext.Polylang = (function (win, doc, $) {
       currentStepNumber: 0
     };
 
-  function create(proto, implementation) {
-    implementation.prototype = proto;
-    return new implementation();
-  }
-
   function Step() {
-    this.validationRules = {};
-    this.load = function () {
-    };
-    this.save = function () {
-    };
   }
 
-  var contentStep = create(Step, function () {
+  Step.prototype = {
+    validationRules: {},
+    load: function () {},
+    validate: function () {
+      return validation.checkAll(this.validationRules);
+    },
+    save: function () {}
+  };
+
+  var contentStep = $.extend(new Step(), new function () {
     var self = this;
 
     self.validationRules = {
@@ -547,7 +546,7 @@ Supertext.Polylang = (function (win, doc, $) {
     }
   });
 
-  var quoteStep = create(Step, function () {
+  var quoteStep = $.extend(new Step(), new function () {
     var self = this;
 
     self.validationRules = {
@@ -561,7 +560,7 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Loads post data for order step two form
      */
-    self.load = function() {
+    self.load = function () {
       $.post(
         context.ajaxUrl + '?action=sttr_getOffer',
         state.contentFormData
@@ -588,7 +587,7 @@ Supertext.Polylang = (function (win, doc, $) {
       );
     };
 
-    self.save = function() {
+    self.save = function () {
       state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
     };
 
@@ -603,10 +602,10 @@ Supertext.Polylang = (function (win, doc, $) {
     }
   });
 
-  var confirmationStep = create(Step, function () {
+  var confirmationStep = $.extend(new Step(), new function () {
     var self = this;
 
-    self.load = function() {
+    self.load = function () {
       $.post(
         context.ajaxUrl + '?action=sttr_createOrder',
         state.contentFormData.concat(state.quoteFormData)
@@ -789,7 +788,7 @@ Supertext.Polylang = (function (win, doc, $) {
    * Moves to next step
    */
   function moveToNextStep() {
-    validation.checkAll(steps[state.currentStepNumber - 1].validationRules)
+    steps[state.currentStepNumber - 1].validate()
       .fail(showValidationErrors)
       .done(hideValidationError)
       .done(function () {
