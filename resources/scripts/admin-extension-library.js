@@ -338,11 +338,25 @@ Supertext.Polylang = (function (win, doc, $) {
       currentStepNumber: 0
     };
 
+  /**
+   * Creates a new step object of specific type
+   */
+  function createStep(type){
+    return $.extend(new Step(), new type());
+  }
+
+  /**
+   * Step base constructor
+   * @constructor
+   */
   function Step() {
     this.savedStepElements = [];
     this.validationRules = {};
   }
 
+  /**
+   * Step base behaviour
+   */
   Step.prototype = {
     load: function () {
       if (this.savedStepElements.length > 0) {
@@ -375,7 +389,10 @@ Supertext.Polylang = (function (win, doc, $) {
     }
   };
 
-  var contentStep = $.extend(new Step(), new function () {
+  /**
+   * Content step
+   */
+  var contentStep = function () {
     var self = this;
 
     self.validationRules = {
@@ -559,9 +576,12 @@ Supertext.Polylang = (function (win, doc, $) {
         $(option).show();
       });
     }
-  });
+  };
 
-  var quoteStep = $.extend(new Step(), new function () {
+  /**
+   * Quote step
+   */
+  var quoteStep = function () {
     var self = this;
 
     self.validationRules = {
@@ -598,9 +618,12 @@ Supertext.Polylang = (function (win, doc, $) {
         options: data.body.options
       }));
     }
-  });
+  };
 
-  var confirmationStep = $.extend(new Step(), new function () {
+  /**
+   * confirmation step
+   */
+  var confirmationStep = function () {
     var self = this;
 
     /**
@@ -621,7 +644,7 @@ Supertext.Polylang = (function (win, doc, $) {
         message: data.body.message
       }));
     }
-  });
+  };
 
   /**
    * Initialize on post screen
@@ -699,6 +722,7 @@ Supertext.Polylang = (function (win, doc, $) {
 
     if (postIds.length > 0) {
       state.postIds = postIds;
+      steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
       openModal();
       addOrderProgressBar();
       addCancelButton();
@@ -1055,8 +1079,6 @@ Supertext.Polylang = (function (win, doc, $) {
       if (!context.isPluginWorking) {
         return;
       }
-
-      steps = [contentStep, quoteStep, confirmationStep];
 
       if (context.screen == 'post') {
         initializePostScreen();
