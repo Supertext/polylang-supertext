@@ -125,8 +125,6 @@ class Library
    * @return bool
    */
   public function isPluginConfiguredProperly(){
-    return false;
-
     $options = $this->getSettingOption();
 
     return
