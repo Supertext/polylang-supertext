@@ -242,22 +242,23 @@ Supertext.Modal = (function (win, doc, $) {
 })(window, document, jQuery);
 
 Supertext.Validation = (function ($) {
+  'use strict';
 
   function check(rule) {
     return checkAll([rule]);
   }
 
   function checkAll(rules) {
-    return $.Deferred(function(defer){
+    return $.Deferred(function (defer) {
       var errors = [];
 
-      $.each(rules, function(index, rule){
-        rule(function(error){
+      $.each(rules, function (index, rule) {
+        rule(function (error) {
           errors.push(error);
         });
       });
 
-      if(errors.length > 0){
+      if (errors.length > 0) {
         defer.reject(errors);
         return;
       }
@@ -332,14 +333,23 @@ Supertext.Polylang = (function (win, doc, $) {
       currentStepNumber: 0
     };
 
-  function Step() {
-    this.validationRules = {};
-    this.load = function () {};
-    this.save = function () {};
+  function create(proto, implementation) {
+    implementation.prototype = proto;
+    return new implementation();
   }
 
-  var contentStep = $.extend(new Step(), (function () {
-    var validationRules = {
+  function Step() {
+    this.validationRules = {};
+    this.load = function () {
+    };
+    this.save = function () {
+    };
+  }
+
+  var contentStep = create(Step, function () {
+    var self = this;
+
+    self.validationRules = {
       posts: function (fail) {
         var languageCode = null;
         var isEachPostInSameLanguage = true;
@@ -356,7 +366,6 @@ Supertext.Polylang = (function (win, doc, $) {
 
         if (isAPostInTranslation) {
           fail(supertextTranslationL10n.errorValidationSomePostInTranslation);
-          return;
         }
 
         if (!isEachPostInSameLanguage) {
@@ -373,7 +382,7 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Loads the content step
      */
-    function load() {
+    self.load = function () {
       $.get(
         context.ajaxUrl,
         {
@@ -401,14 +410,14 @@ Supertext.Polylang = (function (win, doc, $) {
           });
         }
       );
-    }
+    };
 
     /**
      * Saves content step data
      */
-    function save() {
+    self.save = function () {
       state.contentFormData = $(selectors.contentStepForm).serializeArray();
-    }
+    };
 
     /**
      * Add the first order step to the modal content
@@ -443,7 +452,7 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     function checkOrderItems() {
       validation
-        .check(validationRules.posts)
+        .check(self.validationRules.posts)
         .fail(showValidationErrors)
         .done(hideValidationError)
         .done(setLanguages);
@@ -536,27 +545,23 @@ Supertext.Polylang = (function (win, doc, $) {
         }));
       });
     }
+  });
 
-    return {
-      validationRules: validationRules,
-      load: load,
-      save: save
-    }
-  })());
+  var quoteStep = create(Step, function () {
+    var self = this;
 
-  var quoteStep = $.extend(new Step(), (function () {
-    var validationRules = {
+    self.validationRules = {
       quote: function (fail) {
         if ($(selectors.checkedQuote).length === 0) {
           fail(supertextTranslationL10n.errorValidationSelectQuote);
-        };
+        }
       }
     };
 
     /**
      * Loads post data for order step two form
      */
-    function load() {
+    self.load = function() {
       $.post(
         context.ajaxUrl + '?action=sttr_getOffer',
         state.contentFormData
@@ -581,11 +586,11 @@ Supertext.Polylang = (function (win, doc, $) {
           });
         }
       );
-    }
+    };
 
-    function save(){
+    self.save = function() {
       state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
-    }
+    };
 
     /**
      * Add the first order step to the modal content
@@ -596,16 +601,12 @@ Supertext.Polylang = (function (win, doc, $) {
         options: data.body.options
       }));
     }
+  });
 
-    return {
-      validationRules: validationRules,
-      load: load,
-      save: save
-    }
-  })());
+  var confirmationStep = create(Step, function () {
+    var self = this;
 
-  var confirmationStep = $.extend(new Step(), (function (){
-    function load() {
+    self.load = function() {
       $.post(
         context.ajaxUrl + '?action=sttr_createOrder',
         state.contentFormData.concat(state.quoteFormData)
@@ -630,18 +631,14 @@ Supertext.Polylang = (function (win, doc, $) {
           });
         }
       );
-    }
+    };
 
     function addConfirmationStep(data) {
       $(selectors.orderStep).html(template.confirmationStep({
         message: data.body.message
       }));
     }
-
-    return {
-      load: load
-    }
-  })());
+  });
 
   /**
    * Initialize on post screen
@@ -796,7 +793,7 @@ Supertext.Polylang = (function (win, doc, $) {
       .fail(showValidationErrors)
       .done(hideValidationError)
       .done(function () {
-        steps[state.currentStepNumber-1].save();
+        steps[state.currentStepNumber - 1].save();
         loadStep(state.currentStepNumber + 1)
       });
   }
