@@ -7,7 +7,6 @@ use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
-use Supertext\Polylang\Backend\OfferBox;
 use Supertext\Polylang\Backend\AdminExtension;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
@@ -59,10 +58,6 @@ class Core
    */
   private $contentProvider = null;
   /**
-   * @var OfferBox the offer box
-   */
-  private $offerBox = null;
-  /**
    * @var AjaxRequestHandler the ajax request handler
    */
   private $ajaxRequestHandler = null;
@@ -107,18 +102,6 @@ class Core
     }
 
     $this->checkVersion();
-  }
-
-  /**
-   * @return OfferBox the offer box
-   */
-  public function getOfferBox()
-  {
-    if ($this->offerBox === null) {
-      $this->offerBox = new OfferBox($this->getLibrary(), $this->getContentProvider());
-    }
-
-    return $this->offerBox;
   }
 
   /**

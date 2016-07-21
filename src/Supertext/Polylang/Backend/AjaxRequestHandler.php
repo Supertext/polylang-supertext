@@ -63,6 +63,8 @@ class AjaxRequestHandler
         'isDraft' => $post->post_status == 'draft',
         'translatableFieldGroups' => $this->contentProvider->getTranslatableFieldGroups($postId)
       );
+      //TODO
+      //__('There is already a translation for this post. The quote below may be higher than the final price if only parts of the content need to be translated again.', 'polylang-supertext')
     }
 
     self::setJsonOutput('success', $translationInfo);

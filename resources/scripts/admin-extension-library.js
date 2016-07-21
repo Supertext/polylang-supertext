@@ -1076,7 +1076,7 @@ Supertext.Polylang = (function (win, doc, $) {
       validation = externals.validation;
       l10n = externals.l10n;
 
-      if (!context.isPluginWorking) {
+      if (!context.pluginStatus.isWorking) {
         return;
       }
 

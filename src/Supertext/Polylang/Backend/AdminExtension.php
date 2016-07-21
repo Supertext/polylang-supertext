@@ -133,18 +133,10 @@ class AdminExtension
       return;
     }
 
-    // See if the user has credentials
-    $userId = get_current_user_id();
-    $cred = $this->library->getUserCredentials($userId);
-
-    $isPluginWorking =
-      $this->library->isWorking() &&
-      strlen($cred['stUser']) > 0 &&
-      strlen($cred['stApi']) > 0 &&
-      $cred['stUser'] != Constant::DEFAULT_API_USER;
+    $pluginStatus = $this->getPluginStatus();
 
     $context = array(
-      'isPluginWorking' => $isPluginWorking,
+      'pluginStatus' => $pluginStatus,
       'screen' => $this->screenBase,
       'resourceUrl' => get_bloginfo('wpurl'),
       'ajaxUrl' => admin_url( 'admin-ajax.php' )
@@ -245,5 +237,36 @@ class AdminExtension
 
   private function isPostsScreen(){
     return $this->screenBase == 'edit';
+  }
+
+  /**
+   * Gets the plugin status
+   * @return array
+   */
+  private function getPluginStatus()
+  {
+    // See if the user has credentials
+    $userId = get_current_user_id();
+    $cred = $this->library->getUserCredentials($userId);
+
+    $isConfiguredProperly =
+      $this->library->isWorking() &&
+      strlen($cred['stUser']) > 0 &&
+      strlen($cred['stApi']) > 0 &&
+      $cred['stUser'] != Constant::DEFAULT_API_USER;
+
+    $isCurlEnabled = function_exists('curl_exec');
+
+    $errors = array(
+      $isCurlEnabled ? '' : __('The PHP function <em>curl_exec</em> is disabled. Please enable it in order to be able to send requests to Supertext.', 'polylang-supertext'),
+      $isConfiguredProperly ? '' : __('The Supertext plugin hasn\'t been configured correctly.', 'polylang-supertext')
+    );
+
+    $pluginStatus = array(
+      'isWorking' => $isConfiguredProperly && $isCurlEnabled,
+      'error' => implode(' ', $errors)
+    );
+
+    return $pluginStatus;
   }
 } 
