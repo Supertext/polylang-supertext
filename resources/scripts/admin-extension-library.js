@@ -473,6 +473,7 @@ Supertext.Polylang = (function (win, doc, $) {
 
       $(selectors.orderStep).html(template.contentStep({
         posts: state.posts,
+        targetLanguageCode: state.targetLanguageCode,
         languages: l10n.languages
       }));
 
@@ -1020,6 +1021,7 @@ Supertext.Polylang = (function (win, doc, $) {
     }
 
     state.postIds = [$('#post_ID').val()];
+    state.targetLanguageCode = targetLanguageCode;
 
     startOrderProcess();
   }

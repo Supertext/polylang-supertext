@@ -148,7 +148,11 @@
       <select name="orderTargetLanguage" id="sttr-order-target-language">
         <option value=""><?php _e('Please select', 'polylang-supertext');?>...</option>
         <# _.each(data.languages, function(language, code) { #>
-          <option value="{{code}}" style="display: none">{{language}}</option>
+          <# if(code == data.targetLanguageCode){ #>
+            <option value="{{code}}" style="display: none" selected="selected">{{language}}</option>
+          <#} else {#>
+            <option value="{{code}}" style="display: none">{{language}}</option>
+          <# } #>
         <# }); #>
       </select>
     </p>
