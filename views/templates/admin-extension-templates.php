@@ -105,7 +105,7 @@
             </p>
             <# } #>
             <span>
-              <?php _e('Please select the content to be translated of <b>{{post.title}}</b>.', 'polylang-supertext');?>
+              <?php _e('Please select the content to be translated.', 'polylang-supertext');?>
             </span>
             <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
               <table class="translatable-content-table">
