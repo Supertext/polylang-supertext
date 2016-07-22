@@ -87,7 +87,7 @@
         <ul>
           <# _.each(data.posts, function(post) { #>
             <li>
-              <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}">{{post.title}} ({{post.languageCode}})<span class="dashicons dashicons-no-alt"></span></a>
+              <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}"><span class="dashicons dashicons-no-alt"></span>{{post.title}} ({{post.languageCode}})</a>
             </li>
           <# }); #>
         </ul>
@@ -95,6 +95,7 @@
       <div class="sttr-order-item-details">
         <# _.each(data.posts, function(post) { #>
           <div id="sttr-order-translatable-content-{{post.id}}" style="display: none;">
+            <h3>{{post.title}}</h3>
             <# if(post.isInTranslation){ #>
             <p class="notice notice-error">
               <span class="error-message"><?php _e('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext');?></span>

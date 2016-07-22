@@ -185,7 +185,7 @@
   width: 20px;
   height: 20px;
   border: 8px solid #ddd;
-  border-top-color: #444;
+  border-top-color: #0085ba;
   -webkit-animation: spin 1s infinite linear;
   animation: spin 1s infinite linear;
   margin: auto;
@@ -217,7 +217,7 @@
 }
 
 .sttr-order-progress-bar {
-  margin: 25px 0;
+  margin: 30px 0 15px 0;
 }
 
 .sttr-order-progress-bar ul {
@@ -360,12 +360,15 @@
   border-right: none;
 }
 
-.sttr-order-items li a:focus{
+.sttr-order-items li a:focus,
+.sttr-order-items li a:hover
+{
   box-shadow: none;
+  border-color: #eee;
 }
 
 .sttr-order-items li.active a,
-.sttr-order-items li.active a:hover{
+.sttr-order-items li.active a:hover {
   margin-right: -2px;
   border-color: #ddd;
   box-shadow: none;
@@ -374,15 +377,15 @@
 
 .sttr-order-items li a .dashicons-no-alt{
   float: right;
-  display: none;
+  visibility: hidden;
 }
 
 .sttr-order-items li a:hover .dashicons-no-alt{
-  display: block;
+  visibility: visible;
 }
 
 .sttr-order-items li.active a:hover .dashicons-no-alt{
-  display: none;
+  visibility: hidden;
 }
 
 .sttr-order-item-details{
@@ -396,6 +399,11 @@
 
 .sttr-order-item-details .translatable-content-table thead th{
   text-align: left;
+}
+
+.sttr-order-item-details h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
 }
 
 .sttr-order-item-details .notice {
