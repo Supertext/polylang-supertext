@@ -305,7 +305,7 @@ class AjaxRequestHandler
    */
   private static function addInTranslationTexts($translationPost)
   {
-    $translationPost->post_title = $translationPost->post_title . Constant::IN_TRANSLATION_TEXT;
+    $translationPost->post_title = $translationPost->post_title .' '. Constant::IN_TRANSLATION_TEXT;
   }
 
   /**

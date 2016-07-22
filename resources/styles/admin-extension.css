@@ -375,6 +375,11 @@
   color: #444;
 }
 
+.sttr-order-items li.invalid a{
+  color: red;
+}
+
+
 .sttr-order-items li a .dashicons-no-alt{
   float: right;
   visibility: hidden;
