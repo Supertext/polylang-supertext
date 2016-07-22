@@ -51,7 +51,7 @@
 
 <script type="text/html" id="tmpl-sttr-step-loader">
   <div class="loader">
-    <img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/loader.gif'; ?>" title="<?php _e('Loading', 'polylang-supertext'); ?>">
+    <div class="spin"></div>
     <?php _e('Loading', 'polylang-supertext'); ?>
   </div>
 </script>

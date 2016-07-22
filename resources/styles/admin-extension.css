@@ -173,14 +173,43 @@
 
 .sttr-modal-body .loader{
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 200px;
-  height: 200px;
-  line-height: 200px;
-  margin-left: -100px;
-  margin-top: -100px;
+  top: 49%;
+  left: 0;
+  right: 0;
+  margin: auto;
   text-align: center;
+}
+
+.sttr-modal-body .loader .spin{
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: 8px solid #ddd;
+  border-top-color: #444;
+  -webkit-animation: spin 1s infinite linear;
+  animation: spin 1s infinite linear;
+  margin: auto;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 .sttr-modal input, .sttr-modal select{
@@ -231,6 +260,9 @@
   background: #ddd;
   border: 2px solid #FFF;
   border-radius: 50%;
+  -webkit-box-shadow: 0px 0px 0px 2px #ddd;
+  -moz-box-shadow: 0px 0px 0px 2px #ddd;
+  box-shadow: 0px 0px 0px 2px #ddd;
   color: #fff;
   text-align: center;
   z-index: 99;
@@ -238,6 +270,9 @@
 
 .sttr-order-progress-bar ul li.active:before {
   background: #0085ba;
+  -webkit-box-shadow: 0px 0px 0px 2px #0085ba;
+  -moz-box-shadow: 0px 0px 0px 2px #0085ba;
+  box-shadow: 0px 0px 0px 2px #0085ba;
   z-index: 99999;
 }
 
