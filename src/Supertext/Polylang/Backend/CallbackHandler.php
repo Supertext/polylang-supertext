@@ -2,6 +2,7 @@
 
 namespace Supertext\Polylang\Backend;
 
+use Supertext\Polylang\Api\WriteBack;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Api\Multilang;
 use Comotive\Util\ArrayManipulation;
@@ -41,60 +42,79 @@ class CallbackHandler
    */
   public function handleRequest($json)
   {
-    $refData = explode('-', $json->ReferenceData, 2);
-    $postId = $refData[0];
-    $secureToken = $refData[1];
-    $targetLang = substr($json->TargetLang, 0, 2);
-    $translationPostId = Multilang::getPostInLanguage($postId, $targetLang);
+    $writeBack = new WriteBack($json, $this->library);
 
-    // Only if valid, continue
-    if ($translationPostId == null) {
-      $message = __('Error: the language of the translation from Supertext does not match or the translated post has been deleted', 'polylang-supertext');
-      $this->log->addEntry($postId, $message);
-      return $this->createResult(404, $message);
+    $error = $writeBack->validate();
+
+    if($error != null){
+      return $this->createResponse($error['code'], $error['message']);
     }
 
-    $referenceHash = get_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, true);
+    $errors = $this->writeBackTranslation($writeBack);
 
-    // check md5 Secure String
-    if (empty($referenceHash) || md5($referenceHash . $postId) !== $secureToken) {
-      $message = __('Error: method not allowed', 'polylang-supertext');
-      $this->log->addEntry($postId, $message);
-      return $this->createResult(403, $message);
+    if(count($errors)){
+      $message = 'Errors: ';
+      foreach($errors as $postId => $error){
+        $message .= "Concerning post with id $postId" .' -> ' . $error;
+      }
+      return $this->createResponse(500, $message);
     }
 
-    // Get the translation post object
-    $translationPost = get_post($translationPostId);
-    $options = $this->library->getSettingOption();
-    $workflowSettings = isset($options[Constant::SETTING_WORKFLOW]) ? ArrayManipulation::forceArray($options[Constant::SETTING_WORKFLOW]) : array();
+    $writeBack->removeReferenceData();
 
-    $isPostWritable =
-      $translationPost->post_status == 'draft' ||
-      ($translationPost->post_status == 'publish' && $workflowSettings['overridePublishedPosts']) ||
-      intval(get_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, true)) === 1;
+    return $this->createResponse(200, 'The translation was saved successfully');
+  }
 
-    if (!$isPostWritable) {
-      $message = __('Error: translation import only possible for drafted articles', 'polylang-supertext');
-      $this->log->addEntry($translationPostId, $message);
-      return $this->createResult(403, $message);
+  /**
+   * @param WriteBack $writeBack
+   * @return array errors
+   */
+  private function writeBackTranslation($writeBack)
+  {
+    $errors = array();
+    $successMessage = __('translation saved successfully', 'Polylang-Supertext');
+    $translationData = $writeBack->getTranslationData();
+
+    foreach ($writeBack->getPostIds() as $postId) {
+      $translationPostId = Multilang::getPostInLanguage($postId, $writeBack->getTargetLanguage());
+
+      if ($translationPostId == null) {
+        $errors[$postId] = 'There is no linked post for saving the translation.';
+        continue;
+      }
+
+      // Get the translation post object
+      $translationPost = get_post($translationPostId);
+      $options = $this->library->getSettingOption();
+      $workflowSettings = isset($options[Constant::SETTING_WORKFLOW]) ? ArrayManipulation::forceArray($options[Constant::SETTING_WORKFLOW]) : array();
+
+      $isPostWritable =
+        $translationPost->post_status == 'draft' ||
+        ($translationPost->post_status == 'publish' && $workflowSettings['overridePublishedPosts']) ||
+        intval(get_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, true)) === 1;
+
+      if (!$isPostWritable) {
+        $errors[$postId] = 'The post for saving the translation is not writable.';
+        continue;
+      }
+
+      $this->contentProvider->prepareTranslationPost(get_post($postId), $translationPost);
+      $this->contentProvider->saveTranslatedData($translationPost, $translationData[$postId]);
+
+      if ($workflowSettings['publishOnCallback']) {
+        $translationPost->post_status = 'publish';
+      }
+
+      // Now finally save that post and flush cache
+      wp_update_post($translationPost);
+
+      // All good, remove translation flag
+      delete_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG);
+
+      $this->log->addEntry($translationPostId, $successMessage);
     }
 
-    $this->contentProvider->prepareTranslationPost(get_post($postId), $translationPost);
-    $this->contentProvider->saveTranslatedData($translationPost, $json);
-
-    if ($workflowSettings['publishOnCallback']) {
-      $translationPost->post_status = 'publish';
-    }
-
-    // Now finally save that post and flush cache
-    wp_update_post($translationPost);
-
-    // All good, remove translation flag
-    delete_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG);
-
-    $message = __('translation saved successfully', 'polylang-supertext');
-    $this->log->addEntry($translationPostId, $message);
-    return $this->createResult(200, $message);
+    return $errors;
   }
 
   /**
@@ -102,11 +122,11 @@ class CallbackHandler
    * @param $message
    * @return array
    */
-  private function createResult($code, $message)
+  private function createResponse($code, $message)
   {
     return array(
       'code' => $code,
-      'response' => array('message' => $message)
+      'body' => array('message' => $message)
     );
   }
 }

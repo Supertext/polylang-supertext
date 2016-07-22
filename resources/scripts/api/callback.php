@@ -2,26 +2,34 @@
 
 require_once '../../../../../../wp-load.php';
 
-$result = array(
+$response = array(
   'code' => 400,
-  'response' => array('message' => '')
+  'body' => array('message' => '')
 );
 
 $requestBody = file_get_contents('php://input');
 $json = json_decode($requestBody);
 
 if($requestBody === true || !empty($json)){
-  $core = Supertext\Polylang\Core::getInstance();
-  $callbackHandler = $core->getCallbackHandler();
-  $result = $callbackHandler->handleRequest($json);
+  try{
+    $core = Supertext\Polylang\Core::getInstance();
+    $callbackHandler = $core->getCallbackHandler();
+    $response = $callbackHandler->handleRequest($json);
+  }catch (Exception $e){
+    $response = array(
+      'code' => 500,
+      'body' => array('message' => $e->getMessage())
+    );
+  }
+
 }else{
-  $result = array(
+  $response = array(
     'code' => 400,
-    'response' => array('message' => 'Invalid request body')
+    'body' => array('message' => 'Invalid request body')
   );
 }
 
 // Print the response
 header('Content-Type: application/json');
-http_response_code($result['code']);
-echo json_encode($result['response']);
+http_response_code($response['code']);
+echo json_encode($response['body']);

@@ -122,7 +122,6 @@ class AjaxRequestHandler
       $this->ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage);
 
       $this->library->saveReferenceData($referenceHash, array(
-        'randomSalt' => $randomSalt,
         'postIds' => $postIds
       ));
 

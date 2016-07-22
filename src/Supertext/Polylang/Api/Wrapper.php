@@ -99,13 +99,13 @@ class Wrapper
    * @param array $data data to be translated
    * @param string $translationType the supertext product id
    * @param string $comment
-   * @param string $reference
+   * @param string $referenceData
    * @param string $callback the callback url
    * @return array|object api result info
    * @throws ApiConnectionException
    * @throws ApiDataException
    */
-  public static function createOrder($connection, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $comment, $reference, $callback)
+  public static function createOrder($connection, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $comment, $referenceData, $callback)
   {
     $product = explode(':', $translationType);
 
@@ -119,7 +119,7 @@ class Wrapper
       'DeliveryId' => $product[1],
       'OrderName' => $title,
       'OrderTypeId' => $product[0],
-      'ReferenceData' => $reference,
+      'ReferenceData' => $referenceData,
       'Referrer' => 'WordPress Polylang Plugin',
       'SourceLang' => $sourceLanguage,
       'TargetLang' => $targetLanguage,
@@ -159,21 +159,21 @@ class Wrapper
 
   /**
    * Convert the given supertext specific array to plugin translation data array
-   * @param $data
+   * @param $groups
    * @return array
    */
-  public static function buildTranslationData($data){
+  public static function buildTranslationData($groups){
     $result = array();
 
-    foreach($data as $group){
-      $keys = explode(self::KEY_SEPARATOR, $group['GroupId']);
+    foreach($groups as $group){
+      $keys = explode(self::KEY_SEPARATOR, $group->GroupId);
       $postId = $keys[0];
 
       if(!isset($result[$postId])){
         $result[$postId] = array();
       }
 
-      $result[$postId][$keys[1]] = self::getGroupArray($group['Items']);
+      $result[$postId][$keys[1]] = self::getGroupArray($group->Items);
     }
 
     return $result;
@@ -214,13 +214,13 @@ class Wrapper
     $groupArray = array();
 
     foreach($items as $item){
-      $keys = explode(self::KEY_SEPARATOR, $item['Id']);
+      $keys = explode(self::KEY_SEPARATOR, $item->Id);
       $lastKeyIndex = count($keys)-1;
       $currentArray = &$groupArray;
 
       foreach($keys as $index => $key){
         if($index === $lastKeyIndex){
-          $currentArray[$key] = $item['Content'];
+          $currentArray[$key] = $item->Content;
           break;
         }
 

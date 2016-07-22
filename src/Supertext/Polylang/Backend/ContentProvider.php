@@ -1,6 +1,7 @@
 <?php
 
 namespace Supertext\Polylang\Backend;
+
 use Supertext\Polylang\Helper\IContentAccessor;
 use Supertext\Polylang\Helper\ITranslationAware;
 
@@ -61,13 +62,13 @@ class ContentProvider
     $result = array();
 
     foreach ($this->contentAccessors as $id => $contentAccessor) {
-      if(!isset($translatableFieldGroups[$id])){
+      if (!isset($translatableFieldGroups[$id])) {
         continue;
       }
 
       $texts = $contentAccessor->getTexts($post, $translatableFieldGroups[$id]['fields']);
 
-      if(count($texts) === 0){
+      if (count($texts) === 0) {
         continue;
       }
 
@@ -81,24 +82,18 @@ class ContentProvider
   }
 
   /**
-   * @param $post
    * @param $translationPost
-   * @param $json
+   * @param $translationData
    */
-  public function saveTranslatedData($translationPost, $json)
+  public function saveTranslatedData($translationPost, $translationData)
   {
-    foreach ($json->Groups as $translationGroup) {
-      if (isset($this->contentAccessors[$translationGroup->GroupId])) {
-        $contentAccessors = $this->contentAccessors[$translationGroup->GroupId];
-
-        $texts = array();
-
-        foreach ($translationGroup->Items as $translationItem) {
-          $texts[$translationItem->Id] = $translationItem->Content;
-        }
-
-        $contentAccessors->setTexts($translationPost, $texts);
+    foreach ($translationData as $id => $texts) {
+      if (!isset($this->contentAccessors[$id])) {
+        continue;
       }
+
+      $contentAccessors = $this->contentAccessors[$id];
+      $contentAccessors->setTexts($translationPost, $texts);
     }
   }
 
@@ -109,7 +104,7 @@ class ContentProvider
   public function prepareTranslationPost($post, $translationPost)
   {
     foreach ($this->contentAccessors as $id => $contentAccessor) {
-      if($contentAccessor instanceof ITranslationAware){
+      if ($contentAccessor instanceof ITranslationAware) {
         $contentAccessor->prepareTranslationPost($post, $translationPost);
       }
     }

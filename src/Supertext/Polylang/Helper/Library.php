@@ -82,6 +82,11 @@ class Library
   public function getReferenceData($hash)
   {
     $references = get_option(Constant::REFERENCE_OPTION, array());
+
+    if(!isset($references[$hash])){
+      return null;
+    }
+
     return $references[$hash];
   }
 
