@@ -140,7 +140,7 @@ class Wrapper
   /**
    * Convert the given data to supertext specific arrays
    * @param array $data
-   * @return string
+   * @return array
    */
   public static function buildSupertextData($data)
   {
@@ -157,6 +157,27 @@ class Wrapper
     return $result;
   }
 
+  /**
+   * Convert the given supertext specific array to plugin translation data array
+   * @param $data
+   * @return array
+   */
+  public static function buildTranslationData($data){
+    $result = array();
+
+    foreach($data as $group){
+      $keys = explode(self::KEY_SEPARATOR, $group['GroupId']);
+      $postId = $keys[0];
+
+      if(!isset($result[$postId])){
+        $result[$postId] = array();
+      }
+
+      $result[$postId][$keys[1]] = self::getGroupArray($group['Items']);
+    }
+
+    return $result;
+  }
 
   /**
    * Gets the items
@@ -175,11 +196,42 @@ class Wrapper
       }
 
       $items[] = array(
-        'content' => $value,
-        'id' => $keyPrefix.$key
+        'Content' => $value,
+        'Id' => $keyPrefix.$key
       );
     }
 
     return $items;
+  }
+
+  /**
+   * Converts the items to array
+   * @param $items
+   * @return array
+   */
+  private static function getGroupArray($items)
+  {
+    $groupArray = array();
+
+    foreach($items as $item){
+      $keys = explode(self::KEY_SEPARATOR, $item['Id']);
+      $lastKeyIndex = count($keys)-1;
+      $currentArray = &$groupArray;
+
+      foreach($keys as $index => $key){
+        if($index === $lastKeyIndex){
+          $currentArray[$key] = $item['Content'];
+          break;
+        }
+
+        if(!isset($groupArray[$key])){
+          $currentArray[$key] = array();
+        }
+
+        $currentArray = &$currentArray[$key];
+      }
+    }
+
+    return $groupArray;
   }
 }
