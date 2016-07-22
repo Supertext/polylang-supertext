@@ -349,6 +349,7 @@ Supertext.Polylang = (function (win, doc, $) {
   function Step() {
     this.savedStepElements = [];
     this.validationRules = {};
+    this.nextButtonName = l10n.next;
   }
 
   /**
@@ -372,6 +373,9 @@ Supertext.Polylang = (function (win, doc, $) {
       }).promise();
     },
     firstLoad: function () {
+    },
+    getNextButtonName: function(){
+      return this.nextButtonName;
     },
     init: function () {
     },
@@ -597,6 +601,8 @@ Supertext.Polylang = (function (win, doc, $) {
   var quoteStep = function () {
     var self = this;
 
+    self.nextButtonName = l10n.orderTranslation;
+
     self.validationRules = {
       quote: function (fail) {
         if ($(selectors.checkedQuote).length === 0) {
@@ -750,7 +756,7 @@ Supertext.Polylang = (function (win, doc, $) {
     openModal();
     addOrderProgressBar();
     addCancelButton();
-    addStepButtons();
+    addBackButton();
     loadStep(1);
   }
 
@@ -801,17 +807,11 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Adds the buttons
    */
-  function addStepButtons() {
+  function addBackButton() {
     state.backButtonToken = modal.addButton(
       l10n.back,
       'secondary',
       moveToPreviousStep
-    );
-
-    state.nextButtonToken = modal.addButton(
-      l10n.next,
-      'primary',
-      moveToNextStep
     );
   }
 
@@ -847,6 +847,7 @@ Supertext.Polylang = (function (win, doc, $) {
     steps[stepNumber - 1]
       .load()
       .always(function () {
+        addNextButton(stepNumber);
         updateButtonsInLoadedState(stepNumber);
       });
 
@@ -867,6 +868,22 @@ Supertext.Polylang = (function (win, doc, $) {
       modal.disableButton(state.nextButtonToken);
       modal.disableButton(state.backButtonToken);
     }
+  }
+
+  /**
+   * Updates the next button
+   * @param stepNumber
+   */
+  function addNextButton(stepNumber){
+    if(state.nextButtonToken){
+      modal.removeButton(state.nextButtonToken);
+    }
+
+    state.nextButtonToken = modal.addButton(
+      steps[state.currentStepNumber - 1].getNextButtonName(),
+      'primary',
+      moveToNextStep
+    );
   }
 
   /**
@@ -1024,30 +1041,6 @@ Supertext.Polylang = (function (win, doc, $) {
     state.targetLanguageCode = targetLanguageCode;
 
     startOrderProcess();
-  }
-
-  /**
-   * Checks translatability before calling the offerbox
-   * @param tbLink the offer box link that will be fired if everything is ok
-   */
-  function checkBeforeTranslating(languageCode) {
-    var tbLink = getTranslationLink(languageCode);
-    var canTranslate = false;
-    // Are there changes in fields or editor?
-    if (!hasUnsavedChanges()) {
-      canTranslate = true;
-    } else {
-      canTranslate = confirm(l10n.confirmUnsavedArticle);
-    }
-    if (canTranslate) {
-      // Can't translate a post in translation
-      if (inTranslation) {
-        alert(l10n.alertUntranslatable)
-      } else {
-        // Open the offer box
-        tb_show(l10n.offerTranslation, tbLink, false);
-      }
-    }
   }
 
   /**
