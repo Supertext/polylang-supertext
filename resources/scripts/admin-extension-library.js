@@ -800,8 +800,6 @@ Supertext.Polylang = (function (win, doc, $) {
         modal.close();
       }
     );
-
-    modal.disableButton(state.closeButtonToken);
   }
 
   /**
@@ -858,16 +856,9 @@ Supertext.Polylang = (function (win, doc, $) {
    * Updates the step button states according to step number and amount steps
    * @param stepNumber
    */
-  function updateButtonsInLoadingState(stepNumber) {
-    if (stepNumber === steps.length) {
-      modal.removeButton(state.nextButtonToken);
-      modal.removeButton(state.backButtonToken);
-      modal.removeButton(state.cancelButtonToken);
-      addCloseButton();
-    } else {
-      modal.disableButton(state.nextButtonToken);
-      modal.disableButton(state.backButtonToken);
-    }
+  function updateButtonsInLoadingState() {
+    modal.disableButton(state.nextButtonToken);
+    modal.disableButton(state.backButtonToken);
   }
 
   /**
@@ -891,16 +882,20 @@ Supertext.Polylang = (function (win, doc, $) {
    * @param stepNumber
    */
   function updateButtonsInLoadedState(stepNumber) {
+    if(stepNumber == steps.length){
+      modal.removeButton(state.nextButtonToken);
+      modal.removeButton(state.backButtonToken);
+      modal.removeButton(state.cancelButtonToken);
+      addCloseButton();
+      return;
+    }
+
     if (stepNumber < steps.length) {
       modal.enableButton(state.nextButtonToken);
     }
 
     if (stepNumber > 1) {
       modal.enableButton(state.backButtonToken);
-    }
-
-    if (state.closeButtonToken) {
-      modal.enableButton(state.closeButtonToken);
     }
   }
 
