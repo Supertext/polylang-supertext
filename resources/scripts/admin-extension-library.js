@@ -89,10 +89,10 @@ Supertext.Modal = (function (win, doc, $) {
       modalFooter: '.sttr-modal-footer',
       modalNoticeDismissIcon: '.notice-dismiss',
       modalErrorNotice: function (token) {
-        return '#sttr-modal-error-' + token
+        return '#sttr-modal-error-' + token;
       },
       modalButton: function (token) {
-        return '#sttr-modal-button-' + token
+        return '#sttr-modal-button-' + token;
       }
     },
     /**
@@ -238,7 +238,7 @@ Supertext.Modal = (function (win, doc, $) {
     removeButton: removeButton,
     enableButton: enableButton,
     disableButton: disableButton
-  }
+  };
 })(window, document, jQuery);
 
 Supertext.Validation = (function ($) {
@@ -270,7 +270,7 @@ Supertext.Validation = (function ($) {
   return {
     check: check,
     checkAll: checkAll
-  }
+  };
 })(jQuery);
 
 /**
@@ -435,7 +435,7 @@ Supertext.Polylang = (function (win, doc, $) {
         fail(l10n.errorValidationSelectContent);
       },
       targetLanguage: function (fail) {
-        if ($(selectors.orderTargetLanguageSelect).val() == '') {
+        if ($(selectors.orderTargetLanguageSelect).val() === '') {
           fail(l10n.errorValidationSelectTargetLanguage);
         }
       }
@@ -822,7 +822,7 @@ Supertext.Polylang = (function (win, doc, $) {
       .done(hideValidationError)
       .done(function () {
         steps[state.currentStepNumber - 1].save();
-        loadStep(state.currentStepNumber + 1)
+        loadStep(state.currentStepNumber + 1);
       });
   }
 
@@ -1089,7 +1089,7 @@ Supertext.Polylang = (function (win, doc, $) {
       }
     },
     openOrderForm: openOrderForm
-  }
+  };
 
 })(window, document, jQuery);
 

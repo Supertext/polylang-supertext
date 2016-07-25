@@ -1,3 +1,27 @@
+/*!
+ * Supertext translation
+ * https://wordpress.org/plugins/polylang-supertext/
+ * @author Heinrich Muralt
+ * @version 1.9.0
+ * Copyright 2016 */
+/*!
+ * Supertext translation
+ * https://wordpress.org/plugins/polylang-supertext/
+ * @author Heinrich Muralt
+ * @version 1.9.0
+ * Copyright 2016 */
+/*!
+ * Supertext translation
+ * https://wordpress.org/plugins/polylang-supertext/
+ * @author Heinrich Muralt
+ * @version 1.9.0
+ * Copyright 2016 */
+/*!
+ * Supertext translation
+ * https://wordpress.org/plugins/polylang-supertext/
+ * @author Heinrich Muralt
+ * @version 1.9.0
+ * Copyright 2016 */
 var Supertext = Supertext || {};
 
 Supertext.Settings = {};
@@ -27,8 +51,8 @@ Supertext.Settings.Users = (function ($) {
     initialize: function (options) {
       options = options || {};
 
-      $tableBody = $("#tblStFields tbody")
-      $tableBody.find('tr .saved-user-id-hidden')
+      $tableBody = $("#tblStFields tbody");
+      $tableBody.find('tr .saved-user-id-hidden');
       $tableBody.find('tr .remove-user-button').click(removeUserField);
       //select users in wp dropdown
       $tableBody.find('tr .saved-user-id-hidden').each(function () {
@@ -41,7 +65,7 @@ Supertext.Settings.Users = (function ($) {
 
       $('#btnAddUser').click(addUserField);
     }
-  }
+  };
 })(jQuery);
 
 //Custom Fields tab module
@@ -75,7 +99,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
         $('#translatablefieldsSettingsForm .custom-field-add-input')
           .click(addCustomFieldInput);
       }
-    }
+    };
 
   }());
 
@@ -94,7 +118,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
 
         $pcfFieldsTree = $('#pcfFieldsTree');
 
-        if($pcfFieldsTree.length == 0){
+        if($pcfFieldsTree.length === 0){
           return;
         }
 
@@ -117,7 +141,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
 
         $('#translatablefieldsSettingsForm').submit(setCheckedPcfFields);
       }
-    }
+    };
   }());
 
   var acfSettings = (function () {
@@ -135,7 +159,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
 
         $acfFieldsTree = $('#acfFieldsTree');
 
-        if($acfFieldsTree.length == 0){
+        if($acfFieldsTree.length === 0){
           return;
         }
 
@@ -158,7 +182,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
 
         $('#translatablefieldsSettingsForm').submit(setCheckedAcfFields);
       }
-    }
+    };
   }());
 
   return {
@@ -169,7 +193,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
       pcfSettings.initialize(options);
       acfSettings.initialize(options);
     }
-  }
+  };
 })(jQuery);
 
 //Shortcodes tab module
@@ -211,7 +235,7 @@ Supertext.Settings.Shortcodes = (function ($) {
   function showNotEmptyAttributeInputs() {
     $('#shortcodesSettingsForm .shortcode-attribute-input input[type=text]').each(function () {
       var $this = $(this);
-      if ($this.val() != '') {
+      if ($this.val() !== '') {
         $this.parent().show();
       }
     });
@@ -269,7 +293,7 @@ Supertext.Settings.Shortcodes = (function ($) {
         }
       );
     }
-  }
+  };
 })(jQuery);
 
 
