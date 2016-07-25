@@ -6,9 +6,8 @@
  * Copyright 2016 */
 .frmServiceSupertextConfig {
   width: 830px; }
-
-.frmServiceSupertextConfig select {
-  width: 180px; }
+  .frmServiceSupertextConfig select {
+    width: 180px; }
 
 .postbox_admin h3 {
   padding: 3px; }

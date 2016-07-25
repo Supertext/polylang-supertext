@@ -1,59 +1,72 @@
 .frmServiceSupertextConfig {
   width: 830px;
+
+  select {
+    width: 180px;
+  }
 }
 
-.frmServiceSupertextConfig select {
-  width: 180px;
+.postbox_admin {
+
+  h3 {
+    padding: 3px;
+  }
+
+  img {
+    cursor: pointer;
+  }
 }
 
-.postbox_admin h3 {
-  padding: 3px;
+.postbox {
+
+  table th {
+    text-align: left;
+    font-weight: bold;
+  }
+
+  table input, table select {
+    font-size: 13px;
+  }
+
+  .button-add {
+    margin-top: 10px;
+  }
+
+  .button-remove {
+    padding-top: 2px;
+  }
 }
 
-.postbox_admin img {
-  cursor: pointer;
+#shortcodesSettingsForm {
+
+  .shortcode-setting-container {
+    float: left;
+    padding: 5px 10px;
+    margin-right: 5px;
+    background: #ddd;
+  }
+
+  .shortcode-setting-attributes {
+    min-width: 417px;
+  }
+
+  .shortcode-setting-title {
+    margin-bottom: 5px;
+  }
+
+  .shortcode-attribute-input {
+    display: none;
+  }
+
+  .button {
+    margin: 1px;
+  }
 }
 
-.postbox table th{
-  text-align: left;
-  font-weight: bold;
+#translatablefieldsSettingsForm {
+
+  .custom-field-input {
+    margin-bottom: 3px;
+  }
 }
 
-.postbox table input, .postbox table select{
-  font-size: 13px;
-}
-
-.postbox .button-add {
-  margin-top: 10px;
-}
-
-.postbox .button-remove {
-  padding-top:2px;
-}
-
-#shortcodesSettingsForm .shortcode-setting-container{
-  float:left;
-  padding: 5px 10px;
-  margin-right: 5px;
-  background: #ddd;
-}
-
-#shortcodesSettingsForm .shortcode-setting-attributes{
-  min-width:417px;
-}
-
-#shortcodesSettingsForm .shortcode-setting-title{
-  margin-bottom: 5px;
-}
-
-#shortcodesSettingsForm .shortcode-attribute-input{
-  display:none;
-}
-
-#shortcodesSettingsForm .button{
-  margin:1px;
-}
-
-#translatablefieldsSettingsForm .custom-field-input{
-  margin-bottom: 3px;
-}
