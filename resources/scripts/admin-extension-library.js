@@ -871,7 +871,7 @@ Supertext.Polylang = (function (win, doc, $) {
     }
 
     state.nextButtonToken = modal.addButton(
-      steps[state.currentStepNumber - 1].getNextButtonName(),
+      steps[stepNumber - 1].getNextButtonName(),
       'primary',
       moveToNextStep
     );
