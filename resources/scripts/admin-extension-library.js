@@ -592,7 +592,7 @@ Supertext.Polylang = (function (win, doc, $) {
       $(selectors.orderTargetLanguageOptions).each(function (index, option) {
         var $options = $(option);
         if ($options.val() === sourceLanguageCode) {
-          $options.hide();
+          $options.remove();
           return;
         }
 
