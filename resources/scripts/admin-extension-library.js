@@ -358,35 +358,41 @@ Supertext.Polylang = (function (win, doc, $) {
   Step.prototype = {
     load: function () {
       if (this.savedStepElements.length > 0) {
-        return this.loadSavedStepElements();
+        return this.loadSavedStepElements().done(self.init);
       }
 
-      return this.firstLoad();
+      return this.loadData()
+        .done(this.saveData)
+        .done(this.addStepElements)
+        .done(this.init);
     },
     loadSavedStepElements: function () {
       var self = this;
       return $.Deferred(function (defer) {
         $(selectors.orderStep).empty();
         $(selectors.orderStep).append(self.savedStepElements);
-        self.init();
         defer.resolve();
       }).promise();
     },
-    firstLoad: function () {
+    loadData: function () {
+    },
+    saveData: function(data) {
+    },
+    addStepElements: function (data){
+    },
+    init: function () {
     },
     getNextButtonName: function(){
       return this.nextButtonName;
-    },
-    init: function () {
     },
     validate: function () {
       return validation.checkAll(this.validationRules);
     },
     save: function () {
-      this.saveData();
+      this.saveForm();
       this.savedStepElements = $(selectors.orderStep).children().detach();
     },
-    saveData: function () {
+    saveForm: function () {
     }
   };
 
@@ -444,13 +450,29 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Loads the content step
      */
-    self.firstLoad = function () {
+    self.loadData = function () {
       return doGetRequest(
         context.ajaxUrl, {
           action: 'sttr_getPostTranslationData',
           postIds: state.postIds
         }
-      ).done(addContentStep);
+      );
+    };
+
+    self.saveData = function (data){
+      state.posts = data.body;
+    };
+
+    /**
+     * Add the first order step to the modal content
+     * @param data
+     */
+    self.addStepElements = function() {
+      $(selectors.orderStep).html(template.contentStep({
+        posts: state.posts,
+        targetLanguageCode: state.targetLanguageCode,
+        languages: l10n.languages
+      }));
     };
 
     /**
@@ -464,25 +486,9 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Saves content step data
      */
-    self.saveData = function () {
+    self.saveForm = function () {
       state.contentFormData = $(selectors.contentStepForm).serializeArray();
     };
-
-    /**
-     * Add the first order step to the modal content
-     * @param data
-     */
-    function addContentStep(data) {
-      state.posts = data.body;
-
-      $(selectors.orderStep).html(template.contentStep({
-        posts: state.posts,
-        targetLanguageCode: state.targetLanguageCode,
-        languages: l10n.languages
-      }));
-
-      self.init();
-    }
 
     /**
      * Initializes the order item list
@@ -612,31 +618,31 @@ Supertext.Polylang = (function (win, doc, $) {
     };
 
     /**
-     * Loads post data for order step two form
+     * Loads the content step
      */
-    self.firstLoad = function () {
+    self.loadData = function () {
       return doPostRequest(
         context.ajaxUrl + '?action=sttr_getOffer',
         state.contentFormData
-      ).done(addQuoteStep);
-    };
-
-    /**
-     * Saves quote step data
-     */
-    self.saveData = function () {
-      state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
+      );
     };
 
     /**
      * Add the first order step to the modal content
      * @param data
      */
-    function addQuoteStep(data) {
+    self.addStepElements = function(data) {
       $(selectors.orderStep).html(template.quoteStep({
         options: data.body.options
       }));
-    }
+    };
+
+    /**
+     * Saves quote step data
+     */
+    self.saveForm = function () {
+      state.quoteFormData = $(selectors.quoteStepForm).serializeArray();
+    };
   };
 
   /**
@@ -648,21 +654,21 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Loads confirmation step
      */
-    self.firstLoad = function () {
+    self.loadData = function () {
       return doPostRequest(
         context.ajaxUrl + '?action=sttr_createOrder',
         state.contentFormData.concat(state.quoteFormData)
-      ).done(addConfirmationStep);
+      );
     };
 
     /**
      * Adds confirmation step content
      */
-    function addConfirmationStep(data) {
+    self.addStepElements = function(data) {
       $(selectors.orderStep).html(template.confirmationStep({
         message: data.body.message
       }));
-    }
+    };
   };
 
   /**
