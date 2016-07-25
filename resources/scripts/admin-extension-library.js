@@ -112,7 +112,11 @@ Supertext.Modal = (function (win, doc, $) {
        * Button counter
        * @type {number}
        */
-      buttonCounter: 0
+      buttonCounter: 0,
+      /**
+       * Close callbacks
+       */
+      closeCallbacks:[]
     };
 
 
@@ -136,6 +140,9 @@ Supertext.Modal = (function (win, doc, $) {
   function close() {
     state.$modal.hide();
     state.$modal.remove();
+    $.each(state.closeCallbacks, function(index, callback){
+      callback.call();
+    });
   }
 
   /**
@@ -225,6 +232,14 @@ Supertext.Modal = (function (win, doc, $) {
       .prop('disabled', true);
   }
 
+  /**
+   * Registers close callbacks
+   * @param callback
+   */
+  function onClose(callback){
+    state.closeCallbacks.push(callback);
+  }
+
   return {
     initialize: function (externals) {
       template = externals.template;
@@ -237,7 +252,8 @@ Supertext.Modal = (function (win, doc, $) {
     addButton: addButton,
     removeButton: removeButton,
     enableButton: enableButton,
-    disableButton: disableButton
+    disableButton: disableButton,
+    onClose: onClose
   };
 })(window, document, jQuery);
 
@@ -799,13 +815,17 @@ Supertext.Polylang = (function (win, doc, $) {
    * Adds the close button
    */
   function addCloseButton() {
-    state.closeButtonToken = modal.addButton(
+    modal.addButton(
       l10n.close,
       'secondary',
       function () {
         modal.close();
       }
     );
+
+    modal.onClose(function(){
+      win.location.reload();
+    });
   }
 
   /**
