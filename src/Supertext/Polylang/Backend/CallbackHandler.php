@@ -60,8 +60,6 @@ class CallbackHandler
       return $this->createResponse(500, $message);
     }
 
-    $writeBack->removeReferenceData();
-
     return $this->createResponse(200, 'The translation was saved successfully');
   }
 

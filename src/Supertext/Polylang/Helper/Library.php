@@ -76,42 +76,6 @@ class Library
   }
 
   /**
-   * @param $hash
-   * @return array full settings array
-   */
-  public function getReferenceData($hash)
-  {
-    $references = get_option(Constant::REFERENCE_OPTION, array());
-
-    if(!isset($references[$hash])){
-      return null;
-    }
-
-    return $references[$hash];
-  }
-
-  /**
-   * @param $hash
-   * @param $data
-   */
-  public function saveReferenceData($hash, $data)
-  {
-    $references = get_option(Constant::REFERENCE_OPTION, array());
-    $references[$hash] = $data;
-    update_option(Constant::REFERENCE_OPTION, $references);
-  }
-
-  /**
-   * @param $hash
-   */
-  public function removeReferenceData($hash)
-  {
-    $references = get_option(Constant::REFERENCE_OPTION, array());
-    unset($references[$hash]);
-    update_option(Constant::REFERENCE_OPTION, $references);
-  }
-
-  /**
    * @return bool
    */
   public function isPolylangActivated()

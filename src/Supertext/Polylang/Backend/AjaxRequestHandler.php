@@ -101,29 +101,24 @@ class AjaxRequestHandler
     $targetLanguage = $_POST['orderTargetLanguage'];
     $translationData = $this->getTranslationData($translatableContents);
     $postIds = array_keys($translatableContents);
-    $postIdList = implode('_', $postIds);
+
+    $referenceHashes = $this->createReferenceHashes($postIds);
 
     try{
-      $randomSalt = bin2hex(openssl_random_pseudo_bytes(32));
-      $referenceHash = hash('sha256', $postIdList . $randomSalt);
 
       $order = Wrapper::createOrder(
         $this->library->getApiConnection(),
-        get_bloginfo('name') . ' - ' . $postIdList,
+        get_bloginfo('name') . ' - ' . implode(', ', $postIds),
         $this->library->mapLanguage($sourceLanguage),
         $this->library->mapLanguage($targetLanguage),
         $translationData,
         $_POST['translationType'],
         $_POST['comment'],
-        $referenceHash,
+        $referenceHashes[0],
         SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php'
       );
 
-      $this->ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage);
-
-      $this->library->saveReferenceData($referenceHash, array(
-        'postIds' => $postIds
-      ));
+      $this->ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage, $referenceHashes);
 
       $result = array(
         'message' => '
@@ -162,8 +157,9 @@ class AjaxRequestHandler
    * @param $postIds
    * @param $sourceLanguage
    * @param $targetLanguage
+   * @param $referenceHashes
    */
-  private function ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage)
+  private function ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage, $referenceHashes)
   {
     foreach ($postIds as $postId) {
       $translationPostId = Multilang::getPostInLanguage($postId, $targetLanguage);
@@ -185,6 +181,7 @@ class AjaxRequestHandler
       $this->log->addOrderId($translationPostId, $order->Id);
 
       update_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, 1);
+      update_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$postId]);
     }
   }
 
@@ -346,5 +343,25 @@ class AjaxRequestHandler
     header('Content-Type: application/json');
     echo json_encode($json);
     wp_die();
+  }
+
+  /**
+   * @param array $postIds
+   * @return array
+   */
+  private function createReferenceHashes($postIds)
+  {
+    $referenceHashes = array();
+
+    $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
+    foreach ($postIds as $postId) {
+      $referenceHash = openssl_random_pseudo_bytes(32);
+      $referenceData ^= $referenceHash;
+      $referenceHashes[$postId] = bin2hex($referenceHash);
+    }
+
+    $referenceHashes[0] = bin2hex($referenceData);
+
+    return $referenceHashes;
   }
 }

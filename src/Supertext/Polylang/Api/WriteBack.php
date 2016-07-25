@@ -3,6 +3,8 @@
 namespace Supertext\Polylang\Api;
 
 
+use Supertext\Polylang\Helper\Constant;
+
 class WriteBack
 {
   /**
@@ -21,7 +23,7 @@ class WriteBack
    * Reference data
    * @var null|array
    */
-  private $referenceData = null;
+  private $postIds = null;
 
   /**
    * Target language
@@ -51,33 +53,20 @@ class WriteBack
    */
   public function validate()
   {
-    $referenceData = $this->getReferenceData() ;
+    $postIds = $this->getPostIds();
 
-    if ($referenceData == null) {
+    $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
+    foreach ($postIds as $postId) {
+      $translationPostId = Multilang::getPostInLanguage($postId, $this->getTargetLanguage());
+      $referenceHash = get_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, true);
+      $referenceData ^= hex2bin($referenceHash);
+    }
+
+    if($this->json->ReferenceData !== bin2hex($referenceData)) {
       return array('code' => 403, 'message' => 'Error: reference is invalid.');
     }
 
-    $translationData = $this->getTranslationData();
-    $translationDataPostIds = array_keys($translationData);
-    $postIds = $this->getPostIds();
-
-    if(sort($translationDataPostIds) != sort($postIds)){
-      return array('code' => 400, 'message' => 'Error: translation data are missing.');
-    }
-
     return null;
-  }
-
-  /**
-   * @return array|null
-   */
-  public function getReferenceData()
-  {
-    if ($this->referenceData == null) {
-      $this->referenceData = $this->library->getReferenceData($this->json->ReferenceData);
-    }
-
-    return $this->referenceData;
   }
 
   /**
@@ -103,18 +92,13 @@ class WriteBack
   }
 
   /**
-   * @return mixed
+   * @return array|null
    */
-  public function getPostIds()
-  {
-    $referenceData = $this->getReferenceData();
-    return $referenceData['postIds'];
-  }
+  public function getPostIds(){
+    if($this->postIds == null){
+      $this->postIds = array_keys($this->getTranslationData());
+    }
 
-  /**
-   * Removes the reference data
-   */
-  public function removeReferenceData(){
-    $this->library->removeReferenceData($this->json->ReferenceData);
+    return $this->postIds;
   }
 }
