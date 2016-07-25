@@ -383,8 +383,8 @@ Supertext.Polylang = (function (win, doc, $) {
       return validation.checkAll(this.validationRules);
     },
     save: function () {
-      this.savedStepElements = $(selectors.orderStep).children();
       this.saveData();
+      this.savedStepElements = $(selectors.orderStep).children().detach();
     },
     saveData: function () {
     }
