@@ -51,3 +51,10 @@ gulp.task('scripts',function(){
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(paths.scriptsDir));
 });
+
+gulp.task('default', function() {
+  gulp.start('scripts', 'styles');
+
+  gulp.watch(paths.stylesDir + '/*.scss', ['styles']);
+  gulp.watch(paths.scriptsDir + '/*-library.js', ['scripts']);
+});
