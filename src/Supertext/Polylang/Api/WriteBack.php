@@ -53,6 +53,10 @@ class WriteBack
    */
   public function validate()
   {
+    if(strpos($this->json->ReferenceData, '-') !== false){
+      return $this->validateLegacy();
+    }
+
     $postIds = $this->getPostIds();
 
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
@@ -85,7 +89,13 @@ class WriteBack
    */
   public function getTranslationData(){
     if($this->translationData == null){
-      $this->translationData = Wrapper::buildTranslationData($this->json->Groups);
+      $groups = $this->json->Groups;
+
+      if(strpos($this->json->ReferenceData, '-') !== false){
+        $groups = $this->convertGroupsFromLegacyFormat($groups);
+      }
+
+      $this->translationData = Wrapper::buildTranslationData($groups);
     }
 
     return $this->translationData;
@@ -100,5 +110,47 @@ class WriteBack
     }
 
     return $this->postIds;
+  }
+
+  /**
+   * Depricated, old reference check. Can be removed with next version.
+   * @return array|null
+   */
+  private function validateLegacy(){
+    $refData = explode('-', $this->json->ReferenceData, 2);
+    $postId = $refData[0];
+    $secureToken = $refData[1];
+
+    $translationPostId = Multilang::getPostInLanguage($postId, $this->getTargetLanguage());
+    $referenceHash = get_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, true);
+
+    if (empty($referenceHash) || md5($referenceHash . $postId) !== $secureToken) {
+      return array('code' => 403, 'message' => 'Error: reference is invalid.');
+    }
+
+    return null;
+  }
+
+  /**
+   * Old to new format. Can be removed with next version.
+   * @return array|null
+   */
+  private function convertGroupsFromLegacyFormat($groups)
+  {
+    $refData = explode('-', $this->json->ReferenceData, 2);
+    $postId = $refData[0];
+
+    foreach($groups as &$group){
+
+      if($group->GroupId == 'media'){
+        foreach($group->items as &$item){
+          $item->Id = str_replace('attachment__', '', $item->Id);
+        }
+      }
+
+      $group->GroupId = $postId.Wrapper::KEY_SEPARATOR.$group->GroupId;
+    }
+
+    return $groups;
   }
 }
