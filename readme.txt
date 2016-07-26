@@ -19,11 +19,14 @@ Simply order a translation instead of creating a new page with Polylang.
 You will be presented with services, prices and deadlines. Select the right one for you and you'll be notified by email once your translated page or post has been uploaded to your website.
 
 Please note:
-Translatable custom fields must be defined in the settings using the list of available custom fields.
-Supported plugins at the moment are:
-
+Translatable custom fields must be defined in the settings. Plugin defined fields only needed to be selected. Supported plugins at the moment are:
 - Advanced Custom Fields
 - Yoast SEO
+If the field is not available in one of the lists, you can define by adding self defined custom fields.
+
+Plugin has been tested with following page builders:
+- Visual Composer
+- Beaver Builder
 
 == Installation ==
 
@@ -44,6 +47,12 @@ You can create an account at [Supertext] (https://www.supertext.ch/en/signup) if
 Get the API key from the Settings page: [Account Settings] (https://www.supertext.ch/customer/accountsettings)
 
 == Changelog ==
+
+= 2.0 =
+* Extended plugin to be able to order multiple posts/pages
+* Changed order process
+* Introduced Gulp for minification of JavaScript and SASS files
+* Various code improvements
 
 = 1.9 =
 * Added support for Visual Composer
