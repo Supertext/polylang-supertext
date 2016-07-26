@@ -59,7 +59,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
      $translatableFields[] = array(
        'title' => $savedCustomField,
        'name' => $savedCustomField,
-       'default' => true
+       'checkedPerDefault' => true
      );
     }
 

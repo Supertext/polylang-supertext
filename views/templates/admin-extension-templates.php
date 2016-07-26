@@ -116,9 +116,9 @@
                 <tr>
                   <# _.each(translatableFieldGroup.fields, function(field) { #>
                     <td>
-                      <# if(field.default){ #>
+                      <# if(field.checkedPerDefault){ #>
                         <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{groupId}}][fields][{{field.name}}]" checked="checked">
-                        <#} else {#>
+                        <# } else { #>
                         <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{groupId}}][fields][{{field.name}}]">
                       <# } #>
                     </td>

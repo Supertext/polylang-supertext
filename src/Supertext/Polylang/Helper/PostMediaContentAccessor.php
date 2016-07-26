@@ -30,7 +30,7 @@ class PostMediaContentAccessor implements IContentAccessor
     $translatableFields[] = array(
       'title' => __('Image captions', 'polylang-supertext'),
       'name' => 'post_image',
-      'default' => true
+      'checkedPerDefault' => true
     );
 
     return $translatableFields;

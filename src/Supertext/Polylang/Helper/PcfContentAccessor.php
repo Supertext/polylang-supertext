@@ -82,7 +82,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
         $translatableFields[] = array(
           'title' => $subFieldDefinition[$savedPcfField]['label'],
           'name' => $savedPcfField,
-          'default' => true
+          'checkedPerDefault' => true
         );
 
       }

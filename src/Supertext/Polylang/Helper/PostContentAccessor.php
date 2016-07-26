@@ -41,19 +41,19 @@ class PostContentAccessor implements IContentAccessor
     $translatableFields[] = array(
       'title' => __('Title', 'polylang-supertext'),
       'name' => 'post_title',
-      'default' => true
+      'checkedPerDefault' => true
     );
 
     $translatableFields[] = array(
       'title' => __('Content', 'polylang-supertext'),
       'name' => 'post_content',
-      'default' => true
+      'checkedPerDefault' => true
     );
 
     $translatableFields[] = array(
       'title' => __('Excerpt', 'polylang-supertext'),
       'name' => 'post_excerpt',
-      'default' => true
+      'checkedPerDefault' => true
     );
 
     return $translatableFields;

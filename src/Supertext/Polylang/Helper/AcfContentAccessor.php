@@ -57,7 +57,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
         $translatableFields[] = array(
           'title' => $savedAcfFieldDefinition['label'],
           'name' => $savedAcfFieldDefinition['meta_key_regex'],
-          'default' => true
+          'checkedPerDefault' => true
         );
       }
     }

@@ -43,7 +43,7 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
     $translatableFields[] = array(
       'title' => __('Beaver Builder content', 'polylang-supertext'),
       'name' => 'beaver_builder_content',
-      'default' => true
+      'checkedPerDefault' => true
     );
 
     return $translatableFields;
