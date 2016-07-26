@@ -68,7 +68,10 @@ class Wrapper
       return array('options' => array());
     }
 
-    $result = array();
+    $result = array(
+      'wordCount' => $json->WordCount,
+      'language' => __($targetLanguage, 'polylang-supertext-langs')
+    );
 
     foreach ($json->Options as $option) {
       $deliveryOptions = array();

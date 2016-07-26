@@ -670,6 +670,8 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     self.addStepElements = function (data) {
       $(selectors.orderStep).html(template.quoteStep({
+        wordCount: data.body.wordCount,
+        language: data.body.language,
         options: data.body.options
       }));
     };
