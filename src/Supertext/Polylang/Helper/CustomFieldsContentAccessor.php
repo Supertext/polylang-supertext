@@ -36,7 +36,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function getName()
   {
-    return __('User defined custom fields', 'polylang-supertext');
+    return __('Self-defined custom fields', 'polylang-supertext');
   }
 
   /**
