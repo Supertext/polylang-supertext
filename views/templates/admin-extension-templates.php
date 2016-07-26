@@ -170,7 +170,7 @@
         <tbody>
         <# _.each(data.options, function(option) { #>
           <tr class="first-group-row">
-            <td class="quality-group-cell" rowspan="6">
+            <td class="quality-group-cell" rowspan="{{option.items.length+1}}">
               <b>{{option.name}}</b>
             </td>
             <td class="selection-cell">&nbsp;</td>

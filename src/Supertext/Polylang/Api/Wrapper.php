@@ -76,14 +76,14 @@ class Wrapper
       foreach ($option->DeliveryOptions as $do) {
         $deliveryOptions[] = array(
           'id' => $do->DeliveryId,
-          'name' => $do->Name,
+          'name' => trim($do->Name),
           'price' => $json->CurrencySymbol . ' ' . number_format($do->Price, 2, '.', "'"),
           'date' => date_i18n('D, d. F H:i', strtotime($do->DeliveryDate)));
       }
 
       $result['options'][] = array(
         'id' => $option->OrderTypeId,
-        'name' => $option->Name,
+        'name' => trim($option->Name),
         'items' => $deliveryOptions
       );
     }
