@@ -1,5 +1,16 @@
 var Supertext = Supertext || {};
 
+Supertext.Util = (function () {
+  if (!String.format) {
+    String.format = function (format) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      return format.replace(/{(\d+)}/g, function (match, number) {
+        return typeof args[number] != 'undefined' ? args[number] : match;
+      });
+    };
+  }
+})();
+
 Supertext.Template = (function (win, doc, $, wp) {
   'use strict';
 
@@ -116,7 +127,7 @@ Supertext.Modal = (function (win, doc, $) {
       /**
        * Close callbacks
        */
-      closeCallbacks:[]
+      closeCallbacks: []
     };
 
 
@@ -140,7 +151,7 @@ Supertext.Modal = (function (win, doc, $) {
   function close() {
     state.$modal.hide();
     state.$modal.remove();
-    $.each(state.closeCallbacks, function(index, callback){
+    $.each(state.closeCallbacks, function (index, callback) {
       callback.call();
     });
   }
@@ -236,7 +247,7 @@ Supertext.Modal = (function (win, doc, $) {
    * Registers close callbacks
    * @param callback
    */
-  function onClose(callback){
+  function onClose(callback) {
     state.closeCallbacks.push(callback);
   }
 
@@ -354,7 +365,7 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Creates a new step object of specific type
    */
-  function createStep(type){
+  function createStep(type) {
     return $.extend(new Step(), new type());
   }
 
@@ -392,13 +403,13 @@ Supertext.Polylang = (function (win, doc, $) {
     },
     loadData: function () {
     },
-    saveData: function(data) {
+    saveData: function (data) {
     },
-    addStepElements: function (data){
+    addStepElements: function (data) {
     },
     init: function () {
     },
-    getNextButtonName: function(){
+    getNextButtonName: function () {
       return this.nextButtonName;
     },
     validate: function () {
@@ -441,16 +452,16 @@ Supertext.Polylang = (function (win, doc, $) {
           fail(l10n.errorValidationNotAllPostInSameLanguage);
         }
       },
-      content: function(fail){
+      content: function (fail) {
         var anyChecked = false;
-        $(selectors.contentCheckboxes).each(function(index, checkbox){
-          if($(checkbox).prop('checked')){
+        $(selectors.contentCheckboxes).each(function (index, checkbox) {
+          if ($(checkbox).prop('checked')) {
             anyChecked = true;
             return false;
           }
         });
 
-        if(anyChecked){
+        if (anyChecked) {
           return;
         }
 
@@ -459,7 +470,17 @@ Supertext.Polylang = (function (win, doc, $) {
       targetLanguage: function (fail) {
         if ($(selectors.orderTargetLanguageSelect).val() === '') {
           fail(l10n.errorValidationSelectTargetLanguage);
+          return;
         }
+
+        var targetLanguageCode = $(selectors.orderTargetLanguageSelect).val();
+
+        $.each(state.posts, function (index, post) {
+          var unfinishedTranslationForTargetLanguage = post.unfinishedTranslations[targetLanguageCode];
+          if (unfinishedTranslationForTargetLanguage !== undefined) {
+            fail(String.format(l10n.alreadyBeingTranslatedInto, post.title, l10n.languages[targetLanguageCode], unfinishedTranslationForTargetLanguage.orderId));
+          }
+        });
       }
     };
 
@@ -475,7 +496,7 @@ Supertext.Polylang = (function (win, doc, $) {
       );
     };
 
-    self.saveData = function (data){
+    self.saveData = function (data) {
       state.posts = data.body;
     };
 
@@ -483,7 +504,7 @@ Supertext.Polylang = (function (win, doc, $) {
      * Add the first order step to the modal content
      * @param data
      */
-    self.addStepElements = function() {
+    self.addStepElements = function () {
       $(selectors.orderStep).html(template.contentStep({
         posts: state.posts,
         targetLanguageCode: state.targetLanguageCode,
@@ -647,7 +668,7 @@ Supertext.Polylang = (function (win, doc, $) {
      * Add the first order step to the modal content
      * @param data
      */
-    self.addStepElements = function(data) {
+    self.addStepElements = function (data) {
       $(selectors.orderStep).html(template.quoteStep({
         options: data.body.options
       }));
@@ -680,7 +701,7 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Adds confirmation step content
      */
-    self.addStepElements = function(data) {
+    self.addStepElements = function (data) {
       $(selectors.orderStep).html(template.confirmationStep({
         message: data.body.message
       }));
@@ -773,7 +794,7 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Starts the order process
    */
-  function startOrderProcess(){
+  function startOrderProcess() {
     steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
     openModal();
     addOrderProgressBar();
@@ -823,7 +844,7 @@ Supertext.Polylang = (function (win, doc, $) {
       }
     );
 
-    modal.onClose(function(){
+    modal.onClose(function () {
       win.location.reload();
     });
   }
@@ -891,8 +912,8 @@ Supertext.Polylang = (function (win, doc, $) {
    * Updates the next button
    * @param stepNumber
    */
-  function addNextButton(stepNumber){
-    if(state.nextButtonToken){
+  function addNextButton(stepNumber) {
+    if (state.nextButtonToken) {
       modal.removeButton(state.nextButtonToken);
     }
 
@@ -908,7 +929,7 @@ Supertext.Polylang = (function (win, doc, $) {
    * @param stepNumber
    */
   function updateButtonsInLoadedState(stepNumber) {
-    if(stepNumber == steps.length){
+    if (stepNumber == steps.length) {
       modal.removeButton(state.nextButtonToken);
       modal.removeButton(state.backButtonToken);
       modal.removeButton(state.cancelButtonToken);

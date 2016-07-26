@@ -163,6 +163,7 @@ class Core
       'next' => esc_js(__('Next', 'polylang-supertext')),
       'close' => esc_js(__('Close window', 'polylang-supertext')),
       'alertPleaseSelect' => esc_js(__('Please select at least one item', 'polylang-supertext')),
+      'alreadyBeingTranslatedInto' => esc_js(__('<i>{0}</i> is already being translated into {1} (order id: {2})', 'polylang-supertext')),
     );
 
     $library = $this->getLibrary();

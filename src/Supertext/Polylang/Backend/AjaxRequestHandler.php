@@ -61,10 +61,9 @@ class AjaxRequestHandler
         'languageCode' => Multilang::getPostLanguage($postId),
         'isInTranslation' => get_post_meta($postId, Constant::IN_TRANSLATION_FLAG, true) == 1,
         'isDraft' => $post->post_status == 'draft',
+        'unfinishedTranslations' => $this->getUnfinishedTranslations($postId),
         'translatableFieldGroups' => $this->contentProvider->getTranslatableFieldGroups($postId)
       );
-      //TODO
-      //__('There is already a translation for this post. The quote below may be higher than the final price if only parts of the content need to be translated again.', 'polylang-supertext')
     }
 
     self::setJsonOutput('success', $translationInfo);
@@ -138,6 +137,7 @@ class AjaxRequestHandler
   }
 
   /**
+   * @param $translatableContents
    * @return array
    */
   private function getTranslationData($translatableContents)
@@ -363,5 +363,29 @@ class AjaxRequestHandler
     $referenceHashes[0] = bin2hex($referenceData);
 
     return $referenceHashes;
+  }
+
+  /**
+   * @param $postId
+   * @return array
+   */
+  private function getUnfinishedTranslations($postId)
+  {
+    $unfinishedTranslations = array();
+
+    $languages = Multilang::getLanguages();
+    foreach($languages as $language){
+      $translationPostId = Multilang::getPostInLanguage($postId, $language->slug);
+
+      if($translationPostId == null || $translationPostId == $postId || get_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, true) != 1){
+        continue;
+      }
+
+      $unfinishedTranslations[$language->slug] = array(
+        'orderId' => $this->log->getLastOrderId($translationPostId)
+      );
+    }
+
+    return $unfinishedTranslations;
   }
 }

@@ -135,29 +135,17 @@ class AdminExtension
       return;
     }
 
-    $translationPost = get_post(intval($_GET['post']));
-    $orderId = $this->getOrderId($translationPost, true);
+    $translationPostId = intval($_GET['post']);
+    $orderId = $this->log->getLastOrderId($translationPostId);
 
     // Show info if there is an order and the article is not translated yet
-    if (intval($orderId) > 0 && get_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, true) == 1) {
+    if (intval($orderId) > 0 && get_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, true) == 1) {
       echo '
         <div class="updated">
           <p>' . sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
         </div>
       ';
     }
-  }
-
-  /**
-   * @param \WP_Post $translationPost the translated post
-   * @return int $orderId
-   */
-  public function getOrderId($translationPost)
-  {
-    $orderIdList = get_post_meta($translationPost->ID, Log::META_ORDER_ID, true);
-    $orderId = is_array($orderIdList) ? end($orderIdList) : 0;
-
-    return $orderId;
   }
 
   /**

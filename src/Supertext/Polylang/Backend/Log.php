@@ -57,6 +57,18 @@ class Log
   }
 
   /**
+   * @param int $postId
+   * @return int $orderId
+   */
+  public function getLastOrderId($postId)
+  {
+    $orderIdList = get_post_meta($postId, Log::META_ORDER_ID, true);
+    $orderId = is_array($orderIdList) ? end($orderIdList) : 0;
+
+    return $orderId;
+  }
+
+  /**
    * @param int $postId the post whose entries need to be received
    * @return array list of log entries for the post
    */
