@@ -1,27 +1,3 @@
-/*!
- * Supertext translation
- * https://wordpress.org/plugins/polylang-supertext/
- * @author Heinrich Muralt
- * @version 1.9.0
- * Copyright 2016 */
-/*!
- * Supertext translation
- * https://wordpress.org/plugins/polylang-supertext/
- * @author Heinrich Muralt
- * @version 1.9.0
- * Copyright 2016 */
-/*!
- * Supertext translation
- * https://wordpress.org/plugins/polylang-supertext/
- * @author Heinrich Muralt
- * @version 1.9.0
- * Copyright 2016 */
-/*!
- * Supertext translation
- * https://wordpress.org/plugins/polylang-supertext/
- * @author Heinrich Muralt
- * @version 1.9.0
- * Copyright 2016 */
 var Supertext = Supertext || {};
 
 Supertext.Settings = {};
@@ -296,6 +272,36 @@ Supertext.Settings.Shortcodes = (function ($) {
   };
 })(jQuery);
 
+Supertext.Settings.Workflow = (function ($) {
+  'use strict';
+
+  var
+    $apiUrl,
+    $apiSelection;
+
+  function updateAlternativeApiUrlInput(){
+    $apiUrl.val($apiSelection.val());
+
+    if($apiSelection.children('option:last').is(':selected')){
+      $apiUrl.removeProp('readonly');
+    }else{
+      $apiUrl.prop('readonly', true);
+    }
+  }
+
+  return {
+    initialize: function (options) {
+      options = options || {};
+
+      $apiUrl = $('#sttr-api-url');
+      $apiSelection = $('#sttr-api-selection');
+
+      $apiSelection.change(updateAlternativeApiUrlInput);
+
+      updateAlternativeApiUrlInput();
+    }
+  };
+})(jQuery);
 
 jQuery(document).ready(function () {
   //get active tab
@@ -316,5 +322,9 @@ jQuery(document).ready(function () {
     case 'shortcodes':
       Supertext.Settings.Shortcodes.initialize();
       break;
+
+    case 'workflow':
+    Supertext.Settings.Workflow.initialize();
+    break;
   }
 });

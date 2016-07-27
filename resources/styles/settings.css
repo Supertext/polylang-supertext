@@ -19,7 +19,7 @@
   text-align: left;
   font-weight: bold; }
 
-.postbox table input, .postbox table select {
+.postbox input, .postbox select {
   font-size: 13px; }
 
 .postbox .button-add {
@@ -48,3 +48,9 @@
 
 #translatablefieldsSettingsForm .custom-field-input {
   margin-bottom: 3px; }
+
+#workflowSettingsForm .sttr-api-url {
+  width: 400px;
+  height: 28px;
+  line-height: 28px;
+  vertical-align: bottom; }

@@ -24,7 +24,7 @@
     font-weight: bold;
   }
 
-  table input, table select {
+  input, select {
     font-size: 13px;
   }
 
@@ -67,6 +67,15 @@
 
   .custom-field-input {
     margin-bottom: 3px;
+  }
+}
+
+#workflowSettingsForm {
+  .sttr-api-url {
+    width: 400px;
+    height: 28px;
+    line-height: 28px;
+    vertical-align: bottom;
   }
 }
 

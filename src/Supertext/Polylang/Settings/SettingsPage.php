@@ -305,8 +305,9 @@ class SettingsPage extends AbstractPage
   private function saveWorkflowSettings()
   {
     $settingsToSave = array(
-      'publishOnCallback' => isset($_POST['publishOnCallback']) && !empty($_POST['publishOnCallback']),
-      'overridePublishedPosts' => isset($_POST['overridePublishedPosts']) && !empty($_POST['overridePublishedPosts'])
+      'publishOnCallback' => !empty($_POST['publishOnCallback']),
+      'overridePublishedPosts' => !empty($_POST['overridePublishedPosts']),
+      'apiServerUrl' => !empty($_POST['apiServerUrl']) ? $_POST['apiServerUrl'] : Constant::LIVE_API,
     );
 
     $this->library->saveSetting(Constant::SETTING_WORKFLOW, $settingsToSave);

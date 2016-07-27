@@ -10,13 +10,9 @@ namespace Supertext\Polylang\Helper;
 class Constant
 {
   /**
-   * @var string the used API base url
-   */
-  const API_URL = self::DEV_API;
-  /**
    * @var string development api endpoints
    */
-  const DEV_API = 'https://192.168.164.1/Supertext/api/v1/';
+  const DEV_API = 'https://dev.supertext.ch/api/v1/';
   /**
    * @var string live api endpoints
    */

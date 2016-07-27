@@ -150,10 +150,12 @@ class Library
     // Try to find credentials
     $userId = intval($userId);
     $credentials = $this->getUserCredentials($userId);
+    $workflowSetting = $this->getSettingOption(Constant::SETTING_WORKFLOW);
+    $apiServerUrl = !empty($workflowSetting['apiServerUrl']) ? $workflowSetting['apiServerUrl'] : Constant::LIVE_API;
 
     // Get the ready to call instance
     return ApiConnection::getInstance(
-      Constant::API_URL,
+      $apiServerUrl,
       $credentials['stUser'],
       $credentials['stApi'],
       str_replace('_', '-', get_locale())
