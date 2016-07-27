@@ -3,8 +3,7 @@ use Supertext\Polylang\Helper\Constant;
 use Comotive\Util\ArrayManipulation;
 
 /** @var Page $context */
-$options = $context->getSettingOption();
-$userMap = isset($options[Constant::SETTING_USER_MAP]) ? ArrayManipulation::forceArray($options[Constant::SETTING_USER_MAP]) : array();
+$userMappings = $context->getSettingOption(Constant::SETTING_USER_MAP);
 
 // Get all users
 $wpUsers = get_users();
@@ -68,19 +67,19 @@ $addUser = __('Add user', 'polylang-supertext');
 $additionalEmptyUserRows = 1;
 
 // Add five empty user rows, if there are no settings yet
-if (count($userMap) == 0) {
+if (count($userMappings) == 0) {
   $additionalEmptyUserRows = 5;
 }
 
 for ($i = 0; $i < $additionalEmptyUserRows; $i++) {
-  $userMap[] = array(
+  $userMappings[] = array(
     'wpUser' => '',
     'stUser' => '',
     'stApi' => ''
   );
 }
 
-foreach ($userMap as $userConfig) {
+foreach ($userMappings as $userConfig) {
   echo '<tr>
       <td>
         ' . $selectTemplate . '

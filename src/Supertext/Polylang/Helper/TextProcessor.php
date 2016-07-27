@@ -33,8 +33,7 @@ class TextProcessor
    */
   public function replaceShortcodes($content)
   {
-    $options = $this->library->getSettingOption();
-    $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
+    $savedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
     $regex = $this->library->getShortcodeRegex();
 
     return preg_replace_callback("/$regex/s", function ($m) use ($savedShortcodes) {
@@ -83,8 +82,7 @@ class TextProcessor
    */
   public function replaceShortcodeNodes($content)
   {
-    $options = $this->library->getSettingOption();
-    $savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? $options[Constant::SETTING_SHORTCODES] : array();
+    $savedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
 
     $doc = $this->createHtmlDocument($content);
 

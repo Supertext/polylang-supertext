@@ -45,8 +45,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function getTranslatableFields($postId)
   {
-    $options = $this->library->getSettingOption();
-    $savedCustomFields = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_CUSTOM_FIELDS]) : array();
+    $savedCustomFields = $this->library->getSettingOption(Constant::SETTING_CUSTOM_FIELDS);
 
     $translatableFields = array();
 
@@ -99,8 +98,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function getSettingsViewBundle()
   {
-    $options = $this->library->getSettingOption();
-    $savedCustomFields = isset($options[Constant::SETTING_CUSTOM_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_CUSTOM_FIELDS]) : array();
+    $savedCustomFields = $this->library->getSettingOption(Constant::SETTING_CUSTOM_FIELDS);
 
     return array(
       'view' => 'backend/settings-custom-fields',

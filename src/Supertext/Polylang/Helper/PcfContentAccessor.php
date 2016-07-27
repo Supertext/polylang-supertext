@@ -67,8 +67,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function getTranslatableFields($postId)
   {
-    $options = $this->library->getSettingOption();
-    $savedPcfFields = isset($options[Constant::SETTING_PCF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_PCF_FIELDS]) : array();
+    $savedPcfFields = $this->library->getSettingOption(Constant::SETTING_PCF_FIELDS);
     $translatableFields = array();
 
     foreach ($savedPcfFields as $savedPcfField) {
@@ -125,8 +124,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function getSettingsViewBundle()
   {
-    $options = $this->library->getSettingOption();
-    $savedPcfFields = isset($options[Constant::SETTING_PCF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_PCF_FIELDS]) : array();
+    $savedPcfFields = $this->library->getSettingOption(Constant::SETTING_PCF_FIELDS);
 
     return array(
       'view' => 'backend/settings-pcf',

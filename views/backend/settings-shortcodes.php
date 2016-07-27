@@ -3,8 +3,7 @@ use Supertext\Polylang\Helper\Constant;
 use Comotive\Util\ArrayManipulation;
 
 $shortcodeTags = $context->getShortcodeTags();
-$options = $context->getSettingOption();
-$savedShortcodes = isset($options[Constant::SETTING_SHORTCODES]) ? ArrayManipulation::forceArray($options[Constant::SETTING_SHORTCODES]) : array();
+$savedShortcodes = $context->getSettingOption(Constant::SETTING_SHORTCODES);
 
 function getAttributeInput($index, $key, $value){
   return '<div class="shortcode-attribute-input" data-index="'.$index.'">

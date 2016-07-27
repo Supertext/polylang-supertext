@@ -45,8 +45,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
   public function getTranslatableFields($postId)
   {
     $postCustomFields = get_post_meta($postId);
-    $options = $this->library->getSettingOption();
-    $savedAcfFieldDefinitions = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
+    $savedAcfFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_ACF_FIELDS);
 
     $translatableFields = array();
 
@@ -107,8 +106,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function getSettingsViewBundle()
   {
-    $options = $this->library->getSettingOption();
-    $savedAcfFieldDefinitions = isset($options[Constant::SETTING_ACF_FIELDS]) ? ArrayManipulation::forceArray($options[Constant::SETTING_ACF_FIELDS]) : array();
+    $savedAcfFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_ACF_FIELDS);
 
     $savedAcfFieldIds = array();
     foreach($savedAcfFieldDefinitions as $savedAcfFieldDefinition){

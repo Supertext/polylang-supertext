@@ -21,8 +21,8 @@ class Library
    */
   public function mapLanguage($language)
   {
-    $options = $this->getSettingOption();
-    foreach ($options[Constant::SETTING_LANGUAGE_MAP] as $polyKey => $stKey) {
+    $languageMappings = $this->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
+    foreach ($languageMappings as $polyKey => $stKey) {
       if ($language == $polyKey) {
         return $stKey;
       }
@@ -37,18 +37,14 @@ class Library
    */
   public function getUserCredentials($userId)
   {
-    $options = $this->getSettingOption();
-    $userMap = isset($options[Constant::SETTING_USER_MAP]) ? $options[Constant::SETTING_USER_MAP] : null;
+    $userMappings = $this->getSettingOption(Constant::SETTING_USER_MAP);
 
-    if (is_array($userMap)) {
-      foreach ($userMap as $config) {
-        if ($config['wpUser'] == $userId) {
-          return $config;
-        }
+    foreach ($userMappings as $config) {
+      if ($config['wpUser'] == $userId) {
+        return $config;
       }
     }
 
-    // Default user, so it doesn't crash
     return array(
       'wpUser' => $userId,
       'stUser' => Constant::DEFAULT_API_USER,
@@ -57,11 +53,18 @@ class Library
   }
 
   /**
+   * @param $subSetting
    * @return array full settings array
    */
-  public function getSettingOption()
+  public function getSettingOption($subSetting = null)
   {
-    return get_option(Constant::SETTINGS_OPTION, array());
+    $options = get_option(Constant::SETTINGS_OPTION, array());
+
+    if(!isset($subSetting)){
+      return $options;
+    }
+
+    return isset($options[$subSetting]) ? $options[$subSetting] : array();
   }
 
   /**

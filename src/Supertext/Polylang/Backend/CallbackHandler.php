@@ -83,12 +83,11 @@ class CallbackHandler
 
       // Get the translation post object
       $translationPost = get_post($translationPostId);
-      $options = $this->library->getSettingOption();
-      $workflowSettings = isset($options[Constant::SETTING_WORKFLOW]) ? ArrayManipulation::forceArray($options[Constant::SETTING_WORKFLOW]) : array();
+      $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
 
       $isPostWritable =
         $translationPost->post_status == 'draft' ||
-        ($translationPost->post_status == 'publish' && $workflowSettings['overridePublishedPosts']) ||
+        ($translationPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
         intval(get_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, true)) === 1;
 
       if (!$isPostWritable) {
@@ -99,7 +98,7 @@ class CallbackHandler
       $this->contentProvider->prepareTranslationPost(get_post($postId), $translationPost);
       $this->contentProvider->saveTranslatedData($translationPost, $translationData[$postId]);
 
-      if ($workflowSettings['publishOnCallback']) {
+      if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
         $translationPost->post_status = 'publish';
       }
 

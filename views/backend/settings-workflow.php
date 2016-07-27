@@ -2,11 +2,10 @@
 use Supertext\Polylang\Helper\Constant;
 use Comotive\Util\ArrayManipulation;
 
-$options = $context->getSettingOption();
-$workflowSettings = isset($options[Constant::SETTING_WORKFLOW]) ? ArrayManipulation::forceArray($options[Constant::SETTING_WORKFLOW]) : array();
+$workflowSettings = $context->getSettingOption(Constant::SETTING_WORKFLOW);
 
-$publishOnCallbackChecked = $workflowSettings['publishOnCallback'] ? 'checked="checked"' : '';
-$overridePublishedPostsChecked = $workflowSettings['overridePublishedPosts'] ? 'checked="checked"' : '';
+$publishOnCallbackChecked = isset($workflowSettings['publishOnCallback']) && $workflowSettings['publishOnCallback'] ? 'checked="checked"' : '';
+$overridePublishedPostsChecked = isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts'] ? 'checked="checked"' : '';
 ?>
 <div class="postbox postbox_admin">
   <div class="inside">
