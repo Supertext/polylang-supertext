@@ -31,7 +31,7 @@ class Wrapper
     $json = json_decode($httpResult);
 
     if(empty($json->Languages)){
-      throw new ApiDataException(sprintf(__('Languages mapped to <b>%s</b> missing', 'polylang-supertext'), $lang));
+      throw new ApiDataException(sprintf(__('Languages mapped to <b>%s</b> are missing.', 'polylang-supertext'), $lang));
     }
 
     $result = array();

@@ -112,7 +112,7 @@ class AdminExtension
     if(!$pluginStatus->isPolylangActivated){
       echo '
         <div class="notice notice-warning is-dismissible">
-          <p>' . __('The Supertext plugin cannot be used. Polylang is not installed or hasn\'t been activated.', 'polylang-supertext') . '</p>
+          <p>' . __('The Supertext Translation plugin cannot be used. Polylang is not installed or hasn\'t been activated.', 'polylang-supertext') . '</p>
         </div>
       ';
     }
@@ -120,7 +120,7 @@ class AdminExtension
     if(!$pluginStatus->isPluginConfiguredProperly){
       echo '
         <div class="notice notice-warning is-dismissible">
-          <p>' . __('The Supertext plugin cannot be used. It hasn\'t been configured correctly.', 'polylang-supertext') . '</p>
+          <p>' . __('The Supertext Translation plugin cannot be used. It hasn\'t been configured correctly.', 'polylang-supertext') . '</p>
         </div>
       ';
     }
