@@ -34,7 +34,7 @@
     <h2>{{data.error.title}}</h2>
     <p class="error-message">
       <# if(_.isArray(data.error.message)) { #>
-        {{{data.error.message.join('<br>')}}}
+        {{{data.error.message.join('<br><br>')}}}
       <# }else{ #>
         {{data.error.message}}
       <# } #>
@@ -52,7 +52,7 @@
 <script type="text/html" id="tmpl-sttr-step-loader">
   <div class="loader">
     <div class="spin"></div>
-    <?php _e('Loading', 'polylang-supertext'); ?>
+    <?php _e('Loading', 'polylang-supertext'); ?>...
   </div>
 </script>
 
@@ -98,7 +98,7 @@
             <h3>{{post.title}}</h3>
             <# if(post.isInTranslation){ #>
             <p class="notice notice-error">
-              <span class="error-message"><?php _e('The article cannot be translated because there is an unfinished translation task. Please use the original article to order a translation.', 'polylang-supertext');?></span>
+              <span class="error-message"><?php _e('The article cannot be translated because there is an unfinished translation task.', 'polylang-supertext');?></span>
             </p>
             <# }else if(post.isDraft){ #>
             <p class="notice notice-warning">
