@@ -169,10 +169,7 @@ class Library
    */
   public function getShortcodeTags()
   {
-    //Support Visual Composer (add shortcodes)
-    if (WordPress::isPluginActive('js_composer/js_composer.php') && method_exists('WPBMap', 'addAllMappedShortcodes')) {
-      \WPBMap::addAllMappedShortcodes();
-    }
+    $this->registerSpecialShortCodes();
 
     global $shortcode_tags;
     return $shortcode_tags;
@@ -183,11 +180,19 @@ class Library
    */
   public function getShortcodeRegex()
   {
-    //Support Visual Composer (add shortcodes)
-    if (WordPress::isPluginActive('js_composer/js_composer.php') && method_exists('WPBMap', 'addAllMappedShortcodes')) {
-      \WPBMap::addAllMappedShortcodes();
-    }
+    $this->registerSpecialShortCodes();
 
     return get_shortcode_regex();
+  }
+
+  /**
+   * Registers special shortcodes
+   */
+  private function registerSpecialShortCodes()
+  {
+    //Support Visual Composer (add shortcodes)
+    if ((WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')) && method_exists('WPBMap', 'addAllMappedShortcodes')) {
+      \WPBMap::addAllMappedShortcodes();
+    }
   }
 }
