@@ -49,6 +49,9 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 2.2 =
+* Fixed plugin defined content accessor
+
 = 2.1 =
 * Added support for BE page builder
 * Made API url configurable
