@@ -105,12 +105,12 @@
               <span><?php _e('The articles status is <b>draft</b>. Are you sure you want to order a translation for this article?', 'polylang-supertext');?></span>
             </p>
             <# } #>
-            <span>
+            <p>
               <?php _e('Please select the content to be translated.', 'polylang-supertext');?>
-            </span>
+            </p>
             <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
+              <b>{{translatableFieldGroup.name}}</b>
               <table class="translatable-content-table">
-                <thead><tr><th colspan="8">{{translatableFieldGroup.name}}</th></tr></thead>
                 <tbody>
                 <# if(translatableFieldGroup.fields.length){ #>
                 <tr>
