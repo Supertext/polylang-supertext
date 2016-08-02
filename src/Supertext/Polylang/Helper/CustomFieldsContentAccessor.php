@@ -75,7 +75,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     $texts = array();
 
     foreach($selectedTranslatableFields as $id => $selected){
-      $texts[$id] = get_post_meta($post->ID, $id, true);
+      $texts[$id] = $this->textProcessor->replaceShortcodes(get_post_meta($post->ID, $id, true));
     }
 
     return $texts;
@@ -89,6 +89,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
   {
     foreach($texts as $id => $text){
       $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+      $decodedContent = $this->textProcessor->replaceShortcodeNodes($decodedContent);
       update_post_meta($post->ID, $id, $decodedContent);
     }
   }
