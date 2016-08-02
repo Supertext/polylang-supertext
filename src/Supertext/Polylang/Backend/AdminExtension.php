@@ -75,7 +75,7 @@ class AdminExtension
   public function addBackendAssets()
   {
     //Settings assets
-    if ($this->screenBase == 'settings_page_supertext-polylang-settings') {
+    if ($this->isSettingsScreen()) {
       wp_enqueue_style(Constant::SETTINGS_STYLE_HANDLE);
       wp_enqueue_style(Constant::JSTREE_STYLE_HANDLE);
 
@@ -95,7 +95,7 @@ class AdminExtension
    * Show plugin informations
    */
   public function showPluginStatusMessages(){
-    if (!$this->isEditPostScreen() && !$this->isPostsScreen()) {
+    if (!$this->isEditPostScreen() && !$this->isPostsScreen() && !$this->isSettingsScreen()) {
       return;
     }
 
@@ -107,6 +107,10 @@ class AdminExtension
           <p>' . __('The PHP function <em>curl_exec</em> is disabled. Please enable it in order to be able to send requests to Supertext.', 'polylang-supertext') . '</p>
         </div>
       ';
+    }
+
+    if($this->isSettingsScreen()){
+      return;
     }
 
     if(!$pluginStatus->isPolylangActivated){
@@ -261,5 +265,9 @@ class AdminExtension
 
   private function isPostsScreen(){
     return $this->screenBase == 'edit';
+  }
+
+  private function isSettingsScreen(){
+    return $this->screenBase == 'settings_page_supertext-polylang-settings';
   }
 } 
