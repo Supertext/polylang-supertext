@@ -152,8 +152,8 @@ class Library
     $credentials = $this->getUserCredentials($userId);
     $workflowSetting = $this->getSettingOption(Constant::SETTING_WORKFLOW);
     $apiServerUrl = !empty($workflowSetting['apiServerUrl']) ? $workflowSetting['apiServerUrl'] : Constant::LIVE_API;
-    $communicationLanguage = str_replace('_', '-', get_locale());
-    $communicationLanguage = str_replace('-formal', '', $communicationLanguage);
+    $local = explode('_', get_locale());
+    $communicationLanguage = $local[0].'-'.$local[1];
 
     // Get the ready to call instance
     return ApiConnection::getInstance(
