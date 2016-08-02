@@ -71,7 +71,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     $translatableFields = array();
 
     foreach ($savedPcfFields as $savedPcfField) {
-      if (!get_post_meta($postId, $savedPcfField, true)) {
+      if (empty($savedPcfField) || !get_post_meta($postId, $savedPcfField, true)) {
         continue;
       }
 
@@ -83,7 +83,6 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
           'name' => $savedPcfField,
           'checkedPerDefault' => true
         );
-
       }
     }
 
@@ -145,7 +144,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     $pcfFieldsToSave = array();
 
     foreach ($checkedPcfFields as $checkedPcfField) {
-      if (strpos($checkedPcfField, 'group_') === 0) {
+      if (strpos($checkedPcfField, 'group_') === 0 || empty($checkedPcfField)) {
         continue;
       }
 
