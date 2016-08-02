@@ -19,6 +19,7 @@ If the field is not available in one of the lists, you can define by adding self
 Plugin has been tested with following page builders:
 - Visual Composer
 - Beaver Builder
+- BE page builder
 
 ## Installation
 

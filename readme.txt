@@ -27,6 +27,7 @@ If the field is not available in one of the lists, you can define by adding self
 Plugin has been tested with following page builders:
 - Visual Composer
 - Beaver Builder
+- BE page builder
 
 == Installation ==
 
@@ -47,6 +48,12 @@ You can create an account at [Supertext] (https://www.supertext.ch/en/signup) if
 Get the API key from the Settings page: [Account Settings] (https://www.supertext.ch/customer/accountsettings)
 
 == Changelog ==
+
+= 2.1 =
+* Added support for BE page builder
+* Made API url configurable
+* Added support for Salient Visual Composer
+* Various code improvements and fixes
 
 = 2.0 =
 * Extended plugin to be able to order multiple posts/pages
