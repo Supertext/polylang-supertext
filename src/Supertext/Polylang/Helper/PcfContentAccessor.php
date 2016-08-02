@@ -70,17 +70,17 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     $savedPcfFields = $this->library->getSettingOption(Constant::SETTING_PCF_FIELDS);
     $translatableFields = array();
 
-    foreach ($savedPcfFields as $savedPcfField) {
-      if (empty($savedPcfField) || !get_post_meta($postId, $savedPcfField, true)) {
-        continue;
-      }
+    foreach ($this->pcfFieldDefinitions as $pcfFieldDefinition) {
+      $subFieldDefinitions = $pcfFieldDefinition['sub_field_definitions'];
 
-      foreach ($this->pcfFieldDefinitions as $pcfFieldDefinition) {
-        $subFieldDefinition = $pcfFieldDefinition['sub_field_definitions'];
+      foreach($subFieldDefinitions as $key => $subFieldDefinition){
+        if(!in_array($key, $savedPcfFields) || !get_post_meta($postId, $key, true)){
+          continue;
+        }
 
         $translatableFields[] = array(
-          'title' => $subFieldDefinition[$savedPcfField]['label'],
-          'name' => $savedPcfField,
+          'title' => $subFieldDefinition['label'],
+          'name' => $key,
           'checkedPerDefault' => true
         );
       }
