@@ -40,4 +40,18 @@ class PluginFieldDefinitions
       )
     );
   }
+
+  public static function getBePageBuilderFieldDefinitions()
+  {
+    return array(
+      'label' => 'BE page builder',
+      'type' => 'group',
+      'sub_field_definitions' => array(
+        '_be_pb_content' => array(
+          'label' => __('BE page builder content', 'polylang-supertext'),
+          'type' => 'field'
+        )
+      )
+    );
+  }
 }

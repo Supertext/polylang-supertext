@@ -294,6 +294,10 @@ class Core
       $pcfContentAccessor->registerPluginFieldDefinitions('yoast_seo', PluginFieldDefinitions::getYoastSeoFieldDefinitions());
     }
 
+    if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
+      $pcfContentAccessor->registerPluginFieldDefinitions('be_pb', PluginFieldDefinitions::getBePageBuilderFieldDefinitions());
+    }
+
     if($pcfContentAccessor->hasRegisteredPluginFieldDefinitions())
     {
       $contentAccessors['pcf'] = $pcfContentAccessor;
