@@ -162,13 +162,9 @@ class AjaxRequestHandler
   private function ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage, $referenceHashes)
   {
     foreach ($postIds as $postId) {
-      $translationPostId = Multilang::getPostInLanguage($postId, $targetLanguage);
+      $translationPost = $this->getTranslationPost($postId, $sourceLanguage, $targetLanguage);
 
-      if ($translationPostId == null) {
-        $translationPost = $this->createTranslationPost($postId, $sourceLanguage, $targetLanguage);
-        $translationPostId = $translationPost->ID;
-        $this->log->addEntry($translationPostId, __('The article to be translated has been created.', 'polylang-supertext'));
-      }
+      self::updateWithInTranslationTexts($translationPost);
 
       $message = sprintf(
         __('Order for translation of article into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
@@ -178,10 +174,10 @@ class AjaxRequestHandler
 
       $this->log->addEntry($postId, $message);
       $this->log->addOrderId($postId, $order->Id);
-      $this->log->addOrderId($translationPostId, $order->Id);
+      $this->log->addOrderId($translationPost->ID, $order->Id);
 
-      update_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, 1);
-      update_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$postId]);
+      update_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, 1);
+      update_post_meta($translationPost->ID, Constant::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$postId]);
     }
   }
 
@@ -198,6 +194,24 @@ class AjaxRequestHandler
 
   /**
    * @param $postId
+   * @param $sourceLanguage
+   * @param $targetLanguage
+   * @return array|null|\WP_Post
+   */
+  private function getTranslationPost($postId, $sourceLanguage, $targetLanguage){
+    $translationPostId = Multilang::getPostInLanguage($postId, $targetLanguage);
+
+    if ($translationPostId == null) {
+      $translationPost = $this->createTranslationPost($postId, $sourceLanguage, $targetLanguage);
+      $this->log->addEntry($translationPostId, __('The article to be translated has been created.', 'polylang-supertext'));
+      return $translationPost;
+    }
+
+    return get_post($translationPostId);
+  }
+
+  /**
+   * @param $postId
    * @param $options
    * @return array|null|\WP_Post
    */
@@ -208,7 +222,6 @@ class AjaxRequestHandler
 
     self::addImageAttachments($postId, $translationPostId, $sourceLanguage, $targetLanguage);
     self::copyPostMetas($postId, $translationPostId, $targetLanguage);
-    self::addInTranslationTexts($translationPost);
 
     wp_update_post($translationPost);
 
@@ -300,9 +313,10 @@ class AjaxRequestHandler
   /**
    * @param $translationPost
    */
-  private static function addInTranslationTexts($translationPost)
+  private static function updateWithInTranslationTexts($translationPost)
   {
     $translationPost->post_title = $translationPost->post_title .' '. Constant::IN_TRANSLATION_TEXT;
+    wp_update_post($translationPost);
   }
 
   /**
