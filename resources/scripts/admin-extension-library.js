@@ -718,9 +718,7 @@ Supertext.Polylang = (function (win, doc, $) {
       injectOrderLinks();
     }
 
-    var $title = $('#title');
-
-    if ($title.length == 1 && $title.val().indexOf(l10n.inTranslationText) > -1) {
+    if (context.screenContext.isPostInTranslation) {
       disableTranslatingPost();
     }
   }
@@ -1081,7 +1079,7 @@ Supertext.Polylang = (function (win, doc, $) {
       return;
     }
 
-    state.postIds = [$('#post_ID').val()];
+    state.postIds = [context.screenContext.postId];
     state.targetLanguageCode = targetLanguageCode;
 
     startOrderProcess();

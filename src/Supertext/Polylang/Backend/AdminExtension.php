@@ -39,6 +39,11 @@ class AdminExtension
   private $screenAction = null;
 
   /**
+   * @var null|array
+   */
+  private $screenContext = null;
+
+  /**
    * Various filters to change and/or display things
    */
   public function __construct($library, $log)
@@ -46,7 +51,7 @@ class AdminExtension
     $this->library = $library;
     $this->log = $log;
 
-    add_action('current_screen', array($this, 'setScreenBase'));
+    add_action('current_screen', array($this, 'setScreenData'));
     add_action('admin_enqueue_scripts', array($this, 'addBackendAssets'));
     add_action('admin_notices', array($this, 'showPluginStatusMessages'));
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
@@ -63,10 +68,17 @@ class AdminExtension
   /**
    * @param \WP_Screen $screen the screen shown
    */
-  public function setScreenBase($screen)
+  public function setScreenData($screen)
   {
     $this->screenBase = $screen->base;
     $this->screenAction = empty($screen->action) ? empty($_GET['action']) ? '' : $_GET['action'] : $screen->action;
+    $this->screenContext = array();
+
+    if($this->isEditPostScreen()){
+      $postId = intval($_GET['post']);
+      $this->screenContext['postId'] = $postId;
+      $this->screenContext['isPostInTranslation'] = get_post_meta($postId, Constant::IN_TRANSLATION_FLAG, true) == 1;
+    }
   }
 
   /**
@@ -139,11 +151,10 @@ class AdminExtension
       return;
     }
 
-    $translationPostId = intval($_GET['post']);
-    $orderId = $this->log->getLastOrderId($translationPostId);
+    $orderId = $this->log->getLastOrderId($this->screenContext['postId']);
 
     // Show info if there is an order and the article is not translated yet
-    if (intval($orderId) > 0 && get_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, true) == 1) {
+    if (intval($orderId) > 0 && $this->screenContext['isPostInTranslation']) {
       echo '
         <div class="updated">
           <p>' . sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
@@ -166,6 +177,7 @@ class AdminExtension
     $context = array(
       'enable' => $pluginStatus->isPolylangActivated && $pluginStatus->isCurlActivated && $pluginStatus->isPluginConfiguredProperly && $pluginStatus->isCurrentUserConfigured,
       'screen' => $this->screenBase,
+      'screenContext' => $this->screenContext,
       'resourceUrl' => get_bloginfo('wpurl'),
       'ajaxUrl' => admin_url( 'admin-ajax.php' )
     );
@@ -193,12 +205,11 @@ class AdminExtension
    */
   public function addLogInfoMetabox()
   {
-    if (isset($_GET['post'])) {
-      $postId = intval($_GET['post']);
-      $logEntries = $this->log->getLogEntries($postId);
+    if ($this->isEditPostScreen()) {
+      $logEntries = $this->log->getLogEntries($this->screenContext['postId']);
 
       // Show info if valid post and there are entries
-      if ($postId > 0 && count($logEntries) > 0) {
+      if ($this->screenContext['postId'] > 0 && count($logEntries) > 0) {
         // Reverse entries, so that the newest is on top
         $logEntries = array_reverse($logEntries);
         // Create an html element to display the entries

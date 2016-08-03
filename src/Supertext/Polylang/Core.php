@@ -139,7 +139,6 @@ class Core
   {
     $translation_array = array(
       'languages' => array(),
-      'inTranslationText' => esc_js(Constant::IN_TRANSLATION_TEXT),
       'generalError' => esc_js(__('An error occurred', 'polylang-supertext')),
       'networkError' => esc_js(__('A network error occurred', 'polylang-supertext')),
       'validationError' => esc_js(__('Validation error', 'polylang-supertext')),
