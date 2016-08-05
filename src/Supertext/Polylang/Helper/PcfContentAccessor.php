@@ -58,7 +58,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
    */
   public function getName()
   {
-    return __('Plugin defined custom fields', 'polylang-supertext');
+    return __('Plugin fields', 'polylang-supertext');
   }
 
   /**

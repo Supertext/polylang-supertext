@@ -26,9 +26,9 @@ $htmlTree = getPcfTree($context['pcfFieldDefinitions']);
 ?>
 <div class="postbox postbox_admin">
   <div class="inside">
-    <h3><?php _e('Plugin defined custom fields', 'polylang-supertext'); ?></h3>
+    <h3><?php _e('Plugin fields', 'polylang-supertext'); ?></h3>
     <p>
-      <?php _e('Please select the custom fields that can be used for translations.', 'polylang-supertext'); ?>
+      <?php _e('Please select the fields that can be used for translations.', 'polylang-supertext'); ?>
     </p>
     <div id="pcfFieldsTree">
       <?php echo $htmlTree; ?>

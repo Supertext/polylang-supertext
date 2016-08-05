@@ -17,7 +17,7 @@ foreach($savedCustomFields as $savedCustomField){
 ?>
 <div class="postbox postbox_admin">
   <div class="inside">
-    <h3><?php _e('Self-defined custom fields', 'polylang-supertext'); ?></h3>
+    <h3><?php _e('General custom fields', 'polylang-supertext'); ?></h3>
     <p>
       <?php _e('Please add the custom fields that can be used for translations.', 'polylang-supertext'); ?>
     </p>
