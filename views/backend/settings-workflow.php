@@ -32,7 +32,7 @@ if(!isset($options[$selectedApiServer])){
       <label for="sttr-override-published-posts"><?php _e('Allow Supertext to overwrite published posts', 'polylang-supertext'); ?></label>
     </p>
     <p>
-      <label for="sttr-api-selection">API Server</label>
+      <label for="sttr-api-selection"><?php _e('API Server', 'polylang-supertext'); ?></label>
       <select id="sttr-api-selection">
         <?php
           foreach($options as $value => $text){
