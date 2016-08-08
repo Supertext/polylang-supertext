@@ -89,7 +89,7 @@
             <li class="{{post.isInTranslation ? 'hasError' : ''}}">
               <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}">
                 <span class="dashicons dashicons-no-alt"></span>
-                {{post.title}} ({{post.languageCode}}{{post.isInTranslation ? ', <?php _e('blocked', ''); ?>' : ''}}{{post.isDraft ? ', <?php _e('draft', ''); ?>' : ''}})
+                {{post.title}} ({{post.languageCode}}{{post.isInTranslation ? ', <?php _e('blocked', 'polylang-supertext'); ?>' : ''}}{{post.isDraft ? ', <?php _e('draft', 'polylang-supertext'); ?>' : ''}})
               </a>
             </li>
           <# }); #>
