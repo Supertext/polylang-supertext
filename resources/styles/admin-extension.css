@@ -289,7 +289,7 @@
   box-shadow: none;
   color: #444; }
 
-.sttr-order-items li.invalid a {
+.sttr-order-items li.hasError a {
   color: red; }
 
 .sttr-order-items li a .dashicons-no-alt {

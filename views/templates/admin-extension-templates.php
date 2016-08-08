@@ -86,8 +86,11 @@
       <div class="sttr-order-items">
         <ul>
           <# _.each(data.posts, function(post) { #>
-            <li class="{{post.isInTranslation ? 'invalid' : ''}}">
-              <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}"><span class="dashicons dashicons-no-alt"></span>{{post.title}} ({{post.languageCode}})</a>
+            <li class="{{post.isInTranslation ? 'hasError' : ''}}">
+              <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}">
+                <span class="dashicons dashicons-no-alt"></span>
+                {{post.title}} ({{post.languageCode}}{{post.isInTranslation ? ', <?php _e('blocked', ''); ?>' : ''}}{{post.isDraft ? ', <?php _e('draft', ''); ?>' : ''}})
+              </a>
             </li>
           <# }); #>
         </ul>
