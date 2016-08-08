@@ -123,7 +123,7 @@ class AjaxRequestHandler
         'message' => '
           ' . __('The order has been placed successfully.', 'polylang-supertext') . '<br />
           ' . sprintf(__('Your order number is %s.', 'polylang-supertext'), $order->Id) . '<br />
-          ' . sprintf(__('The article will be translated by %s.', 'polylang-supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
+          ' . sprintf(__('The post will be translated by %s.', 'polylang-supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
       );
 
       self::setJsonOutput('success', $result);
@@ -167,7 +167,7 @@ class AjaxRequestHandler
       self::updateWithInTranslationTexts($translationPost);
 
       $message = sprintf(
-        __('Order for translation of article into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
+        __('Translation order into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
         $this->getLanguageName($targetLanguage),
         $order->Id
       );
@@ -203,7 +203,7 @@ class AjaxRequestHandler
 
     if ($translationPostId == null) {
       $translationPost = $this->createTranslationPost($postId, $sourceLanguage, $targetLanguage);
-      $this->log->addEntry($translationPostId, __('The article to be translated has been created.', 'polylang-supertext'));
+      $this->log->addEntry($translationPostId, __('The post to be translated has been created.', 'polylang-supertext'));
       return $translationPost;
     }
 

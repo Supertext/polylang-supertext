@@ -98,7 +98,7 @@
             <h3>{{post.title}}</h3>
             <# if(post.isInTranslation){ #>
             <p class="notice notice-error">
-              <span class="error-message"><?php _e('The article cannot be translated because there is an unfinished translation task.', 'polylang-supertext');?></span>
+              <span class="error-message"><?php _e('The article cannot be translated. It is blocked by a translation order in progress.', 'polylang-supertext');?></span>
             </p>
             <# }else if(post.isDraft){ #>
             <p class="notice notice-warning">

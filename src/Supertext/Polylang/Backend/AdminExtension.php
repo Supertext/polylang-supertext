@@ -157,7 +157,7 @@ class AdminExtension
     if (intval($orderId) > 0 && $this->screenContext['isPostInTranslation']) {
       echo '
         <div class="updated">
-          <p>' . sprintf(__('The article was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
+          <p>' . sprintf(__('The post was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
         </div>
       ';
     }

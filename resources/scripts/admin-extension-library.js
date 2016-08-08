@@ -1075,7 +1075,7 @@ Supertext.Polylang = (function (win, doc, $) {
    * @param targetLanguageCode
    */
   function openOrderForm(targetLanguageCode) {
-    if (hasUnsavedChanges() && !confirm(l10n.confirmUnsavedArticle)) {
+    if (hasUnsavedChanges() && !confirm(l10n.confirmUnsavedPost)) {
       return;
     }
 
