@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2016-08-08 15:06+0100\n"
-"PO-Revision-Date: 2016-08-08 15:06+0100\n"
+"POT-Creation-Date: 2016-08-08 15:56+0100\n"
+"PO-Revision-Date: 2016-08-08 15:57+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_DE\n"
@@ -423,7 +423,7 @@ msgstr ""
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:205
 msgid "The post to be translated has been created."
-msgstr "The post to be translated has been created."
+msgstr "Der zu übersetzende Beitrag wurde erstellt."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:247
 msgid "In translation"
@@ -541,7 +541,7 @@ msgstr "Auszug"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:34
 #, php-format
 msgid "Supertext doesn't support <b>%s</b>."
-msgstr "Supertext untzerstüzt <b>%s</b> nicht."
+msgstr "Supertext unterstützt <b>%s</b> nicht."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:137
 msgid "Could not create an order with Supertext."
