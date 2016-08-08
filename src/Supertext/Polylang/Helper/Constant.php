@@ -90,10 +90,6 @@ class Constant
    */
   const JQUERY_UI_AUTOCOMPLETE = 'jquery-ui-autocomplete';
   /**
-   * @var string the text that marks a post as "in translation"
-   */
-  const IN_TRANSLATION_TEXT = '[in Translation...]';
-  /**
    * @var string the flag that sets a post in translation
    */
   const IN_TRANSLATION_FLAG = '_in_st_translation';

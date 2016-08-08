@@ -76,7 +76,7 @@ class AjaxRequestHandler
   {
     $translationData = $this->getTranslationData($_POST['translatableContents']);
 
-    try{
+    try {
       $quote = Wrapper::getQuote(
         $this->library->getApiConnection(),
         $this->library->mapLanguage($_POST['orderSourceLanguage']),
@@ -85,7 +85,7 @@ class AjaxRequestHandler
       );
 
       self::setJsonOutput('success', $quote);
-    }catch (\Exception $e){
+    } catch (\Exception $e) {
       self::setJsonOutput('error', $e->getMessage());
     }
   }
@@ -103,7 +103,7 @@ class AjaxRequestHandler
 
     $referenceHashes = $this->createReferenceHashes($postIds);
 
-    try{
+    try {
 
       $order = Wrapper::createOrder(
         $this->library->getApiConnection(),
@@ -127,8 +127,8 @@ class AjaxRequestHandler
       );
 
       self::setJsonOutput('success', $result);
-    }catch (\Exception $e){
-      foreach($postIds as $postId){
+    } catch (\Exception $e) {
+      foreach ($postIds as $postId) {
         $this->log->addEntry($postId, $e->getMessage());
       }
 
@@ -164,8 +164,6 @@ class AjaxRequestHandler
     foreach ($postIds as $postId) {
       $translationPost = $this->getTranslationPost($postId, $sourceLanguage, $targetLanguage);
 
-      self::updateWithInTranslationTexts($translationPost);
-
       $message = sprintf(
         __('Translation order into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
         $this->getLanguageName($targetLanguage),
@@ -198,7 +196,8 @@ class AjaxRequestHandler
    * @param $targetLanguage
    * @return array|null|\WP_Post
    */
-  private function getTranslationPost($postId, $sourceLanguage, $targetLanguage){
+  private function getTranslationPost($postId, $sourceLanguage, $targetLanguage)
+  {
     $translationPostId = Multilang::getPostInLanguage($postId, $targetLanguage);
 
     if ($translationPostId == null) {
@@ -212,8 +211,10 @@ class AjaxRequestHandler
 
   /**
    * @param $postId
-   * @param $options
+   * @param $sourceLanguage
+   * @param $targetLanguage
    * @return array|null|\WP_Post
+   * @internal param $options
    */
   private function createTranslationPost($postId, $sourceLanguage, $targetLanguage)
   {
@@ -243,7 +244,7 @@ class AjaxRequestHandler
       'post_mime_type' => $post->post_mime_type,
       'post_password' => $post->post_password,
       'post_status' => self::TRANSLATION_POST_STATUS,
-      'post_title' => $post->post_title,
+      'post_title' => $post->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]',
       'post_type' => $post->post_type,
       'menu_order' => $post->menu_order,
       'comment_status' => $post->comment_status,
@@ -308,15 +309,6 @@ class AjaxRequestHandler
 
     $polylang->sync->copy_taxonomies($postId, $translationPostId, $target_lang);
     $polylang->sync->copy_post_metas($postId, $translationPostId, $target_lang);
-  }
-
-  /**
-   * @param $translationPost
-   */
-  private static function updateWithInTranslationTexts($translationPost)
-  {
-    $translationPost->post_title = $translationPost->post_title .' '. Constant::IN_TRANSLATION_TEXT;
-    wp_update_post($translationPost);
   }
 
   /**
@@ -388,10 +380,10 @@ class AjaxRequestHandler
     $unfinishedTranslations = array();
 
     $languages = Multilang::getLanguages();
-    foreach($languages as $language){
+    foreach ($languages as $language) {
       $translationPostId = Multilang::getPostInLanguage($postId, $language->slug);
 
-      if($translationPostId == null || $translationPostId == $postId || get_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, true) != 1){
+      if ($translationPostId == null || $translationPostId == $postId || get_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, true) != 1) {
         continue;
       }
 

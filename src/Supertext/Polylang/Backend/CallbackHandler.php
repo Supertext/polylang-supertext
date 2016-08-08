@@ -98,8 +98,6 @@ class CallbackHandler
       $this->contentProvider->prepareTranslationPost(get_post($postId), $translationPost);
       $this->contentProvider->saveTranslatedData($translationPost, $translationData[$postId]);
 
-      $translationPost->post_title = str_replace(Constant::IN_TRANSLATION_TEXT, '', $translationPost->post_title);
-
       if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
         $translationPost->post_status = 'publish';
       }
