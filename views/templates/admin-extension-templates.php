@@ -101,11 +101,11 @@
             <h3>{{post.title}}</h3>
             <# if(post.isInTranslation){ #>
             <p class="notice notice-error">
-              <span class="error-message"><?php _e('The article cannot be translated. It is blocked by a translation order in progress.', 'polylang-supertext');?></span>
+              <span class="error-message"><?php _e('The post cannot be translated. It is blocked by a translation order in progress.', 'polylang-supertext');?></span>
             </p>
             <# }else if(post.isDraft){ #>
             <p class="notice notice-warning">
-              <span><?php _e('The articles status is <b>draft</b>. Are you sure you want to order a translation for this article?', 'polylang-supertext');?></span>
+              <span><?php _e('The post status is <b>draft</b>. Are you sure you want to order a translation for this article?', 'polylang-supertext');?></span>
             </p>
             <# } #>
             <p>
@@ -132,7 +132,7 @@
                 </tr>
                 <# } else { #>
                 <tr>
-                  <td>- <?php _e('Not present in this item', 'polylang-supertext');?></td>
+                  <td>- <?php _e('Not present in this post', 'polylang-supertext');?></td>
                 </tr>
                 <# } #>
                 </tbody>
@@ -142,7 +142,7 @@
         <# }); #>
       </div>
       <div class="clearfix"></div>
-      <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this item', 'polylang-supertext');?></button>
+      <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post', 'polylang-supertext');?></button>
       <div class="clearfix"></div>
     </div>
     <h2><?php _e('Language', 'polylang-supertext');?></h2>
