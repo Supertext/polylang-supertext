@@ -121,15 +121,15 @@ class Core
    */
   public function registerAdminAssets()
   {
-    $suffix = defined('WP_DEBUG') && WP_DEBUG ? '': '.min';
+    $suffix = defined('WP_DEBUG') && WP_DEBUG ? '' : '.min';
 
-    wp_register_style(Constant::SETTINGS_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/settings'.$suffix.'.css', array(), SUPERTEXT_PLUGIN_REVISION);
-    wp_register_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/admin-extension'.$suffix.'.css', array(), SUPERTEXT_PLUGIN_REVISION);
-    wp_register_style(Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/themes/wordpress-dark/style'.$suffix.'.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_style(Constant::SETTINGS_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/settings' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/admin-extension' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_style(Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/themes/wordpress-dark/style' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
 
-    wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/admin-extension-library'.$suffix.'.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION, true);
-    wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library'.$suffix.'.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
-    wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree'.$suffix.'.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/admin-extension-library' . $suffix . '.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION, true);
+    wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library' . $suffix . '.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree' . $suffix . '.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
   }
 
   /**
@@ -160,10 +160,10 @@ class Core
     );
 
     $library = $this->getLibrary();
-    if($library->getPluginStatus()->isPluginConfiguredProperly){
+    if ($library->getPluginStatus()->isPluginConfiguredProperly) {
       $languages = Multilang::getLanguages();
-      foreach($languages as $language){
-        $translation_array['languages'][$language->slug] =  esc_js(__($library->mapLanguage($language->slug), 'polylang-supertext-langs'));
+      foreach ($languages as $language) {
+        $translation_array['languages'][$language->slug] = esc_js(__($library->mapLanguage($language->slug), 'polylang-supertext-langs'));
       }
     }
 
@@ -183,39 +183,9 @@ class Core
       $library->saveSetting(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
     }
 
-    //Migrate options
-    if (isset($options[Helper\Constant::SETTING_SHORTCODES])) {
-      //Check options state and update if needed
-      $shortcodes = $options[Helper\Constant::SETTING_SHORTCODES];
-      $checkedShortcodes = array();
+    self::migrateOldShortcodeSettings($options, $library);
 
-      foreach ($shortcodes as $key => $shortcode) {
-        if (!is_array($shortcode['attributes'])) {
-          $shortcode['attributes'] = array();
-          $checkedShortcodes[$key] = $shortcode;
-          continue;
-        }
-
-        if (empty($shortcode['attributes'])) {
-          $checkedShortcodes[$key] = $shortcode;
-          continue;
-        }
-
-        $checkedAttributes = array();
-        foreach ($shortcode['attributes'] as $attribute) {
-          if (!is_array($attribute)) {
-            $checkedAttributes[] = array('name' => $attribute, 'encoding' => '');
-          } else {
-            $checkedAttributes[] = $attribute;
-          }
-        }
-
-        $shortcode['attributes'] = $checkedAttributes;
-        $checkedShortcodes[$key] = $shortcode;
-      }
-
-      $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, $checkedShortcodes);
-    }
+    self::addWellKnownShortcodeSettings($options, $library);
   }
 
   /**
@@ -223,6 +193,105 @@ class Core
    */
   public static function onDeactivation()
   {
+  }
+
+  /**
+   * Migrates old shortcode settings
+   * @param $options
+   * @param Library $library
+   */
+  private static function migrateOldShortcodeSettings($options, $library)
+  {
+    if (!isset($options[Helper\Constant::SETTING_SHORTCODES])) {
+      return;
+    }
+
+    //Check options state and update if needed
+    $shortcodes = $options[Helper\Constant::SETTING_SHORTCODES];
+    $checkedShortcodes = array();
+
+    foreach ($shortcodes as $key => $shortcode) {
+      if (!is_array($shortcode['attributes'])) {
+        $shortcode['attributes'] = array();
+        $checkedShortcodes[$key] = $shortcode;
+        continue;
+      }
+
+      if (empty($shortcode['attributes'])) {
+        $checkedShortcodes[$key] = $shortcode;
+        continue;
+      }
+
+      $checkedAttributes = array();
+      foreach ($shortcode['attributes'] as $attribute) {
+        if (!is_array($attribute)) {
+          $checkedAttributes[] = array('name' => $attribute, 'encoding' => '');
+        } else {
+          $checkedAttributes[] = $attribute;
+        }
+      }
+
+      $shortcode['attributes'] = $checkedAttributes;
+      $checkedShortcodes[$key] = $shortcode;
+    }
+
+    $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, $checkedShortcodes);
+  }
+
+  /**
+   * Adds well known shortcode settings depending on installed plugins
+   * @param $options
+   * @param Library $library
+   */
+  private static function addWellKnownShortcodeSettings($options, $library)
+  {
+    $shortcodeSettings = isset($options[Helper\Constant::SETTING_SHORTCODES]) ? $options[Helper\Constant::SETTING_SHORTCODES] : array();
+
+    if (WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')){
+      $shortcodeSettings['vc_raw_html'] = array(
+        'content_encoding' => 'rawurl,base64',
+        'attributes' => array()
+      );
+
+      $shortcodeSettings['vc_custom_heading'] = array(
+        'content_encoding' => null,
+        'attributes' => array(
+          array('name' => 'text', 'encoding' => '')
+        )
+      );
+    }
+
+    if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
+      $shortcodeSettings['special_heading'] = array(
+        'content_encoding' => null,
+        'attributes' => array(
+          array('name' => 'title_content', 'encoding' => '')
+        )
+      );
+
+      $shortcodeSettings['special_heading2'] = array(
+        'content_encoding' => null,
+        'attributes' => array(
+          array('name' => 'title_content', 'encoding' => '')
+        )
+      );
+
+      $shortcodeSettings['special_heading3'] = array(
+        'content_encoding' => null,
+        'attributes' => array(
+          array('name' => 'title_content', 'encoding' => '')
+        )
+      );
+
+      $shortcodeSettings['button'] = array(
+        'content_encoding' => null,
+        'attributes' => array(
+          array('name' => 'button_text', 'encoding' => '')
+        )
+      );
+    }
+
+    $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, $shortcodeSettings);
   }
 
   /**
@@ -297,8 +366,7 @@ class Core
       $pcfContentAccessor->registerPluginFieldDefinitions('be_pb', PluginFieldDefinitions::getBePageBuilderFieldDefinitions());
     }
 
-    if($pcfContentAccessor->hasRegisteredPluginFieldDefinitions())
-    {
+    if ($pcfContentAccessor->hasRegisteredPluginFieldDefinitions()) {
       $contentAccessors['pcf'] = $pcfContentAccessor;
     }
 
