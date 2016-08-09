@@ -83,7 +83,7 @@ class Library
    */
   public function isPolylangActivated()
   {
-    return WordPress::isPluginActive('polylang/polylang.php');
+    return WordPress::isPluginActive('polylang/polylang.php') || WordPress::isPluginActive('polylang-pro/polylang.php');
   }
 
   /**
