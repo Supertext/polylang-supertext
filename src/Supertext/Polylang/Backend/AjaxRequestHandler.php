@@ -100,19 +100,19 @@ class AjaxRequestHandler
     $targetLanguage = $_POST['orderTargetLanguage'];
     $translationData = $this->getTranslationData($translatableContents);
     $postIds = array_keys($translatableContents);
-
+    $additionalInformation = $_POST['comment'] . ' Posts:' . implode(', ', $postIds);
     $referenceHashes = $this->createReferenceHashes($postIds);
 
     try {
 
       $order = Wrapper::createOrder(
         $this->library->getApiConnection(),
-        get_bloginfo('name') . ' - ' . implode(', ', $postIds),
+        get_bloginfo('name') . ' - ' . count($postIds) . ' post(s)' ,
         $this->library->mapLanguage($sourceLanguage),
         $this->library->mapLanguage($targetLanguage),
         $translationData,
         $_POST['translationType'],
-        $_POST['comment'],
+        $additionalInformation,
         $referenceHashes[0],
         SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php'
       );

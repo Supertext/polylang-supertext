@@ -23,6 +23,7 @@ use Supertext\Polylang\Helper\PostMediaContentAccessor;
 use Supertext\Polylang\Helper\AcfContentAccessor;
 use Supertext\Polylang\Settings\SettingsPage;
 
+//TODO refactor class (extract plugin dependent logic...)
 /**
  * Core Class that initializes the plugins features
  * @package Supertext\Polylang

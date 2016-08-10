@@ -93,7 +93,7 @@ class Wrapper
 
     return $result;
   }
-
+//TODO refactor function signature
   /**
    * @param ApiConnection $connection
    * @param string $title the title of the translations
@@ -101,14 +101,14 @@ class Wrapper
    * @param string $targetLanguage supertext target language
    * @param array $data data to be translated
    * @param string $translationType the supertext product id
-   * @param string $comment
+   * @param string $additionalInformation
    * @param string $referenceData
    * @param string $callback the callback url
    * @return array|object api result info
    * @throws ApiConnectionException
    * @throws ApiDataException
    */
-  public static function createOrder($connection, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $comment, $referenceData, $callback)
+  public static function createOrder($connection, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $additionalInformation, $referenceData, $callback)
   {
     $product = explode(':', $translationType);
 
@@ -126,7 +126,7 @@ class Wrapper
       'Referrer' => 'WordPress Polylang Plugin',
       'SourceLang' => $sourceLanguage,
       'TargetLang' => $targetLanguage,
-      'AdditionalInformation' => $comment,
+      'AdditionalInformation' => $additionalInformation,
       'Groups' => self::buildSupertextData($data)
     );
 
