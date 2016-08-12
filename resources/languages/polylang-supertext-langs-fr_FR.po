@@ -4,7 +4,7 @@ msgstr ""
 "POT-Creation-Date: 2015-02-07 09:16+0100\n"
 "PO-Revision-Date: 2016-08-12 08:36+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
-"Language: it_IT\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,178 +15,178 @@ msgstr ""
 "Language-Team: \n"
 
 msgid "de-CH"
-msgstr "Tedesco (Svizzera)"
+msgstr "allemand (Suisse)"
 
 msgid "en-US"
-msgstr "Inglese (USA)"
+msgstr "anglais (USA)"
 
 msgid "fr-CH"
-msgstr "Francese (Svizzera)"
+msgstr "français (Suisse)"
 
 msgid "it-CH"
-msgstr "Italiano (Svizzera)"
+msgstr "italien (Suisse)"
 
 msgid "sv"
-msgstr "Svedese"
+msgstr "suédois"
 
 msgid "da"
-msgstr "Danese"
+msgstr "danois"
 
 msgid "no"
-msgstr "Norvegese"
+msgstr "norvégien"
 
 msgid "es-ES"
-msgstr "Spagnolo (Spagna)"
+msgstr "espagnol (Espagne)"
 
 msgid "pt-PT"
-msgstr "Portoghese (Portogallo)"
+msgstr "portugais (Portugal)"
 
 msgid "nl"
-msgstr "Olandese"
+msgstr "néerlandais"
 
 msgid "zh"
-msgstr "Cinese"
+msgstr "chinois"
 
 msgid "ru"
-msgstr "Russo"
+msgstr "russe"
 
 msgid "de-DE"
-msgstr "Tedesco (Germania)"
+msgstr "allemand (Allemagne)"
 
 msgid "de-AT"
-msgstr "Tedesco (Austria)"
+msgstr "allemand (Autriche)"
 
 msgid "en-GB"
-msgstr "Inglese (GB)"
+msgstr "anglais (Grande-Bretagne)"
 
 msgid "fr-FR"
-msgstr "Francese (Francia)"
+msgstr "français (France)"
 
 msgid "it-IT"
-msgstr "Italiano (Italia)"
+msgstr "italien (Italie)"
 
 msgid "tr"
-msgstr "Turco"
+msgstr "turc"
 
 msgid "pl"
-msgstr "Polacco"
+msgstr "polonais"
 
 msgid "en_IE"
-msgstr "Inglese (Irlanda)"
+msgstr "anglais (Irlande)"
 
 msgid "de"
-msgstr "Tedesco"
+msgstr "allemand"
 
 msgid "fr"
-msgstr "Francese"
+msgstr "français"
 
 msgid "en"
-msgstr "Inglese"
+msgstr "anglais"
 
 msgid "it"
-msgstr "Italiano"
+msgstr "italien"
 
 msgid "nl-BE"
-msgstr "Fiammingo"
+msgstr "flamand"
 
 msgid "fr-BE"
-msgstr "Francese (Belgio)"
+msgstr "français (Belgique)"
 
 msgid "sq"
-msgstr "Albanese"
+msgstr "albanais"
 
 msgid "ar"
-msgstr "Arabo"
+msgstr "arabe"
 
 msgid "bs-BA"
-msgstr "Bosniaco"
+msgstr "bosniaque"
 
 msgid "nb-NO"
-msgstr "Norvegese"
+msgstr "norvégien"
 
 msgid "et"
-msgstr "Estone"
+msgstr "estonien"
 
 msgid "fi"
-msgstr "Finlandese"
+msgstr "finnois"
 
 msgid "el"
-msgstr "Greco"
+msgstr "grec"
 
 msgid "he"
-msgstr "Ebraico"
+msgstr "hébreu"
 
 msgid "ja"
-msgstr "Giapponese"
+msgstr "japonais"
 
 msgid "ko"
-msgstr "Coreano"
+msgstr "coréen"
 
 msgid "hr"
-msgstr "Croato"
+msgstr "croate"
 
 msgid "lv"
-msgstr "Lettone"
+msgstr "letton"
 
 msgid "lt"
-msgstr "Lituano"
+msgstr "lituanien"
 
 msgid "mk"
-msgstr "Macedone"
+msgstr "macédonien"
 
 msgid "sr"
-msgstr "Serbo"
+msgstr "serbe"
 
 msgid "sk"
-msgstr "Slovacco"
+msgstr "slovaque"
 
 msgid "sl"
-msgstr "Sloveno"
+msgstr "slovène"
 
 msgid "cs"
-msgstr "Ceco"
+msgstr "tchèque"
 
 msgid "th"
-msgstr "Tailandese"
+msgstr "thaïlandais"
 
 msgid "hu"
-msgstr "Ungherese"
+msgstr "hongrois"
 
 msgid "ro"
-msgstr "Romeno"
+msgstr "roumain"
 
 msgid "es-LAm"
-msgstr "Spagnolo (Sudamerica)"
+msgstr "espagnol (Amérique du Sud)"
 
 msgid "pt-BR"
-msgstr "Portoghese (Brasile)"
+msgstr "portugais (Brésil)"
 
 msgid "rm-CH"
-msgstr "Romancio"
+msgstr "rhéto-romanche"
 
 msgid "es"
-msgstr "Spagnolo"
+msgstr "espagnol"
 
 msgid "pt"
-msgstr "Portoghese"
+msgstr "portugais"
 
 msgid "zh-CHS"
-msgstr "Cinese (semplificato)"
+msgstr "chinois (simplifié)"
 
 msgid "zh-CHT"
-msgstr "Cinese (tradizionale)"
+msgstr "chinois (traditionnel)"
 
 msgid "bg-BG"
-msgstr "Bulgaro"
+msgstr "bulgare"
 
 msgid "ta-IN"
-msgstr "Tamil"
+msgstr "tamoul"
 
 msgid "ms-MY"
-msgstr "Malese (Malesia)"
+msgstr "malaisien"
 
 msgid "hi-IN"
-msgstr "Hindi"
+msgstr "hindi"
 
 msgid "la"
-msgstr "Latino"
+msgstr "latin"
