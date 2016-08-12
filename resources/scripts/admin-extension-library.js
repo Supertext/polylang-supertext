@@ -906,6 +906,7 @@ Supertext.Polylang = (function (win, doc, $) {
   function updateButtonsInLoadingState() {
     modal.disableButton(state.nextButtonToken);
     modal.disableButton(state.backButtonToken);
+    modal.disableButton(state.cancelButtonToken);
   }
 
   /**
@@ -944,6 +945,8 @@ Supertext.Polylang = (function (win, doc, $) {
     if (stepNumber > 1) {
       modal.enableButton(state.backButtonToken);
     }
+
+    modal.enableButton(state.cancelButtonToken);
   }
 
   /**
