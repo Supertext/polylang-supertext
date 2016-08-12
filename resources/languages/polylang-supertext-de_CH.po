@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
 "POT-Creation-Date: 2016-08-08 15:56+0100\n"
-"PO-Revision-Date: 2016-08-12 08:35+0100\n"
+"PO-Revision-Date: 2016-08-12 14:35+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_CH\n"
@@ -33,7 +33,7 @@ msgstr "Shortcodes"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:21
 msgid "Please define any shortcode attributes you want to have translated."
 msgstr ""
-"Bitte geben Sie alle  Shortcode-Attribute an, welche Sie übersetzt haben "
+"Bitte geben Sie alle Shortcode-Attribute an, welche Sie übersetzt haben "
 "möchten."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:24
@@ -90,8 +90,8 @@ msgstr "Allgemeine benutzerdefinierte Felder"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-custom-fields.php:22
 msgid "Please add the custom fields that can be used for translations."
 msgstr ""
-"Bitte fügen Sie die benutzerdefinierten Felder hinzu, die für Übersetzungen "
-"genutzt werden können."
+"Bitte fügen Sie die benutzerdefinierten Felder hinzu, welche übersetzt "
+"werden können."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-custom-fields.php:26
 msgid "Add field"
@@ -234,7 +234,7 @@ msgid ""
 "The post cannot be translated. It is blocked by a translation order in "
 "progress."
 msgstr ""
-"Der Beitrag kann nicht übersetzt werden. Er ist durch einen laufenden "
+"Der Beitrag kann nicht übersetzt werden. Dieser ist durch einen laufenden "
 "Übersetzungsauftrag blockiert."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:108
@@ -431,7 +431,7 @@ msgstr "In der Übersetzung"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/CallbackHandler.php:73
 msgid "translation saved successfully"
-msgstr "Übersetzung von Supertext swurde erfolgreich importiert."
+msgstr "Übersetzung von Supertext wurde erfolgreich importiert."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Menu.php:31
 msgid "Supertext - Settings"
@@ -471,7 +471,7 @@ msgid ""
 "The post was sent to Supertext and is now being translated. Your order "
 "number is %s."
 msgstr ""
-"Ihr Beitrag wurde an Supertext gesendet und wird Übersetzt. Ihre "
+"Ihr Beitrag wurde an Supertext gesendet und wird übersetzt. Ihre "
 "Bestellnummer lautet %s."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AdminExtension.php:227

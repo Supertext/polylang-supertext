@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
 "POT-Creation-Date: 2016-08-08 15:56+0100\n"
-"PO-Revision-Date: 2016-08-12 08:35+0100\n"
+"PO-Revision-Date: 2016-08-12 14:35+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_DE\n"
@@ -33,7 +33,7 @@ msgstr "Shortcodes"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:21
 msgid "Please define any shortcode attributes you want to have translated."
 msgstr ""
-"Bitte geben Sie alle  Shortcode-Attribute an, welche Sie übersetzt haben "
+"Bitte geben Sie alle Shortcode-Attribute an, welche Sie übersetzt haben "
 "möchten."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:24
@@ -90,8 +90,8 @@ msgstr "Allgemeine benutzerdefinierte Felder"
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-custom-fields.php:22
 msgid "Please add the custom fields that can be used for translations."
 msgstr ""
-"Bitte fügen Sie die benutzerdefinierten Felder hinzu, die für Übersetzungen "
-"genutzt werden können."
+"Bitte fügen Sie die benutzerdefinierten Felder hinzu, welche übersetzt "
+"werden können."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-custom-fields.php:26
 msgid "Add field"
@@ -234,7 +234,7 @@ msgid ""
 "The post cannot be translated. It is blocked by a translation order in "
 "progress."
 msgstr ""
-"Der Beitrag kann nicht übersetzt werden. Er ist durch einen laufenden "
+"Der Beitrag kann nicht übersetzt werden. Dieser ist durch einen laufenden "
 "Übersetzungsauftrag blockiert."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:108
@@ -431,7 +431,7 @@ msgstr "In der Übersetzung"
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/CallbackHandler.php:73
 msgid "translation saved successfully"
-msgstr "Übersetzung von Supertext swurde erfolgreich importiert."
+msgstr "Übersetzung von Supertext wurde erfolgreich importiert."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Menu.php:31
 msgid "Supertext - Settings"
@@ -471,7 +471,7 @@ msgid ""
 "The post was sent to Supertext and is now being translated. Your order "
 "number is %s."
 msgstr ""
-"Ihr Beitrag wurde an Supertext gesendet und wird Übersetzt. Ihre "
+"Ihr Beitrag wurde an Supertext gesendet und wird übersetzt. Ihre "
 "Bestellnummer lautet %s."
 
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AdminExtension.php:227
@@ -567,195 +567,3 @@ msgstr ""
 #: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/ApiConnection.php:127
 msgid "HTTP-Request error occurred. Details: "
 msgstr "HTTP-Anfrage-Fehler. Details: "
-
-#~ msgid "Translatable Custom Fields"
-#~ msgstr "Übersetzbare benutzerdefinierte Felder"
-
-#~ msgid "Custom fields"
-#~ msgstr "Benutzerdefinierte Felder"
-
-#~ msgid ""
-#~ "The article was sent to Supertext and is now being translated. Your order "
-#~ "number is %s."
-#~ msgstr ""
-#~ "Ihr Beitrag wurde an Supertext gesendet und wird Übersetzt. Ihre "
-#~ "Bestellnummer lautet %s."
-
-#~ msgid "Translation is being initialized. Please wait a moment."
-#~ msgstr "Die Übersetzung wird initialisiert, einen Moment bitte."
-
-#~ msgid "An error occurred."
-#~ msgstr "Es ist ein Fehler aufgetreten."
-
-#~ msgid "The order couldn't be sent to Supertext. Please try again."
-#~ msgstr ""
-#~ "Der Auftrag konnte nicht an Supertext gesendet werden. Bitte versuchen "
-#~ "Sie es erneut."
-
-#~ msgid ""
-#~ "The article was not saved. If you proceed with the translation, the "
-#~ "unsaved changes will be lost."
-#~ msgstr ""
-#~ "Der Beitrag wurde nicht gespeichert. Falls Sie mit der Übersetzung "
-#~ "fortfahren, werden die Änderungen verworfen."
-
-#~ msgid ""
-#~ "The article cannot be translated because there is an unfinished "
-#~ "translation task. Please use the original article to order a translation."
-#~ msgstr ""
-#~ "Der Beitrag kann nicht übersetzt werden, da dieser selbst noch übersetzt "
-#~ "wird. Bitte verwenden Sie den Original Beitrag zur Übersetzung."
-
-#~ msgid ""
-#~ "You are ordering a translation with the deadline {deadline} and price "
-#~ "{price}."
-#~ msgstr ""
-#~ "Sie bestellen eine Übersetzung bis zum {deadline} Uhr, zum Preis von "
-#~ "{price}."
-
-#~ msgid "This order for a translation is binding."
-#~ msgstr "Diese Übersetzungsbeauftragung ist verbindlich."
-
-#~ msgid ""
-#~ "You will receive an email as soon as the translation of your article is "
-#~ "complete."
-#~ msgstr ""
-#~ "Sie werden per E-Mail informiert, sobald die Übersetzung abgeschlossen "
-#~ "wurde."
-
-#~ msgid "Please confirm your order."
-#~ msgstr "Bitte bestätigen Sie die Bestellung."
-
-#~ msgid "One moment please. The translation order is being sent to Supertext."
-#~ msgstr ""
-#~ "Einen Moment bitte. Der Übersetzungsauftrag wird an Supertext übermittelt."
-
-#~ msgid "Please do not close this window."
-#~ msgstr "Bitte schliessen Sie dieses Fenster noch nicht."
-
-#~ msgid "The Supertext plugin hasn't been configured correctly."
-#~ msgstr "Das Supertext Plugin wurde nicht korrekt konfiguriert."
-
-#~ msgid ""
-#~ "The articles status is <b>draft</b>.<br>Are you sure you want to order a "
-#~ "translation for this article?"
-#~ msgstr ""
-#~ "Der Beitrag hat den Status <b>Entwurf</b>.<br>Sind Sie sicher, dass Sie "
-#~ "für diesen Beitrag eine Übersetzung beauftragen wollen?"
-
-#~ msgid ""
-#~ "There is already a translation for this post. The quote below may be "
-#~ "higher than the final price if only parts of the content need to be "
-#~ "translated again."
-#~ msgstr ""
-#~ "Es gibt bereits eine Übersetzung für diesen Beitrag. Die unten angegebene "
-#~ "Preise können tiefer ausfallen als angegeben, da nur einzelne Teile neu "
-#~ "übersetzt werden müssen."
-
-#~ msgid "Translation of post %s"
-#~ msgstr "Übersetzung des Beitrages %s"
-
-#~ msgid "The article will be translated from <b>%s</b> into <b>%s</b>."
-#~ msgstr "Der Beitrag soll von <b>%s</b> in <b>%s</b> übersetzt werden."
-
-#~ msgid "Custom fields to be translated"
-#~ msgstr "Benutzerdefinierte Felder"
-
-#~ msgid "Select the translation service and deadline:"
-#~ msgstr "Wählen Sie die Art der Übersetzung und die Lieferfrist:"
-
-#~ msgid "The price is being calculated, one moment please."
-#~ msgstr "Die Preise werden berechnet. Einen Moment."
-
-#~ msgid ""
-#~ "Could not create a new post for the translation. You need to create the "
-#~ "new post manually using Polylang."
-#~ msgstr ""
-#~ "Der neue Beitrag für die Übersetzung konnte nicht erstellt werden. Dieser "
-#~ "muss nun manuell mit Polylang angelegt werden."
-
-#~ msgid "The article will be translated by %s."
-#~ msgstr "Der Beitrag wird bis am %s Uhr übersetzt."
-
-#~ msgid ""
-#~ "Order for translation of article into %s has been placed successfully. "
-#~ "Your order number is %s."
-#~ msgstr ""
-#~ "Bestellung für Beitragsübersetzung nach %s erfolgreich. Ihre "
-#~ "Bestellnummer lautet %s."
-
-#~ msgid "Could not get offers."
-#~ msgstr "Angebote konnten nicht angefordert werden."
-
-#~ msgid "There are no offers for this translation."
-#~ msgstr "Für diese Übersetzung sind keine Angebote vorhanden."
-
-#~ msgid "The article to be translated has been created."
-#~ msgstr "Der zu übersetzende Beitrag wurde erstellt."
-
-#~ msgid ""
-#~ "Error: the language of the translation from Supertext does not match or "
-#~ "the translated post has been deleted"
-#~ msgstr ""
-#~ "Fehler: Übersetzung von Supertext hat die falsche Sprache, oder der zu "
-#~ "übersetzende Artikel wurde gelöscht."
-
-#~ msgid "Error: method not allowed"
-#~ msgstr "Fehler: Methode nicht erlaubt"
-
-#~ msgid "Error: translation import only possible for drafted articles"
-#~ msgstr "Fehler: Übersetzungs-Import ist nur bei Entwurfs-Beitrag möglich."
-
-#~ msgid "Shortcode"
-#~ msgstr "Shortcode"
-
-#~ msgid "Enclosed content encoding"
-#~ msgstr "Kodierung umschlossener Inhalt"
-
-#~ msgid "API-Key"
-#~ msgstr "API-Key"
-
-#~ msgid "Order article translation"
-#~ msgstr "Übersetzung beauftragen"
-
-#~ msgid ""
-#~ "The following settings are available for the selected components of your "
-#~ "article:"
-#~ msgstr "Wählen Sie die Art der Übersetzung und die Lieferfrist:"
-
-#~ msgid "Your order for Supertext"
-#~ msgstr "Ihr Übersetzungsauftrag an Supertext"
-
-#~ msgid ""
-#~ "As soon as the order is placed, you will be automatically redirected."
-#~ msgstr ""
-#~ "Sobald die Bestellung erfolgreich abgeschlossen ist, werden Sie "
-#~ "automatisch weitergeleitet. Bitte schliessen Sie dieses Fenster noch "
-#~ "nicht."
-
-#~ msgid ""
-#~ "One moment, the window closes itself in a few seconds and finishes the "
-#~ "order. Don't close the window yet."
-#~ msgstr "Einen Moment noch, das Fenster schliesst sich automatisch."
-
-#~ msgid "The order is being sent. One moment, please."
-#~ msgstr "Die Bestellung wird ausgelöst. Einen Moment bitte."
-
-#~ msgid "Duration"
-#~ msgstr "Dauer"
-
-#~ msgid "Translation until"
-#~ msgstr "Übersetzung erfolgt bis"
-
-#~ msgid "Price"
-#~ msgstr "Preis"
-
-#~ msgid "Translation"
-#~ msgstr "Übersetzung des Beitrages %s"
-
-#~ msgid ""
-#~ "Error while communicating with Supertext. We couldn't find any offers. "
-#~ "Please try again later."
-#~ msgstr ""
-#~ "Fehler bei der Verbindung zu Supertext: Die Preise können nicht angezeigt "
-#~ "werden. Bitte versuchen Sie es später erneut"
