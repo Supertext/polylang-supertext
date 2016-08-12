@@ -49,6 +49,12 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 2.3 =
+* Added new translations
+* Added support for Polylang Pro
+* Extended order item list
+* Extended plugin activation with adding defaults settings depending on installed plugins
+
 = 2.2 =
 * Fixed plugin defined content accessor
 
