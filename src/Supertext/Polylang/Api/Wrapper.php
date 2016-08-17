@@ -113,9 +113,6 @@ class Wrapper
     $product = explode(':', $translationType);
 
     $json = array(
-      'PluginName' => 'polylang-supertext',
-      'PluginVersion' => SUPERTEXT_PLUGIN_VERSION,
-      'InstallationName' => get_bloginfo('name'),
       'CallbackUrl' => $callback,
       'ContentType' => 'text/html',
       'Currency' => 'eur',
@@ -123,7 +120,11 @@ class Wrapper
       'OrderName' => $title,
       'OrderTypeId' => $product[0],
       'ReferenceData' => $referenceData,
-      'Referrer' => 'WordPress Polylang Plugin',
+      'Referrer' => 'WordPress Supertext Plugin',
+      'SystemName' => get_bloginfo('name'),
+      'SystemVersion' => get_bloginfo('version'),
+      'ComponentName' => 'polylang-supertext',
+      'ComponentVersion' => SUPERTEXT_PLUGIN_VERSION,
       'SourceLang' => $sourceLanguage,
       'TargetLang' => $targetLanguage,
       'AdditionalInformation' => $additionalInformation,
