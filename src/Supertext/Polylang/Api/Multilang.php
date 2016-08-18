@@ -38,6 +38,19 @@ class Multilang
   }
 
   /**
+   * @param $termId
+   * @return string language of the term or false if not found
+   */
+  public static function getTermLanguage($termId)
+  {
+    if (function_exists('pll_get_term_language')) {
+      return pll_get_term_language($termId);
+    }
+
+    return false;
+  }
+
+  /**
    * @param int $postId the post in for example german
    * @param string $language the language of the translation you want (i.e. en)
    * @return int|null post id or null if not found
@@ -46,6 +59,20 @@ class Multilang
   {
     if (function_exists('pll_get_post')) {
       return pll_get_post($postId, $language);
+    }
+
+    return null;
+  }
+
+  /**
+   * @param int $termId the term id
+   * @param string $language the language of the translation you want
+   * @return false|int|null term id or null if not found
+   */
+  public static function getTermInLanguage($termId, $language)
+  {
+    if (function_exists('pll_get_term')) {
+      return pll_get_term($termId, $language);
     }
 
     return null;
@@ -62,11 +89,30 @@ class Multilang
   }
 
   /**
+   * @param $termId
+   * @param $language
+   */
+  public static function setTermLanguage($termId, $language){
+    if (function_exists('pll_set_term_language')) {
+      pll_set_term_language($termId, $language);
+    }
+  }
+
+  /**
    * @param array $arr an associative array of translations with language code as key and post id as value
    */
   public static function savePostTranslations($arr){
     if (function_exists('pll_save_post_translations')) {
       pll_save_post_translations($arr);
+    }
+  }
+
+  /**
+   * @param array $arr an associative array of translations with language code as key and term id as value
+   */
+  public static function saveTermTranslations($arr){
+    if (function_exists('pll_save_term_translations')) {
+      pll_save_term_translations($arr);
     }
   }
 } 

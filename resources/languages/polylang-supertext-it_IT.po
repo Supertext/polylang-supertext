@@ -1,558 +1,47 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2016-08-12 08:06+0100\n"
-"PO-Revision-Date: 2016-08-12 14:36+0100\n"
+"POT-Creation-Date: 2016-08-18 14:03+0200\n"
+"PO-Revision-Date: 2016-08-18 14:03+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n;_x\n"
-"X-Poedit-Basepath: .\n"
+"X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-SearchPath-0: /var/www/other/wp-polylang/wp-content/plugins/"
-"polylang-supertext\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: node_modules\n"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:10
-msgid "Attribute name..."
-msgstr "Nome attributo..."
+#: src/Comotive/Helper/Metabox.php:382
+msgid "Choose picture"
+msgstr "Seleziona foto"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:11
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:49
-msgid "Functions..."
-msgstr "Funzioni..."
+#: src/Comotive/Helper/Metabox.php:385
+msgid "Remove picture"
+msgstr "Elimina foto"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:19
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:58
-msgid "Shortcodes"
-msgstr "Shortcode"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:21
-msgid "Please define any shortcode attributes you want to have translated."
-msgstr ""
-"Inserire tutti gli attributi dello shortcode che si desiderano far tradurre."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:24
-msgid ""
-"Please define the encoding process for all encoded and enclosed content. "
-"Available encoding functions are: rawurl, url and base64"
-msgstr ""
-"Inserire il processo di codificazione per ogni contenuto codificato "
-"riservato. Funzioni disponibili: rawurl, url e base64"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:46
-msgid "Encoding for enclosed content"
-msgstr "Codifica contenuto chiuso"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:54
-msgid "Translatable attributes"
-msgstr "Attributi traducibili"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-shortcodes.php:56
-msgid "Add attribute"
-msgstr "Aggiungere attributo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-pcf.php:29
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PcfContentAccessor.php:61
-msgid "Plugin fields"
-msgstr "Campi plugin"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-pcf.php:31
-msgid "Please select the fields that can be used for translations."
-msgstr "Selezionare i campi che possono essere tradotti."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-languages.php:40
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:153
-msgid "Please select"
-msgstr "Seleziona"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-languages.php:56
-msgid "Language settings"
-msgstr "Imposta lingue"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-languages.php:73
-msgid "Please configure the languages within the polylang plugin."
-msgstr "Configurare le lingue in Polylang."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-custom-fields.php:5
-msgid "Custom field name..."
-msgstr "Nome del campo definito dall’utente..."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-custom-fields.php:20
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/CustomFieldsContentAccessor.php:39
-msgid "General custom fields"
-msgstr "Campi generali definiti dall’utente"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-custom-fields.php:22
-msgid "Please add the custom fields that can be used for translations."
-msgstr ""
-"Inserire i campi definiti dall’utente che possono essere utilizzati per le "
-"traduzioni."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-custom-fields.php:26
-msgid "Add field"
-msgstr "Aggiungere campo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:26
-msgid "Select user"
-msgstr "Seleziona utente"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:34
-msgid "Supertext Accounts"
-msgstr "Account Supertext"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:38
-#, php-format
-msgid ""
-"You need at least one Supertext Account. You can sign up <a href=\"%s"
-"\">here</a>."
-msgstr ""
-"È necessario disporre almeno di un account Supertext. La registrazione può "
-"essere effettuata <a href=\"%s\">qui</a>."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:43
-msgid "Please fill in a Supertext API key for every user."
-msgstr "Per ogni utente inserire l’API Key di Supertext."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:47
-#, php-format
-msgid ""
-"You will find the API key on the <a href=\"%s\">Supertext settings page</a>."
-msgstr "L’API Key si trova tra le <a href=\"%s\">impostazioni</a>."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:49
-msgid "Only configured users can use the translation features."
-msgstr "Solo gli utenti registrati qui possono far tradurre articoli."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:55
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:56
-msgid "User"
-msgstr "Utente"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:57
-msgid "API Key"
-msgstr "API Key"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:65
-msgid "Delete user"
-msgstr "Elimina utente"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-users.php:66
-msgid "Add user"
-msgstr "Aggiungi utente"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-acf.php:30
-msgid "Advanced Custom Fields (Plugin)"
-msgstr "Advanced Custom Fields (plugin)"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-acf.php:32
-msgid "Please select the custom fields that can be used for translations."
-msgstr "Selezionare i campi definiti dall’utente che possono essere tradotti."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-workflow.php:12
-msgid "Live"
-msgstr "Live"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-workflow.php:13
-msgid "Development"
-msgstr "Sviluppo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-workflow.php:17
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-workflow.php:19
-msgid "Other"
-msgstr "Altro"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-workflow.php:25
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:67
-msgid "Workflow"
-msgstr "Flusso di lavoro"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-workflow.php:28
-msgid "Automatically publish translations"
-msgstr "Pubblica automaticamente le traduzioni"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-workflow.php:32
-msgid "Allow Supertext to overwrite published posts"
-msgstr "Cosentire a Supertext di sovrascrivere gli articoli pubblicati"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/backend/settings-workflow.php:35
-msgid "API Server"
-msgstr "Server API"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:5
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:146
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:154
-msgid "Order translation"
-msgstr "Assegna incarico di traduzione"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:55
-msgid "Loading"
-msgstr "Caricamento in corso"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:62
-msgid "Select content and language"
-msgstr "Seleziona contenuto e lingua"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:63
-msgid "Select service and deadline"
-msgstr "Seleziona servizio e scadenza"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:64
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:215
-msgid "Confirmation"
-msgstr "Conferma"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:74
-msgid "Content to be translated"
-msgstr "Definisci contenuti da tradurre"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:79
-#, php-format
-msgid ""
-"Translatable custom fields can be defined in the <a target=\"_parent\" href="
-"\"%s\">settings</a>."
-msgstr ""
-"I campi traducibili definiti dall’utente possono essere indicati nelle <a "
-"target=\"_parent\" href=\"%s\">impostazioni</a>."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:92
-msgid "blocked"
-msgstr "bloccato"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:92
-msgid "draft"
-msgstr "Bozza"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:104
-msgid ""
-"The post cannot be translated. It is blocked by a translation order in "
-"progress."
-msgstr ""
-"L’articolo non può essere tradotto visto che è bloccato da un incarico di "
-"traduzione in corso."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:108
-msgid ""
-"The post status is <b>draft</b>. Are you sure you want to order a "
-"translation for this article?"
-msgstr ""
-"L’articolo è stato salvato come <b>bozza</b>. Richiedere una traduzione per "
-"l’articolo?"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:112
-msgid "Please select the content to be translated."
-msgstr "Selezionare il contenuto da tradurre."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:135
-msgid "Not present in this post"
-msgstr "Non disponibile in questo articolo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:145
-msgid "Remove this post"
-msgstr "Rimuovere questo articolo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:148
-msgid "Language"
-msgstr "Lingua"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:150
-msgid "Translate from <b id=\"sttr-order-source-language-label\">-</b> into "
-msgstr "Traduzione <b id=\"sttr-order-source-language-label\">-</b>"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:168
-msgid "Service and deadline"
-msgstr "Qualità e scadenza"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:170
-msgid ""
-"Select the translation service and deadline for translating <b>{{data."
-"wordCount}} words</b> into <b>{{data.language}}</b>:"
-msgstr ""
-"Selezioni il tipo di servizio e la scadenza per la traduzione di <b>{{data."
-"wordCount}} parole</b> in <b>{{data.language}}</b>:"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:206
-msgid "There is no content to be translated."
-msgstr "Non sono presenti contenuti da tradurre."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/views/templates/admin-extension-templates.php:208
-msgid "Your comment to Supertext"
-msgstr "Commento per Supertext"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Comotive/Util/Date.php:322
+#: src/Comotive/Util/Date.php:322
 msgid "o'clock"
 msgstr "Ora"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Comotive/Util/StringUtils.php:553
+#: src/Comotive/Util/StringUtils.php:553
 #, php-format
 msgid "Your password must be at least %s long"
 msgstr "La password deve contenere almeno %s caratteri"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Comotive/Util/StringUtils.php:556
+#: src/Comotive/Util/StringUtils.php:556
 msgid "Your passwords do not match"
 msgstr "Le password non coincidono"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Comotive/Util/StringUtils.php:560
+#: src/Comotive/Util/StringUtils.php:560
 msgid "Please enter your password"
 msgstr "Inserire una password"
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Comotive/Helper/Metabox.php:382
-msgid "Choose picture"
-msgstr "Seleziona foto"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Comotive/Helper/Metabox.php:385
-msgid "Remove picture"
-msgstr "Elimina foto"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:143
-msgid "An error occurred"
-msgstr "Si è verificato un errore"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:144
-msgid "A network error occurred"
-msgstr "Si è verificato un errore di rete"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:145
-msgid "Validation error"
-msgstr "Errore di controllo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:147
-msgid ""
-"The post was not saved. If you proceed with the translation, the unsaved "
-"changes will be lost."
-msgstr ""
-"L’articolo non è stato salvato. Se si desidera procedere con la traduzione, "
-"le modifiche non verranno considerate."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:148
-msgid "Please only select posts in the same language."
-msgstr "Scegliere solamente articoli nella stessa lingua."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:149
-msgid "Blocked posts cannot be translated."
-msgstr "Gli articoli bloccati non possono essere tradotti."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:150
-msgid "Please select content to be translated."
-msgstr "Selezionare il contenuto da tradurre."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:151
-msgid "Please select the target language."
-msgstr "Selezionare la lingua d’arrivo."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:152
-msgid "Please choose a quote."
-msgstr "Selezionare un’offerta."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:153
-msgid "Your Supertext translation order"
-msgstr "Incarico di traduzione a Supertext"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:155
-msgid "Cancel"
-msgstr "Interrompi"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:156
-msgid "Back"
-msgstr "Indietro"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:157
-msgid "Next"
-msgstr "Continua"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:158
-msgid "Close window"
-msgstr "Chiudi finestra"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:159
-msgid "Please select at least one post"
-msgstr "Selezionare almeno un articolo."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Core.php:160
-msgid "<i>{0}</i> is already being translated into {1} (order id: {2})"
-msgstr "<i>{0}</i> viene già tradotto in {1} (numero dell’incarico: {2})"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:41
-msgid "User and languages"
-msgstr "Utente e lingue"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:51
-msgid "Translatable fields"
-msgstr "Campi traducibili"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:87
-msgid "Settings › Supertext"
-msgstr "Impostazioni › Supertext"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:143
-msgid "Settings saved"
-msgstr "Impostazioni salvate"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Settings/SettingsPage.php:181
-msgid "Save settings"
-msgstr "Salva impostazioni"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:124
-msgid "The order has been placed successfully."
-msgstr "L’ordine è stato concluso con successo."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:125
-#, php-format
-msgid "Your order number is %s."
-msgstr "Il numero d’ordine è %s."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:126
-#, php-format
-msgid "The post will be translated by %s."
-msgstr "L’articolo verrà tradotto entro le ore %s."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:168
-#, php-format
-msgid ""
-"Translation order into %s has been placed successfully. Your order number is "
-"%s."
-msgstr ""
-"L’ordine per la traduzione dell’articolo secondo %s è stato registrato "
-"correttamente. Il numero d’ordine è %s."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:205
-msgid "The post to be translated has been created."
-msgstr "L’articolo da tradurre è stato creato."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AjaxRequestHandler.php:247
-msgid "In translation"
-msgstr "In traduzione"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/CallbackHandler.php:73
-msgid "translation saved successfully"
-msgstr "La traduzione di Supertext è stata importata con successo."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Menu.php:31
-msgid "Supertext - Settings"
-msgstr "Impostazioni Supertext"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/Menu.php:32
-msgid "Supertext"
-msgstr "Supertext"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AdminExtension.php:119
-msgid ""
-"The PHP function <em>curl_exec</em> is disabled. Please enable it in order "
-"to be able to send requests to Supertext."
-msgstr ""
-"La funzione PHP <em>curl_exec</em> è disattivata. È necessario attivare la "
-"funzione per poter inviare una richiesta a Supertext."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AdminExtension.php:131
-msgid ""
-"The Supertext Translation plugin cannot be used. Polylang is not installed "
-"or hasn't been activated."
-msgstr ""
-"Il plugin Supertext Translation non può essere utilizzato. Polylang non è "
-"installato o non è attivato."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AdminExtension.php:139
-msgid ""
-"The Supertext Translation plugin cannot be used. It hasn't been configured "
-"correctly."
-msgstr ""
-"Il plugin Supertext Translation non può essere utilizzato dal momento che "
-"non è configurato correttamente."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AdminExtension.php:160
-#, php-format
-msgid ""
-"The post was sent to Supertext and is now being translated. Your order "
-"number is %s."
-msgstr ""
-"L’articolo è stato inviato a Supertext e verrà tradotto. Il numero d’ordine "
-"è %s."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Backend/AdminExtension.php:227
-msgid "Supertext Plugin Log"
-msgstr "Log plugin Supertext"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PostMediaContentAccessor.php:19
-msgid "Media"
-msgstr "Media"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PostMediaContentAccessor.php:31
-msgid "Image captions"
-msgstr "Testi immagini"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:21
-msgid "SEO-optimized title"
-msgstr "Titolo ottimizzato SEO"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:25
-msgid "SEO-optimized description"
-msgstr "Descrizione ottimizzata SEO"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:29
-msgid "Focus keywords"
-msgstr "Focus keyword"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:33
-msgid "Facebook title"
-msgstr "Titolo Facebook"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:37
-msgid "Facebook description"
-msgstr "Descrizione Facebook"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:51
-msgid "BE page builder content"
-msgstr "Contenuto BE Page Builder"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/BeaverBuilderContentAccessor.php:32
-msgid "Beaver Builder (Plugin)"
-msgstr "Beaver Builder (plugin)"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/BeaverBuilderContentAccessor.php:44
-msgid "Beaver Builder content"
-msgstr "Contenuto Beaver Builder"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/AcfContentAccessor.php:38
-msgid "Advanced Custom Field (Plugin)"
-msgstr "Advanced Custom Field (plugin)"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PostContentAccessor.php:30
-msgid "Post"
-msgstr "Articolo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PostContentAccessor.php:42
-msgid "Title"
-msgstr "Titolo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PostContentAccessor.php:48
-msgid "Content"
-msgstr "Testo"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Helper/PostContentAccessor.php:54
-msgid "Excerpt"
-msgstr "Estratto"
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:34
-#, php-format
-msgid "Supertext doesn't support <b>%s</b>."
-msgstr "Supertext non supporta <b>%s</b>."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/Wrapper.php:137
-msgid "Could not create an order with Supertext."
-msgstr "Non è stato possibile creare un ordine per Supertext."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/ApiDataException.php:9
-msgid "Supertext API returned unsupported data."
-msgstr "Non è stato possibile elaborare i dati API di Supertext."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/ApiConnectionException.php:9
-msgid "Supertext API connection failed."
-msgstr "Collegamento all’API di Supertext non riuscito."
-
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/ApiConnection.php:123
+#: src/Supertext/Polylang/Api/ApiConnection.php:123
 msgid ""
 "The Supertext Translation plugin could not login into the Supertext API. "
 "Please verify the entered account username and API-Key in the plugin "
@@ -561,6 +50,527 @@ msgstr ""
 "Il plugin Supertext Translation non è riuscito a identificarla nel sistema "
 "di Supertext. Controllare le impostazioni utente."
 
-#: /var/www/other/wp-polylang/wp-content/plugins/polylang-supertext/src/Supertext/Polylang/Api/ApiConnection.php:127
+#: src/Supertext/Polylang/Api/ApiConnection.php:127
 msgid "HTTP-Request error occurred. Details: "
 msgstr "Errore di richiesta HTTP. Dettagli:"
+
+#: src/Supertext/Polylang/Api/ApiConnectionException.php:9
+msgid "Supertext API connection failed."
+msgstr "Collegamento all’API di Supertext non riuscito."
+
+#: src/Supertext/Polylang/Api/ApiDataException.php:9
+msgid "Supertext API returned unsupported data."
+msgstr "Non è stato possibile elaborare i dati API di Supertext."
+
+#: src/Supertext/Polylang/Api/Wrapper.php:34
+#, php-format
+msgid "Supertext doesn't support <b>%s</b>."
+msgstr "Supertext non supporta <b>%s</b>."
+
+#: src/Supertext/Polylang/Api/Wrapper.php:138
+msgid "Could not create an order with Supertext."
+msgstr "Non è stato possibile creare un ordine per Supertext."
+
+#: src/Supertext/Polylang/Backend/AdminExtension.php:119
+msgid ""
+"The PHP function <em>curl_exec</em> is disabled. Please enable it in order "
+"to be able to send requests to Supertext."
+msgstr ""
+"La funzione PHP <em>curl_exec</em> è disattivata. È necessario attivare la "
+"funzione per poter inviare una richiesta a Supertext."
+
+#: src/Supertext/Polylang/Backend/AdminExtension.php:131
+msgid ""
+"The Supertext Translation plugin cannot be used. Polylang is not installed "
+"or hasn't been activated."
+msgstr ""
+"Il plugin Supertext Translation non può essere utilizzato. Polylang non è "
+"installato o non è attivato."
+
+#: src/Supertext/Polylang/Backend/AdminExtension.php:139
+msgid ""
+"The Supertext Translation plugin cannot be used. It hasn't been configured "
+"correctly."
+msgstr ""
+"Il plugin Supertext Translation non può essere utilizzato dal momento che "
+"non è configurato correttamente."
+
+#: src/Supertext/Polylang/Backend/AdminExtension.php:160
+#, php-format
+msgid ""
+"The post was sent to Supertext and is now being translated. Your order "
+"number is %s."
+msgstr ""
+"L’articolo è stato inviato a Supertext e verrà tradotto. Il numero d’ordine "
+"è %s."
+
+#: src/Supertext/Polylang/Backend/AdminExtension.php:227
+msgid "Supertext Plugin Log"
+msgstr "Log plugin Supertext"
+
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:124
+msgid "The order has been placed successfully."
+msgstr "L’ordine è stato concluso con successo."
+
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:125
+#, php-format
+msgid "Your order number is %s."
+msgstr "Il numero d’ordine è %s."
+
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:126
+#, php-format
+msgid "The post will be translated by %s."
+msgstr "L’articolo verrà tradotto entro le ore %s."
+
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:168
+#, php-format
+msgid ""
+"Translation order into %s has been placed successfully. Your order number is "
+"%s."
+msgstr ""
+"L’ordine per la traduzione dell’articolo secondo %s è stato registrato "
+"correttamente. Il numero d’ordine è %s."
+
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:205
+msgid "The post to be translated has been created."
+msgstr "L’articolo da tradurre è stato creato."
+
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:247
+msgid "In translation"
+msgstr "In traduzione"
+
+#: src/Supertext/Polylang/Backend/CallbackHandler.php:73
+msgid "translation saved successfully"
+msgstr "La traduzione di Supertext è stata importata con successo."
+
+#: src/Supertext/Polylang/Backend/Menu.php:31
+msgid "Supertext - Settings"
+msgstr "Impostazioni Supertext"
+
+#: src/Supertext/Polylang/Backend/Menu.php:32
+msgid "Supertext"
+msgstr "Supertext"
+
+#: src/Supertext/Polylang/Core.php:144
+msgid "An error occurred"
+msgstr "Si è verificato un errore"
+
+#: src/Supertext/Polylang/Core.php:145
+msgid "A network error occurred"
+msgstr "Si è verificato un errore di rete"
+
+#: src/Supertext/Polylang/Core.php:146
+msgid "Validation error"
+msgstr "Errore di controllo"
+
+#: src/Supertext/Polylang/Core.php:147 src/Supertext/Polylang/Core.php:155
+#: views/templates/admin-extension-templates.php:5
+msgid "Order translation"
+msgstr "Assegna incarico di traduzione"
+
+#: src/Supertext/Polylang/Core.php:148
+msgid ""
+"The post was not saved. If you proceed with the translation, the unsaved "
+"changes will be lost."
+msgstr ""
+"L’articolo non è stato salvato. Se si desidera procedere con la traduzione, "
+"le modifiche non verranno considerate."
+
+#: src/Supertext/Polylang/Core.php:149
+msgid "Please only select posts in the same language."
+msgstr "Scegliere solamente articoli nella stessa lingua."
+
+#: src/Supertext/Polylang/Core.php:150
+msgid "Blocked posts cannot be translated."
+msgstr "Gli articoli bloccati non possono essere tradotti."
+
+#: src/Supertext/Polylang/Core.php:151
+msgid "Please select content to be translated."
+msgstr "Selezionare il contenuto da tradurre."
+
+#: src/Supertext/Polylang/Core.php:152
+msgid "Please select the target language."
+msgstr "Selezionare la lingua d’arrivo."
+
+#: src/Supertext/Polylang/Core.php:153
+msgid "Please choose a quote."
+msgstr "Selezionare un’offerta."
+
+#: src/Supertext/Polylang/Core.php:154
+msgid "Your Supertext translation order"
+msgstr "Incarico di traduzione a Supertext"
+
+#: src/Supertext/Polylang/Core.php:156
+msgid "Cancel"
+msgstr "Interrompi"
+
+#: src/Supertext/Polylang/Core.php:157
+msgid "Back"
+msgstr "Indietro"
+
+#: src/Supertext/Polylang/Core.php:158
+msgid "Next"
+msgstr "Continua"
+
+#: src/Supertext/Polylang/Core.php:159
+msgid "Close window"
+msgstr "Chiudi finestra"
+
+#: src/Supertext/Polylang/Core.php:160
+msgid "Please select at least one post"
+msgstr "Selezionare almeno un articolo."
+
+#: src/Supertext/Polylang/Core.php:161
+msgid "<i>{0}</i> is already being translated into {1} (order id: {2})"
+msgstr "<i>{0}</i> viene già tradotto in {1} (numero dell’incarico: {2})"
+
+#: src/Supertext/Polylang/Helper/AcfContentAccessor.php:38
+msgid "Advanced Custom Field (Plugin)"
+msgstr "Advanced Custom Field (plugin)"
+
+#: src/Supertext/Polylang/Helper/BeaverBuilderContentAccessor.php:32
+msgid "Beaver Builder (Plugin)"
+msgstr "Beaver Builder (plugin)"
+
+#: src/Supertext/Polylang/Helper/BeaverBuilderContentAccessor.php:44
+msgid "Beaver Builder content"
+msgstr "Contenuto Beaver Builder"
+
+#: src/Supertext/Polylang/Helper/CustomFieldsContentAccessor.php:39
+#: views/backend/settings-custom-fields.php:20
+msgid "General custom fields"
+msgstr "Campi generali definiti dall’utente"
+
+#: src/Supertext/Polylang/Helper/PcfContentAccessor.php:61
+#: views/backend/settings-pcf.php:29
+msgid "Plugin fields"
+msgstr "Campi plugin"
+
+#: src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:21
+msgid "SEO-optimized title"
+msgstr "Titolo ottimizzato SEO"
+
+#: src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:25
+msgid "SEO-optimized description"
+msgstr "Descrizione ottimizzata SEO"
+
+#: src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:29
+msgid "Focus keywords"
+msgstr "Focus keyword"
+
+#: src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:33
+msgid "Facebook title"
+msgstr "Titolo Facebook"
+
+#: src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:37
+msgid "Facebook description"
+msgstr "Descrizione Facebook"
+
+#: src/Supertext/Polylang/Helper/PluginFieldDefinitions.php:51
+msgid "BE page builder content"
+msgstr "Contenuto BE Page Builder"
+
+#: src/Supertext/Polylang/Helper/PostContentAccessor.php:30
+msgid "Post"
+msgstr "Articolo"
+
+#: src/Supertext/Polylang/Helper/PostContentAccessor.php:42
+msgid "Title"
+msgstr "Titolo"
+
+#: src/Supertext/Polylang/Helper/PostContentAccessor.php:48
+msgid "Content"
+msgstr "Testo"
+
+#: src/Supertext/Polylang/Helper/PostContentAccessor.php:54
+msgid "Excerpt"
+msgstr "Estratto"
+
+#: src/Supertext/Polylang/Helper/PostMediaContentAccessor.php:19
+msgid "Media"
+msgstr "Media"
+
+#: src/Supertext/Polylang/Helper/PostMediaContentAccessor.php:31
+msgid "Image captions"
+msgstr "Testi immagini"
+
+#: src/Supertext/Polylang/Helper/PostTaxonomyAccessor.php:19
+msgid "Taxonomy"
+msgstr "Tassonomia"
+
+#: src/Supertext/Polylang/Helper/PostTaxonomyAccessor.php:31
+msgid "Categories"
+msgstr "Categorie"
+
+#: src/Supertext/Polylang/Helper/PostTaxonomyAccessor.php:37
+msgid "Tags"
+msgstr "Tag"
+
+#: src/Supertext/Polylang/Settings/SettingsPage.php:41
+msgid "User and languages"
+msgstr "Utente e lingue"
+
+#: src/Supertext/Polylang/Settings/SettingsPage.php:51
+msgid "Translatable fields"
+msgstr "Campi traducibili"
+
+#: src/Supertext/Polylang/Settings/SettingsPage.php:58
+#: views/backend/settings-shortcodes.php:19
+msgid "Shortcodes"
+msgstr "Shortcode"
+
+#: src/Supertext/Polylang/Settings/SettingsPage.php:67
+#: views/backend/settings-workflow.php:25
+msgid "Workflow"
+msgstr "Flusso di lavoro"
+
+#: src/Supertext/Polylang/Settings/SettingsPage.php:87
+msgid "Settings › Supertext"
+msgstr "Impostazioni › Supertext"
+
+#: src/Supertext/Polylang/Settings/SettingsPage.php:143
+msgid "Settings saved"
+msgstr "Impostazioni salvate"
+
+#: src/Supertext/Polylang/Settings/SettingsPage.php:181
+msgid "Save settings"
+msgstr "Salva impostazioni"
+
+#: views/backend/settings-acf.php:30
+msgid "Advanced Custom Fields (Plugin)"
+msgstr "Advanced Custom Fields (plugin)"
+
+#: views/backend/settings-acf.php:32
+msgid "Please select the custom fields that can be used for translations."
+msgstr "Selezionare i campi definiti dall’utente che possono essere tradotti."
+
+#: views/backend/settings-custom-fields.php:5
+msgid "Custom field name..."
+msgstr "Nome del campo definito dall’utente..."
+
+#: views/backend/settings-custom-fields.php:22
+msgid "Please add the custom fields that can be used for translations."
+msgstr ""
+"Inserire i campi definiti dall’utente che possono essere utilizzati per le "
+"traduzioni."
+
+#: views/backend/settings-custom-fields.php:26
+msgid "Add field"
+msgstr "Aggiungere campo"
+
+#: views/backend/settings-languages.php:40
+#: views/templates/admin-extension-templates.php:153
+msgid "Please select"
+msgstr "Seleziona"
+
+#: views/backend/settings-languages.php:56
+msgid "Language settings"
+msgstr "Imposta lingue"
+
+#: views/backend/settings-languages.php:73
+msgid "Please configure the languages within the polylang plugin."
+msgstr "Configurare le lingue in Polylang."
+
+#: views/backend/settings-pcf.php:31
+msgid "Please select the fields that can be used for translations."
+msgstr "Selezionare i campi che possono essere tradotti."
+
+#: views/backend/settings-shortcodes.php:10
+msgid "Attribute name..."
+msgstr "Nome attributo..."
+
+#: views/backend/settings-shortcodes.php:11
+#: views/backend/settings-shortcodes.php:49
+msgid "Functions..."
+msgstr "Funzioni..."
+
+#: views/backend/settings-shortcodes.php:21
+msgid "Please define any shortcode attributes you want to have translated."
+msgstr ""
+"Inserire tutti gli attributi dello shortcode che si desiderano far tradurre."
+
+#: views/backend/settings-shortcodes.php:24
+msgid ""
+"Please define the encoding process for all encoded and enclosed content. "
+"Available encoding functions are: rawurl, url and base64"
+msgstr ""
+"Inserire il processo di codificazione per ogni contenuto codificato "
+"riservato. Funzioni disponibili: rawurl, url e base64"
+
+#: views/backend/settings-shortcodes.php:46
+msgid "Encoding for enclosed content"
+msgstr "Codifica contenuto chiuso"
+
+#: views/backend/settings-shortcodes.php:54
+msgid "Translatable attributes"
+msgstr "Attributi traducibili"
+
+#: views/backend/settings-shortcodes.php:56
+msgid "Add attribute"
+msgstr "Aggiungere attributo"
+
+#: views/backend/settings-users.php:26
+msgid "Select user"
+msgstr "Seleziona utente"
+
+#: views/backend/settings-users.php:34
+msgid "Supertext Accounts"
+msgstr "Account Supertext"
+
+#: views/backend/settings-users.php:38
+#, php-format
+msgid ""
+"You need at least one Supertext Account. You can sign up <a href=\"%s"
+"\">here</a>."
+msgstr ""
+"È necessario disporre almeno di un account Supertext. La registrazione può "
+"essere effettuata <a href=\"%s\">qui</a>."
+
+#: views/backend/settings-users.php:43
+msgid "Please fill in a Supertext API key for every user."
+msgstr "Per ogni utente inserire l’API Key di Supertext."
+
+#: views/backend/settings-users.php:47
+#, php-format
+msgid ""
+"You will find the API key on the <a href=\"%s\">Supertext settings page</a>."
+msgstr "L’API Key si trova tra le <a href=\"%s\">impostazioni</a>."
+
+#: views/backend/settings-users.php:49
+msgid "Only configured users can use the translation features."
+msgstr "Solo gli utenti registrati qui possono far tradurre articoli."
+
+#: views/backend/settings-users.php:55 views/backend/settings-users.php:56
+msgid "User"
+msgstr "Utente"
+
+#: views/backend/settings-users.php:57
+msgid "API Key"
+msgstr "API Key"
+
+#: views/backend/settings-users.php:65
+msgid "Delete user"
+msgstr "Elimina utente"
+
+#: views/backend/settings-users.php:66
+msgid "Add user"
+msgstr "Aggiungi utente"
+
+#: views/backend/settings-workflow.php:12
+msgid "Live"
+msgstr "Live"
+
+#: views/backend/settings-workflow.php:13
+msgid "Development"
+msgstr "Sviluppo"
+
+#: views/backend/settings-workflow.php:17
+#: views/backend/settings-workflow.php:19
+msgid "Other"
+msgstr "Altro"
+
+#: views/backend/settings-workflow.php:28
+msgid "Automatically publish translations"
+msgstr "Pubblica automaticamente le traduzioni"
+
+#: views/backend/settings-workflow.php:32
+msgid "Allow Supertext to overwrite published posts"
+msgstr "Cosentire a Supertext di sovrascrivere gli articoli pubblicati"
+
+#: views/backend/settings-workflow.php:35
+msgid "API Server"
+msgstr "Server API"
+
+#: views/templates/admin-extension-templates.php:55
+msgid "Loading"
+msgstr "Caricamento in corso"
+
+#: views/templates/admin-extension-templates.php:62
+msgid "Select content and language"
+msgstr "Seleziona contenuto e lingua"
+
+#: views/templates/admin-extension-templates.php:63
+msgid "Select service and deadline"
+msgstr "Seleziona servizio e scadenza"
+
+#: views/templates/admin-extension-templates.php:64
+#: views/templates/admin-extension-templates.php:215
+msgid "Confirmation"
+msgstr "Conferma"
+
+#: views/templates/admin-extension-templates.php:74
+msgid "Content to be translated"
+msgstr "Definisci contenuti da tradurre"
+
+#: views/templates/admin-extension-templates.php:79
+#, php-format
+msgid ""
+"Translatable custom fields can be defined in the <a target=\"_parent\" href="
+"\"%s\">settings</a>."
+msgstr ""
+"I campi traducibili definiti dall’utente possono essere indicati nelle <a "
+"target=\"_parent\" href=\"%s\">impostazioni</a>."
+
+#: views/templates/admin-extension-templates.php:92
+msgid "blocked"
+msgstr "bloccato"
+
+#: views/templates/admin-extension-templates.php:92
+msgid "draft"
+msgstr "Bozza"
+
+#: views/templates/admin-extension-templates.php:104
+msgid ""
+"The post cannot be translated. It is blocked by a translation order in "
+"progress."
+msgstr ""
+"L’articolo non può essere tradotto visto che è bloccato da un incarico di "
+"traduzione in corso."
+
+#: views/templates/admin-extension-templates.php:108
+msgid ""
+"The post status is <b>draft</b>. Are you sure you want to order a "
+"translation for this article?"
+msgstr ""
+"L’articolo è stato salvato come <b>bozza</b>. Richiedere una traduzione per "
+"l’articolo?"
+
+#: views/templates/admin-extension-templates.php:112
+msgid "Please select the content to be translated."
+msgstr "Selezionare il contenuto da tradurre."
+
+#: views/templates/admin-extension-templates.php:135
+msgid "Not present in this post"
+msgstr "Non disponibile in questo articolo"
+
+#: views/templates/admin-extension-templates.php:145
+msgid "Remove this post"
+msgstr "Rimuovere questo articolo"
+
+#: views/templates/admin-extension-templates.php:148
+msgid "Language"
+msgstr "Lingua"
+
+#: views/templates/admin-extension-templates.php:150
+msgid "Translate from <b id=\"sttr-order-source-language-label\">-</b> into "
+msgstr "Traduzione <b id=\"sttr-order-source-language-label\">-</b>"
+
+#: views/templates/admin-extension-templates.php:168
+msgid "Service and deadline"
+msgstr "Qualità e scadenza"
+
+#: views/templates/admin-extension-templates.php:170
+msgid ""
+"Select the translation service and deadline for translating <b>{{data."
+"wordCount}} words</b> into <b>{{data.language}}</b>:"
+msgstr ""
+"Selezioni il tipo di servizio e la scadenza per la traduzione di <b>{{data."
+"wordCount}} parole</b> in <b>{{data.language}}</b>:"
+
+#: views/templates/admin-extension-templates.php:206
+msgid "There is no content to be translated."
+msgstr "Non sono presenti contenuti da tradurre."
+
+#: views/templates/admin-extension-templates.php:208
+msgid "Your comment to Supertext"
+msgstr "Commento per Supertext"

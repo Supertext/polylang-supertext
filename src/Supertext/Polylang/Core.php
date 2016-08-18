@@ -17,6 +17,7 @@ use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\CustomFieldsContentAccessor;
 use Supertext\Polylang\Helper\PcfContentAccessor;
 use Supertext\Polylang\Helper\PluginFieldDefinitions;
+use Supertext\Polylang\Helper\PostTaxonomyContentAccessor;
 use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostContentAccessor;
 use Supertext\Polylang\Helper\PostMediaContentAccessor;
@@ -354,6 +355,7 @@ class Core
     $contentAccessors = array(
       'post' => new PostContentAccessor($textProcessor),
       'media' => new PostMediaContentAccessor(),
+      'taxonomy' => new PostTaxonomyContentAccessor(),
       'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $this->getLibrary())
     );
 
