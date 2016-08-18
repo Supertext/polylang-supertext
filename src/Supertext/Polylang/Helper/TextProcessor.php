@@ -19,6 +19,11 @@ class TextProcessor
   private $library;
 
   /**
+   * @var array save shortcodes cached for one replacement process
+   */
+  private $cachedSavedShortcodes;
+
+  /**
    * @param Library $library
    */
   public function __construct($library)
@@ -33,38 +38,36 @@ class TextProcessor
    */
   public function replaceShortcodes($content)
   {
-    $savedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+    $this->cachedSavedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
     $regex = $this->library->getShortcodeRegex();
 
-    return preg_replace_callback("/$regex/s", function ($m) use ($savedShortcodes) {
-      return $this->replaceShortcode($m, $savedShortcodes);
-    }, $content);
+    return preg_replace_callback("/$regex/s", array(&$this, 'replaceShortcode'), $content);
   }
 
   /**
    * Effectively replaces one shortcode with a html node.
-   * @param $matches matches (0: match, 1, 6: escaping chars, 2: shortcode tag name, 3: attributes, 5: enclosed content/data)
+   * @param $match matches (0: match, 1, 6: escaping chars, 2: shortcode tag name, 3: attributes, 5: enclosed content/data)
    * @param $savedShortcodes saved shortcodes
    * @return string replacement string
    */
-  private function replaceShortcode($matches, $savedShortcodes)
+  public function replaceShortcode($match)
   {
     //return escaped shortcodes, do not replace
-    if ($matches[1] == '[' && $matches[6] == ']') {
-      return $matches[0];
+    if ($match[1] == '[' && $match[6] == ']') {
+      return $match[0];
     }
 
-    $tagName = $matches[2];
-    $attributes = shortcode_parse_atts($matches[3]);
-    $savedShortcode = isset($savedShortcodes[$tagName]) ? $savedShortcodes[$tagName] : array('attributes' => array());
+    $tagName = $match[2];
+    $attributes = shortcode_parse_atts($match[3]);
+    $savedShortcode = isset($this->cachedSavedShortcodes[$tagName]) ? $this->cachedSavedShortcodes[$tagName] : array('attributes' => array());
     $translatableShortcodeAttributes = $savedShortcode['attributes'];
-    $forceEnclosingForm = preg_match('/\[\s*\/\s*' . $tagName . '\s*\]/', $matches[0]);
+    $forceEnclosingForm = preg_match('/\[\s*\/\s*' . $tagName . '\s*\]/', $match[0]);
 
     $attributeNodes = $this->getAttributeNodes($attributes, $translatableShortcodeAttributes);
 
     //Enclosed content can contain shortcodes as well
-    if (!empty($matches[5])) {
-      $content = $matches[5];
+    if (!empty($match[5])) {
+      $content = $match[5];
       if (!empty($savedShortcode['content_encoding'])) {
         $content = $this->decodeEnclosedContent($content, $savedShortcode['content_encoding']);
       }
