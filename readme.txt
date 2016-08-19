@@ -2,7 +2,7 @@
 Contributors: msebel, comotive, supertext
 Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 3.8
-Tested up to: 4.5.3
+Tested up to: 4.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,12 @@ You can create an account at [Supertext] (https://www.supertext.ch/en/signup) if
 Get the API key from the Settings page: [Account Settings] (https://www.supertext.ch/customer/accountsettings)
 
 == Changelog ==
+
+= 2.4 =
+* Added shortcode replacement support for PHP with object context bug
+* Extended order creation request with additional plugin information
+* Added german formal language file
+* Added content accessors (for translation of categories and tags)
 
 = 2.3 =
 * Added new translations
