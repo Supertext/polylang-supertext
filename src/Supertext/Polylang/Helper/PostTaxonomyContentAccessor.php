@@ -26,17 +26,21 @@ class PostTaxonomyContentAccessor implements IContentAccessor
   {
     $translatableFields = array();
 
-    $translatableFields[] = array(
-      'title' => __('Categories', 'polylang-supertext'),
-      'name' => 'post_categories',
-      'checkedPerDefault' => false
-    );
+    if(count(wp_get_object_terms($postId, 'category'))){
+      $translatableFields[] = array(
+        'title' => __('Categories', 'polylang-supertext'),
+        'name' => 'post_categories',
+        'checkedPerDefault' => false
+      );
+    }
 
-    $translatableFields[] = array(
-      'title' => __('Tags', 'polylang-supertext'),
-      'name' => 'post_tags',
-      'checkedPerDefault' => false
-    );
+    if(count(wp_get_object_terms($postId, 'post_tag'))) {
+      $translatableFields[] = array(
+        'title' => __('Tags', 'polylang-supertext'),
+        'name' => 'post_tags',
+        'checkedPerDefault' => false
+      );
+    }
 
     return $translatableFields;
   }
