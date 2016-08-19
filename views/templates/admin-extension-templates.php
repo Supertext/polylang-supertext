@@ -143,6 +143,7 @@
       </div>
       <div class="clearfix"></div>
       <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post', 'polylang-supertext');?></button>
+      <button id="sttr-order-show-item-content" class="button button-secondary" style="display: none"><?php _e('Show content', 'polylang-supertext');?></button>
       <div class="clearfix"></div>
     </div>
     <h2><?php _e('Language', 'polylang-supertext');?></h2>

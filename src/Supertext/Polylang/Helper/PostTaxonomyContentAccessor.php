@@ -3,7 +3,6 @@
 namespace Supertext\Polylang\Helper;
 use Supertext\Polylang\Api\Multilang;
 
-
 /**
  * Class PostTaxonomyContentAccessor
  * @package Supertext\Polylang\Helper
@@ -40,6 +39,15 @@ class PostTaxonomyContentAccessor implements IContentAccessor
     );
 
     return $translatableFields;
+  }
+
+  /**
+   * @param $post
+   * @return array
+   */
+  public function getRawTexts($post)
+  {
+    return $this->getTexts($post, array('post_categories' => true, 'post_tags' => true));
   }
 
   /**

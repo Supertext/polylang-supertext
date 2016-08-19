@@ -67,6 +67,15 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
 
   /**
    * @param $post
+   * @return array
+   */
+  public function getRawTexts($post)
+  {
+    return get_post_meta($post->ID);
+  }
+
+  /**
+   * @param $post
    * @param $selectedTranslatableFields
    * @return array
    */

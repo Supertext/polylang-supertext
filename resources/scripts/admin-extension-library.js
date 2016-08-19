@@ -319,6 +319,7 @@ Supertext.Polylang = (function (win, doc, $) {
       orderItemList: '.sttr-order-list',
       orderItemRemoveIcon: '.dashicons-no-alt',
       orderItemRemoveButton: '#sttr-order-remove-item',
+      orderShowItemContentButton: '#sttr-order-show-item-content',
       orderStep: '#sttr-order-step',
       contentStepForm: '#sttr-content-step-form',
       orderProgressBarSteps: '#sttr-order-progress-bar li',
@@ -490,7 +491,7 @@ Supertext.Polylang = (function (win, doc, $) {
     self.loadData = function () {
       return doGetRequest(
         context.ajaxUrl, {
-          action: 'sttr_getPostTranslationData',
+          action: 'sttr_getPostTranslationInfo',
           postIds: state.postIds
         }
       );
@@ -535,6 +536,7 @@ Supertext.Polylang = (function (win, doc, $) {
       $itemAnchors.click(onOrderItemAnchorClick);
       $itemAnchors.find(selectors.orderItemRemoveIcon).click(onOrderItemRemoveIconClick);
       $(selectors.orderItemRemoveButton).click(onOrderItemRemoveButtonClick);
+      $(selectors.orderShowItemContentButton).click(onOrderShowItemContentButtonClick);
 
       activateOrderItem.call($(selectors.orderItemList + ' li:first a'));
     }
@@ -616,6 +618,39 @@ Supertext.Polylang = (function (win, doc, $) {
       });
 
       checkOrderItems();
+    }
+
+    /**
+     * Show item content button click event handler
+     * @param e
+     */
+    function onOrderShowItemContentButtonClick(e) {
+      e.preventDefault();
+      showItemContent.call($(selectors.orderItemList + ' li.active a'));
+    }
+
+    /**
+     * Show item content
+     */
+    function showItemContent() {
+      var $itemAnchor = $(this);
+      var postId = $itemAnchor.data('post-id');
+
+      doGetRequest(
+        context.ajaxUrl + '?action=sttr_getPostRawData',
+        {postId: postId}
+      )
+        .done(function (data) {
+          console.log(data);
+        });
+
+      doPostRequest(
+        context.ajaxUrl + '?action=sttr_getPostTranslationData&postId='+postId,
+        $(selectors.contentStepForm).serializeArray()
+      )
+        .done(function (data) {
+          console.log(data);
+        });
     }
 
     /**

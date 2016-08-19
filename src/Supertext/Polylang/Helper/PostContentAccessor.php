@@ -61,6 +61,15 @@ class PostContentAccessor implements IContentAccessor
 
   /**
    * @param $post
+   * @return array
+   */
+  public function getRawTexts($post)
+  {
+    return $post;
+  }
+
+  /**
+   * @param $post
    * @param $selectedTranslatableFields
    * @return array
    */

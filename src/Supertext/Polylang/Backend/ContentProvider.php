@@ -54,6 +54,30 @@ class ContentProvider
 
   /**
    * @param $post
+   * @return array|mixed|void
+   */
+  public function getRawData($post)
+  {
+    $result = array();
+
+    foreach ($this->contentAccessors as $id => $contentAccessor) {
+      $texts = $contentAccessor->getRawTexts($post);
+
+      if (count($texts) === 0) {
+        continue;
+      }
+
+      $result[$id] = $texts;
+    }
+
+    // Let developers add their own fields
+    $result = apply_filters('raw_data_for_post', $result, $post->ID);
+
+    return $result;
+  }
+
+  /**
+   * @param $post
    * @param $translatableFieldGroups
    * @return array|mixed|void
    */

@@ -38,6 +38,20 @@ class PostMediaContentAccessor implements IContentAccessor
 
   /**
    * @param $post
+   * @return array
+   */
+  public function getRawTexts($post)
+  {
+    return get_children(
+      array(
+        'post_parent' => $post->ID,
+        'post_type' => 'attachment',
+        'post_mime_type' => 'image')
+    );
+  }
+
+  /**
+   * @param $post
    * @param $selectedTranslatableFields
    * @return array
    */

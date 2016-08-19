@@ -40,6 +40,8 @@ class AjaxRequestHandler
     $this->log = $log;
     $this->contentProvider = $contentProvider;
 
+    add_action('wp_ajax_sttr_getPostTranslationInfo', array($this, 'getPostTranslationInfo'));
+    add_action('wp_ajax_sttr_getPostRawData', array($this, 'getPostRawData'));
     add_action('wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
     add_action('wp_ajax_sttr_getOffer', array($this, 'getOffer'));
     add_action('wp_ajax_sttr_createOrder', array($this, 'createOrder'));
@@ -48,7 +50,7 @@ class AjaxRequestHandler
   /**
    * Gets translation information about posts
    */
-  public function getPostTranslationData()
+  public function getPostTranslationInfo()
   {
     $translationInfo = array();
     $postIds = $_GET['postIds'];
@@ -67,6 +69,27 @@ class AjaxRequestHandler
     }
 
     self::setJsonOutput('success', $translationInfo);
+  }
+
+  /**
+   * Gets the raw data of a posts
+   */
+  public function getPostRawData()
+  {
+    $postId = $_GET['postId'];
+    $content = $this->contentProvider->getRawData(get_post($postId));
+    self::setJsonOutput('success', $content);
+  }
+
+  /**
+   * Gets the translation data of a post
+   */
+  public function getPostTranslationData()
+  {
+    $postId = $_GET['postId'];
+    $translatableFieldGroups = $_POST['translatableContents'];
+    $content = $this->contentProvider->getTranslationData(get_post($postId), $translatableFieldGroups[$postId]);
+    self::setJsonOutput('success', $content);
   }
 
   /**

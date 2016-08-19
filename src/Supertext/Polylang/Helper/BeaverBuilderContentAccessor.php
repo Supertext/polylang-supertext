@@ -51,6 +51,15 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
 
   /**
    * @param $post
+   * @return array
+   */
+  public function getRawTexts($post)
+  {
+    return FLBuilderModel::get_layout_data(null, $post->ID);
+  }
+
+  /**
+   * @param $post
    * @param $selectedTranslatableFields
    * @return array
    */

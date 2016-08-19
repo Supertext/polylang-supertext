@@ -91,6 +91,25 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
 
   /**
    * @param $post
+   * @return array
+   */
+  public function getRawTexts($post)
+  {
+    $rawTexts = array();
+
+    foreach ($this->pcfFieldDefinitions as $pcfFieldDefinition) {
+      $subFieldDefinitions = $pcfFieldDefinition['sub_field_definitions'];
+
+      foreach($subFieldDefinitions as $key => $subFieldDefinition){
+        $rawTexts[$key] = get_post_meta($post->ID, $key);
+      }
+    }
+
+    return $rawTexts;
+  }
+
+  /**
+   * @param $post
    * @param $selectedTranslatableFields
    * @return array
    */
