@@ -15,7 +15,7 @@ $languages = Multilang::getLanguages();
 foreach ($languages as $language) {
   // Get anonymous wrapper to get languages
   try{
-    $stMapping = Wrapper::getLanguageMapping($context->getApiConnection(), $language->slug);
+    $stMapping = Wrapper::getLanguageMapping($context->getApiConnection(), $language->slug, $language->name);
   }catch (Exception $e){
     echo '
         <div class="updated fade error">

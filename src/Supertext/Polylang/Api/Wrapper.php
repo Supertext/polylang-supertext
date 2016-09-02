@@ -20,18 +20,26 @@ class Wrapper
 
   /**
    * @param ApiConnection $connection
-   * @param string $lang polylang language code
+   * @param $languageCode
+   * @param $languageName
    * @return array mappings for this language code
    * @throws ApiConnectionException
    * @throws ApiDataException
    */
-  public static function getLanguageMapping($connection, $lang)
+  public static function getLanguageMapping($connection, $languageCode, $languageName)
   {
-    $httpResult = $connection->postRequest('translation/LanguageMapping/' . $lang);
+    $httpResult = $connection->postRequest('translation/LanguageMapping/' . $languageCode);
+
     $json = json_decode($httpResult);
 
-    if(empty($json->Languages)){
-      throw new ApiDataException(sprintf(__('Supertext doesn\'t support <b>%s</b>.', 'polylang-supertext'), $lang));
+    if (empty($json)) {
+      throw new ApiDataException(sprintf(__('Supertext doesn\'t support <b>%s</b>.', 'polylang-supertext'), $languageCode));
+    }
+
+    if (empty($json->Languages)) {
+      return array(
+        $languageCode => $languageName
+      );
     }
 
     $result = array();
@@ -64,13 +72,24 @@ class Wrapper
     $httpResult = $connection->postRequest('translation/quote', json_encode($json), true);
     $json = json_decode($httpResult);
 
-    if($json->WordCount == 0){
-      return array('options' => array());
+    if ($json->WordCount == 0) {
+      throw new ApiDataException(__('There is no content to be translated.', 'polylang-supertext'));
+    }
+
+    if (empty($json->Options)) {
+      throw new ApiDataException(
+        sprintf(
+          __('The quotes are missing (%s -> %s). Please contact Supertext.', 'polylang-supertext'),
+          __($sourceLanguage, 'polylang-supertext-langs'),
+          __($targetLanguage, 'polylang-supertext-langs')
+        )
+      );
     }
 
     $result = array(
       'wordCount' => $json->WordCount,
-      'language' => __($targetLanguage, 'polylang-supertext-langs')
+      'language' => __($targetLanguage, 'polylang-supertext-langs'),
+      'options' => array()
     );
 
     foreach ($json->Options as $option) {
@@ -166,14 +185,15 @@ class Wrapper
    * @param $groups
    * @return array
    */
-  public static function buildTranslationData($groups){
+  public static function buildTranslationData($groups)
+  {
     $result = array();
 
-    foreach($groups as $group){
+    foreach ($groups as $group) {
       $keys = explode(self::KEY_SEPARATOR, $group->GroupId);
       $postId = $keys[0];
 
-      if(!isset($result[$postId])){
+      if (!isset($result[$postId])) {
         $result[$postId] = array();
       }
 
@@ -193,15 +213,15 @@ class Wrapper
   {
     $items = array();
 
-    foreach($group as $key => $value){
-      if(is_array($value)){
-        $items = array_merge($items, self::getGroupItems($value, $keyPrefix.$key.self::KEY_SEPARATOR));
+    foreach ($group as $key => $value) {
+      if (is_array($value)) {
+        $items = array_merge($items, self::getGroupItems($value, $keyPrefix . $key . self::KEY_SEPARATOR));
         continue;
       }
 
       $items[] = array(
         'Content' => $value,
-        'Id' => $keyPrefix.$key
+        'Id' => $keyPrefix . $key
       );
     }
 
@@ -217,18 +237,18 @@ class Wrapper
   {
     $groupArray = array();
 
-    foreach($items as $item){
+    foreach ($items as $item) {
       $keys = explode(self::KEY_SEPARATOR, $item->Id);
-      $lastKeyIndex = count($keys)-1;
+      $lastKeyIndex = count($keys) - 1;
       $currentArray = &$groupArray;
 
-      foreach($keys as $index => $key){
-        if($index === $lastKeyIndex){
+      foreach ($keys as $index => $key) {
+        if ($index === $lastKeyIndex) {
           $currentArray[$key] = $item->Content;
           break;
         }
 
-        if(!isset($groupArray[$key])){
+        if (!isset($groupArray[$key])) {
           $currentArray[$key] = array();
         }
 

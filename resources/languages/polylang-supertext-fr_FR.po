@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2016-08-18 14:00+0200\n"
-"PO-Revision-Date: 2016-08-18 14:00+0200\n"
+"POT-Creation-Date: 2016-09-02 11:27+0200\n"
+"PO-Revision-Date: 2016-09-02 11:45+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: fr_FR\n"
@@ -62,12 +62,21 @@ msgstr "La connexion avec l’API de Supertext a échoué."
 msgid "Supertext API returned unsupported data."
 msgstr "Les données API de Supertext n’ont pas pu être traitées."
 
-#: src/Supertext/Polylang/Api/Wrapper.php:34
+#: src/Supertext/Polylang/Api/Wrapper.php:36
 #, php-format
 msgid "Supertext doesn't support <b>%s</b>."
 msgstr "<b>%s</b> n’est pas compatible avec Supertext."
 
-#: src/Supertext/Polylang/Api/Wrapper.php:138
+#: src/Supertext/Polylang/Api/Wrapper.php:76
+msgid "There is no content to be translated."
+msgstr "Il n’y a pas de contenu à traduire."
+
+#: src/Supertext/Polylang/Api/Wrapper.php:82
+#, php-format
+msgid "The quotes are missing (%s -> %s). Please contact Supertext."
+msgstr "Offre manquante (%s -> %s). Veuillez contacter Supertext."
+
+#: src/Supertext/Polylang/Api/Wrapper.php:157
 msgid "Could not create an order with Supertext."
 msgstr "Aucune commande pour Supertext n’a pu être créée."
 
@@ -108,21 +117,21 @@ msgstr ""
 msgid "Supertext Plugin Log"
 msgstr "Historique du plug-in de Supertext"
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:124
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:147
 msgid "The order has been placed successfully."
 msgstr "La commande a été passée avec succès."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:125
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:148
 #, php-format
 msgid "Your order number is %s."
 msgstr "Votre numéro de commande est le suivant: %s."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:126
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:149
 #, php-format
 msgid "The post will be translated by %s."
 msgstr "L’article sera traduit pour %sh."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:168
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:191
 #, php-format
 msgid ""
 "Translation order into %s has been placed successfully. Your order number is "
@@ -131,11 +140,11 @@ msgstr ""
 "Votre commande pour la traduction en %s a été transmise avec succès. Votre "
 "numéro de commande est le suivant: %s."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:205
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:228
 msgid "The post to be translated has been created."
 msgstr "L’article à traduire a été créé."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:247
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:270
 msgid "In translation"
 msgstr "En traduction"
 
@@ -296,15 +305,15 @@ msgstr "Médias"
 msgid "Image captions"
 msgstr "Légendes d’images"
 
-#: src/Supertext/Polylang/Helper/PostTaxonomyAccessor.php:19
+#: src/Supertext/Polylang/Helper/PostTaxonomyContentAccessor.php:18
 msgid "Taxonomy"
 msgstr "Taxonomie"
 
-#: src/Supertext/Polylang/Helper/PostTaxonomyAccessor.php:31
+#: src/Supertext/Polylang/Helper/PostTaxonomyContentAccessor.php:31
 msgid "Categories"
 msgstr "Catégories"
 
-#: src/Supertext/Polylang/Helper/PostTaxonomyAccessor.php:37
+#: src/Supertext/Polylang/Helper/PostTaxonomyContentAccessor.php:39
 msgid "Tags"
 msgstr "Ètiquettes"
 
@@ -359,7 +368,7 @@ msgid "Add field"
 msgstr "Ajouter un champ"
 
 #: views/backend/settings-languages.php:40
-#: views/templates/admin-extension-templates.php:153
+#: views/templates/admin-extension-templates.php:154
 msgid "Please select"
 msgstr "Veuillez choisir"
 
@@ -496,7 +505,7 @@ msgid "Select service and deadline"
 msgstr "Sélectionner un service et un délai"
 
 #: views/templates/admin-extension-templates.php:64
-#: views/templates/admin-extension-templates.php:215
+#: views/templates/admin-extension-templates.php:212
 msgid "Confirmation"
 msgstr "Confirmation"
 
@@ -549,15 +558,19 @@ msgstr "Non disponible dans cet article"
 msgid "Remove this post"
 msgstr "Supprimer cet article"
 
-#: views/templates/admin-extension-templates.php:148
+#: views/templates/admin-extension-templates.php:146
+msgid "Show content"
+msgstr "Montrer le contenu"
+
+#: views/templates/admin-extension-templates.php:149
 msgid "Language"
 msgstr "Langue"
 
-#: views/templates/admin-extension-templates.php:150
+#: views/templates/admin-extension-templates.php:151
 msgid "Translate from <b id=\"sttr-order-source-language-label\">-</b> into "
 msgstr "Traduction de <b id=\"sttr-order-source-language-label\">-</b> en"
 
-#: views/templates/admin-extension-templates.php:168
+#: views/templates/admin-extension-templates.php:169
 msgid "Service and deadline"
 msgstr "Qualité et délai"
 
@@ -569,10 +582,6 @@ msgstr ""
 "Choisissez le service de traduction et le délai pour la traduction de "
 "<b>{{data.wordCount}} mots</b> en<b>{{data.language}}</b>:"
 
-#: views/templates/admin-extension-templates.php:206
-msgid "There is no content to be translated."
-msgstr "Il n’y a pas de contenu à traduire."
-
-#: views/templates/admin-extension-templates.php:208
+#: views/templates/admin-extension-templates.php:205
 msgid "Your comment to Supertext"
 msgstr "Votre commentaire à Supertext"
