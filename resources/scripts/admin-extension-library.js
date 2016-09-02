@@ -912,6 +912,9 @@ Supertext.Polylang = (function (win, doc, $) {
    * Moves to previous step
    */
   function moveToPreviousStep() {
+    hideValidationError();
+    hideAjaxResponseError();
+    hideAjaxError();
     loadStep(state.currentStepNumber - 1);
   }
 
@@ -926,8 +929,14 @@ Supertext.Polylang = (function (win, doc, $) {
 
     steps[stepNumber - 1]
       .load()
-      .always(function () {
+      .done(function (){
+        removeNextButton();
         addNextButton(stepNumber);
+      })
+      .fail(function(){
+        removeNextButton();
+      })
+      .always(function () {
         updateButtonsInLoadedState(stepNumber);
       });
 
@@ -949,15 +958,20 @@ Supertext.Polylang = (function (win, doc, $) {
    * @param stepNumber
    */
   function addNextButton(stepNumber) {
-    if (state.nextButtonToken) {
-      modal.removeButton(state.nextButtonToken);
-    }
-
     state.nextButtonToken = modal.addButton(
       steps[stepNumber - 1].getNextButtonName(),
       'primary',
       moveToNextStep
     );
+  }
+
+  /**
+   * Removes the next button
+   */
+  function removeNextButton(){
+    if (state.nextButtonToken) {
+      modal.removeButton(state.nextButtonToken);
+    }
   }
 
   /**
@@ -1046,10 +1060,7 @@ Supertext.Polylang = (function (win, doc, $) {
       ).done(
         function (responseData) {
           if (responseData.responseType != 'success') {
-            modal.showError({
-              title: l10n.generalError,
-              message: responseData.body
-            });
+            showAjaxResponseError(responseData.body);
             defer.reject(responseData.body);
             return;
           }
@@ -1077,10 +1088,7 @@ Supertext.Polylang = (function (win, doc, $) {
       ).done(
         function (responseData) {
           if (responseData.responseType != 'success') {
-            modal.showError({
-              title: l10n.generalError,
-              message: responseData.body
-            });
+            showAjaxResponseError(responseData.body);
             defer.reject(responseData.body);
             return;
           }
@@ -1095,17 +1103,54 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
+   * Shows an ajax response error
+   * @param jqXHR
+   * @param textStatus
+   * @param errorThrown
+   */
+  function showAjaxResponseError(message) {
+    state.ajaxResponseErrorToken = modal.showError({
+      title: l10n.generalError,
+      message: message
+    });
+  }
+
+  /**
+   * Hides an ajax response error
+   */
+  function hideAjaxResponseError(){
+    if(!state.ajaxResponseErrorToken){
+      return;
+    }
+
+    modal.hideError(state.ajaxResponseErrorToken);
+    state.ajaxResponseErrorToken = null;
+  }
+
+  /**
    * Shows an ajax error
    * @param jqXHR
    * @param textStatus
    * @param errorThrown
    */
   function showAjaxError(jqXHR, textStatus, errorThrown) {
-    modal.showError({
+    state.ajaxErrorToken = modal.showError({
       title: l10n.networkError,
       message: jqXHR.status + ' ' + textStatus,
       details: errorThrown
     });
+  }
+
+  /**
+   * Hides an ajax error
+   */
+  function hideAjaxError(){
+    if(!state.ajaxErrorToken){
+      return;
+    }
+
+    modal.hideError(state.ajaxErrorToken);
+    state.ajaxErrorToken = null;
   }
 
   /**
