@@ -45,6 +45,18 @@
   animation-name: sttr-appear;
   animation-duration: 0.4s; }
 
+.sttr-modal-full-content {
+  position: fixed;
+  display: none;
+  z-index: 160010;
+  left: 5%;
+  top: 5%;
+  right: 5%;
+  bottom: 5%;
+  width: 90%;
+  height: 90%;
+  background: #fff; }
+
 .sttr-modal-content hr {
   margin-top: 15px; }
 
@@ -153,6 +165,17 @@
   border-top-color: #0085ba;
   animation: spin 1s infinite linear;
   margin: auto; }
+
+.sttr-modal-full-body {
+  position: absolute;
+  left: 0;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 16px 16px 0 16px;
+  border-top: 1px solid #ddd;
+  overflow: auto; }
 
 @keyframes spin {
   0% {

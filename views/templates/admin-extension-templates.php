@@ -11,7 +11,7 @@
     <div id="sttr-modal-notice" class="sttr-modal-notice"></div>
     <div class="sttr-modal-content wp-core-ui">
       <button class="sttr-modal-icon-close" type="button"><span class="dashicons dashicons-no"></span></button>
-      <div id="sttr-modal-header" class="sttr-modal-header">
+      <div class="sttr-modal-header">
         <div class="logo"><img src="<?php echo SUPERTEXT_POLYLANG_RESOURCE_URL . '/images/logo_supertext.png'; ?>" width="32" height="32" alt="Supertext" title="Supertext" /></div>
         <h1>{{data.title}}</h1>
         <div class="clearfix"></div>
@@ -25,6 +25,16 @@
       </div>
     </div>
     <div class="sttr-modal-background"> </div>
+    <div id="sttr-modal-full-content" class="sttr-modal-full-content" style="display: none">
+      <button class="sttr-modal-icon-close" type="button"><span class="dashicons dashicons-no"></span></button>
+      <div class="sttr-modal-header">
+        <h1>{{data.title}}</h1>
+      </div>
+      <div class="sttr-modal-full-body">
+        <div id="sttr-modal-full-body-content" class="sttr-modal-full-body-content">
+        </div>
+      </div>
+    </div>
   </div>
 </script>
 
@@ -87,7 +97,7 @@
         <ul>
           <# _.each(data.posts, function(post) { #>
             <li class="{{post.isInTranslation ? 'hasError' : ''}}">
-              <a href="#sttr-order-translatable-content-{{post.id}}" data-post-id="{{post.id}}">
+              <a href="#sttr-order-content-selection-{{post.id}}" data-post-id="{{post.id}}">
                 <span class="dashicons dashicons-no-alt"></span>
                 {{post.title}} ({{post.languageCode}}{{post.isInTranslation ? ', <?php _e('blocked', 'polylang-supertext'); ?>' : ''}}{{post.isDraft ? ', <?php _e('draft', 'polylang-supertext'); ?>' : ''}})
               </a>
@@ -97,7 +107,7 @@
       </div>
       <div class="sttr-order-item-details">
         <# _.each(data.posts, function(post) { #>
-          <div id="sttr-order-translatable-content-{{post.id}}" style="display: none;">
+          <div id="sttr-order-content-selection-{{post.id}}" style="display: none;">
             <h3>{{post.title}}</h3>
             <# if(post.isInTranslation){ #>
             <p class="notice notice-error">
@@ -143,7 +153,7 @@
       </div>
       <div class="clearfix"></div>
       <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post', 'polylang-supertext');?></button>
-      <button id="sttr-order-show-item-content" class="button button-secondary" style="display: none"><?php _e('Show content', 'polylang-supertext');?></button>
+      <button id="sttr-order-show-item-content" class="button button-secondary"><?php _e('Show content', 'polylang-supertext');?></button>
       <div class="clearfix"></div>
     </div>
     <h2><?php _e('Language', 'polylang-supertext');?></h2>
@@ -162,6 +172,16 @@
       </select>
     </p>
   </form>
+</script>
+
+<script type="text/html" id="tmpl-sttr-item-content">
+  <div>
+    <# _.each(data.translationData, function(element) { #>
+      {{element.path}}<br/>
+      {{element.value}}<br/><br/>
+    <# }); #>
+  </div>
+  <pre>{{data.rawData}}</pre>
 </script>
 
 <script type="text/html" id="tmpl-sttr-quote-step">

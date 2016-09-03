@@ -48,6 +48,10 @@ Supertext.Template = (function (win, doc, $, wp) {
        */
       contentStep: 'sttr-content-step',
       /**
+       * The item content id
+       */
+      itemContent: 'sttr-item-content',
+      /**
        * The quote step id
        */
       quoteStep: 'sttr-quote-step',
@@ -94,6 +98,8 @@ Supertext.Modal = (function (win, doc, $) {
     selectors = {
       modal: '#sttr-modal',
       modalBodyContent: '#sttr-modal-body-content',
+      modalFullContent: '#sttr-modal-full-content',
+      modalFullBodyContent: '#sttr-modal-full-body-content',
       modalNotice: '#sttr-modal-notice',
       modalCloseIcon: '.sttr-modal-icon-close',
       modalBackground: '.sttr-modal-background',
@@ -127,7 +133,11 @@ Supertext.Modal = (function (win, doc, $) {
       /**
        * Close callbacks
        */
-      closeCallbacks: []
+      closeCallbacks: [],
+      /**
+       * Is full screen shown
+       */
+      isFullScreenShown: false
     };
 
 
@@ -149,6 +159,12 @@ Supertext.Modal = (function (win, doc, $) {
    * Closes the modal
    */
   function close() {
+    if(state.isFullScreenShown){
+      $(selectors.modalFullContent).hide();
+      state.isFullScreenShown = false;
+      return;
+    }
+
     state.$modal.hide();
     state.$modal.remove();
     $.each(state.closeCallbacks, function (index, callback) {
@@ -162,6 +178,16 @@ Supertext.Modal = (function (win, doc, $) {
    */
   function showContent(html) {
     $(selectors.modalBodyContent).html(html);
+  }
+
+  /**
+   * Shows some content in full screen
+   * @param html
+   */
+  function showFullScreenContent(html) {
+    $(selectors.modalFullBodyContent).html(html);
+    $(selectors.modalFullContent).show();
+    state.isFullScreenShown = true;
   }
 
   /**
@@ -258,6 +284,7 @@ Supertext.Modal = (function (win, doc, $) {
     open: open,
     close: close,
     showContent: showContent,
+    showFullScreenContent: showFullScreenContent,
     showError: showError,
     hideError: hideError,
     addButton: addButton,
@@ -636,21 +663,43 @@ Supertext.Polylang = (function (win, doc, $) {
       var $itemAnchor = $(this);
       var postId = $itemAnchor.data('post-id');
 
-      doGetRequest(
-        context.ajaxUrl + '?action=sttr_getPostRawData',
-        {postId: postId}
-      )
-        .done(function (data) {
-          console.log(data);
-        });
+      $.when(
+        doGetRequest(
+          context.ajaxUrl + '?action=sttr_getPostRawData',
+          {postId: postId}
+        ),
+        doPostRequest(
+          context.ajaxUrl + '?action=sttr_getPostTranslationData&postId='+postId,
+          $(selectors.contentStepForm).serializeArray()
+        )
+      ).done(function(rawData, translationData){
+          var preparedTranslationData = [];
 
-      doPostRequest(
-        context.ajaxUrl + '?action=sttr_getPostTranslationData&postId='+postId,
-        $(selectors.contentStepForm).serializeArray()
-      )
-        .done(function (data) {
-          console.log(data);
-        });
+          var queue = [{path: 'data', value: translationData.body}];
+
+          while(queue.length > 0){
+            var element = queue.pop();
+
+            if(typeof element.value !== 'object' && typeof element.value !== 'array'){
+              preparedTranslationData.push(element);
+              continue;
+            }
+
+            for(var prop in element.value){
+              queue.push({
+                path: element.path + "->" + prop,
+                value: element.value[prop]
+              })
+            }
+          }
+
+          modal.showFullScreenContent(template.itemContent({
+            rawData: JSON.stringify(rawData.body, null, 4),
+            translationData: preparedTranslationData
+          }));
+        }
+      );
+
     }
 
     /**
