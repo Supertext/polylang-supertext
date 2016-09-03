@@ -49,6 +49,11 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 2.5 =
+* Corrected language mapping with Supertext API
+* Extended content step
+* Various code improvements and fixes
+
 = 2.4 =
 * Added shortcode replacement support for PHP with object context bug
 * Extended order creation request with additional plugin information
