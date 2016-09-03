@@ -671,27 +671,17 @@ Supertext.Polylang = (function (win, doc, $) {
         doPostRequest(
           context.ajaxUrl + '?action=sttr_getPostTranslationData&postId='+postId,
           $(selectors.contentStepForm).serializeArray()
-        )
-      ).done(function(rawData, translationData){
-          var preparedTranslationData = [];
-
-          var queue = [{path: 'data', value: translationData.body}];
-
-          while(queue.length > 0){
-            var element = queue.pop();
-
-            if(typeof element.value !== 'object' && typeof element.value !== 'array'){
-              preparedTranslationData.push(element);
-              continue;
-            }
-
-            for(var prop in element.value){
-              queue.push({
-                path: element.path + "->" + prop,
-                value: element.value[prop]
-              })
-            }
+        ),
+        $.each(state.posts, function (index, post) {
+          if(post.id == postId){
+            return post;
           }
+
+          return null;
+        })
+      ).done(function(rawData, translationData, postsResult){
+
+          var preparedTranslationData = getPreparedTranslationData(postsResult[0], translationData);
 
           modal.showFullScreenContent(template.itemContent({
             rawData: JSON.stringify(rawData.body, null, 4),
@@ -699,7 +689,50 @@ Supertext.Polylang = (function (win, doc, $) {
           }));
         }
       );
+    }
 
+    /**
+     * Gets the prepared translation data for the template
+     * @param postsResult
+     * @param translationData
+     * @returns {Array}
+     */
+    function getPreparedTranslationData(post, translationData) {
+      var preparedTranslationData = [];
+
+      for (var group in post.translatableFieldGroups) {
+        if (!translationData.body.hasOwnProperty(group)) {
+          continue;
+        }
+
+        var groupName = post.translatableFieldGroups[group].name;
+        var groupElements = [];
+
+        var queue = [{path: group, value: translationData.body[group]}];
+
+        while (queue.length > 0) {
+          var element = queue.pop();
+
+          if (typeof element.value !== 'object' && typeof element.value !== 'array') {
+            groupElements.push(element);
+            continue;
+          }
+
+          for (var prop in element.value) {
+            queue.push({
+              path: element.path + "->" + prop,
+              value: element.value[prop]
+            })
+          }
+        }
+
+        preparedTranslationData.push({
+          name: groupName,
+          elements: groupElements
+        })
+      }
+
+      return preparedTranslationData;
     }
 
     /**

@@ -27,9 +27,6 @@
     <div class="sttr-modal-background"> </div>
     <div id="sttr-modal-full-content" class="sttr-modal-full-content" style="display: none">
       <button class="sttr-modal-icon-close" type="button"><span class="dashicons dashicons-no"></span></button>
-      <div class="sttr-modal-header">
-        <h1>{{data.title}}</h1>
-      </div>
       <div class="sttr-modal-full-body">
         <div id="sttr-modal-full-body-content" class="sttr-modal-full-body-content">
         </div>
@@ -175,13 +172,19 @@
 </script>
 
 <script type="text/html" id="tmpl-sttr-item-content">
-  <div>
-    <# _.each(data.translationData, function(element) { #>
-      {{element.path}}<br/>
-      {{element.value}}<br/><br/>
+  <div class="sttr-item-content">
+    <# _.each(data.translationData, function(group) { #>
+      <b>{{group.name}}</b><br/>
+      <# _.each(group.elements, function(element) { #>
+        <i>{{element.path}}</i><br/>
+        {{{element.value}}}<br/><br/>
+      <# }); #>
+      <br/>
     <# }); #>
+
+    <pre>{{data.rawData}}</pre>
   </div>
-  <pre>{{data.rawData}}</pre>
+
 </script>
 
 <script type="text/html" id="tmpl-sttr-quote-step">

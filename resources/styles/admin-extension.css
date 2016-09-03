@@ -388,6 +388,13 @@
   padding-right: 2px;
   overflow: hidden; }
 
+.sttr-item-content img {
+  display: none; }
+
+.sttr-item-content pre {
+  display: none;
+  font-size: 13px; }
+
 #sttr-order-comment {
   width: 100%; }
 
