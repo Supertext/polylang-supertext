@@ -377,7 +377,7 @@ class Core
       $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $this->getLibrary());
     }
 
-    if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php')) {
+    if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php') || WordPress::isPluginActive('bb-plugin/fl-builder.php')) {
       $contentAccessors['beaver_builder'] = new BeaverBuilderContentAccessor($textProcessor);
     }
 
