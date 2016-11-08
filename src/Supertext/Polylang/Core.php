@@ -103,6 +103,8 @@ class Core
       $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
     }
 
+    add_action( 'wp_ajax_nopriv_sttr_callback', array($this, 'handleCallback'));
+
     $this->checkVersion();
   }
 
@@ -170,6 +172,13 @@ class Core
     }
 
     wp_localize_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, 'supertextTranslationL10n', $translation_array);
+  }
+
+  /**
+   * Handles a callback
+   */
+  public function handleCallback(){
+    $this->getCallbackHandler()->handleRequest();
   }
 
   /**

@@ -137,7 +137,7 @@ class AjaxRequestHandler
         $_POST['translationType'],
         $additionalInformation,
         $referenceHashes[0],
-        SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/api/callback.php'
+        admin_url( 'admin-ajax.php' ) . '?action=sttr_callback'
       );
 
       $this->ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage, $referenceHashes);

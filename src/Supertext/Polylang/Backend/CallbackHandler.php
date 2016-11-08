@@ -5,7 +5,6 @@ namespace Supertext\Polylang\Backend;
 use Supertext\Polylang\Api\WriteBack;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Api\Multilang;
-use Comotive\Util\ArrayManipulation;
 
 class CallbackHandler
 {
@@ -37,10 +36,39 @@ class CallbackHandler
   }
 
   /**
+   * Handles a callback request
+   */
+  public function handleRequest(){
+    $requestBody = file_get_contents('php://input');
+    $json = json_decode($requestBody);
+
+    if($requestBody === true || !empty($json)){
+      try{
+        $response = $this->handleWriteBackRequest($json);
+      }catch (\Exception $e){
+        $response = array(
+          'code' => 500,
+          'body' => array('message' => $e->getMessage())
+        );
+      }
+    }else{
+      $response = array(
+        'code' => 400,
+        'body' => array('message' => 'Invalid request body')
+      );
+    }
+
+    header('Content-Type: application/json');
+    http_response_code($response['code']);
+    echo json_encode($response['body']);
+    die();
+  }
+
+  /**
    * @param $json
    * @return array
    */
-  public function handleRequest($json)
+  private function handleWriteBackRequest($json)
   {
     $writeBack = new WriteBack($json, $this->library);
 
