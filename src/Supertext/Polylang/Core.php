@@ -185,8 +185,6 @@ class Core
       $library->saveSetting(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
     }
 
-    self::migrateOldShortcodeSettings($options, $library);
-
     self::addWellKnownShortcodeSettings($options, $library);
   }
 
@@ -198,46 +196,13 @@ class Core
   }
 
   /**
-   * Migrates old shortcode settings
-   * @param $options
-   * @param Library $library
+   * Do stuff, if plugin is uninstalled
    */
-  private static function migrateOldShortcodeSettings($options, $library)
+  public static function onUninstall()
   {
-    if (!isset($options[Helper\Constant::SETTING_SHORTCODES])) {
-      return;
-    }
+    $library = new Library();
 
-    //Check options state and update if needed
-    $shortcodes = $options[Helper\Constant::SETTING_SHORTCODES];
-    $checkedShortcodes = array();
-
-    foreach ($shortcodes as $key => $shortcode) {
-      if (!is_array($shortcode['attributes'])) {
-        $shortcode['attributes'] = array();
-        $checkedShortcodes[$key] = $shortcode;
-        continue;
-      }
-
-      if (empty($shortcode['attributes'])) {
-        $checkedShortcodes[$key] = $shortcode;
-        continue;
-      }
-
-      $checkedAttributes = array();
-      foreach ($shortcode['attributes'] as $attribute) {
-        if (!is_array($attribute)) {
-          $checkedAttributes[] = array('name' => $attribute, 'encoding' => '');
-        } else {
-          $checkedAttributes[] = $attribute;
-        }
-      }
-
-      $shortcode['attributes'] = $checkedAttributes;
-      $checkedShortcodes[$key] = $shortcode;
-    }
-
-    $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, $checkedShortcodes);
+    $library->deleteSettingOption();
   }
 
   /**
@@ -390,7 +355,7 @@ class Core
   private function checkVersion()
   {
     if (get_option(Constant::VERSION_OPTION) != SUPERTEXT_PLUGIN_VERSION) {
-      $this->onActivation();
+      Core::onActivation();
       update_option(Constant::VERSION_OPTION, SUPERTEXT_PLUGIN_VERSION);
     }
   }

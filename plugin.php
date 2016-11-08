@@ -33,6 +33,7 @@ add_action('plugins_loaded', function () {
 // Register the install- and deinstallation hooks
 register_activation_hook(__FILE__, array('\Supertext\Polylang\Core', 'onActivation'));
 register_deactivation_hook(__FILE__, array('\Supertext\Polylang\Core', 'onDeactivation'));
+register_uninstall_hook(__FILE__, array('\Supertext\Polylang\Core', 'onUninstall'));
 
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'add_action_links');
 

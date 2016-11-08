@@ -79,6 +79,13 @@ class Library
   }
 
   /**
+   * Deletes the setting option
+   */
+  public function deleteSettingOption(){
+    delete_option(Constant::SETTINGS_OPTION);
+  }
+
+  /**
    * @return bool
    */
   public function isPolylangActivated()
