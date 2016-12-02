@@ -59,8 +59,8 @@ class TextProcessor
 
     $tagName = $match[2];
     $attributes = shortcode_parse_atts($match[3]);
-    $savedShortcode = isset($this->cachedSavedShortcodes[$tagName]) ? $this->cachedSavedShortcodes[$tagName] : array('attributes' => array());
-    $translatableShortcodeAttributes = $savedShortcode['attributes'];
+    $shortcodeSetting = $this->getShortcodeSetting($tagName);
+    $translatableShortcodeAttributes = $shortcodeSetting['attributes'];
     $forceEnclosingForm = preg_match('/\[\s*\/\s*' . $tagName . '\s*\]/', $match[0]);
 
     $attributeNodes = $this->getAttributeNodes($attributes, $translatableShortcodeAttributes);
@@ -68,8 +68,8 @@ class TextProcessor
     //Enclosed content can contain shortcodes as well
     if (!empty($match[5])) {
       $content = $match[5];
-      if (!empty($savedShortcode['content_encoding'])) {
-        $content = $this->decodeEnclosedContent($content, $savedShortcode['content_encoding']);
+      if (!empty($shortcodeSetting['content_encoding'])) {
+        $content = $this->decodeEnclosedContent($content, $shortcodeSetting['content_encoding']);
       }
       $enclosedContent = $this->replaceShortcodes($content);
       $attributeNodes .= '<div class="' . self::SHORTCODE_ENCLOSED_CONTENT_CLASS . '">' . $enclosedContent . '</div>';
@@ -302,5 +302,22 @@ class TextProcessor
 
     $regex = str_replace('\[(\[?)(', '\[(\[?)(' . $extendRegex, $regex);
     return $regex;
+  }
+
+  /**
+   * @param $tagName
+   * @return array
+   */
+  private function getShortcodeSetting($tagName)
+  {
+    $shortcodeSetting = array('attributes' => array());
+
+    foreach($this->cachedSavedShortcodes as $name => $savedShortcode){
+      if(preg_match('/' . $name . '/', $tagName)){
+        $shortcodeSetting = array_merge_recursive($shortcodeSetting, $savedShortcode);
+      }
+    }
+
+    return $shortcodeSetting;
   }
 }

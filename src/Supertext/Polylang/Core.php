@@ -224,35 +224,22 @@ class Core
     $shortcodeSettings = isset($options[Helper\Constant::SETTING_SHORTCODES]) ? $options[Helper\Constant::SETTING_SHORTCODES] : array();
 
     if (WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')){
+      $shortcodeSettings['vc_[^\s|\]]+'] = array(
+        'content_encoding' => null,
+        'attributes' => array(
+          array('name' => 'text', 'encoding' => ''),
+          array('name' => 'title', 'encoding' => ''),
+        )
+      );
+
       $shortcodeSettings['vc_raw_html'] = array(
         'content_encoding' => 'rawurl,base64',
         'attributes' => array()
       );
-
-      $shortcodeSettings['vc_custom_heading'] = array(
-        'content_encoding' => null,
-        'attributes' => array(
-          array('name' => 'text', 'encoding' => '')
-        )
-      );
     }
 
     if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
-      $shortcodeSettings['special_heading'] = array(
-        'content_encoding' => null,
-        'attributes' => array(
-          array('name' => 'title_content', 'encoding' => '')
-        )
-      );
-
-      $shortcodeSettings['special_heading2'] = array(
-        'content_encoding' => null,
-        'attributes' => array(
-          array('name' => 'title_content', 'encoding' => '')
-        )
-      );
-
-      $shortcodeSettings['special_heading3'] = array(
+      $shortcodeSettings['special_heading\d?'] = array(
         'content_encoding' => null,
         'attributes' => array(
           array('name' => 'title_content', 'encoding' => '')
@@ -263,6 +250,29 @@ class Core
         'content_encoding' => null,
         'attributes' => array(
           array('name' => 'button_text', 'encoding' => '')
+        )
+      );
+    }
+
+    if (WordPress::isPluginActive('divi-builder/divi-builder.php')) {
+      $shortcodeSettings['et_pb_[^\s|\]]+'] = array(
+        'content_encoding' => null,
+        'attributes' => array(
+          array('name' => 'more_text', 'encoding' => ''),
+          array('name' => 'alt', 'encoding' => ''),
+          array('name' => 'title_text', 'encoding' => ''),
+          array('name' => 'title', 'encoding' => ''),
+          array('name' => 'button_one_text', 'encoding' => ''),
+          array('name' => 'button_two_text', 'encoding' => ''),
+          array('name' => 'logo_alt_text', 'encoding' => ''),
+          array('name' => 'logo_title', 'encoding' => ''),
+          array('name' => 'prev_text', 'encoding' => ''),
+          array('name' => 'next_text', 'encoding' => ''),
+          array('name' => 'name', 'encoding' => ''),
+          array('name' => 'button_text', 'encoding' => ''),
+          array('name' => 'job_title', 'encoding' => ''),
+          array('name' => 'heading', 'encoding' => ''),
+          array('name' => 'title_text', 'encoding' => '')
         )
       );
     }
