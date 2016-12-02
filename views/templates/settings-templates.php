@@ -23,7 +23,7 @@
       <button type="button" class="button button-highlighted button-add shortcode-attribute-add-input"><?php _e('Add attribute', 'polylang-supertext'); ?></button>
     </div>
     <div class="clear"></div>
-    <button type="button" class="button button-highlighted button-remove shortcode-remove-setting"><span class="dashicons dashicons-trash"></span> <?php _e('remove shortcode setting', 'polylang-supertext'); ?></button>
+    <button type="button" class="button button-highlighted button-remove shortcode-remove-setting"><span class="dashicons dashicons-trash"></span> <?php _e('remove setting', 'polylang-supertext'); ?></button>
   </div>
 </script>
 

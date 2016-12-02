@@ -16,7 +16,7 @@ $savedShortcodes = $context->getSettingOption(Constant::SETTING_SHORTCODES);
       <?php _e('Please define the encoding process for all encoded and enclosed content. Available encoding functions are: rawurl, url and base64', 'polylang-supertext'); ?>
     </p>
     <div id="shortcode-settings"></div>
-    <button type="button" class="button button-highlighted button-add shortcode-add-setting"><?php _e('Add shortcode setting', 'polylang-supertext'); ?></button>
+    <button type="button" class="button button-highlighted button-add shortcode-add-setting"><?php _e('Add setting', 'polylang-supertext'); ?></button>
   </div>
 </div>
 

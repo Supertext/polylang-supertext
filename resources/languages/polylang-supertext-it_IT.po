@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2016-09-02 11:25+0200\n"
-"PO-Revision-Date: 2016-09-02 11:26+0200\n"
+"POT-Creation-Date: 2016-12-02 18:12+0100\n"
+"PO-Revision-Date: 2016-12-02 18:12+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: it_IT\n"
@@ -149,7 +149,7 @@ msgstr "L’articolo da tradurre è stato creato."
 msgid "In translation"
 msgstr "In traduzione"
 
-#: src/Supertext/Polylang/Backend/CallbackHandler.php:73
+#: src/Supertext/Polylang/Backend/CallbackHandler.php:101
 msgid "translation saved successfully"
 msgstr "La traduzione di Supertext è stata importata con successo."
 
@@ -161,24 +161,24 @@ msgstr "Impostazioni Supertext"
 msgid "Supertext"
 msgstr "Supertext"
 
-#: src/Supertext/Polylang/Core.php:144
+#: src/Supertext/Polylang/Core.php:146
 msgid "An error occurred"
 msgstr "Si è verificato un errore"
 
-#: src/Supertext/Polylang/Core.php:145
+#: src/Supertext/Polylang/Core.php:147
 msgid "A network error occurred"
 msgstr "Si è verificato un errore di rete"
 
-#: src/Supertext/Polylang/Core.php:146
+#: src/Supertext/Polylang/Core.php:148
 msgid "Validation error"
 msgstr "Errore di controllo"
 
-#: src/Supertext/Polylang/Core.php:147 src/Supertext/Polylang/Core.php:155
+#: src/Supertext/Polylang/Core.php:149 src/Supertext/Polylang/Core.php:157
 #: views/templates/admin-extension-templates.php:5
 msgid "Order translation"
 msgstr "Assegna incarico di traduzione"
 
-#: src/Supertext/Polylang/Core.php:148
+#: src/Supertext/Polylang/Core.php:150
 msgid ""
 "The post was not saved. If you proceed with the translation, the unsaved "
 "changes will be lost."
@@ -186,51 +186,51 @@ msgstr ""
 "L’articolo non è stato salvato. Se si desidera procedere con la traduzione, "
 "le modifiche non verranno considerate."
 
-#: src/Supertext/Polylang/Core.php:149
+#: src/Supertext/Polylang/Core.php:151
 msgid "Please only select posts in the same language."
 msgstr "Scegliere solamente articoli nella stessa lingua."
 
-#: src/Supertext/Polylang/Core.php:150
+#: src/Supertext/Polylang/Core.php:152
 msgid "Blocked posts cannot be translated."
 msgstr "Gli articoli bloccati non possono essere tradotti."
 
-#: src/Supertext/Polylang/Core.php:151
+#: src/Supertext/Polylang/Core.php:153
 msgid "Please select content to be translated."
 msgstr "Selezionare il contenuto da tradurre."
 
-#: src/Supertext/Polylang/Core.php:152
+#: src/Supertext/Polylang/Core.php:154
 msgid "Please select the target language."
 msgstr "Selezionare la lingua d’arrivo."
 
-#: src/Supertext/Polylang/Core.php:153
+#: src/Supertext/Polylang/Core.php:155
 msgid "Please choose a quote."
 msgstr "Selezionare un’offerta."
 
-#: src/Supertext/Polylang/Core.php:154
+#: src/Supertext/Polylang/Core.php:156
 msgid "Your Supertext translation order"
 msgstr "Incarico di traduzione a Supertext"
 
-#: src/Supertext/Polylang/Core.php:156
+#: src/Supertext/Polylang/Core.php:158
 msgid "Cancel"
 msgstr "Interrompi"
 
-#: src/Supertext/Polylang/Core.php:157
+#: src/Supertext/Polylang/Core.php:159
 msgid "Back"
 msgstr "Indietro"
 
-#: src/Supertext/Polylang/Core.php:158
+#: src/Supertext/Polylang/Core.php:160
 msgid "Next"
 msgstr "Continua"
 
-#: src/Supertext/Polylang/Core.php:159
+#: src/Supertext/Polylang/Core.php:161
 msgid "Close window"
 msgstr "Chiudi finestra"
 
-#: src/Supertext/Polylang/Core.php:160
+#: src/Supertext/Polylang/Core.php:162
 msgid "Please select at least one post"
 msgstr "Selezionare almeno un articolo."
 
-#: src/Supertext/Polylang/Core.php:161
+#: src/Supertext/Polylang/Core.php:163
 msgid "<i>{0}</i> is already being translated into {1} (order id: {2})"
 msgstr "<i>{0}</i> viene già tradotto in {1} (numero dell’incarico: {2})"
 
@@ -325,7 +325,7 @@ msgid "Translatable fields"
 msgstr "Campi traducibili"
 
 #: src/Supertext/Polylang/Settings/SettingsPage.php:58
-#: views/backend/settings-shortcodes.php:19
+#: views/backend/settings-shortcodes.php:11
 msgid "Shortcodes"
 msgstr "Shortcode"
 
@@ -338,11 +338,11 @@ msgstr "Flusso di lavoro"
 msgid "Settings › Supertext"
 msgstr "Impostazioni › Supertext"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:143
+#: src/Supertext/Polylang/Settings/SettingsPage.php:145
 msgid "Settings saved"
 msgstr "Impostazioni salvate"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:181
+#: src/Supertext/Polylang/Settings/SettingsPage.php:183
 msgid "Save settings"
 msgstr "Salva impostazioni"
 
@@ -369,7 +369,7 @@ msgid "Add field"
 msgstr "Aggiungere campo"
 
 #: views/backend/settings-languages.php:40
-#: views/templates/admin-extension-templates.php:154
+#: views/templates/admin-extension-templates.php:161
 msgid "Please select"
 msgstr "Seleziona"
 
@@ -385,21 +385,12 @@ msgstr "Configurare le lingue in Polylang."
 msgid "Please select the fields that can be used for translations."
 msgstr "Selezionare i campi che possono essere tradotti."
 
-#: views/backend/settings-shortcodes.php:10
-msgid "Attribute name..."
-msgstr "Nome attributo..."
-
-#: views/backend/settings-shortcodes.php:11
-#: views/backend/settings-shortcodes.php:49
-msgid "Functions..."
-msgstr "Funzioni..."
-
-#: views/backend/settings-shortcodes.php:21
+#: views/backend/settings-shortcodes.php:13
 msgid "Please define any shortcode attributes you want to have translated."
 msgstr ""
 "Inserire tutti gli attributi dello shortcode che si desiderano far tradurre."
 
-#: views/backend/settings-shortcodes.php:24
+#: views/backend/settings-shortcodes.php:16
 msgid ""
 "Please define the encoding process for all encoded and enclosed content. "
 "Available encoding functions are: rawurl, url and base64"
@@ -407,17 +398,9 @@ msgstr ""
 "Inserire il processo di codificazione per ogni contenuto codificato "
 "riservato. Funzioni disponibili: rawurl, url e base64"
 
-#: views/backend/settings-shortcodes.php:46
-msgid "Encoding for enclosed content"
-msgstr "Codifica contenuto chiuso"
-
-#: views/backend/settings-shortcodes.php:54
-msgid "Translatable attributes"
-msgstr "Attributi traducibili"
-
-#: views/backend/settings-shortcodes.php:56
-msgid "Add attribute"
-msgstr "Aggiungere attributo"
+#: views/backend/settings-shortcodes.php:19
+msgid "Add setting"
+msgstr "Aggiungere impostazione"
 
 #: views/backend/settings-users.php:26
 msgid "Select user"
@@ -491,28 +474,28 @@ msgstr "Cosentire a Supertext di sovrascrivere gli articoli pubblicati"
 msgid "API Server"
 msgstr "Server API"
 
-#: views/templates/admin-extension-templates.php:55
+#: views/templates/admin-extension-templates.php:62
 msgid "Loading"
 msgstr "Caricamento in corso"
 
-#: views/templates/admin-extension-templates.php:62
+#: views/templates/admin-extension-templates.php:69
 msgid "Select content and language"
 msgstr "Seleziona contenuto e lingua"
 
-#: views/templates/admin-extension-templates.php:63
+#: views/templates/admin-extension-templates.php:70
 msgid "Select service and deadline"
 msgstr "Seleziona servizio e scadenza"
 
-#: views/templates/admin-extension-templates.php:64
-#: views/templates/admin-extension-templates.php:212
+#: views/templates/admin-extension-templates.php:71
+#: views/templates/admin-extension-templates.php:235
 msgid "Confirmation"
 msgstr "Conferma"
 
-#: views/templates/admin-extension-templates.php:74
+#: views/templates/admin-extension-templates.php:81
 msgid "Content to be translated"
 msgstr "Definisci contenuti da tradurre"
 
-#: views/templates/admin-extension-templates.php:79
+#: views/templates/admin-extension-templates.php:86
 #, php-format
 msgid ""
 "Translatable custom fields can be defined in the <a target=\"_parent\" href="
@@ -521,15 +504,15 @@ msgstr ""
 "I campi traducibili definiti dall’utente possono essere indicati nelle <a "
 "target=\"_parent\" href=\"%s\">impostazioni</a>."
 
-#: views/templates/admin-extension-templates.php:92
+#: views/templates/admin-extension-templates.php:99
 msgid "blocked"
 msgstr "bloccato"
 
-#: views/templates/admin-extension-templates.php:92
+#: views/templates/admin-extension-templates.php:99
 msgid "draft"
 msgstr "Bozza"
 
-#: views/templates/admin-extension-templates.php:104
+#: views/templates/admin-extension-templates.php:111
 msgid ""
 "The post cannot be translated. It is blocked by a translation order in "
 "progress."
@@ -537,7 +520,7 @@ msgstr ""
 "L’articolo non può essere tradotto visto che è bloccato da un incarico di "
 "traduzione in corso."
 
-#: views/templates/admin-extension-templates.php:108
+#: views/templates/admin-extension-templates.php:115
 msgid ""
 "The post status is <b>draft</b>. Are you sure you want to order a "
 "translation for this article?"
@@ -545,35 +528,35 @@ msgstr ""
 "L’articolo è stato salvato come <b>bozza</b>. Richiedere una traduzione per "
 "l’articolo?"
 
-#: views/templates/admin-extension-templates.php:112
+#: views/templates/admin-extension-templates.php:119
 msgid "Please select the content to be translated."
 msgstr "Selezionare il contenuto da tradurre."
 
-#: views/templates/admin-extension-templates.php:135
+#: views/templates/admin-extension-templates.php:142
 msgid "Not present in this post"
 msgstr "Non disponibile in questo articolo"
 
-#: views/templates/admin-extension-templates.php:145
+#: views/templates/admin-extension-templates.php:152
 msgid "Remove this post"
 msgstr "Rimuovere questo articolo"
 
-#: views/templates/admin-extension-templates.php:146
+#: views/templates/admin-extension-templates.php:153
 msgid "Show content"
 msgstr "Contenuto"
 
-#: views/templates/admin-extension-templates.php:149
+#: views/templates/admin-extension-templates.php:156
 msgid "Language"
 msgstr "Lingua"
 
-#: views/templates/admin-extension-templates.php:151
+#: views/templates/admin-extension-templates.php:158
 msgid "Translate from <b id=\"sttr-order-source-language-label\">-</b> into "
 msgstr "Traduzione <b id=\"sttr-order-source-language-label\">-</b>"
 
-#: views/templates/admin-extension-templates.php:169
+#: views/templates/admin-extension-templates.php:192
 msgid "Service and deadline"
 msgstr "Qualità e scadenza"
 
-#: views/templates/admin-extension-templates.php:170
+#: views/templates/admin-extension-templates.php:193
 msgid ""
 "Select the translation service and deadline for translating <b>{{data."
 "wordCount}} words</b> into <b>{{data.language}}</b>:"
@@ -581,6 +564,39 @@ msgstr ""
 "Selezioni il tipo di servizio e la scadenza per la traduzione di <b>{{data."
 "wordCount}} parole</b> in <b>{{data.language}}</b>:"
 
-#: views/templates/admin-extension-templates.php:205
+#: views/templates/admin-extension-templates.php:228
 msgid "Your comment to Supertext"
 msgstr "Commento per Supertext"
+
+#: views/templates/settings-templates.php:5
+msgid "Shortcode"
+msgstr "Shortcode"
+
+#: views/templates/settings-templates.php:7
+msgid "Shortcode..."
+msgstr "Shortcode..."
+
+#: views/templates/settings-templates.php:10
+msgid "Encoding for enclosed content"
+msgstr "Codifica contenuto chiuso"
+
+#: views/templates/settings-templates.php:13
+#: views/templates/settings-templates.php:33
+msgid "Functions..."
+msgstr "Funzioni..."
+
+#: views/templates/settings-templates.php:18
+msgid "Translatable attributes"
+msgstr "Attributi traducibili"
+
+#: views/templates/settings-templates.php:23
+msgid "Add attribute"
+msgstr "Aggiungere attributo"
+
+#: views/templates/settings-templates.php:26
+msgid "remove setting"
+msgstr "rimuovere l'impostazione"
+
+#: views/templates/settings-templates.php:32
+msgid "Attribute name..."
+msgstr "Nome attributo..."
