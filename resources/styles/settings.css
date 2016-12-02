@@ -48,6 +48,9 @@
 #shortcodesSettingsForm .shortcode-remove-setting {
   margin: 0 0 10px 10px; }
 
+#shortcodesSettingsForm .shortcode-attribute-add-input {
+  margin-top: 0px; }
+
 #translatablefieldsSettingsForm .custom-field-input {
   margin-bottom: 3px; }
 

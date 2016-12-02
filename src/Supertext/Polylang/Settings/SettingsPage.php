@@ -259,11 +259,13 @@ class SettingsPage extends AbstractPage
    */
   private function saveShortcodesSettings()
   {
-    print_r($_POST);die();
-
     $shortcodeSettingsToSave = array();
 
-    foreach ($_POST['shortcodes'] as $name => $shortcode) {
+    foreach ($_POST['shortcodes'] as $shortcode) {
+      if(empty($shortcode['name'])){
+        continue;
+      }
+
       $settings = array(
         'content_encoding' => null,
         'attributes' => array()
@@ -277,11 +279,13 @@ class SettingsPage extends AbstractPage
         $settings['content_encoding'] = $shortcode['content_encoding'];
       }
 
-      if(count($settings['attributes']) == 0 && empty($settings['content_encoding'])){
-        continue;
-      }
+      $name = $shortcode['name'];
 
-      $shortcodeSettingsToSave[$name] = $settings;
+      if(!isset($shortcodeSettingsToSave[$name])){
+        $shortcodeSettingsToSave[$name] = $settings;
+      }else{
+        $shortcodeSettingsToSave[$name] =  array_merge_recursive($shortcodeSettingsToSave[$name], $settings);
+      }
     }
 
     $this->library->saveSetting(Constant::SETTING_SHORTCODES, $shortcodeSettingsToSave);

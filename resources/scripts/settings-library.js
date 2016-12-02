@@ -179,13 +179,13 @@ Supertext.Settings.Shortcodes = (function ($) {
   var shortcodeSettingTemplate,
       shortcodeAttributeTemplate;
 
-  function addShortcodeSetting($container, key, contentEncoding){
+  function addShortcodeSetting($container, name, contentEncoding){
     var lastIndex = $container.data('lastIndex');
     var newIndex =  lastIndex === undefined ? 0 : lastIndex + 1;
 
     var html = shortcodeSettingTemplate({
       shortcodeIndex: newIndex,
-      key: key,
+      name: name,
       contentEncoding: contentEncoding
     });
 
@@ -198,9 +198,13 @@ Supertext.Settings.Shortcodes = (function ($) {
         $shortcodeSetting.remove();
       });
 
+    $shortcodeSetting.find('.shortcode-attribute-add-input')
+      .click(function(){
+        addAttributeInput($shortcodeSetting.find('.shortcode-setting-attributes'), newIndex);
+      });
+
     initEncodingAutoComplete($shortcodeSetting);
     initShortcodeAutoComplete($shortcodeSetting);
-    initAttributeButtons($shortcodeSetting, newIndex);
   }
 
   function addAttributeInput($container, shortcodeIndex, name, encoding) {
@@ -284,13 +288,6 @@ Supertext.Settings.Shortcodes = (function ($) {
     );
   }
 
-  function initAttributeButtons($element, shortcodeIndex){
-    $element.find('.shortcode-attribute-add-input')
-      .click(function(){
-        addAttributeInput($element.find('.shortcode-setting-attributes'), shortcodeIndex);
-      });
-  }
-
   return {
     initialize: function (options) {
       options = options || {};
@@ -300,12 +297,13 @@ Supertext.Settings.Shortcodes = (function ($) {
 
       var $shortcodeSettings = $("#shortcode-settings");
 
-      $.each(savedShortcodes, function(key, shortcode){
-        addShortcodeSetting($shortcodeSettings, key, shortcode['content_encoding']);
+      $.each(savedShortcodes, function(name, shortcode){
+        addShortcodeSetting($shortcodeSettings, name, shortcode['content_encoding']);
+        var $container = $shortcodeSettings.find('.shortcode-setting-container:last .shortcode-setting-attributes');
+        var shortcodeIndex = $shortcodeSettings.data('lastIndex');
 
         $.each(shortcode['attributes'], function(index, attribute){
-          var $container = $shortcodeSettings.find('.shortcode-setting-container:last .shortcode-setting-attributes');
-          addAttributeInput($container, $shortcodeSettings.data('lastIndex'), attribute['name'], attribute['encoding']);
+          addAttributeInput($container, shortcodeIndex, attribute['name'], attribute['encoding']);
         });
       });
 

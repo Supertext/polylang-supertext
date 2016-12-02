@@ -4,7 +4,7 @@
       <div class="shortcode-setting-title">
         <?php _e('Shortcode', 'polylang-supertext'); ?>
       </div>
-      <input class="shortcode-input-name" type="text" value="{{data.key}}" name="shortcodes[{{data.shortcodeIndex}}][key]" placeholder="<?php _e('Shortcode...', 'polylang-supertext'); ?>"></div>
+      <input class="shortcode-input-name" type="text" value="{{data.name}}" name="shortcodes[{{data.shortcodeIndex}}][name]" placeholder="<?php _e('Shortcode...', 'polylang-supertext'); ?>"></div>
     <div class="shortcode-setting-part">
       <div class="shortcode-setting-title">
         <?php _e('Encoding for enclosed content', 'polylang-supertext'); ?>
@@ -22,8 +22,8 @@
       </div>
       <button type="button" class="button button-highlighted button-add shortcode-attribute-add-input"><?php _e('Add attribute', 'polylang-supertext'); ?></button>
     </div>
-    <button type="button" class="button button-highlighted button-remove shortcode-remove-setting"><span class="dashicons dashicons-trash"></span> <?php _e('remove shortcode setting', 'polylang-supertext'); ?></button>
     <div class="clear"></div>
+    <button type="button" class="button button-highlighted button-remove shortcode-remove-setting"><span class="dashicons dashicons-trash"></span> <?php _e('remove shortcode setting', 'polylang-supertext'); ?></button>
   </div>
 </script>
 

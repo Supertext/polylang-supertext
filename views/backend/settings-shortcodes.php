@@ -25,4 +25,3 @@ $savedShortcodes = $context->getSettingOption(Constant::SETTING_SHORTCODES);
   var registeredShortcodes = <?php echo json_encode(array_keys($shortcodeTags)); ?>;
   var savedShortcodes = <?php echo json_encode($savedShortcodes); ?>;
 </script>
-
