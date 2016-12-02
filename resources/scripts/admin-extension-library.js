@@ -722,14 +722,14 @@ Supertext.Polylang = (function (win, doc, $) {
             queue.push({
               path: element.path + "->" + prop,
               value: element.value[prop]
-            })
+            });
           }
         }
 
         preparedTranslationData.push({
           name: groupName,
           elements: groupElements
-        })
+        });
       }
 
       return preparedTranslationData;

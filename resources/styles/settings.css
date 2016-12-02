@@ -25,26 +25,28 @@
 .postbox .button-add {
   margin-top: 10px; }
 
-.postbox .button-remove {
+.postbox .button-remove .dashicons {
   padding-top: 2px; }
 
 #shortcodesSettingsForm .shortcode-setting-container {
-  float: left;
-  padding: 5px 10px;
-  margin-right: 5px;
+  max-width: 780px;
+  margin: 10px 0;
   background: #ddd; }
 
-#shortcodesSettingsForm .shortcode-setting-attributes {
-  min-width: 417px; }
+#shortcodesSettingsForm .shortcode-setting-part {
+  float: left;
+  padding: 10px; }
+  #shortcodesSettingsForm .shortcode-setting-part input {
+    width: 154px; }
+
+#shortcodesSettingsForm .shortcode-setting-part-attributes {
+  min-width: 370px; }
 
 #shortcodesSettingsForm .shortcode-setting-title {
   margin-bottom: 5px; }
 
-#shortcodesSettingsForm .shortcode-attribute-input {
-  display: none; }
-
-#shortcodesSettingsForm .button {
-  margin: 1px; }
+#shortcodesSettingsForm .shortcode-remove-setting {
+  margin: 0 0 10px 10px; }
 
 #translatablefieldsSettingsForm .custom-field-input {
   margin-bottom: 3px; }

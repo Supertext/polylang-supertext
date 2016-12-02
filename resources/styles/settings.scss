@@ -32,34 +32,38 @@
     margin-top: 10px;
   }
 
-  .button-remove {
+  .button-remove .dashicons {
     padding-top: 2px;
   }
 }
 
 #shortcodesSettingsForm {
 
-  .shortcode-setting-container {
-    float: left;
-    padding: 5px 10px;
-    margin-right: 5px;
+  .shortcode-setting-container{
+    max-width: 780px;
+    margin: 10px 0;
     background: #ddd;
   }
 
-  .shortcode-setting-attributes {
-    min-width: 417px;
+  .shortcode-setting-part {
+    float: left;
+    padding: 10px;
+
+    input{
+      width: 154px;
+    }
+  }
+
+  .shortcode-setting-part-attributes {
+    min-width: 370px;
   }
 
   .shortcode-setting-title {
     margin-bottom: 5px;
   }
 
-  .shortcode-attribute-input {
-    display: none;
-  }
-
-  .button {
-    margin: 1px;
+  .shortcode-remove-setting{
+    margin: 0 0 10px 10px;
   }
 }
 

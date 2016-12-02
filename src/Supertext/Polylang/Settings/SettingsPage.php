@@ -92,6 +92,8 @@ class SettingsPage extends AbstractPage
       $this->addViews($currentTabId);
     }
 
+    $this->includeView("templates/settings-templates");
+
     echo '</div>';
   }
 
@@ -257,6 +259,8 @@ class SettingsPage extends AbstractPage
    */
   private function saveShortcodesSettings()
   {
+    print_r($_POST);die();
+
     $shortcodeSettingsToSave = array();
 
     foreach ($_POST['shortcodes'] as $name => $shortcode) {
