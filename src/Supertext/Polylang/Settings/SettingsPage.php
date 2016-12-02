@@ -279,7 +279,7 @@ class SettingsPage extends AbstractPage
         $settings['content_encoding'] = $shortcode['content_encoding'];
       }
 
-      $name = $shortcode['name'];
+      $name = stripslashes($shortcode['name']);
 
       if(!isset($shortcodeSettingsToSave[$name])){
         $shortcodeSettingsToSave[$name] = $settings;

@@ -39,7 +39,7 @@ class TextProcessor
   public function replaceShortcodes($content)
   {
     $this->cachedSavedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
-    $regex = $this->library->getShortcodeRegex();
+    $regex = $this->getExtendedShortcodeRegex();
 
     return preg_replace_callback("/$regex/s", array(&$this, 'replaceShortcode'), $content);
   }
@@ -280,5 +280,27 @@ class TextProcessor
     }
 
     return $content;
+  }
+
+  /**
+   * Gets an extended shortcode regex with the shortcodes that have been saved with shortcode settings
+   * @return mixed|string
+   */
+  private function getExtendedShortcodeRegex()
+  {
+    $registeredShortcodes = $this->library->getShortcodeTags();
+    $regex = get_shortcode_regex();
+
+    $extendRegex = "";
+    foreach ($this->cachedSavedShortcodes as $name => $savedShortcode) {
+      if (isset($registeredShortcodes[$name])) {
+        continue;
+      }
+
+      $extendRegex .= $name . '|';
+    }
+
+    $regex = str_replace('\[(\[?)(', '\[(\[?)(' . $extendRegex, $regex);
+    return $regex;
   }
 }

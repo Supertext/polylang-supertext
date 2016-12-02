@@ -176,30 +176,7 @@ class Library
    */
   public function getShortcodeTags()
   {
-    $this->registerSpecialShortCodes();
-
     global $shortcode_tags;
     return $shortcode_tags;
-  }
-
-  /**
-   * @return string
-   */
-  public function getShortcodeRegex()
-  {
-    $this->registerSpecialShortCodes();
-
-    return get_shortcode_regex();
-  }
-
-  /**
-   * Registers special shortcodes
-   */
-  private function registerSpecialShortCodes()
-  {
-    //Support Visual Composer (add shortcodes)
-    if ((WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')) && method_exists('WPBMap', 'addAllMappedShortcodes')) {
-      \WPBMap::addAllMappedShortcodes();
-    }
   }
 }
