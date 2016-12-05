@@ -49,6 +49,10 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 2.7 =
+* Extended shortcode replacement
+* Added support for Divi page builder
+
 = 2.6 =
 * Fixed GitHub issue 2 - replaced callback url used for writing translations back with ajax admin url
 * Clean database options on uninstall
