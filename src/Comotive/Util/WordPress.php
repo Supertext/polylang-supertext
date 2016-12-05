@@ -72,7 +72,7 @@ class WordPress
    */
   public static function isPluginActive($plugin)
   {
-    return in_array($plugin, (array) get_option('active_plugins', array()));
+    return in_array($plugin, (array) get_option('active_plugins', array())) || (is_multisite() && isset(get_site_option( 'active_sitewide_plugins')[$plugin]));
   }
 
   /**

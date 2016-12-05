@@ -272,8 +272,7 @@ class Core
           array('name' => 'name', 'encoding' => ''),
           array('name' => 'button_text', 'encoding' => ''),
           array('name' => 'job_title', 'encoding' => ''),
-          array('name' => 'heading', 'encoding' => ''),
-          array('name' => 'title_text', 'encoding' => '')
+          array('name' => 'heading', 'encoding' => '')
         )
       );
     }
