@@ -20,6 +20,7 @@ Plugin has been tested with following page builders:
 - Visual Composer
 - Beaver Builder
 - BE page builder
+- Divi page builder
 
 ## Installation
 
