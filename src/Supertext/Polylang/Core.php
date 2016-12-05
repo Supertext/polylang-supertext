@@ -10,6 +10,7 @@ use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\AdminExtension;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
+use Supertext\Polylang\Helper\DiviBuilderContentAccessor;
 use Supertext\Polylang\Helper\IContentAccessor;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
@@ -363,6 +364,10 @@ class Core
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php') || WordPress::isPluginActive('bb-plugin/fl-builder.php')) {
       $contentAccessors['beaver_builder'] = new BeaverBuilderContentAccessor($textProcessor);
+    }
+
+    if (WordPress::isPluginActive('divi-builder/divi-builder.php')) {
+      $contentAccessors['post'] = new DiviBuilderContentAccessor($textProcessor);
     }
 
     return $contentAccessors;
