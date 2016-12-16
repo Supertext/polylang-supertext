@@ -67,6 +67,7 @@ class ApiConnection
   {
     $ch = curl_init();
 
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT , 120);
     curl_setopt($ch, CURLOPT_URL, $this->host . $path);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

@@ -68,7 +68,7 @@ class AjaxRequestHandler
       );
     }
 
-    self::setJsonOutput('success', $translationInfo);
+    self::returnResponse(200, $translationInfo);
   }
 
   /**
@@ -78,7 +78,7 @@ class AjaxRequestHandler
   {
     $postId = $_GET['postId'];
     $content = $this->contentProvider->getRawData(get_post($postId));
-    self::setJsonOutput('success', $content);
+    self::returnResponse(200, $content);
   }
 
   /**
@@ -89,7 +89,7 @@ class AjaxRequestHandler
     $postId = $_GET['postId'];
     $translatableFieldGroups = $_POST['translatableContents'];
     $content = $this->contentProvider->getTranslationData(get_post($postId), $translatableFieldGroups[$postId]);
-    self::setJsonOutput('success', $content);
+    self::returnResponse(200, $content);
   }
 
   /**
@@ -107,9 +107,9 @@ class AjaxRequestHandler
         $translationData
       );
 
-      self::setJsonOutput('success', $quote);
+      self::returnResponse(200, $quote);
     } catch (\Exception $e) {
-      self::setJsonOutput('error', $e->getMessage());
+      self::returnResponse(500, $e->getMessage());
     }
   }
 
@@ -149,13 +149,13 @@ class AjaxRequestHandler
           ' . sprintf(__('The post will be translated by %s.', 'polylang-supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
       );
 
-      self::setJsonOutput('success', $result);
+      self::returnResponse(200, $result);
     } catch (\Exception $e) {
       foreach ($postIds as $postId) {
         $this->log->addEntry($postId, $e->getMessage());
       }
 
-      self::setJsonOutput('error', $e->getMessage());
+      self::returnResponse(500, $e->getMessage());
     }
   }
 
@@ -360,18 +360,15 @@ class AjaxRequestHandler
   }
 
   /**
-   * @param string $responseType the response type
-   * @param array $data data to be sent in body
+   * @param $code
+   * @param $body
    */
-  private static function setJsonOutput($responseType, $data)
+  private static function returnResponse($code, $body)
   {
-    $json = array(
-      'responseType' => $responseType,
-      'body' => $data
-    );
     header('Content-Type: application/json');
-    echo json_encode($json);
-    wp_die();
+    http_response_code($code);
+    echo json_encode($body);
+    die();
   }
 
   /**

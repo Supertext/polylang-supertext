@@ -48,13 +48,13 @@ class WriteBack
   }
 
   /**
-   * Validates the request
+   * Validates the reference data
    * @return array|null
    */
-  public function validate()
+  public function isReferenceValid()
   {
     if(strpos($this->json->ReferenceData, '-') !== false){
-      return $this->validateLegacy();
+      return $this->isReferenceValidLegacy();
     }
 
     $postIds = $this->getPostIds();
@@ -66,11 +66,7 @@ class WriteBack
       $referenceData ^= hex2bin($referenceHash);
     }
 
-    if($this->json->ReferenceData !== bin2hex($referenceData)) {
-      return array('code' => 403, 'message' => 'Error: reference is invalid.');
-    }
-
-    return null;
+    return $this->json->ReferenceData === bin2hex($referenceData);
   }
 
   /**
@@ -116,7 +112,7 @@ class WriteBack
    * Depricated, old reference check. Can be removed with next version.
    * @return array|null
    */
-  private function validateLegacy(){
+  private function isReferenceValidLegacy(){
     $refData = explode('-', $this->json->ReferenceData, 2);
     $postId = $refData[0];
     $secureToken = $refData[1];
@@ -124,11 +120,7 @@ class WriteBack
     $translationPostId = Multilang::getPostInLanguage($postId, $this->getTargetLanguage());
     $referenceHash = get_post_meta($translationPostId, Constant::IN_TRANSLATION_REFERENCE_HASH, true);
 
-    if (empty($referenceHash) || md5($referenceHash . $postId) !== $secureToken) {
-      return array('code' => 403, 'message' => 'Error: reference is invalid.');
-    }
-
-    return null;
+    return !empty($referenceHash) && md5($referenceHash . $postId) === $secureToken;
   }
 
   /**

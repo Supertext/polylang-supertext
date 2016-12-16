@@ -525,7 +525,7 @@ Supertext.Polylang = (function (win, doc, $) {
     };
 
     self.saveData = function (data) {
-      state.posts = data.body;
+      state.posts = data;
     };
 
     /**
@@ -684,7 +684,7 @@ Supertext.Polylang = (function (win, doc, $) {
           var preparedTranslationData = getPreparedTranslationData(postsResult[0], translationData);
 
           modal.showFullScreenContent(template.itemContent({
-            rawData: JSON.stringify(rawData.body, null, 4),
+            rawData: JSON.stringify(rawData, null, 4),
             translationData: preparedTranslationData
           }));
         }
@@ -701,14 +701,14 @@ Supertext.Polylang = (function (win, doc, $) {
       var preparedTranslationData = [];
 
       for (var group in post.translatableFieldGroups) {
-        if (!translationData.body.hasOwnProperty(group)) {
+        if (!translationData.hasOwnProperty(group)) {
           continue;
         }
 
         var groupName = post.translatableFieldGroups[group].name;
         var groupElements = [];
 
-        var queue = [{path: group, value: translationData.body[group]}];
+        var queue = [{path: group, value: translationData[group]}];
 
         while (queue.length > 0) {
           var element = queue.pop();
@@ -787,9 +787,9 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     self.addStepElements = function (data) {
       $(selectors.orderStep).html(template.quoteStep({
-        wordCount: data.body.wordCount,
-        language: data.body.language,
-        options: data.body.options
+        wordCount: data.wordCount,
+        language: data.language,
+        options: data.options
       }));
     };
 
@@ -822,7 +822,7 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     self.addStepElements = function (data) {
       $(selectors.orderStep).html(template.confirmationStep({
-        message: data.body.message
+        message: data.message
       }));
     };
   };
@@ -1141,11 +1141,6 @@ Supertext.Polylang = (function (win, doc, $) {
         data
       ).done(
         function (responseData) {
-          if (responseData.responseType != 'success') {
-            showAjaxResponseError(responseData.body);
-            defer.reject(responseData.body);
-            return;
-          }
           defer.resolve(responseData);
         }
       ).fail(
@@ -1169,11 +1164,6 @@ Supertext.Polylang = (function (win, doc, $) {
         data
       ).done(
         function (responseData) {
-          if (responseData.responseType != 'success') {
-            showAjaxResponseError(responseData.body);
-            defer.reject(responseData.body);
-            return;
-          }
           defer.resolve(responseData);
         }
       ).fail(
@@ -1182,19 +1172,6 @@ Supertext.Polylang = (function (win, doc, $) {
         defer.reject
       );
     }).promise();
-  }
-
-  /**
-   * Shows an ajax response error
-   * @param jqXHR
-   * @param textStatus
-   * @param errorThrown
-   */
-  function showAjaxResponseError(message) {
-    state.ajaxResponseErrorToken = modal.showError({
-      title: l10n.generalError,
-      message: message
-    });
   }
 
   /**
@@ -1215,11 +1192,11 @@ Supertext.Polylang = (function (win, doc, $) {
    * @param textStatus
    * @param errorThrown
    */
-  function showAjaxError(jqXHR, textStatus, errorThrown) {
+  function showAjaxError(jqXHR, textStatus, errorThrown) {console.log(arguments);
     state.ajaxErrorToken = modal.showError({
       title: l10n.networkError,
-      message: jqXHR.status + ' ' + textStatus,
-      details: errorThrown
+      message: jqXHR.status + ' ' + textStatus + ': ' + errorThrown,
+      details: jqXHR.responseJSON
     });
   }
 

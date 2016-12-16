@@ -44,61 +44,49 @@ class CallbackHandler
 
     if($requestBody === true || !empty($json)){
       try{
-        $response = $this->handleWriteBackRequest($json);
+        $this->handleWriteBackRequest($json);
       }catch (\Exception $e){
-        $response = array(
-          'code' => 500,
-          'body' => array('message' => $e->getMessage())
-        );
+        self::returnResponse(500, array('message' => $e->getMessage()));
       }
     }else{
-      $response = array(
-        'code' => 400,
-        'body' => array('message' => 'Invalid request body')
-      );
+      self::returnResponse(400, array('message' => 'Invalid request body'));
     }
+  }
 
+  /**
+   * @param $code
+   * @param $body
+   */
+  private static function returnResponse($code, $body)
+  {
     header('Content-Type: application/json');
-    http_response_code($response['code']);
-    echo json_encode($response['body']);
+    http_response_code($code);
+    echo json_encode($body);
     die();
   }
 
   /**
    * @param $json
-   * @return array
    */
   private function handleWriteBackRequest($json)
   {
     $writeBack = new WriteBack($json, $this->library);
 
-    $error = $writeBack->validate();
-
-    if($error != null){
-      return $this->createResponse($error['code'], $error['message']);
+    if(!$writeBack->isReferenceValid()){
+      self::returnResponse(403, array('message' => 'Error: reference is invalid.'));
     }
 
-    $errors = $this->writeBackTranslation($writeBack);
+    $this->writeBackTranslation($writeBack);
 
-    if(count($errors)){
-      $message = 'Errors: ';
-      foreach($errors as $postId => $error){
-        $message .= "Concerning post with id $postId" .' -> ' . $error;
-      }
-      return $this->createResponse(500, $message);
-    }
-
-    return $this->createResponse(200, 'The translation was saved successfully');
+    self::returnResponse(200, array('message' => 'The translation was saved successfully'));
   }
 
   /**
    * @param WriteBack $writeBack
-   * @return array errors
    */
   private function writeBackTranslation($writeBack)
   {
     $errors = array();
-    $successMessage = __('translation saved successfully', 'Polylang-Supertext');
     $translationData = $writeBack->getTranslationData();
 
     foreach ($writeBack->getPostIds() as $postId) {
@@ -136,22 +124,15 @@ class CallbackHandler
       // All good, remove translation flag
       delete_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG);
 
-      $this->log->addEntry($translationPostId, $successMessage);
+      $this->log->addEntry($translationPostId, __('translation saved successfully', 'Polylang-Supertext'));
     }
 
-    return $errors;
-  }
-
-  /**
-   * @param $code
-   * @param $message
-   * @return array
-   */
-  private function createResponse($code, $message)
-  {
-    return array(
-      'code' => $code,
-      'body' => array('message' => $message)
-    );
+    if(count($errors)){
+      $message = 'Errors: ';
+      foreach($errors as $postId => $error){
+        $message .= "Concerning post with id $postId" .' -> ' . $error;
+      }
+      self::returnResponse(500, array('message' => $message));
+    }
   }
 }
