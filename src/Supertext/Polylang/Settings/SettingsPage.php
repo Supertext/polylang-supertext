@@ -102,6 +102,7 @@ class SettingsPage extends AbstractPage
    */
   public function control()
   {
+    $this->runHiddenFunctions();
     $this->initTabs();
 
     $currentTabId = $this->getCurrentTabId();
@@ -319,5 +320,15 @@ class SettingsPage extends AbstractPage
     );
 
     $this->library->saveSetting(Constant::SETTING_WORKFLOW, $settingsToSave);
+  }
+
+  /**
+   * Hidden helper functions
+   */
+  private function runHiddenFunctions()
+  {
+    if(!empty($_GET['setInTranslationFlagFalse'])){
+      update_post_meta($_GET['setInTranslationFlagFalse'], Constant::IN_TRANSLATION_FLAG, 0);
+    }
   }
 } 
