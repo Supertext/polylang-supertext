@@ -41,7 +41,7 @@ msgstr "Le password non coincidono"
 msgid "Please enter your password"
 msgstr "Inserire una password"
 
-#: src/Supertext/Polylang/Api/ApiConnection.php:123
+#: src/Supertext/Polylang/Api/ApiClient.php:123
 msgid ""
 "The Supertext Translation plugin could not login into the Supertext API. "
 "Please verify the entered account username and API-Key in the plugin "
@@ -50,7 +50,7 @@ msgstr ""
 "Il plugin Supertext Translation non è riuscito a identificarla nel sistema "
 "di Supertext. Controllare le impostazioni utente."
 
-#: src/Supertext/Polylang/Api/ApiConnection.php:127
+#: src/Supertext/Polylang/Api/ApiClient.php:127
 msgid "HTTP-Request error occurred. Details: "
 msgstr "Errore di richiesta HTTP. Dettagli:"
 

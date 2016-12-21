@@ -3,9 +3,8 @@
 namespace Supertext\Polylang\Helper;
 
 use Comotive\Util\WordPress;
-use Supertext\Polylang\Api\ApiConnection;
+use Supertext\Polylang\Api\ApiClient;
 use Supertext\Polylang\Api\Multilang;
-use Supertext\Polylang\Api\Wrapper;
 
 /**
  * Class Library
@@ -145,7 +144,7 @@ class Library
   /**
    * Get an API connection as an authenticated user
    * @param int $userId
-   * @return ApiConnection the api connection of the user
+   * @return ApiClient the api connection of the user
    */
   public function getApiConnection($userId = 0)
   {
@@ -163,7 +162,7 @@ class Library
     $communicationLanguage = $local[0].'-'.$local[1];
 
     // Get the ready to call instance
-    return ApiConnection::getInstance(
+    return ApiClient::getInstance(
       $apiServerUrl,
       $credentials['stUser'],
       $credentials['stApi'],

@@ -2,12 +2,12 @@
 
 namespace Supertext\Polylang\Api;
 
-class ApiConnection
+class ApiClient
 {
   /**
-   * @var array Open api connections per user
+   * @var array Open api client per user
    */
-  private static $apiConnections = array();
+  private static $apiClients = array();
   /**
    * @var string the host
    */
@@ -50,10 +50,10 @@ class ApiConnection
     $connectionKey = $host . $user;
 
     // Open connection for every user
-    if (!isset(self::$apiConnections[$connectionKey])) {
-      self::$apiConnections[$connectionKey] = new self($host, $user, $apiKey, $communicationLanguage);
+    if (!isset(self::$apiClients[$connectionKey])) {
+      self::$apiClients[$connectionKey] = new self($host, $user, $apiKey, $communicationLanguage);
     }
-    return self::$apiConnections[$connectionKey];
+    return self::$apiClients[$connectionKey];
   }
 
   /**

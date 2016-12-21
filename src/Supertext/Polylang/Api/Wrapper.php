@@ -19,7 +19,7 @@ class Wrapper
   const KEY_SEPARATOR = '__';
 
   /**
-   * @param ApiConnection $connection
+   * @param ApiClient $connection
    * @param $languageCode
    * @param $languageName
    * @return array mappings for this language code
@@ -52,12 +52,13 @@ class Wrapper
   }
 
   /**
-   * @param ApiConnection $connection
+   * @param ApiClient $connection
    * @param string $sourceLanguage polylang source language
    * @param string $targetLanguage polylang target language
    * @param array $data data to be quoted for translation
-   * @throws ApiConnectionException
    * @return array
+   * @throws ApiConnectionException
+   * @throws ApiDataException
    */
   public static function getQuote($connection, $sourceLanguage, $targetLanguage, $data)
   {
@@ -114,7 +115,7 @@ class Wrapper
   }
 //TODO refactor function signature
   /**
-   * @param ApiConnection $connection
+   * @param ApiClient $connection
    * @param string $title the title of the translations
    * @param string $sourceLanguage supertext source language
    * @param string $targetLanguage supertext target language
