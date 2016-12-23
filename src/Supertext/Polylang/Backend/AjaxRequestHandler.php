@@ -62,7 +62,7 @@ class AjaxRequestHandler
         'id' => $postId,
         'title' => $post->post_title,
         'languageCode' => Multilang::getPostLanguage($postId),
-        'isInTranslation' => PostMeta::from($postId)->get(PostMeta::IN_TRANSLATION),
+        'meta' => PostMeta::from($postId)->getPublicProperties(),
         'isDraft' => $post->post_status == 'draft',
         'unfinishedTranslations' => $this->getUnfinishedTranslations($postId),
         'translatableFieldGroups' => $this->contentProvider->getTranslatableFieldGroups($postId)
@@ -201,6 +201,7 @@ class AjaxRequestHandler
       $postMeta = PostMeta::from($translationPost->ID);
       $postMeta->set(PostMeta::IN_TRANSLATION, true);
       $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$postId]);
+      $postMeta->set(PostMeta::SOURCE_LANGUAGE, $sourceLanguage);
     }
   }
 

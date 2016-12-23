@@ -469,7 +469,7 @@ Supertext.Polylang = (function (win, doc, $) {
             isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
           }
 
-          isAPostInTranslation = isAPostInTranslation || post.isInTranslation;
+          isAPostInTranslation = isAPostInTranslation || post.meta.inTranslation;
         });
 
         if (isAPostInTranslation) {
