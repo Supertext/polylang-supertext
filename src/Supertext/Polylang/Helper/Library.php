@@ -146,7 +146,7 @@ class Library
    * @param int $userId
    * @return ApiClient the api connection of the user
    */
-  public function getApiConnection($userId = 0)
+  public function getApiClient($userId = 0)
   {
     // Get currently logged in user, if no user given
     if ($userId == 0) {

@@ -101,7 +101,7 @@ class AjaxRequestHandler
 
     try {
       $quote = Wrapper::getQuote(
-        $this->library->getApiConnection(),
+        $this->library->getApiClient(),
         $this->library->mapLanguage($_POST['orderSourceLanguage']),
         $this->library->mapLanguage($_POST['orderTargetLanguage']),
         $translationData
@@ -129,7 +129,7 @@ class AjaxRequestHandler
     try {
 
       $order = Wrapper::createOrder(
-        $this->library->getApiConnection(),
+        $this->library->getApiClient(),
         get_bloginfo('name') . ' - ' . count($postIds) . ' post(s)' ,
         $this->library->mapLanguage($sourceLanguage),
         $this->library->mapLanguage($targetLanguage),

@@ -19,16 +19,16 @@ class Wrapper
   const KEY_SEPARATOR = '__';
 
   /**
-   * @param ApiClient $connection
+   * @param ApiClient $apiClient
    * @param $languageCode
    * @param $languageName
    * @return array mappings for this language code
    * @throws ApiConnectionException
    * @throws ApiDataException
    */
-  public static function getLanguageMapping($connection, $languageCode, $languageName)
+  public static function getLanguageMapping($apiClient, $languageCode, $languageName)
   {
-    $httpResult = $connection->postRequest('translation/LanguageMapping/' . $languageCode);
+    $httpResult = $apiClient->postRequest('translation/LanguageMapping/' . $languageCode);
 
     $json = json_decode($httpResult);
 
@@ -52,7 +52,7 @@ class Wrapper
   }
 
   /**
-   * @param ApiClient $connection
+   * @param ApiClient $apiClient
    * @param string $sourceLanguage polylang source language
    * @param string $targetLanguage polylang target language
    * @param array $data data to be quoted for translation
@@ -60,7 +60,7 @@ class Wrapper
    * @throws ApiConnectionException
    * @throws ApiDataException
    */
-  public static function getQuote($connection, $sourceLanguage, $targetLanguage, $data)
+  public static function getQuote($apiClient, $sourceLanguage, $targetLanguage, $data)
   {
     $json = array(
       'ContentType' => 'text/html',
@@ -70,7 +70,7 @@ class Wrapper
       'TargetLang' => $targetLanguage
     );
 
-    $httpResult = $connection->postRequest('translation/quote', json_encode($json), true);
+    $httpResult = $apiClient->postRequest('translation/quote', json_encode($json), true);
     $json = json_decode($httpResult);
 
     if ($json->WordCount == 0) {
@@ -115,7 +115,7 @@ class Wrapper
   }
 //TODO refactor function signature
   /**
-   * @param ApiClient $connection
+   * @param ApiClient $apiClient
    * @param string $title the title of the translations
    * @param string $sourceLanguage supertext source language
    * @param string $targetLanguage supertext target language
@@ -128,7 +128,7 @@ class Wrapper
    * @throws ApiConnectionException
    * @throws ApiDataException
    */
-  public static function createOrder($connection, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $additionalInformation, $referenceData, $callback)
+  public static function createOrder($apiClient, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $additionalInformation, $referenceData, $callback)
   {
     $product = explode(':', $translationType);
 
@@ -151,7 +151,7 @@ class Wrapper
       'Groups' => self::buildSupertextData($data)
     );
 
-    $httpResult = $connection->postRequest('translation/order', json_encode($json), true);
+    $httpResult = $apiClient->postRequest('translation/order', json_encode($json), true);
     $json = json_decode($httpResult);
 
     if (empty($json->Deadline) || empty($json->Id)) {
