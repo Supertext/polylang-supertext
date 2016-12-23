@@ -170,6 +170,6 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
       $pcfFieldsToSave[] = $checkedPcfField;
     }
 
-    $this->library->saveSetting(Constant::SETTING_PCF_FIELDS, $pcfFieldsToSave);
+    $this->library->saveSettingOption(Constant::SETTING_PCF_FIELDS, $pcfFieldsToSave);
   }
 }

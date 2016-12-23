@@ -154,7 +154,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
       }
     }
 
-    $this->library->saveSetting(Constant::SETTING_ACF_FIELDS, $acfFieldDefinitionsToSave);
+    $this->library->saveSettingOption(Constant::SETTING_ACF_FIELDS, $acfFieldDefinitionsToSave);
   }
 
   /**

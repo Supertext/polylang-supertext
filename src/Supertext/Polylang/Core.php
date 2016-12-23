@@ -79,6 +79,7 @@ class Core
 
   /**
    * @return Core return the core instance
+   * @deprecated
    */
   public static function getInstance()
   {
@@ -192,7 +193,7 @@ class Core
     $options = $library->getSettingOption();
 
     if (isset($options[Helper\Constant::SETTING_CUSTOM_FIELDS]) && get_option(Constant::VERSION_OPTION) < 1.8) {
-      $library->saveSetting(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
+      $library->saveSettingOption(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
     }
 
     self::addWellKnownShortcodeSettings($options, $library);
@@ -279,7 +280,7 @@ class Core
       );
     }
 
-    $library->saveSetting(Helper\Constant::SETTING_SHORTCODES, $shortcodeSettings);
+    $library->saveSettingOption(Helper\Constant::SETTING_SHORTCODES, $shortcodeSettings);
   }
 
   /**

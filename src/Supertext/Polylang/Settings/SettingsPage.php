@@ -5,6 +5,7 @@ namespace Supertext\Polylang\Settings;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Helper\ISettingsAware;
 use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\PostMeta;
 
 /**
  * The supertext / polylang main settings page
@@ -241,8 +242,8 @@ class SettingsPage extends AbstractPage
     }
 
     // Put into the options
-    $this->library->saveSetting(Constant::SETTING_USER_MAP, $userMap);
-    $this->library->saveSetting(Constant::SETTING_LANGUAGE_MAP, $languageMap);
+    $this->library->saveSettingOption(Constant::SETTING_USER_MAP, $userMap);
+    $this->library->saveSettingOption(Constant::SETTING_LANGUAGE_MAP, $languageMap);
   }
 
   private function saveTranslatableFieldsSettings()
@@ -289,7 +290,7 @@ class SettingsPage extends AbstractPage
       }
     }
 
-    $this->library->saveSetting(Constant::SETTING_SHORTCODES, $shortcodeSettingsToSave);
+    $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettingsToSave);
   }
 
   /**
@@ -319,7 +320,7 @@ class SettingsPage extends AbstractPage
       'apiServerUrl' => !empty($_POST['apiServerUrl']) ? $_POST['apiServerUrl'] : Constant::LIVE_API,
     );
 
-    $this->library->saveSetting(Constant::SETTING_WORKFLOW, $settingsToSave);
+    $this->library->saveSettingOption(Constant::SETTING_WORKFLOW, $settingsToSave);
   }
 
   /**
@@ -328,7 +329,7 @@ class SettingsPage extends AbstractPage
   private function runHiddenFunctions()
   {
     if(!empty($_GET['setInTranslationFlagFalse'])){
-      update_post_meta($_GET['setInTranslationFlagFalse'], Constant::IN_TRANSLATION_FLAG, 0);
+      PostMeta::from($_GET['setInTranslationFlagFalse'])->set(PostMeta::IN_TRANSLATION, false);
     }
   }
 } 

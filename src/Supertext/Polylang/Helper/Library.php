@@ -70,7 +70,7 @@ class Library
    * @param string $subSetting key
    * @param array|mixed $value saved value
    */
-  public function saveSetting($subSetting, $value)
+  public function saveSettingOption($subSetting, $value)
   {
     $options = $this->getSettingOption();
     $options[$subSetting] = $value;

@@ -5,6 +5,7 @@ namespace Supertext\Polylang\Backend;
 use Supertext\Polylang\Api\WriteBack;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Api\Multilang;
+use Supertext\Polylang\Helper\PostMeta;
 
 class CallbackHandler
 {
@@ -104,7 +105,7 @@ class CallbackHandler
       $isPostWritable =
         $translationPost->post_status == 'draft' ||
         ($translationPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
-        intval(get_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, true)) === 1;
+        PostMeta::from($translationPost->ID)->is(PostMeta::IN_TRANSLATION);
 
       if (!$isPostWritable) {
         $errors[$postId] = 'The post for saving the translation is not writable.';
@@ -121,8 +122,8 @@ class CallbackHandler
       // Now finally save that post and flush cache
       wp_update_post($translationPost);
 
-      // All good, remove translation flag
-      delete_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG);
+      // All good, set translation flag false
+      PostMeta::from($translationPost->ID)->set(PostMeta::IN_TRANSLATION, false);
 
       $this->log->addEntry($translationPostId, __('translation saved successfully', 'Polylang-Supertext'));
     }

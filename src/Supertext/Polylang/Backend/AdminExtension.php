@@ -5,6 +5,7 @@ namespace Supertext\Polylang\Backend;
 use Comotive\Helper\Metabox;
 use Comotive\Util\Date;
 use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\PostMeta;
 
 /**
  * Serves as a helper for the translation inject to the user
@@ -77,7 +78,7 @@ class AdminExtension
     if($this->isEditPostScreen()){
       $postId = intval($_GET['post']);
       $this->screenContext['postId'] = $postId;
-      $this->screenContext['isPostInTranslation'] = get_post_meta($postId, Constant::IN_TRANSLATION_FLAG, true) == 1;
+      $this->screenContext['isPostInTranslation'] = PostMeta::from($postId)->is(PostMeta::IN_TRANSLATION);
     }
   }
 
@@ -241,7 +242,7 @@ class AdminExtension
       return;
     }
 
-    if (get_post_meta($postId, Constant::IN_TRANSLATION_FLAG, true) == 1) {
+    if (PostMeta::from($postId)->is(PostMeta::IN_TRANSLATION)) {
       echo '<span class="dashicons dashicons-clock"></span>';
     }
   }

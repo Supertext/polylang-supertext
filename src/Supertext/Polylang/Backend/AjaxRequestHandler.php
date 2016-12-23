@@ -5,6 +5,7 @@ namespace Supertext\Polylang\Backend;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\PostMeta;
 
 /**
  * Provided ajax request handlers
@@ -61,7 +62,7 @@ class AjaxRequestHandler
         'id' => $postId,
         'title' => $post->post_title,
         'languageCode' => Multilang::getPostLanguage($postId),
-        'isInTranslation' => get_post_meta($postId, Constant::IN_TRANSLATION_FLAG, true) == 1,
+        'isInTranslation' => PostMeta::from($postId)->get(PostMeta::IN_TRANSLATION),
         'isDraft' => $post->post_status == 'draft',
         'unfinishedTranslations' => $this->getUnfinishedTranslations($postId),
         'translatableFieldGroups' => $this->contentProvider->getTranslatableFieldGroups($postId)
@@ -197,8 +198,9 @@ class AjaxRequestHandler
       $this->log->addOrderId($postId, $order->Id);
       $this->log->addOrderId($translationPost->ID, $order->Id);
 
-      update_post_meta($translationPost->ID, Constant::IN_TRANSLATION_FLAG, 1);
-      update_post_meta($translationPost->ID, Constant::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$postId]);
+      $postMeta = PostMeta::from($translationPost->ID);
+      $postMeta->set(PostMeta::IN_TRANSLATION, true);
+      $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$postId]);
     }
   }
 
@@ -403,7 +405,7 @@ class AjaxRequestHandler
     foreach ($languages as $language) {
       $translationPostId = Multilang::getPostInLanguage($postId, $language->slug);
 
-      if ($translationPostId == null || $translationPostId == $postId || get_post_meta($translationPostId, Constant::IN_TRANSLATION_FLAG, true) != 1) {
+      if ($translationPostId == null || $translationPostId == $postId || !PostMeta::from($translationPostId)->is(PostMeta::IN_TRANSLATION)) {
         continue;
       }
 
