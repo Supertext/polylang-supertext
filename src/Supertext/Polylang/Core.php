@@ -102,11 +102,11 @@ class Core
       $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getContentAccessors()));
       $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
       $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
+
+      $this->checkVersion();
     }
 
     add_action( 'wp_ajax_nopriv_sttr_callback', array($this, 'handleCallback'));
-
-    $this->checkVersion();
   }
 
   /**
@@ -272,7 +272,9 @@ class Core
           array('name' => 'name', 'encoding' => ''),
           array('name' => 'button_text', 'encoding' => ''),
           array('name' => 'job_title', 'encoding' => ''),
-          array('name' => 'heading', 'encoding' => '')
+          array('name' => 'heading', 'encoding' => ''),
+          array('name' => 'title1_overlay', 'encoding' => ''),
+          array('name' => 'title2_overlay', 'encoding' => '')
         )
       );
     }
