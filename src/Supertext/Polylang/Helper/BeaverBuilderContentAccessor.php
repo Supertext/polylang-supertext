@@ -110,18 +110,18 @@ class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAwar
   }
 
   /**
-   * @param $post
-   * @param $translationPost
+   * @param $sourcePost
+   * @param $targetPost
    */
-  public function prepareTranslationPost($post, $translationPost)
+  public function prepareTargetPost($sourcePost, $targetPost)
   {
-    update_post_meta($translationPost->ID, '_fl_builder_enabled', get_post_meta($post->ID, '_fl_builder_enabled', true));
+    update_post_meta($targetPost->ID, '_fl_builder_enabled', get_post_meta($sourcePost->ID, '_fl_builder_enabled', true));
 
-    $layoutData = FLBuilderModel::get_layout_data(null, $post->ID);
-    FLBuilderModel::update_layout_data($layoutData, null, $translationPost->ID);
+    $layoutData = FLBuilderModel::get_layout_data(null, $sourcePost->ID);
+    FLBuilderModel::update_layout_data($layoutData, null, $targetPost->ID);
 
-    $layoutSettings = FLBuilderModel::get_layout_settings(null, $post->ID);
-    FLBuilderModel::update_layout_settings($layoutSettings, null, $translationPost->ID);
+    $layoutSettings = FLBuilderModel::get_layout_settings(null, $sourcePost->ID);
+    FLBuilderModel::update_layout_settings($layoutSettings, null, $targetPost->ID);
   }
 
   /**

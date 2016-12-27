@@ -106,10 +106,10 @@ class ContentProvider
   }
 
   /**
-   * @param $translationPost
+   * @param $targetPost
    * @param $translationData
    */
-  public function saveTranslatedData($translationPost, $translationData)
+  public function saveTranslatedData($targetPost, $translationData)
   {
     foreach ($translationData as $id => $texts) {
       if (!isset($this->contentAccessors[$id])) {
@@ -117,19 +117,19 @@ class ContentProvider
       }
 
       $contentAccessors = $this->contentAccessors[$id];
-      $contentAccessors->setTexts($translationPost, $texts);
+      $contentAccessors->setTexts($targetPost, $texts);
     }
   }
 
   /**
-   * @param $post
-   * @param $translationPost
+   * @param $sourcePost
+   * @param $targetPost
    */
-  public function prepareTranslationPost($post, $translationPost)
+  public function prepareTargetPost($sourcePost, $targetPost)
   {
     foreach ($this->contentAccessors as $id => $contentAccessor) {
       if ($contentAccessor instanceof ITranslationAware) {
-        $contentAccessor->prepareTranslationPost($post, $translationPost);
+        $contentAccessor->prepareTargetPost($sourcePost, $targetPost);
       }
     }
   }

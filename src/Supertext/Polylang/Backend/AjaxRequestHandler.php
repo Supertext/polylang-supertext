@@ -123,15 +123,15 @@ class AjaxRequestHandler
     $sourceLanguage = $_POST['orderSourceLanguage'];
     $targetLanguage = $_POST['orderTargetLanguage'];
     $translationData = $this->getTranslationData($translatableContents);
-    $postIds = array_keys($translatableContents);
-    $additionalInformation = $_POST['comment'] . ' Posts:' . implode(', ', $postIds);
-    $referenceHashes = $this->createReferenceHashes($postIds);
+    $sourcePostIds = array_keys($translatableContents);
+    $additionalInformation = $_POST['comment'] . ' Posts:' . implode(', ', $sourcePostIds);
+    $referenceHashes = $this->createReferenceHashes($sourcePostIds);
 
     try {
 
       $order = Wrapper::createOrder(
         $this->library->getApiClient(),
-        get_bloginfo('name') . ' - ' . count($postIds) . ' post(s)' ,
+        get_bloginfo('name') . ' - ' . count($sourcePostIds) . ' post(s)' ,
         $this->library->mapLanguage($sourceLanguage),
         $this->library->mapLanguage($targetLanguage),
         $translationData,
@@ -141,7 +141,7 @@ class AjaxRequestHandler
         admin_url( 'admin-ajax.php' ) . '?action=sttr_callback'
       );
 
-      $this->ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage, $referenceHashes);
+      $this->ProcessTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes);
 
       $result = array(
         'message' => '
@@ -152,8 +152,8 @@ class AjaxRequestHandler
 
       self::returnResponse(200, $result);
     } catch (\Exception $e) {
-      foreach ($postIds as $postId) {
-        $this->log->addEntry($postId, $e->getMessage());
+      foreach ($sourcePostIds as $sourcePostId) {
+        $this->log->addEntry($sourcePostId, $e->getMessage());
       }
 
       self::returnResponse(500, $e->getMessage());
@@ -178,15 +178,15 @@ class AjaxRequestHandler
 
   /**
    * @param $order
-   * @param $postIds
+   * @param $sourcePostIds
    * @param $sourceLanguage
    * @param $targetLanguage
    * @param $referenceHashes
    */
-  private function ProcessTranslationPosts($order, $postIds, $sourceLanguage, $targetLanguage, $referenceHashes)
+  private function ProcessTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes)
   {
-    foreach ($postIds as $postId) {
-      $translationPost = $this->getTranslationPost($postId, $sourceLanguage, $targetLanguage);
+    foreach ($sourcePostIds as $sourcePostId) {
+      $targetPost = $this->getTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
 
       $message = sprintf(
         __('Translation order into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
@@ -194,13 +194,13 @@ class AjaxRequestHandler
         $order->Id
       );
 
-      $this->log->addEntry($postId, $message);
-      $this->log->addOrderId($postId, $order->Id);
-      $this->log->addOrderId($translationPost->ID, $order->Id);
+      $this->log->addEntry($sourcePostId, $message);
+      $this->log->addOrderId($sourcePostId, $order->Id);
+      $this->log->addOrderId($targetPost->ID, $order->Id);
 
-      $postMeta = PostMeta::from($translationPost->ID);
+      $postMeta = PostMeta::from($targetPost->ID);
       $postMeta->set(PostMeta::IN_TRANSLATION, true);
-      $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$postId]);
+      $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
       $postMeta->set(PostMeta::SOURCE_LANGUAGE, $sourceLanguage);
     }
   }
@@ -217,67 +217,67 @@ class AjaxRequestHandler
   }
 
   /**
-   * @param $postId
+   * @param $sourcePostId
    * @param $sourceLanguage
    * @param $targetLanguage
    * @return array|null|\WP_Post
    */
-  private function getTranslationPost($postId, $sourceLanguage, $targetLanguage)
+  private function getTargetPost($sourcePostId, $sourceLanguage, $targetLanguage)
   {
-    $translationPostId = Multilang::getPostInLanguage($postId, $targetLanguage);
+    $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
 
-    if ($translationPostId == null) {
-      $translationPost = $this->createTranslationPost($postId, $sourceLanguage, $targetLanguage);
-      $this->log->addEntry($translationPostId, __('The post to be translated has been created.', 'polylang-supertext'));
-      return $translationPost;
+    if ($targetPostId == null) {
+      $targetPost = $this->createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
+      $this->log->addEntry($targetPostId, __('The post to be translated has been created.', 'polylang-supertext'));
+      return $targetPost;
     }
 
-    return get_post($translationPostId);
+    return get_post($targetPostId);
   }
 
   /**
-   * @param $postId
+   * @param $sourcePostId
    * @param $sourceLanguage
    * @param $targetLanguage
    * @return array|null|\WP_Post
    * @internal param $options
    */
-  private function createTranslationPost($postId, $sourceLanguage, $targetLanguage)
+  private function createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage)
   {
-    $translationPostId = self::createNewPostFrom($postId);
-    $translationPost = get_post($translationPostId);
+    $targetPostId = self::createNewPostFrom($sourcePostId);
+    $targetPost = get_post($targetPostId);
 
-    self::addImageAttachments($postId, $translationPostId, $sourceLanguage, $targetLanguage);
-    self::copyPostMetas($postId, $translationPostId, $targetLanguage);
+    self::addImageAttachments($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
+    self::copyPostMetas($sourcePostId, $targetPostId, $targetLanguage);
 
-    wp_update_post($translationPost);
+    wp_update_post($targetPost);
 
-    self::setLanguage($postId, $translationPostId, $sourceLanguage, $targetLanguage);
+    self::setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
 
-    return $translationPost;
+    return $targetPost;
   }
 
   /**
-   * @param $postId
+   * @param $sourcePostId
    * @return int|\WP_Error
    */
-  private static function createNewPostFrom($postId)
+  private static function createNewPostFrom($sourcePostId)
   {
-    $post = get_post($postId);
+    $sourcePost = get_post($sourcePostId);
 
-    $translationPostData = array(
+    $targetPostData = array(
       'post_author' => wp_get_current_user()->ID,
-      'post_mime_type' => $post->post_mime_type,
-      'post_password' => $post->post_password,
+      'post_mime_type' => $sourcePost->post_mime_type,
+      'post_password' => $sourcePost->post_password,
       'post_status' => self::TRANSLATION_POST_STATUS,
-      'post_title' => $post->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]',
-      'post_type' => $post->post_type,
-      'menu_order' => $post->menu_order,
-      'comment_status' => $post->comment_status,
-      'ping_status' => $post->ping_status,
+      'post_title' => $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]',
+      'post_type' => $sourcePost->post_type,
+      'menu_order' => $sourcePost->menu_order,
+      'comment_status' => $sourcePost->comment_status,
+      'ping_status' => $sourcePost->ping_status,
     );
 
-    return wp_insert_post($translationPostData);
+    return wp_insert_post($targetPostData);
   }
 
   /**
@@ -321,11 +321,11 @@ class AjaxRequestHandler
 
   /**
    * Copy post metas using polylang
-   * @param $postId
-   * @param $translationPostId
+   * @param $sourcePostId
+   * @param $targetPostId
    * @param $target_lang
    */
-  private static function copyPostMetas($postId, $translationPostId, $target_lang)
+  private static function copyPostMetas($sourcePostId, $targetPostId, $target_lang)
   {
     global $polylang;
 
@@ -333,8 +333,8 @@ class AjaxRequestHandler
       return;
     }
 
-    $polylang->sync->copy_taxonomies($postId, $translationPostId, $target_lang);
-    $polylang->sync->copy_post_metas($postId, $translationPostId, $target_lang);
+    $polylang->sync->copy_taxonomies($sourcePostId, $targetPostId, $target_lang);
+    $polylang->sync->copy_post_metas($sourcePostId, $targetPostId, $target_lang);
   }
 
   /**
@@ -375,18 +375,18 @@ class AjaxRequestHandler
   }
 
   /**
-   * @param array $postIds
+   * @param array $sourcePostIds
    * @return array
    */
-  private function createReferenceHashes($postIds)
+  private function createReferenceHashes($sourcePostIds)
   {
     $referenceHashes = array();
 
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
-    foreach ($postIds as $postId) {
+    foreach ($sourcePostIds as $sourcePostId) {
       $referenceHash = openssl_random_pseudo_bytes(32);
       $referenceData ^= $referenceHash;
-      $referenceHashes[$postId] = bin2hex($referenceHash);
+      $referenceHashes[$sourcePostId] = bin2hex($referenceHash);
     }
 
     $referenceHashes[0] = bin2hex($referenceData);
@@ -395,23 +395,23 @@ class AjaxRequestHandler
   }
 
   /**
-   * @param $postId
+   * @param $sourcePostId
    * @return array
    */
-  private function getUnfinishedTranslations($postId)
+  private function getUnfinishedTranslations($sourcePostId)
   {
     $unfinishedTranslations = array();
 
     $languages = Multilang::getLanguages();
     foreach ($languages as $language) {
-      $translationPostId = Multilang::getPostInLanguage($postId, $language->slug);
+      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $language->slug);
 
-      if ($translationPostId == null || $translationPostId == $postId || !PostMeta::from($translationPostId)->is(PostMeta::IN_TRANSLATION)) {
+      if ($targetPostId == null || $targetPostId == $sourcePostId || !PostMeta::from($targetPostId)->is(PostMeta::IN_TRANSLATION)) {
         continue;
       }
 
       $unfinishedTranslations[$language->slug] = array(
-        'orderId' => $this->log->getLastOrderId($translationPostId)
+        'orderId' => $this->log->getLastOrderId($targetPostId)
       );
     }
 

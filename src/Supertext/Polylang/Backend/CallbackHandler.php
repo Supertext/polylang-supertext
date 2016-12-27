@@ -90,48 +90,48 @@ class CallbackHandler
     $errors = array();
     $translationData = $writeBack->getTranslationData();
 
-    foreach ($writeBack->getPostIds() as $postId) {
-      $translationPostId = Multilang::getPostInLanguage($postId, $writeBack->getTargetLanguage());
+    foreach ($writeBack->getSourcePostIds() as $sourcePostId) {
+      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $writeBack->getTargetLanguage());
 
-      if ($translationPostId == null) {
-        $errors[$postId] = 'There is no linked post for saving the translation.';
+      if ($targetPostId == null) {
+        $errors[$sourcePostId] = 'There is no linked post for saving the translation.';
         continue;
       }
 
       // Get the translation post object
-      $translationPost = get_post($translationPostId);
+      $targetPost = get_post($targetPostId);
       $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
 
       $isPostWritable =
-        $translationPost->post_status == 'draft' ||
-        ($translationPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
-        PostMeta::from($translationPost->ID)->is(PostMeta::IN_TRANSLATION);
+        $targetPost->post_status == 'draft' ||
+        ($targetPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
+        PostMeta::from($targetPost->ID)->is(PostMeta::IN_TRANSLATION);
 
       if (!$isPostWritable) {
-        $errors[$postId] = 'The post for saving the translation is not writable.';
+        $errors[$sourcePostId] = 'The post for saving the translation is not writable.';
         continue;
       }
 
-      $this->contentProvider->prepareTranslationPost(get_post($postId), $translationPost);
-      $this->contentProvider->saveTranslatedData($translationPost, $translationData[$postId]);
+      $this->contentProvider->prepareTargetPost(get_post($sourcePostId), $targetPost);
+      $this->contentProvider->saveTranslatedData($targetPost, $translationData[$sourcePostId]);
 
       if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
-        $translationPost->post_status = 'publish';
+        $targetPost->post_status = 'publish';
       }
 
       // Now finally save that post and flush cache
-      wp_update_post($translationPost);
+      wp_update_post($targetPost);
 
       // All good, set translation flag false
-      PostMeta::from($translationPost->ID)->set(PostMeta::IN_TRANSLATION, false);
+      PostMeta::from($targetPost->ID)->set(PostMeta::IN_TRANSLATION, false);
 
-      $this->log->addEntry($translationPostId, __('translation saved successfully', 'Polylang-Supertext'));
+      $this->log->addEntry($targetPostId, __('translation saved successfully', 'Polylang-Supertext'));
     }
 
     if(count($errors)){
       $message = 'Errors: ';
-      foreach($errors as $postId => $error){
-        $message .= "Concerning post with id $postId" .' -> ' . $error;
+      foreach($errors as $sourcePostId => $error){
+        $message .= "Concerning post with id $sourcePostId" .' -> ' . $error;
       }
       self::returnResponse(500, array('message' => $message));
     }

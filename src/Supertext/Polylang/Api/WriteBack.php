@@ -58,12 +58,12 @@ class WriteBack
       return $this->isReferenceValidLegacy();
     }
 
-    $postIds = $this->getPostIds();
+    $sourcePostIds = $this->getSourcePostIds();
 
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
-    foreach ($postIds as $postId) {
-      $translationPostId = Multilang::getPostInLanguage($postId, $this->getTargetLanguage());
-      $referenceHash = PostMeta::from($translationPostId)->get(PostMeta::IN_TRANSLATION_REFERENCE_HASH);
+    foreach ($sourcePostIds as $sourcePostId) {
+      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguage());
+      $referenceHash = PostMeta::from($targetPostId)->get(PostMeta::IN_TRANSLATION_REFERENCE_HASH);
       $referenceData ^= hex2bin($referenceHash);
     }
 
@@ -101,7 +101,7 @@ class WriteBack
   /**
    * @return array|null
    */
-  public function getPostIds(){
+  public function getSourcePostIds(){
     if($this->postIds == null){
       $this->postIds = array_keys($this->getTranslationData());
     }
@@ -115,13 +115,13 @@ class WriteBack
    */
   private function isReferenceValidLegacy(){
     $refData = explode('-', $this->json->ReferenceData, 2);
-    $postId = $refData[0];
+    $sourcePostId = $refData[0];
     $secureToken = $refData[1];
 
-    $translationPostId = Multilang::getPostInLanguage($postId, $this->getTargetLanguage());
-    $referenceHash = PostMeta::from($translationPostId)->get(PostMeta::IN_TRANSLATION_REFERENCE_HASH);
+    $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguage());
+    $referenceHash = PostMeta::from($targetPostId)->get(PostMeta::IN_TRANSLATION_REFERENCE_HASH);
 
-    return !empty($referenceHash) && md5($referenceHash . $postId) === $secureToken;
+    return !empty($referenceHash) && md5($referenceHash . $sourcePostId) === $secureToken;
   }
 
   /**
