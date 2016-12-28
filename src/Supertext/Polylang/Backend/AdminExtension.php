@@ -217,13 +217,25 @@ class AdminExtension
    */
   public function displayMetaBoxView()
   {
+    $status = "";
+    $postMeta = PostMeta::from($this->currentPostId);
+
+    $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
+    if($sourceLanguageCode != null){
+
+      if($postMeta->is(PostMeta::IN_TRANSLATION)){
+        $status = sprintf(__('This post is being translated from %s', 'polylang-supertext'), __($sourceLanguageCode, 'polylang-supertext-langs'));
+      } else if ($sourceLanguageCode != null){
+        $status = sprintf(__('This post was translated from %s', 'polylang-supertext'), __($sourceLanguageCode, 'polylang-supertext-langs'));
+      }
+    }
+
     $logEntries = $this->log->getLogEntries($this->currentPostId);
     $logEntries = array_reverse($logEntries);
 
     $view = new View('backend/meta-box.php');
     $view->render(array(
-      'library' => $this->library,
-      'postMeta' => PostMeta::from($this->currentPostId),
+      'status' => $status,
       'logEntries' => $logEntries
     ));
   }

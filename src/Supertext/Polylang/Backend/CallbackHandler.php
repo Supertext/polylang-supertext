@@ -123,7 +123,8 @@ class CallbackHandler
       wp_update_post($targetPost);
 
       // All good, set translation flag false
-      PostMeta::from($targetPost->ID)->set(PostMeta::IN_TRANSLATION, false);
+      $postMeta = PostMeta::from($targetPost->ID);
+      $postMeta->set(PostMeta::IN_TRANSLATION, false);
 
       $this->log->addEntry($targetPostId, __('translation saved successfully', 'Polylang-Supertext'));
     }

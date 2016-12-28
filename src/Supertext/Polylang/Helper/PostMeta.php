@@ -8,7 +8,7 @@ class PostMeta
   const TRANSLATION_PROPERTIES = '_sttr_translation_properties';
   const IN_TRANSLATION = 'inTranslation';
   const IN_TRANSLATION_REFERENCE_HASH = 'inTranslationRefHash';
-  const SOURCE_LANGUAGE = 'sourceLanguage';
+  const SOURCE_LANGUAGE_CODE = 'sourceLanguageCode';
 
   private $postId;
   private $translationProperties;
@@ -27,7 +27,7 @@ class PostMeta
       $translationProperties = array(
         self::IN_TRANSLATION => false,
         self::IN_TRANSLATION_REFERENCE_HASH => '',
-        self::SOURCE_LANGUAGE => ''
+        self::SOURCE_LANGUAGE_CODE => ''
       );
     }
 
@@ -36,19 +36,19 @@ class PostMeta
 
   public function is($key)
   {
-    return $this->translationProperties[$key] === true;
+    return isset($this->translationProperties[$key]) && $this->translationProperties[$key] === true;
   }
 
   public function get($key)
   {
-    return $this->translationProperties[$key];
+    return isset($this->translationProperties[$key]) ? $this->translationProperties[$key] : null;
   }
 
   public function getPublicProperties()
   {
     return array(
       self::IN_TRANSLATION => $this->is(self::IN_TRANSLATION),
-      self::SOURCE_LANGUAGE => $this->translationProperties[self::SOURCE_LANGUAGE]
+      self::SOURCE_LANGUAGE_CODE => $this->translationProperties[self::SOURCE_LANGUAGE_CODE]
     );
   }
 
