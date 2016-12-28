@@ -2,15 +2,13 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Comotive\Helper\Metabox;
-use Comotive\Util\Date;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\PostMeta;
+use Supertext\Polylang\Helper\View;
 
 /**
  * Serves as a helper for the translation inject to the user
  * @package Supertext\Polylang\Backend
- * @author Michael Sebel <michael@comotive.ch>
  */
 class AdminExtension
 {
@@ -18,6 +16,11 @@ class AdminExtension
    * @var string the translation column id
    */
   const TRANSLATION_STATUS_COLUMN = 'translation-status';
+
+  /**
+   * @var meta box id
+   */
+  const META_BOX = 'sttr_meta_box';
 
   /**
    * @var \Supertext\Polylang\Helper\Library
@@ -42,7 +45,7 @@ class AdminExtension
   /**
    * @var null|array
    */
-  private $screenContext = null;
+  private $currentPostId = null;
 
   /**
    * Various filters to change and/or display things
@@ -58,7 +61,7 @@ class AdminExtension
     add_action('admin_notices', array($this, 'showInTranslationMessage'));
     add_action('admin_footer', array($this, 'addJavascriptContext'));
     add_action('admin_footer', array($this, 'addTemplates'));
-    add_action('add_meta_boxes', array($this, 'addLogInfoMetabox'));
+    add_action('add_meta_boxes', array($this, 'addMetaBox'));
 
     add_filter('manage_posts_columns', array($this, 'addTranslationStatusColumn'), 100);
     add_action('manage_posts_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
@@ -73,13 +76,7 @@ class AdminExtension
   {
     $this->screenBase = $screen->base;
     $this->screenAction = empty($screen->action) ? empty($_GET['action']) ? '' : $_GET['action'] : $screen->action;
-    $this->screenContext = array();
-
-    if($this->isEditPostScreen()){
-      $postId = intval($_GET['post']);
-      $this->screenContext['postId'] = $postId;
-      $this->screenContext['isPostInTranslation'] = PostMeta::from($postId)->is(PostMeta::IN_TRANSLATION);
-    }
+    $this->currentPostId = isset($_GET['post']) ? intval($_GET['post']) : 0;
   }
 
   /**
@@ -152,10 +149,10 @@ class AdminExtension
       return;
     }
 
-    $orderId = $this->log->getLastOrderId($this->screenContext['postId']);
+    $orderId = $this->log->getLastOrderId($this->currentPostId);
 
     // Show info if there is an order and the article is not translated yet
-    if (intval($orderId) > 0 && $this->screenContext['isPostInTranslation']) {
+    if (intval($orderId) > 0 && PostMeta::from($this->currentPostId)->is(PostMeta::IN_TRANSLATION)) {
       echo '
         <div class="updated">
           <p>' . sprintf(__('The post was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
@@ -178,7 +175,7 @@ class AdminExtension
     $context = array(
       'enable' => $pluginStatus->isPolylangActivated && $pluginStatus->isCurlActivated && $pluginStatus->isPluginConfiguredProperly && $pluginStatus->isCurrentUserConfigured,
       'screen' => $this->screenBase,
-      'screenContext' => $this->screenContext,
+      'currentPostId' => $this->currentPostId,
       'resourceUrl' => get_bloginfo('wpurl'),
       'ajaxUrl' => admin_url( 'admin-ajax.php' )
     );
@@ -197,38 +194,38 @@ class AdminExtension
   public function addTemplates()
   {
     if ($this->isEditPostScreen() || $this->isPostsScreen()) {
-      include SUPERTEXT_POLYLANG_VIEW_PATH . 'templates/admin-extension-templates.php';
+      $view = new View('templates/admin-extension-templates.php');
+      $view->render();
     }
   }
 
   /**
-   * Show supertext log information, if there are entries for the current post
+   * Show supertext translation information
    */
-  public function addLogInfoMetabox()
+  public function addMetaBox()
   {
-    if ($this->isEditPostScreen()) {
-      $logEntries = $this->log->getLogEntries($this->screenContext['postId']);
-
-      // Show info if valid post and there are entries
-      if ($this->screenContext['postId'] > 0 && count($logEntries) > 0) {
-        // Reverse entries, so that the newest is on top
-        $logEntries = array_reverse($logEntries);
-        // Create an html element to display the entries
-        $html = '';
-        foreach ($logEntries as $entry) {
-          $datetime = '
-          ' . Date::getTime(Date::EU_DATE, $entry['datetime']) . ',
-          ' . Date::getTime(Date::EU_TIME, $entry['datetime']) . '
-        ';
-          $html .= '<p><strong>' . $datetime . '</strong>: ' . $entry['message'] . '</p>';
-        }
-
-        $helper = Metabox::get('post');
-        // Add a new metabox to show log entries
-        $helper->addMetabox(Log::META_LOG, __('Supertext Plugin Log', 'polylang-supertext'), 'side', 'low');
-        $helper->addHtml('info', Log::META_LOG, $html);
-      }
+    //return if not edit screen and not existing post
+    if(!$this->isEditPostScreen() || $this->currentPostId <= 0){
+      return;
     }
+
+    add_meta_box(self::META_BOX, __('Supertext Translation', 'polylang-supertext'), array($this, 'displayMetaBoxView'), $this->screenBase, 'side');
+  }
+
+  /**
+   * Shows meta box view
+   */
+  public function displayMetaBoxView()
+  {
+    $logEntries = $this->log->getLogEntries($this->currentPostId);
+    $logEntries = array_reverse($logEntries);
+
+    $view = new View('backend/meta-box.php');
+    $view->render(array(
+      'library' => $this->library,
+      'postMeta' => PostMeta::from($this->currentPostId),
+      'logEntries' => $logEntries
+    ));
   }
 
   /**

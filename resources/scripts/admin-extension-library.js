@@ -835,9 +835,15 @@ Supertext.Polylang = (function (win, doc, $) {
       injectOrderLinks();
     }
 
-    if (context.screenContext.isPostInTranslation) {
-      disableTranslatingPost();
-    }
+    doGetRequest(
+      context.ajaxUrl, {
+        action: 'sttr_getPostTranslationInfo',
+        postIds: [context.currentPostId]
+      }).done(function(translationInfos) {
+        if(translationInfos[0].meta.inTranslation){
+          disableTranslatingPost();
+        }
+      });
   }
 
   /**
@@ -1221,7 +1227,7 @@ Supertext.Polylang = (function (win, doc, $) {
       return;
     }
 
-    state.postIds = [context.screenContext.postId];
+    state.postIds = [context.currentPostId];
     state.targetLanguageCode = targetLanguageCode;
 
     startOrderProcess();
