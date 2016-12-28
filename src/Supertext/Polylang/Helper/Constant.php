@@ -24,6 +24,10 @@ class Constant
   /**
    * @var string the version option
    */
+  const ENVIRONMENT_ADJUSTED_OPTION = 'polylang_supertext_environment_adjusted';
+  /**
+   * @var string the version option
+   */
   const VERSION_OPTION = 'polylang_supertext_version';
   /**
    * @var string the version option

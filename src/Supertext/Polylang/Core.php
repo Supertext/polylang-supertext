@@ -105,6 +105,7 @@ class Core
       $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
 
       $this->checkVersion();
+      $this->checkEnvironment();
     }
 
     add_action( 'wp_ajax_nopriv_sttr_callback', array($this, 'handleCallback'));
@@ -195,8 +196,6 @@ class Core
     if (isset($options[Helper\Constant::SETTING_CUSTOM_FIELDS]) && get_option(Constant::VERSION_OPTION) < 1.8) {
       $library->saveSettingOption(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
     }
-
-    self::addWellKnownShortcodeSettings($options, $library);
   }
 
   /**
@@ -218,12 +217,11 @@ class Core
 
   /**
    * Adds well known shortcode settings depending on installed plugins
-   * @param $options
    * @param Library $library
    */
-  private static function addWellKnownShortcodeSettings($options, $library)
+  private function addWellKnownShortcodeSettings($library)
   {
-    $shortcodeSettings = isset($options[Helper\Constant::SETTING_SHORTCODES]) ? $options[Helper\Constant::SETTING_SHORTCODES] : array();
+    $shortcodeSettings = $library->getSettingOption(Helper\Constant::SETTING_SHORTCODES);
 
     if (WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')){
       $shortcodeSettings['vc_[^\s|\]]+'] = array(
@@ -373,6 +371,18 @@ class Core
     }
 
     return $contentAccessors;
+  }
+
+  /**
+   * Check environment
+   */
+  private function checkEnvironment()
+  {
+    if (!get_option(Constant::ENVIRONMENT_ADJUSTED_OPTION, false)) {
+      $this->addWellKnownShortcodeSettings($this->getLibrary());
+
+      update_option(Constant::ENVIRONMENT_ADJUSTED_OPTION, true);
+    }
   }
 
   /**
