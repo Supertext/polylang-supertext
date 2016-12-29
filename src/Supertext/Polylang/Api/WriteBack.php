@@ -62,7 +62,7 @@ class WriteBack
 
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
     foreach ($sourcePostIds as $sourcePostId) {
-      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguage());
+      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
       $referenceHash = PostMeta::from($targetPostId)->get(PostMeta::IN_TRANSLATION_REFERENCE_HASH);
       $referenceData ^= hex2bin($referenceHash);
     }
@@ -73,10 +73,11 @@ class WriteBack
   /**
    * @return null|string
    */
-  public function getTargetLanguage()
+
+  public function getTargetLanguageCode()
   {
     if ($this->targetLanguage == null) {
-      $this->targetLanguage = substr($this->json->TargetLang, 0, 2);
+      $this->targetLanguage = $this->library->toPolyCode($this->json->TargetLang);
     }
     return $this->targetLanguage;
   }
@@ -118,7 +119,7 @@ class WriteBack
     $sourcePostId = $refData[0];
     $secureToken = $refData[1];
 
-    $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguage());
+    $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
     $referenceHash = PostMeta::from($targetPostId)->get(PostMeta::IN_TRANSLATION_REFERENCE_HASH);
 
     return !empty($referenceHash) && md5($referenceHash . $sourcePostId) === $secureToken;

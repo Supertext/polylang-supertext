@@ -15,20 +15,37 @@ class Library
   private $pluginStatus = null;
 
   /**
-   * @param string $language polylang language code
+   * @param $languageCode polylang language code
    * @return string equivalent supertext language code
    */
-  public function mapLanguage($language)
+  public function toSuperCode($languageCode)
   {
     $languageMappings = $this->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
-    foreach ($languageMappings as $polyKey => $stKey) {
-      if ($language == $polyKey) {
-        return $stKey;
+    foreach ($languageMappings as $polyKey => $superKey) {
+      if ($languageCode == $polyKey) {
+        return $superKey;
       }
     }
 
     return null;
   }
+
+  /**
+   * @param $languageCode Supertext language code
+   * @return string equivalent polylang language code
+   */
+  public function toPolyCode($languageCode)
+  {
+    $languageMappings = $this->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
+    foreach ($languageMappings as $polyKey => $superKey) {
+      if ($languageCode == $superKey) {
+        return $polyKey;
+      }
+    }
+
+    return null;
+  }
+
 
   /**
    * @param int $userId wordpress user

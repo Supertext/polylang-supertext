@@ -104,8 +104,8 @@ class AjaxRequestHandler
     try {
       $quote = Wrapper::getQuote(
         $this->library->getApiClient(),
-        $this->library->mapLanguage($_POST['orderSourceLanguage']),
-        $this->library->mapLanguage($_POST['orderTargetLanguage']),
+        $this->library->toSuperCode($_POST['orderSourceLanguage']),
+        $this->library->toSuperCode($_POST['orderTargetLanguage']),
         $translationData
       );
 
@@ -133,8 +133,8 @@ class AjaxRequestHandler
       $order = Wrapper::createOrder(
         $this->library->getApiClient(),
         get_bloginfo('name') . ' - ' . count($sourcePostIds) . ' post(s)' ,
-        $this->library->mapLanguage($sourceLanguage),
-        $this->library->mapLanguage($targetLanguage),
+        $this->library->toSuperCode($sourceLanguage),
+        $this->library->toSuperCode($targetLanguage),
         $translationData,
         $_POST['translationType'],
         $additionalInformation,
@@ -183,8 +183,8 @@ class AjaxRequestHandler
 
       Wrapper::sendPostChanges(
         $this->library->getApiClient(),
-        $this->library->mapLanguage($sourceLanguageCode),
-        $this->library->mapLanguage(Multilang::getPostLanguage($targetPostId)),
+        $this->library->toSuperCode($sourceLanguageCode),
+        $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
         $postMeta->get(PostMeta::TRANSLATION_DATA),
         $this->contentProvider->getTranslationData($targetPost, $selectedTranslatableFieldGroups)
       );
@@ -253,7 +253,7 @@ class AjaxRequestHandler
   private function getLanguageName($key)
   {
     // Get the supertext key
-    $stKey = $this->library->mapLanguage($key);
+    $stKey = $this->library->toSuperCode($key);
     return __($stKey, 'polylang-supertext-langs');
   }
 

@@ -91,7 +91,7 @@ class CallbackHandler
     $translationData = $writeBack->getTranslationData();
 
     foreach ($writeBack->getSourcePostIds() as $sourcePostId) {
-      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $writeBack->getTargetLanguage());
+      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
 
       if ($targetPostId == null) {
         $errors[$sourcePostId] = 'There is no linked post for saving the translation.';
