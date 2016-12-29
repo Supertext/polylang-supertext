@@ -828,6 +828,33 @@ Supertext.Polylang = (function (win, doc, $) {
   };
 
   /**
+   * Sending post changes step
+   */
+  var sendPostChangesStep = function () {
+    var self = this;
+
+    /**
+     * Loads confirmation step
+     */
+    self.loadData = function () {
+      return doGetRequest(
+        context.ajaxUrl, {
+          action: 'sttr_sendPostChanges',
+          targetPostId: state.targetPostId
+        });
+    };
+
+    /**
+     * Adds confirmation step content
+     */
+    self.addStepElements = function (data) {
+      modal.showContent(template.confirmationStep({
+        message: data.message
+      }));
+    };
+  };
+
+  /**
    * Initialize on post screen
    */
   function initializePostScreen() {
@@ -919,7 +946,7 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function startOrderProcess() {
     steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
-    openModal();
+    openModal(l10n.orderModalTitle);
     addOrderProgressBar();
     addCancelButton();
     addBackButton();
@@ -927,11 +954,23 @@ Supertext.Polylang = (function (win, doc, $) {
   }
 
   /**
+   * Starts the send post changes process
+   */
+  function startSendPostChangesProcess() {
+    var step = createStep(sendPostChangesStep);
+    openModal(l10n.sendChangesModalTitle);
+    addCloseButton();
+    modal.showContent(template.stepLoader({}));
+
+    step.load();
+  }
+
+  /**
    * Opens the modal
    */
-  function openModal() {
+  function openModal(title) {
     modal.open({
-      title: l10n.modalTitle
+      title: title
     });
   }
 
@@ -1198,7 +1237,7 @@ Supertext.Polylang = (function (win, doc, $) {
    * @param textStatus
    * @param errorThrown
    */
-  function showAjaxError(jqXHR, textStatus, errorThrown) {console.log(arguments);
+  function showAjaxError(jqXHR, textStatus, errorThrown) {
     state.ajaxErrorToken = modal.showError({
       title: l10n.networkError,
       message: jqXHR.status + ' ' + textStatus + ': ' + errorThrown,
@@ -1231,6 +1270,15 @@ Supertext.Polylang = (function (win, doc, $) {
     state.targetLanguageCode = targetLanguageCode;
 
     startOrderProcess();
+  }
+
+  /**
+   * Sends the post changes to supertext
+   */
+  function sendPostChanges() {
+    state.targetPostId = context.currentPostId;
+
+    startSendPostChangesProcess();
   }
 
   /**
@@ -1283,7 +1331,8 @@ Supertext.Polylang = (function (win, doc, $) {
         initializeEditScreen();
       }
     },
-    openOrderForm: openOrderForm
+    openOrderForm: openOrderForm,
+    sendPostChanges: sendPostChanges
   };
 
 })(window, document, jQuery);

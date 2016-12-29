@@ -46,6 +46,7 @@ class AjaxRequestHandler
     add_action('wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
     add_action('wp_ajax_sttr_getOffer', array($this, 'getOffer'));
     add_action('wp_ajax_sttr_createOrder', array($this, 'createOrder'));
+    add_action('wp_ajax_sttr_sendPostChanges', array($this, 'sendPostChanges'));
   }
 
   /**
@@ -156,6 +157,46 @@ class AjaxRequestHandler
         $this->log->addEntry($sourcePostId, $e->getMessage());
       }
 
+      self::returnResponse(500, $e->getMessage());
+    }
+  }
+
+  /**
+   * Send post changes to supertext
+   */
+  public function sendPostChanges()
+  {
+    $targetPostId = $_GET['targetPostId'];
+    $targetPost = get_post($targetPostId);
+    $postMeta = PostMeta::from($targetPostId);
+    $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
+    $translatableFieldGroups = $this->contentProvider->getTranslatableFieldGroups($targetPostId);
+    $selectedTranslatableFieldGroups = array();
+    foreach($translatableFieldGroups as $id => $translatableFieldGroup){
+      $selectedTranslatableFieldGroups[$id] = array('fields' => array());
+      foreach($translatableFieldGroup['fields'] as $field){
+        $selectedTranslatableFieldGroups[$id]['fields'][$field['name']] = 'on';
+      }
+    }
+
+    try {
+
+      Wrapper::sendPostChanges(
+        $this->library->getApiClient(),
+        $this->library->mapLanguage($sourceLanguageCode),
+        $this->library->mapLanguage(Multilang::getPostLanguage($targetPostId)),
+        $postMeta->get(PostMeta::TRANSLATION_DATA),
+        $this->contentProvider->getTranslationData($targetPost, $selectedTranslatableFieldGroups)
+      );
+
+      $postMeta->set(PostMeta::TRANSLATION_DATE, $targetPost->post_modified);
+
+      $result = array(
+        'message' => __('The changes have been sent successfully.', 'polylang-supertext')
+      );
+
+      self::returnResponse(200, $result);
+    } catch (\Exception $e) {
       self::returnResponse(500, $e->getMessage());
     }
   }

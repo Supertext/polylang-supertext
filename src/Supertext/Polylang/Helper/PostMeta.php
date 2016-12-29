@@ -9,6 +9,8 @@ class PostMeta
   const IN_TRANSLATION = 'inTranslation';
   const IN_TRANSLATION_REFERENCE_HASH = 'inTranslationRefHash';
   const SOURCE_LANGUAGE_CODE = 'sourceLanguageCode';
+  const TRANSLATION_DATE = "translationDate";
+  const TRANSLATION_DATA = "translationData";
 
   private $postId;
   private $translationProperties;
@@ -27,7 +29,9 @@ class PostMeta
       $translationProperties = array(
         self::IN_TRANSLATION => false,
         self::IN_TRANSLATION_REFERENCE_HASH => '',
-        self::SOURCE_LANGUAGE_CODE => ''
+        self::SOURCE_LANGUAGE_CODE => '',
+        self::TRANSLATION_DATE => '',
+        self::TRANSLATION_DATA => ''
       );
     }
 

@@ -217,18 +217,16 @@ class AdminExtension
    */
   public function displayMetaBoxView()
   {
-    $status = "";
     $postMeta = PostMeta::from($this->currentPostId);
 
     $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
-    if($sourceLanguageCode != null){
 
-      if($postMeta->is(PostMeta::IN_TRANSLATION)){
-        $status = sprintf(__('This post is being translated from %s', 'polylang-supertext'), __($sourceLanguageCode, 'polylang-supertext-langs'));
-      } else if ($sourceLanguageCode != null){
-        $status = sprintf(__('This post was translated from %s', 'polylang-supertext'), __($sourceLanguageCode, 'polylang-supertext-langs'));
-      }
-    }
+    $status = array(
+      'isTranslation' => $sourceLanguageCode != null,
+      'sourceLanguage' => __($sourceLanguageCode, 'polylang-supertext-langs'),
+      'isInTranslation' => $postMeta->is(PostMeta::IN_TRANSLATION),
+      'hasChangedSinceLastTranslation' => $postMeta->get(PostMeta::TRANSLATION_DATE) <  get_post_field( 'post_modified', $this->currentPostId)
+    );
 
     $logEntries = $this->log->getLogEntries($this->currentPostId);
     $logEntries = array_reverse($logEntries);

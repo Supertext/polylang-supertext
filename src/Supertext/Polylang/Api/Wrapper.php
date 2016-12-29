@@ -205,6 +205,27 @@ class Wrapper
   }
 
   /**
+   * @param ApiClient $apiClient
+   * @param $sourceLanguage
+   * @param $targetLanguage
+   * @param $oldData
+   * @param $newData
+   * @return array|mixed|object
+   * @throws ApiDataException
+   */
+  public static function sendPostChanges($apiClient, $sourceLanguage, $targetLanguage, $oldData, $newData)
+  {
+    $json = array(
+      'SourceLang' => $sourceLanguage,
+      'TargetLang' => $targetLanguage,
+      'OldFinalContentGroups' => self::buildSupertextData($oldData),
+      'NewFinalContentGroups' => self::buildSupertextData($newData)
+    );
+
+    $httpResult = $apiClient->postRequest('translationmemory/syncrequests', json_encode($json), true);
+  }
+
+  /**
    * Gets the items
    * @param $group
    * @param $keyPrefix
