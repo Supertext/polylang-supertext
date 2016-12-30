@@ -48,6 +48,11 @@ class AdminExtension
   private $currentPostId = null;
 
   /**
+   * @var bool
+   */
+  private $isCurrentPostInTranslation = false;
+
+  /**
    * Various filters to change and/or display things
    */
   public function __construct($library, $log)
@@ -77,6 +82,7 @@ class AdminExtension
     $this->screenBase = $screen->base;
     $this->screenAction = empty($screen->action) ? empty($_GET['action']) ? '' : $_GET['action'] : $screen->action;
     $this->currentPostId = isset($_GET['post']) ? intval($_GET['post']) : 0;
+    $this->isCurrentPostInTranslation = isset($_GET['post'])  && PostMeta::from($this->currentPostId)->is(PostMeta::IN_TRANSLATION);
   }
 
   /**
@@ -152,7 +158,7 @@ class AdminExtension
     $orderId = $this->log->getLastOrderId($this->currentPostId);
 
     // Show info if there is an order and the article is not translated yet
-    if (intval($orderId) > 0 && PostMeta::from($this->currentPostId)->is(PostMeta::IN_TRANSLATION)) {
+    if (intval($orderId) > 0 && $this->isCurrentPostInTranslation) {
       echo '
         <div class="updated">
           <p>' . sprintf(__('The post was sent to Supertext and is now being translated. Your order number is %s.', 'polylang-supertext'), intval($orderId)) . '</p>
@@ -176,6 +182,7 @@ class AdminExtension
       'enable' => $pluginStatus->isPolylangActivated && $pluginStatus->isCurlActivated && $pluginStatus->isPluginConfiguredProperly && $pluginStatus->isCurrentUserConfigured,
       'screen' => $this->screenBase,
       'currentPostId' => $this->currentPostId,
+      'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,
       'resourceUrl' => get_bloginfo('wpurl'),
       'ajaxUrl' => admin_url( 'admin-ajax.php' )
     );

@@ -862,15 +862,9 @@ Supertext.Polylang = (function (win, doc, $) {
       injectOrderLinks();
     }
 
-    doGetRequest(
-      context.ajaxUrl, {
-        action: 'sttr_getPostTranslationInfo',
-        postIds: [context.currentPostId]
-      }).done(function(translationInfos) {
-        if(translationInfos[0].meta.inTranslation){
-          disableTranslatingPost();
-        }
-      });
+    if(context.isCurrentPostInTranslation){
+      disableTranslatingPost();
+    }
   }
 
   /**
