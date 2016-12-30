@@ -1,21 +1,15 @@
-<strong><?php _e('Status', 'polylang-supertext'); ?></strong>
-<p>
 <?php
-if(!$status['isTranslation']){
-  _e('This post is not a translation of another post', 'polylang-supertext');
-}else if($status['isInTranslation']) {
-  printf(__('This post is being translated from %s', 'polylang-supertext'), $status['sourceLanguage']);
-}else{
-  printf(__('This post was translated from %s', 'polylang-supertext'), $status['sourceLanguage']);
-}
-?>
-</p>
 
-<?php
-if($status['isTranslation'] && !$status['isInTranslation']){
+if ($status['isInTranslation']) {
+  echo '<strong>'. __('Status', 'polylang-supertext') . '</strong>';
+  echo '<p>' . __('This post is being translated', 'polylang-supertext') . '</p>';
+} else if($status['isTranslation']) {
+  echo '<strong>'. __('Status', 'polylang-supertext') . '</strong>';
+  echo '<p>' . __('This post is a translation', 'polylang-supertext') . '</p>';
   $disabled = $status['hasChangedSinceLastTranslation'] ? '' : 'disabled';
-  echo '<p><button type="button" class="button" '.$disabled.' onclick="Supertext.Polylang.sendPostChanges()">Send changes to Supertext</button></p>';
+  echo '<p><button type="button" class="button" ' . $disabled . ' onclick="Supertext.Polylang.sendPostChanges()">Send changes to Supertext</button></p>';
 }
+
 ?>
 <strong><?php _e('Log', 'polylang-supertext'); ?></strong>
 <div class="sttr-log-container">

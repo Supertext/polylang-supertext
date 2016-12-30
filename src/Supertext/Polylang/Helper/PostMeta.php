@@ -5,6 +5,7 @@ namespace Supertext\Polylang\Helper;
 class PostMeta
 {
   const TRANSLATION_PROPERTIES = '_sttr_translation_properties';
+  const TRANSLATION = 'translation';
   const IN_TRANSLATION = 'inTranslation';
   const IN_TRANSLATION_REFERENCE_HASH = 'inTranslationRefHash';
   const SOURCE_LANGUAGE_CODE = 'sourceLanguageCode';
@@ -26,6 +27,7 @@ class PostMeta
 
     if(empty($translationProperties)){
       $translationProperties = array(
+        self::TRANSLATION => false,
         self::IN_TRANSLATION => false,
         self::IN_TRANSLATION_REFERENCE_HASH => '',
         self::SOURCE_LANGUAGE_CODE => '',

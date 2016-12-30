@@ -240,6 +240,7 @@ class AjaxRequestHandler
       $this->log->addOrderId($targetPost->ID, $order->Id);
 
       $postMeta = PostMeta::from($targetPost->ID);
+      $postMeta->set(PostMeta::TRANSLATION, true);
       $postMeta->set(PostMeta::IN_TRANSLATION, true);
       $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
       $postMeta->set(PostMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);

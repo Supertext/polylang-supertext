@@ -18,6 +18,7 @@ use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\CustomFieldsContentAccessor;
 use Supertext\Polylang\Helper\PcfContentAccessor;
 use Supertext\Polylang\Helper\PluginFieldDefinitions;
+use Supertext\Polylang\Helper\PostMeta;
 use Supertext\Polylang\Helper\PostTaxonomyContentAccessor;
 use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostContentAccessor;
@@ -196,6 +197,17 @@ class Core
 
     if (isset($options[Helper\Constant::SETTING_CUSTOM_FIELDS]) && get_option(Constant::VERSION_OPTION) < 1.8) {
       $library->saveSettingOption(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
+    }
+
+    $queryForLegacyTranslationFlag = new \WP_Query(array(
+      'meta_key' => '_in_st_translation'
+    ));
+
+    foreach($queryForLegacyTranslationFlag->posts as $post){
+      $postMeta = PostMeta::from($post->ID);
+      $postMeta->set(PostMeta::TRANSLATION, true);
+      $postMeta->set(PostMeta::IN_TRANSLATION, true);
+      $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, get_post_meta($post->ID, '_in_translation_ref_hash', true));
     }
   }
 

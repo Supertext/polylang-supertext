@@ -15,7 +15,7 @@ class Library
   private $pluginStatus = null;
 
   /**
-   * @param $languageCode polylang language code
+   * @param string $languageCode polylang language code
    * @return string equivalent supertext language code
    */
   public function toSuperCode($languageCode)
@@ -31,7 +31,7 @@ class Library
   }
 
   /**
-   * @param $languageCode Supertext language code
+   * @param string $languageCode Supertext language code
    * @return string equivalent polylang language code
    */
   public function toPolyCode($languageCode)
