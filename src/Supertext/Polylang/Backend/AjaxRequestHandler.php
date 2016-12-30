@@ -170,23 +170,30 @@ class AjaxRequestHandler
     $targetPost = get_post($targetPostId);
     $postMeta = PostMeta::from($targetPostId);
     $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
-    $translatableFieldGroups = $this->contentProvider->getTranslatableFieldGroups($targetPostId);
-    $selectedTranslatableFieldGroups = array();
-    foreach($translatableFieldGroups as $id => $translatableFieldGroup){
-      $selectedTranslatableFieldGroups[$id] = array('fields' => array());
-      foreach($translatableFieldGroup['fields'] as $field){
-        $selectedTranslatableFieldGroups[$id]['fields'][$field['name']] = 'on';
-      }
-    }
+    $newTranslatableContent = $this->getAllTranslatableContent($targetPostId);
+    $oldTranslatableContent = array();
 
     try {
+      $revisions = wp_get_post_revisions($targetPostId);
+      $translationDate = strtotime($postMeta->get(PostMeta::TRANSLATION_DATE));
+
+      foreach($revisions as $revision){
+        if(strtotime($revision->post_modified) == $translationDate){
+          $oldTranslatableContent = $this->getAllTranslatableContent($revision->ID);
+          break;
+        }
+      }
+
+      if(empty($oldTranslatableContent)){
+        self::returnResponse(500, __('Could not retrieve old version', 'polylang-supertext'));
+      }
 
       Wrapper::sendPostChanges(
         $this->library->getApiClient(),
         $this->library->toSuperCode($sourceLanguageCode),
         $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
-        $postMeta->get(PostMeta::TRANSLATION_DATA),
-        $this->contentProvider->getTranslationData($targetPost, $selectedTranslatableFieldGroups)
+        $this->getTranslationData($oldTranslatableContent),
+        $this->getTranslationData($newTranslatableContent)
       );
 
       $postMeta->set(PostMeta::TRANSLATION_DATE, $targetPost->post_modified);
@@ -215,6 +222,23 @@ class AjaxRequestHandler
     }
 
     return $translationData;
+  }
+
+  /**
+   * @param $postId
+   * @return array
+   */
+  private function getAllTranslatableContent($postId)
+  {
+    $translatableContents = array($postId => array());
+    $translatableFieldGroups = $this->contentProvider->getTranslatableFieldGroups($postId);
+    foreach($translatableFieldGroups as $id => $translatableFieldGroup){
+      $translatableContents[$postId][$id] = array('fields' => array());
+      foreach($translatableFieldGroup['fields'] as $field){
+        $translatableContents[$postId][$id]['fields'][$field['name']] = 'on';
+      }
+    }
+    return $translatableContents;
   }
 
   /**

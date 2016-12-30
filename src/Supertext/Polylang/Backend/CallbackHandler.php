@@ -126,7 +126,6 @@ class CallbackHandler
       $postMeta = PostMeta::from($targetPost->ID);
       $postMeta->set(PostMeta::IN_TRANSLATION, false);
       $postMeta->set(PostMeta::TRANSLATION_DATE, get_post_field('post_modified', $targetPost->ID));
-      $postMeta->set(PostMeta::TRANSLATION_DATA, $translationData[$sourcePostId]);
 
       $this->log->addEntry($targetPostId, __('translation saved successfully', 'Polylang-Supertext'));
     }

@@ -222,7 +222,7 @@ class Wrapper
       'NewFinalContentGroups' => self::buildSupertextData($newData)
     );
 
-    $httpResult = $apiClient->postRequest('translationmemory/syncrequests', json_encode($json), true);
+    $apiClient->postRequest('translationmemory/syncrequests', json_encode($json), true);
   }
 
   /**

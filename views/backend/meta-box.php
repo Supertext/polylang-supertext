@@ -6,7 +6,7 @@ if ($status['isInTranslation']) {
 } else if($status['isTranslation']) {
   echo '<strong>'. __('Status', 'polylang-supertext') . '</strong>';
   echo '<p>' . __('This post is a translation', 'polylang-supertext') . '</p>';
-  $disabled = $status['hasChangedSinceLastTranslation'] ? '' : 'disabled';
+  $disabled = $status['hasChangedSinceLastTranslation'] ? '' : 'disabled="disabled"';
   echo '<p><button type="button" class="button" ' . $disabled . ' onclick="Supertext.Polylang.sendPostChanges()">Send changes to Supertext</button></p>';
 }
 
