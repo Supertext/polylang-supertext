@@ -376,6 +376,11 @@ class AjaxRequestHandler
 
     $polylang->sync->copy_taxonomies($sourcePostId, $targetPostId, $target_lang);
     $polylang->sync->copy_post_metas($sourcePostId, $targetPostId, $target_lang);
+
+    //TODO refactor
+    delete_post_meta($targetPostId, PostMeta::TRANSLATION_PROPERTIES);
+    delete_post_meta($targetPostId, Log::META_LOG);
+    delete_post_meta($targetPostId, Log::META_ORDER_ID);
   }
 
   /**
