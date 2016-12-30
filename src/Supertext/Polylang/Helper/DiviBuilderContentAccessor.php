@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: heinrich
- * Date: 05.12.16
- * Time: 09:00
- */
 
 namespace Supertext\Polylang\Helper;
 

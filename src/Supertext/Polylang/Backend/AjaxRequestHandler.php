@@ -247,14 +247,14 @@ class AjaxRequestHandler
   }
 
   /**
-   * @param string $key slug to search
+   * @param string $polyCode slug to search
    * @return string name of the $key language
    */
-  private function getLanguageName($key)
+  private function getLanguageName($polyCode)
   {
     // Get the supertext key
-    $stKey = $this->library->toSuperCode($key);
-    return __($stKey, 'polylang-supertext-langs');
+    $superCode = $this->library->toSuperCode($polyCode);
+    return __($superCode, 'polylang-supertext-langs');
   }
 
   /**

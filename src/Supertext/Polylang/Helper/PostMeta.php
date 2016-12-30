@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang\Helper;
 
-
 class PostMeta
 {
   const TRANSLATION_PROPERTIES = '_sttr_translation_properties';
