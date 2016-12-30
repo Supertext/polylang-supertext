@@ -270,7 +270,7 @@ class AjaxRequestHandler
 
     if ($targetPostId == null) {
       $targetPost = $this->createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
-      $this->log->addEntry($targetPostId, __('The post to be translated has been created.', 'polylang-supertext'));
+      $this->log->addEntry($targetPost->ID, __('The post to be translated has been created.', 'polylang-supertext'));
       return $targetPost;
     }
 
