@@ -213,7 +213,7 @@ class Wrapper
    * @return array|mixed|object
    * @throws ApiDataException
    */
-  public static function sendPostChanges($apiClient, $sourceLanguage, $targetLanguage, $oldData, $newData)
+  public static function sendSyncRequest($apiClient, $sourceLanguage, $targetLanguage, $oldData, $newData)
   {
     $json = array(
       'SourceLang' => $sourceLanguage,

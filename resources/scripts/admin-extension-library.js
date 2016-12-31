@@ -830,7 +830,7 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Sending post changes step
    */
-  var sendPostChangesStep = function () {
+  var sendSyncRequestStep = function () {
     var self = this;
 
     /**
@@ -839,7 +839,7 @@ Supertext.Polylang = (function (win, doc, $) {
     self.loadData = function () {
       return doGetRequest(
         context.ajaxUrl, {
-          action: 'sttr_sendPostChanges',
+          action: 'sttr_sendSyncRequest',
           targetPostId: state.targetPostId
         });
     };
@@ -950,8 +950,8 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Starts the send post changes process
    */
-  function startSendPostChangesProcess() {
-    var step = createStep(sendPostChangesStep);
+  function startSendSyncRequestProcess() {
+    var step = createStep(sendSyncRequestStep);
     openModal(l10n.sendChangesModalTitle);
     addCloseButton();
     modal.showContent(template.stepLoader({}));
@@ -1269,10 +1269,10 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Sends the post changes to supertext
    */
-  function sendPostChanges() {
+  function sendSyncRequest() {
     state.targetPostId = context.currentPostId;
 
-    startSendPostChangesProcess();
+    startSendSyncRequestProcess();
   }
 
   /**
@@ -1326,7 +1326,7 @@ Supertext.Polylang = (function (win, doc, $) {
       }
     },
     openOrderForm: openOrderForm,
-    sendPostChanges: sendPostChanges
+    sendSyncRequest: sendSyncRequest
   };
 
 })(window, document, jQuery);

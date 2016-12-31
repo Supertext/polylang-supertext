@@ -2,12 +2,15 @@
 
 if ($status['isInTranslation']) {
   echo '<strong>'. __('Status', 'polylang-supertext') . '</strong>';
-  echo '<p>' . __('This post is being translated', 'polylang-supertext') . '</p>';
+  echo '<p>' . __('This post is being translated.', 'polylang-supertext') . '</p>';
 } else if($status['isTranslation']) {
   echo '<strong>'. __('Status', 'polylang-supertext') . '</strong>';
-  echo '<p>' . __('This post is a translation', 'polylang-supertext') . '</p>';
+  echo '<p>';
+  echo __('This post is a translation.', 'polylang-supertext');
+  echo $status['hasChangedSinceLastTranslation'] ? __(' It has been modified and doesn\'t match the original translation.', 'polylang-supertext') : '';
+  echo '</p>';
   $disabled = $status['hasChangedSinceLastTranslation'] ? '' : 'disabled="disabled"';
-  echo '<p><button type="button" class="button" ' . $disabled . ' onclick="Supertext.Polylang.sendPostChanges()">Send changes to Supertext</button></p>';
+  echo '<p><button type="button" class="button" ' . $disabled . ' onclick="Supertext.Polylang.sendSyncRequest()">'. __('Send changes to Supertext', 'polylang-supertext') .' </button></p>';
 }
 
 ?>

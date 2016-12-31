@@ -46,7 +46,7 @@ class AjaxRequestHandler
     add_action('wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
     add_action('wp_ajax_sttr_getOffer', array($this, 'getOffer'));
     add_action('wp_ajax_sttr_createOrder', array($this, 'createOrder'));
-    add_action('wp_ajax_sttr_sendPostChanges', array($this, 'sendPostChanges'));
+    add_action('wp_ajax_sttr_sendSyncRequest', array($this, 'sendSyncRequest'));
   }
 
   /**
@@ -164,7 +164,7 @@ class AjaxRequestHandler
   /**
    * Send post changes to supertext
    */
-  public function sendPostChanges()
+  public function sendSyncRequest()
   {
     $targetPostId = $_GET['targetPostId'];
     $targetPost = get_post($targetPostId);
@@ -188,7 +188,7 @@ class AjaxRequestHandler
         self::returnResponse(500, __('Could not retrieve old version', 'polylang-supertext'));
       }
 
-      Wrapper::sendPostChanges(
+      Wrapper::sendSyncRequest(
         $this->library->getApiClient(),
         $this->library->toSuperCode($sourceLanguageCode),
         $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
@@ -201,6 +201,8 @@ class AjaxRequestHandler
       $result = array(
         'message' => __('The changes have been sent successfully.', 'polylang-supertext')
       );
+
+      $this->log->addEntry($targetPostId, __('Post changes have been sent to Supertext.', 'polylang-supertext'));
 
       self::returnResponse(200, $result);
     } catch (\Exception $e) {
