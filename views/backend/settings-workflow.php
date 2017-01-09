@@ -32,10 +32,13 @@ if(!isset($options[$selectedApiServer])){
       <input type="checkbox" id="sttr-override-published-posts" name="overridePublishedPosts"  <?php echo $overridePublishedPostsChecked; ?>/>
       <label for="sttr-override-published-posts"><?php _e('Allow Supertext to overwrite published posts', 'polylang-supertext'); ?></label>
     </p>
-    <p>
+    <?php
+    //not available for the moment
+    /*<p>
       <input type="checkbox" id="sttr-sync-translation-changes" name="syncTranslationChanges"  <?php echo $syncTranslationChangesChecked; ?>/>
       <label for="sttr-sync-translation-changes"><?php _e('Synchronize translation changes', 'polylang-supertext'); ?></label>
-    </p>
+    </p>*/
+    ?>
     <p>
       <label for="sttr-api-selection"><?php _e('API Server', 'polylang-supertext'); ?></label>
       <select id="sttr-api-selection">
