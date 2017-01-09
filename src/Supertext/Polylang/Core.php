@@ -20,6 +20,7 @@ use Supertext\Polylang\Helper\PcfContentAccessor;
 use Supertext\Polylang\Helper\PluginFieldDefinitions;
 use Supertext\Polylang\Helper\PostMeta;
 use Supertext\Polylang\Helper\PostTaxonomyContentAccessor;
+use Supertext\Polylang\Helper\SiteOriginContentAccessor;
 use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostContentAccessor;
 use Supertext\Polylang\Helper\PostMediaContentAccessor;
@@ -377,6 +378,10 @@ class Core
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php') || WordPress::isPluginActive('bb-plugin/fl-builder.php')) {
       $contentAccessors['beaver_builder'] = new BeaverBuilderContentAccessor($textProcessor);
+    }
+
+    if (WordPress::isPluginActive('siteorigin-panels/siteorigin-panels.php')) {
+      $contentAccessors['siteorigin_panels'] = new SiteOriginContentAccessor($textProcessor);
     }
 
     if (WordPress::isPluginActive('divi-builder/divi-builder.php')) {
