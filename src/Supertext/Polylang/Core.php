@@ -364,6 +364,10 @@ class Core
       $pcfContentAccessor->registerPluginFieldDefinitions('yoast_seo', PluginFieldDefinitions::getYoastSeoFieldDefinitions());
     }
 
+    if (WordPress::isPluginActive('all-in-one-seo-pack/all_in_one_seo_pack.php')) {
+      $pcfContentAccessor->registerPluginFieldDefinitions('all_in_one_seo_pack', PluginFieldDefinitions::getAllInOneSeoFieldDefinitions());
+    }
+
     if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
       $pcfContentAccessor->registerPluginFieldDefinitions('be_pb', PluginFieldDefinitions::getBePageBuilderFieldDefinitions());
     }

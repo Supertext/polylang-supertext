@@ -41,6 +41,27 @@ class PluginFieldDefinitions
     );
   }
 
+  public static function getAllInOneSeoFieldDefinitions(){
+    return array(
+      'label' => 'All in One SEO',
+      'type' => 'group',
+      'sub_field_definitions' => array(
+        '_aioseop_title' => array(
+          'label' => __('SEO Title', 'polylang-supertext'),
+          'type' => 'field'
+        ),
+        '_aioseop_description' => array(
+          'label' => __('SEO Description', 'polylang-supertext'),
+          'type' => 'field'
+        ),
+        '_aioseop_keywords' => array(
+          'label' => __('SEO Keywords', 'polylang-supertext'),
+          'type' => 'field'
+        ),
+      )
+    );
+  }
+
   public static function getBePageBuilderFieldDefinitions()
   {
     return array(
