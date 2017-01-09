@@ -6,6 +6,7 @@ $workflowSettings = $library->getSettingOption(Constant::SETTING_WORKFLOW);
 
 $publishOnCallbackChecked = isset($workflowSettings['publishOnCallback']) && $workflowSettings['publishOnCallback'] ? 'checked="checked"' : '';
 $overridePublishedPostsChecked = isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts'] ? 'checked="checked"' : '';
+$syncTranslationChangesChecked = isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges'] ? 'checked="checked"' : '';
 $selectedApiServer = isset($workflowSettings['apiServerUrl']) ? $workflowSettings['apiServerUrl'] : Constant::LIVE_API;
 
 $options = array(
@@ -30,6 +31,10 @@ if(!isset($options[$selectedApiServer])){
     <p>
       <input type="checkbox" id="sttr-override-published-posts" name="overridePublishedPosts"  <?php echo $overridePublishedPostsChecked; ?>/>
       <label for="sttr-override-published-posts"><?php _e('Allow Supertext to overwrite published posts', 'polylang-supertext'); ?></label>
+    </p>
+    <p>
+      <input type="checkbox" id="sttr-sync-translation-changes" name="syncTranslationChanges"  <?php echo $syncTranslationChangesChecked; ?>/>
+      <label for="sttr-sync-translation-changes"><?php _e('Synchronize translation changes', 'polylang-supertext'); ?></label>
     </p>
     <p>
       <label for="sttr-api-selection"><?php _e('API Server', 'polylang-supertext'); ?></label>

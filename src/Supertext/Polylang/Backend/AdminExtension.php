@@ -238,9 +238,12 @@ class AdminExtension
     $logEntries = $this->log->getLogEntries($this->currentPostId);
     $logEntries = array_reverse($logEntries);
 
+    $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
+
     $view = new View('backend/meta-box');
     $view->render(array(
       'status' => $status,
+      'syncTranslationChanges' => isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges'],
       'logEntries' => $logEntries
     ));
   }

@@ -322,6 +322,7 @@ class SettingsPage extends AbstractPage
     $settingsToSave = array(
       'publishOnCallback' => !empty($_POST['publishOnCallback']),
       'overridePublishedPosts' => !empty($_POST['overridePublishedPosts']),
+      'syncTranslationChanges' => !empty($_POST['syncTranslationChanges']),
       'apiServerUrl' => !empty($_POST['apiServerUrl']) ? $_POST['apiServerUrl'] : Constant::LIVE_API,
     );
 
