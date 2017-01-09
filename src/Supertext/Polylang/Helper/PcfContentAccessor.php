@@ -145,7 +145,7 @@ class PcfContentAccessor implements IContentAccessor, ISettingsAware
     $savedPcfFields = $this->library->getSettingOption(Constant::SETTING_PCF_FIELDS);
 
     return array(
-      'view' => 'backend/settings-pcf',
+      'view' => new View('backend/settings-pcf'),
       'context' => array(
         'pcfFieldDefinitions' => $this->pcfFieldDefinitions,
         'savedPcfFields' => $savedPcfFields

@@ -123,7 +123,7 @@ class AcfContentAccessor implements IContentAccessor, ISettingsAware
     }
 
     return array(
-      'view' => 'backend/settings-acf',
+      'view' => new View('backend/settings-acf'),
       'context' => array(
         'acfFieldDefinitions' => $this->getAcfFieldDefinitions(),
         'savedAcfFieldIds' => $savedAcfFieldIds

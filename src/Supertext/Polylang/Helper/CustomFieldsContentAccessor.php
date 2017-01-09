@@ -111,7 +111,7 @@ class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
     $savedCustomFields = $this->library->getSettingOption(Constant::SETTING_CUSTOM_FIELDS);
 
     return array(
-      'view' => 'backend/settings-custom-fields',
+      'view' => new View('backend/settings-custom-fields'),
       'context' => array(
         'savedCustomFields' => $savedCustomFields
       )

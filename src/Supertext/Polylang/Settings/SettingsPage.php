@@ -6,6 +6,7 @@ use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Helper\ISettingsAware;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\PostMeta;
+use Supertext\Polylang\Helper\View;
 
 /**
  * The supertext / polylang main settings page
@@ -21,6 +22,7 @@ class SettingsPage extends AbstractPage
 
   private $contentAccessors;
   private $tabs = array();
+  private $viewTemplates;
 
   public function __construct($library, $contentAccessors)
   {
@@ -30,6 +32,8 @@ class SettingsPage extends AbstractPage
 
     // Tabs definitions
     $this->tabs = array();
+
+    $this->viewTemplates = new View("templates/settings-templates");
   }
 
   public function initTabs(){
@@ -41,8 +45,8 @@ class SettingsPage extends AbstractPage
     $this->tabs[self::USERS_TAB] = array(
       'name' => __('User and languages', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-users', 'context' => $this->library),
-        array('view' => 'backend/settings-languages', 'context' => $this->library)
+        array('view' => new View('backend/settings-users')),
+        array('view' => new View('backend/settings-languages'))
       ),
       'saveFunction' => 'saveUserAndLanguageSettings'
     );
@@ -58,7 +62,7 @@ class SettingsPage extends AbstractPage
     $this->tabs[self::SHORTCODES_TAB] = array(
       'name' => __('Shortcodes', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-shortcodes', 'context' => $this->library)
+        array('view' => new View('backend/settings-shortcodes'))
       ),
       'saveFunction' => 'saveShortcodesSettings'
     );
@@ -67,7 +71,7 @@ class SettingsPage extends AbstractPage
     $this->tabs[self::WORKFLOW_TAB] = array(
       'name' => __('Workflow', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => 'backend/settings-workflow', 'context' => $this->library)
+        array('view' => new View('backend/settings-workflow'))
       ),
       'saveFunction' => 'saveWorkflowSettings'
     );
@@ -93,9 +97,9 @@ class SettingsPage extends AbstractPage
       $this->addViews($currentTabId);
     }
 
-    $this->includeView("templates/settings-templates");
-
     echo '</div>';
+
+    $this->viewTemplates->render();
   }
 
   /**
@@ -178,7 +182,8 @@ class SettingsPage extends AbstractPage
 
     // Include the views
     foreach ($this->tabs[$currentTabId]['viewBundles'] as $viewBundle) {
-      $this->includeView($viewBundle['view'], $viewBundle['context']);
+      $context = isset($viewBundle['context']) ? $viewBundle['context'] : array('library' => $this->library);
+      $viewBundle['view']->render($context);
     }
 
     echo '

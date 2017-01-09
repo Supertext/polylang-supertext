@@ -1,9 +1,8 @@
 <?php
 use Supertext\Polylang\Helper\Constant;
-use Comotive\Util\ArrayManipulation;
 
-/** @var Page $context */
-$userMappings = $context->getSettingOption(Constant::SETTING_USER_MAP);
+/** @var \Supertext\Polylang\Helper\Library $library */
+$userMappings = $library->getSettingOption(Constant::SETTING_USER_MAP);
 
 // Get all users
 $wpUsers = get_users();

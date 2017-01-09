@@ -2,10 +2,9 @@
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
-use Comotive\Util\ArrayManipulation;
 
-/** @var \Supertext\Polylang\Helper\Library $context */
-$languageMappings = $context->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
+/** @var \Supertext\Polylang\Helper\Library $library */
+$languageMappings = $library->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
 
 // Laod Languages from Polylang to match with supertext api
 $htmlLanguageDropdown = '';
@@ -15,7 +14,7 @@ $languages = Multilang::getLanguages();
 foreach ($languages as $language) {
   // Get anonymous wrapper to get languages
   try{
-    $stMapping = Wrapper::getLanguageMapping($context->getApiClient(), $language->slug, $language->name);
+    $stMapping = Wrapper::getLanguageMapping($library->getApiClient(), $language->slug, $language->name);
   }catch (Exception $e){
     echo '
         <div class="updated fade error">

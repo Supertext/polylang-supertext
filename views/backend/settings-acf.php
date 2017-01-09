@@ -22,7 +22,7 @@ function getAcfTree($nodes){
   return $nodeHtml;
 }
 
-$htmlTree = getAcfTree($context['acfFieldDefinitions']);
+$htmlTree = getAcfTree($acfFieldDefinitions);
 
 ?>
 <div class="postbox postbox_admin">
@@ -39,5 +39,5 @@ $htmlTree = getAcfTree($context['acfFieldDefinitions']);
 </div>
 
 <script type="text/javascript">
-  var savedAcfFieldIds = <?php echo json_encode($context['savedAcfFieldIds']); ?>;
+  var savedAcfFieldIds = <?php echo json_encode($savedAcfFieldIds); ?>;
 </script>

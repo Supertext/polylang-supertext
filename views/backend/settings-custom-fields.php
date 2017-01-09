@@ -7,7 +7,6 @@ function getCustomFieldInput($value=''){
     </div>';
 }
 
-$savedCustomFields = $context['savedCustomFields'];
 $savedCustomFieldsInputs = '';
 
 foreach($savedCustomFields as $savedCustomField){

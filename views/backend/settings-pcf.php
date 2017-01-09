@@ -1,5 +1,4 @@
 <?php
-
 function getPcfTree($nodes){
   $nodeHtml = '<ul>';
 
@@ -21,7 +20,7 @@ function getPcfTree($nodes){
   return $nodeHtml;
 }
 
-$htmlTree = getPcfTree($context['pcfFieldDefinitions']);
+$htmlTree = getPcfTree($pcfFieldDefinitions);
 
 ?>
 <div class="postbox postbox_admin">
@@ -38,5 +37,5 @@ $htmlTree = getPcfTree($context['pcfFieldDefinitions']);
 </div>
 
 <script type="text/javascript">
-  var savedPcfFields = <?php echo json_encode($context['savedPcfFields']); ?>;
+  var savedPcfFields = <?php echo json_encode($savedPcfFields); ?>;
 </script>

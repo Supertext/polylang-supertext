@@ -1,9 +1,9 @@
 <?php
 use Supertext\Polylang\Helper\Constant;
-use Comotive\Util\ArrayManipulation;
 
-$shortcodeTags = $context->getShortcodeTags();
-$savedShortcodes = $context->getSettingOption(Constant::SETTING_SHORTCODES);
+/** @var \Supertext\Polylang\Helper\Library $library */
+$shortcodeTags = $library->getShortcodeTags();
+$savedShortcodes = $library->getSettingOption(Constant::SETTING_SHORTCODES);
 
 ?>
 <div class="postbox postbox_admin">

@@ -201,7 +201,7 @@ class AdminExtension
   public function addTemplates()
   {
     if ($this->isEditPostScreen() || $this->isPostsScreen()) {
-      $view = new View('templates/admin-extension-templates.php');
+      $view = new View('templates/admin-extension-templates');
       $view->render();
     }
   }
@@ -238,7 +238,7 @@ class AdminExtension
     $logEntries = $this->log->getLogEntries($this->currentPostId);
     $logEntries = array_reverse($logEntries);
 
-    $view = new View('backend/meta-box.php');
+    $view = new View('backend/meta-box');
     $view->render(array(
       'status' => $status,
       'logEntries' => $logEntries

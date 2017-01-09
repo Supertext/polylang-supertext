@@ -26,15 +26,6 @@ abstract class AbstractPage
   }
 
   /**
-   * @param string $viewName the view to be included
-   * @param mixed $context this variable can be used in the view
-   */
-  public function includeView($viewName, $context = NULL)
-  {
-    include SUPERTEXT_POLYLANG_VIEW_PATH . $viewName . '.php';
-  }
-
-  /**
    * Displays the actual backend menu
    */
   abstract public function display();

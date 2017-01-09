@@ -25,6 +25,6 @@ class View
   public function render(Array $context = array()) {
     extract($context);
 
-    include( SUPERTEXT_POLYLANG_VIEW_PATH . $this->name);
+    include( SUPERTEXT_POLYLANG_VIEW_PATH . $this->name . '.php');
   }
 }
