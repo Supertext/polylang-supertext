@@ -312,9 +312,9 @@ class TextProcessor
   {
     $shortcodeSetting = array('attributes' => array());
 
-    foreach($this->cachedSavedShortcodes as $name => $savedShortcode){
+    foreach($this->cachedSavedShortcodes as $name => $savedShortcodeSetting){
       if(preg_match('/' . $name . '/', $tagName)){
-        $shortcodeSetting = array_merge_recursive($shortcodeSetting, $savedShortcode);
+        $shortcodeSetting = $savedShortcodeSetting;
       }
     }
 
