@@ -9,17 +9,17 @@ namespace Supertext\Polylang\Helper;
 abstract class AbstractPluginCustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
 {
   /**
-   * @var string plugin id
-   */
-  private $pluginId;
-  /**
    * @var TextProcessor text processor
    */
-  private $textProcessor;
+  protected $textProcessor;
   /**
    * @var Library library
    */
-  private $library;
+  protected $library;
+  /**
+   * @var string plugin id
+   */
+  protected $pluginId;
 
   /**
    * @param $textProcessor
@@ -27,9 +27,9 @@ abstract class AbstractPluginCustomFieldsContentAccessor implements IContentAcce
    */
   public function __construct($textProcessor, $library)
   {
-    $this->pluginId = $this->getPluginId();
     $this->textProcessor = $textProcessor;
     $this->library = $library;
+    $this->pluginId = $this->getPluginId();
   }
 
   /**

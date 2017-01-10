@@ -2,7 +2,7 @@
 
 namespace Supertext\Polylang\Helper;
 
-class YoastSeoContentAccessor extends AbstractPluginCustomFieldsContentAccessor
+class YoastSeoContentAccessor extends AbstractPluginCustomFieldsContentAccessor implements IAddDefaultSettings
 {
   /**
    * Gets the content accessors name
@@ -11,6 +11,16 @@ class YoastSeoContentAccessor extends AbstractPluginCustomFieldsContentAccessor
   public function getName()
   {
     return __('Yoast SEO (Plugin)', 'polylang-supertext');
+  }
+
+  /**
+   * Adds default settings
+   */
+  public function addDefaultSettings()
+  {
+    $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
+    $savedFieldDefinitions[$this->pluginId] = $this->getFieldDefinitions()[0]['sub_field_definitions'];
+    $this->library->saveSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS, $savedFieldDefinitions);
   }
 
   /**

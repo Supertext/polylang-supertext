@@ -13,6 +13,7 @@ use Supertext\Polylang\Backend\CallbackHandler;
 use Supertext\Polylang\Helper\AllInOneSeoPackContentAccessor;
 use Supertext\Polylang\Helper\BePageBuilderContentAccessor;
 use Supertext\Polylang\Helper\DiviBuilderContentAccessor;
+use Supertext\Polylang\Helper\IAddDefaultSettings;
 use Supertext\Polylang\Helper\IContentAccessor;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
@@ -25,10 +26,10 @@ use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostContentAccessor;
 use Supertext\Polylang\Helper\PostMediaContentAccessor;
 use Supertext\Polylang\Helper\AcfContentAccessor;
+use Supertext\Polylang\Helper\VisualComposerContentAccessor;
 use Supertext\Polylang\Helper\YoastSeoContentAccessor;
 use Supertext\Polylang\Settings\SettingsPage;
 
-//TODO refactor class (extract plugin dependent logic...)
 /**
  * Core Class that initializes the plugins features
  * @package Supertext\Polylang
@@ -241,66 +242,14 @@ class Core
    * Adds well known shortcode settings depending on installed plugins
    * @param Library $library
    */
-  private function addWellKnownShortcodeSettings($library)
+  private function addDefaultSettings()
   {
-    $shortcodeSettings = $library->getSettingOption(Helper\Constant::SETTING_SHORTCODES);
-
-    if (WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')){
-      $shortcodeSettings['vc_[^\s|\]]+'] = array(
-        'content_encoding' => null,
-        'attributes' => array(
-          array('name' => 'text', 'encoding' => ''),
-          array('name' => 'title', 'encoding' => ''),
-        )
-      );
-
-      $shortcodeSettings['vc_raw_html'] = array(
-        'content_encoding' => 'rawurl,base64',
-        'attributes' => array()
-      );
+    $contentAccessors = $this->getContentAccessors();
+    foreach($contentAccessors as $contentAccessor){
+      if($contentAccessor instanceof IAddDefaultSettings){
+        $contentAccessor->addDefaultSettings();
+      }
     }
-
-    if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
-      $shortcodeSettings['special_heading\d?'] = array(
-        'content_encoding' => null,
-        'attributes' => array(
-          array('name' => 'title_content', 'encoding' => '')
-        )
-      );
-
-      $shortcodeSettings['button'] = array(
-        'content_encoding' => null,
-        'attributes' => array(
-          array('name' => 'button_text', 'encoding' => '')
-        )
-      );
-    }
-
-    if (WordPress::isPluginActive('divi-builder/divi-builder.php')) {
-      $shortcodeSettings['et_pb_[^\s|\]]+'] = array(
-        'content_encoding' => null,
-        'attributes' => array(
-          array('name' => 'more_text', 'encoding' => ''),
-          array('name' => 'alt', 'encoding' => ''),
-          array('name' => 'title_text', 'encoding' => ''),
-          array('name' => 'title', 'encoding' => ''),
-          array('name' => 'button_one_text', 'encoding' => ''),
-          array('name' => 'button_two_text', 'encoding' => ''),
-          array('name' => 'logo_alt_text', 'encoding' => ''),
-          array('name' => 'logo_title', 'encoding' => ''),
-          array('name' => 'prev_text', 'encoding' => ''),
-          array('name' => 'next_text', 'encoding' => ''),
-          array('name' => 'name', 'encoding' => ''),
-          array('name' => 'button_text', 'encoding' => ''),
-          array('name' => 'job_title', 'encoding' => ''),
-          array('name' => 'heading', 'encoding' => ''),
-          array('name' => 'title1_overlay', 'encoding' => ''),
-          array('name' => 'title2_overlay', 'encoding' => '')
-        )
-      );
-    }
-
-    $library->saveSettingOption(Helper\Constant::SETTING_SHORTCODES, $shortcodeSettings);
   }
 
   /**
@@ -357,29 +306,30 @@ class Core
    */
   private function createContentAccessors()
   {
-    $textProcessor = new TextProcessor($this->getLibrary());
+    $library = $this->getLibrary();
+    $textProcessor = new TextProcessor($library);
 
     $contentAccessors = array(
       'post' => new PostContentAccessor($textProcessor),
       'media' => new PostMediaContentAccessor(),
       'taxonomy' => new PostTaxonomyContentAccessor(),
-      'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $this->getLibrary())
+      'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $library)
     );
 
     if (WordPress::isPluginActive('wordpress-seo/wp-seo.php')) {
-      $contentAccessors['yoast_seo'] = new YoastSeoContentAccessor($textProcessor, $this->getLibrary());
+      $contentAccessors['yoast_seo'] = new YoastSeoContentAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('all-in-one-seo-pack/all_in_one_seo_pack.php')) {
-      $contentAccessors['all_in_one_seo'] = new AllInOneSeoPackContentAccessor($textProcessor, $this->getLibrary());
+      $contentAccessors['all_in_one_seo'] = new AllInOneSeoPackContentAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
-      $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $this->getLibrary());
+      $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
-      $contentAccessors['be_page_builder'] = new BePageBuilderContentAccessor($textProcessor, $this->getLibrary());
+      $contentAccessors['be_page_builder'] = new BePageBuilderContentAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php') || WordPress::isPluginActive('bb-plugin/fl-builder.php')) {
@@ -390,8 +340,12 @@ class Core
       $contentAccessors['siteorigin_panels'] = new SiteOriginContentAccessor($textProcessor);
     }
 
+    if (WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')){
+      $contentAccessors['post'] = new VisualComposerContentAccessor($textProcessor, $library);
+    }
+
     if (WordPress::isPluginActive('divi-builder/divi-builder.php')) {
-      $contentAccessors['post'] = new DiviBuilderContentAccessor($textProcessor);
+      $contentAccessors['post'] = new DiviBuilderContentAccessor($textProcessor, $library);
     }
 
     return $contentAccessors;
@@ -403,8 +357,7 @@ class Core
   private function checkEnvironment()
   {
     if (!get_option(Constant::ENVIRONMENT_ADJUSTED_OPTION, false)) {
-      $this->addWellKnownShortcodeSettings($this->getLibrary());
-
+      $this->addDefaultSettings();
       update_option(Constant::ENVIRONMENT_ADJUSTED_OPTION, true);
     }
   }

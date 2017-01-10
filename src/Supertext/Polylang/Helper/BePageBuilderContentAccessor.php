@@ -2,7 +2,7 @@
 
 namespace Supertext\Polylang\Helper;
 
-class BePageBuilderContentAccessor extends AbstractPluginCustomFieldsContentAccessor
+class BePageBuilderContentAccessor extends AbstractPluginCustomFieldsContentAccessor implements IAddDefaultSettings
 {
   /**
    * Gets the content accessors name
@@ -11,6 +11,30 @@ class BePageBuilderContentAccessor extends AbstractPluginCustomFieldsContentAcce
   public function getName()
   {
     return __('BE page builder (Plugin)', 'polylang-supertext');
+  }
+
+  /**
+   * Adds default settings
+   */
+  public function addDefaultSettings()
+  {
+    $shortcodeSettings = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+
+    $shortcodeSettings['special_heading\d?'] = array(
+      'content_encoding' => null,
+      'attributes' => array(
+        array('name' => 'title_content', 'encoding' => '')
+      )
+    );
+
+    $shortcodeSettings['button'] = array(
+      'content_encoding' => null,
+      'attributes' => array(
+        array('name' => 'button_text', 'encoding' => '')
+      )
+    );
+
+    $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettings);
   }
 
   /**

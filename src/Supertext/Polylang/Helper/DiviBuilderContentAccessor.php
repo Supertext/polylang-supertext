@@ -3,14 +3,54 @@
 namespace Supertext\Polylang\Helper;
 
 
-class DiviBuilderContentAccessor extends PostContentAccessor implements ITranslationAware
+class DiviBuilderContentAccessor extends PostContentAccessor implements ITranslationAware, IAddDefaultSettings
 {
   /**
-   * @param TextProcessor $textProcessor
+   * @var Library library
    */
-  public function __construct($textProcessor)
+  private $library;
+
+  /**
+   * @param TextProcessor $textProcessor
+   * @param $library
+   */
+  public function __construct($textProcessor, $library)
   {
     parent::__construct($textProcessor);
+
+    $this->library = $library;
+  }
+
+  /**
+   * Adds default settings
+   */
+  public function addDefaultSettings()
+  {
+    $shortcodeSettings = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+
+    $shortcodeSettings['et_pb_[^\s|\]]+'] = array(
+      'content_encoding' => null,
+      'attributes' => array(
+        array('name' => 'more_text', 'encoding' => ''),
+        array('name' => 'alt', 'encoding' => ''),
+        array('name' => 'title_text', 'encoding' => ''),
+        array('name' => 'title', 'encoding' => ''),
+        array('name' => 'button_one_text', 'encoding' => ''),
+        array('name' => 'button_two_text', 'encoding' => ''),
+        array('name' => 'logo_alt_text', 'encoding' => ''),
+        array('name' => 'logo_title', 'encoding' => ''),
+        array('name' => 'prev_text', 'encoding' => ''),
+        array('name' => 'next_text', 'encoding' => ''),
+        array('name' => 'name', 'encoding' => ''),
+        array('name' => 'button_text', 'encoding' => ''),
+        array('name' => 'job_title', 'encoding' => ''),
+        array('name' => 'heading', 'encoding' => ''),
+        array('name' => 'title1_overlay', 'encoding' => ''),
+        array('name' => 'title2_overlay', 'encoding' => '')
+      )
+    );
+
+    $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettings);
   }
 
   public function prepareTargetPost($sourcePost, $targetPost)
