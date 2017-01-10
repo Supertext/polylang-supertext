@@ -10,14 +10,14 @@ use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\AdminExtension;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
+use Supertext\Polylang\Helper\AllInOneSeoPackContentAccessor;
+use Supertext\Polylang\Helper\BePageBuilderContentAccessor;
 use Supertext\Polylang\Helper\DiviBuilderContentAccessor;
 use Supertext\Polylang\Helper\IContentAccessor;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\CustomFieldsContentAccessor;
-use Supertext\Polylang\Helper\PcfContentAccessor;
-use Supertext\Polylang\Helper\PluginFieldDefinitions;
 use Supertext\Polylang\Helper\PostMeta;
 use Supertext\Polylang\Helper\PostTaxonomyContentAccessor;
 use Supertext\Polylang\Helper\SiteOriginContentAccessor;
@@ -25,6 +25,7 @@ use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\Helper\PostContentAccessor;
 use Supertext\Polylang\Helper\PostMediaContentAccessor;
 use Supertext\Polylang\Helper\AcfContentAccessor;
+use Supertext\Polylang\Helper\YoastSeoContentAccessor;
 use Supertext\Polylang\Settings\SettingsPage;
 
 //TODO refactor class (extract plugin dependent logic...)
@@ -210,6 +211,13 @@ class Core
       $postMeta->set(PostMeta::IN_TRANSLATION, true);
       $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, get_post_meta($post->ID, '_in_translation_ref_hash', true));
     }
+
+    $savedAcfFieldDefinitions = $library->getSettingOption('acfFields');
+    if(count($savedAcfFieldDefinitions) && get_option(Constant::VERSION_OPTION) < 2.8){
+      $savedFieldDefinitions = $library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
+      $savedFieldDefinitions[AcfContentAccessor::ID] = $savedAcfFieldDefinitions;
+      $library->saveSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS, $savedFieldDefinitions);
+    }
   }
 
   /**
@@ -358,26 +366,20 @@ class Core
       'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $this->getLibrary())
     );
 
-    $pcfContentAccessor = new PcfContentAccessor($textProcessor, $this->getLibrary());
-
     if (WordPress::isPluginActive('wordpress-seo/wp-seo.php')) {
-      $pcfContentAccessor->registerPluginFieldDefinitions('yoast_seo', PluginFieldDefinitions::getYoastSeoFieldDefinitions());
+      $contentAccessors['yoast_seo'] = new YoastSeoContentAccessor($textProcessor, $this->getLibrary());
     }
 
     if (WordPress::isPluginActive('all-in-one-seo-pack/all_in_one_seo_pack.php')) {
-      $pcfContentAccessor->registerPluginFieldDefinitions('all_in_one_seo_pack', PluginFieldDefinitions::getAllInOneSeoFieldDefinitions());
-    }
-
-    if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
-      $pcfContentAccessor->registerPluginFieldDefinitions('be_pb', PluginFieldDefinitions::getBePageBuilderFieldDefinitions());
-    }
-
-    if ($pcfContentAccessor->hasRegisteredPluginFieldDefinitions()) {
-      $contentAccessors['pcf'] = $pcfContentAccessor;
+      $contentAccessors['all_in_one_seo'] = new AllInOneSeoPackContentAccessor($textProcessor, $this->getLibrary());
     }
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
       $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $this->getLibrary());
+    }
+
+    if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
+      $contentAccessors['be_page_builder'] = new BePageBuilderContentAccessor($textProcessor, $this->getLibrary());
     }
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php') || WordPress::isPluginActive('bb-plugin/fl-builder.php')) {

@@ -27,4 +27,31 @@ class View
 
     include( SUPERTEXT_POLYLANG_VIEW_PATH . $this->name . '.php');
   }
+
+  /**
+   * @param $nodes
+   * @return string
+   */
+  protected function convertToHtmlListTree($nodes)
+  {
+    $nodeHtml = '<ul>';
+
+    foreach ($nodes as $node) {
+      $id = $node['id'];
+      $icon = $node['type'] === 'field' ? 'jstree-file' : 'jstree-folder';
+
+      $nodeHtml .= '<li id="' . $id . '" data-jstree=\'{"icon":"' . $icon . '"}\'>';
+      $nodeHtml .= $node['label'];
+
+      if (!empty($node['sub_field_definitions'])) {
+        $nodeHtml .= $this->convertToHtmlListTree($node['sub_field_definitions']);
+      }
+
+      $nodeHtml .= '</li>';
+    }
+
+    $nodeHtml .= '</ul>';
+
+    return $nodeHtml;
+  }
 }
