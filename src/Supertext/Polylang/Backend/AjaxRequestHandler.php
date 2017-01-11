@@ -190,6 +190,7 @@ class AjaxRequestHandler
 
       Wrapper::sendSyncRequest(
         $this->library->getApiClient(),
+        $this->log->getLastOrderId($targetPostId),
         $this->library->toSuperCode($sourceLanguageCode),
         $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
         $this->getTranslationData($oldTranslatableContent),

@@ -213,9 +213,10 @@ class Wrapper
    * @return array|mixed|object
    * @throws ApiDataException
    */
-  public static function sendSyncRequest($apiClient, $sourceLanguage, $targetLanguage, $oldData, $newData)
+  public static function sendSyncRequest($apiClient, $lastOrderId, $sourceLanguage, $targetLanguage, $oldData, $newData)
   {
     $json = array(
+      'referenceOrderId' => $lastOrderId,
       'SourceLang' => $sourceLanguage,
       'TargetLang' => $targetLanguage,
       'OldFinalContentGroups' => self::buildSupertextData($oldData),
