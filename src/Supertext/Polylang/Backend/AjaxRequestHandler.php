@@ -41,18 +41,18 @@ class AjaxRequestHandler
     $this->log = $log;
     $this->contentProvider = $contentProvider;
 
-    add_action('wp_ajax_sttr_getPostTranslationInfo', array($this, 'getPostTranslationInfo'));
-    add_action('wp_ajax_sttr_getPostRawData', array($this, 'getPostRawData'));
-    add_action('wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationData'));
-    add_action('wp_ajax_sttr_getOffer', array($this, 'getOffer'));
-    add_action('wp_ajax_sttr_createOrder', array($this, 'createOrder'));
-    add_action('wp_ajax_sttr_sendSyncRequest', array($this, 'sendSyncRequest'));
+    add_action('wp_ajax_sttr_getPostTranslationInfo', array($this, 'getPostTranslationInfoAjax'));
+    add_action('wp_ajax_sttr_getPostRawData', array($this, 'getPostRawDataAjax'));
+    add_action('wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationDataAjax'));
+    add_action('wp_ajax_sttr_getOffer', array($this, 'getOfferAjax'));
+    add_action('wp_ajax_sttr_createOrder', array($this, 'createOrderAjax'));
+    add_action('wp_ajax_sttr_sendSyncRequest', array($this, 'sendSyncRequestAjax'));
   }
 
   /**
    * Gets translation information about posts
    */
-  public function getPostTranslationInfo()
+  public function getPostTranslationInfoAjax()
   {
     $translationInfo = array();
     $postIds = $_GET['postIds'];
@@ -76,7 +76,7 @@ class AjaxRequestHandler
   /**
    * Gets the raw data of a posts
    */
-  public function getPostRawData()
+  public function getPostRawDataAjax()
   {
     $postId = $_GET['postId'];
     $content = $this->contentProvider->getRawData(get_post($postId));
@@ -86,7 +86,7 @@ class AjaxRequestHandler
   /**
    * Gets the translation data of a post
    */
-  public function getPostTranslationData()
+  public function getPostTranslationDataAjax()
   {
     $postId = $_GET['postId'];
     $translatableFieldGroups = $_POST['translatableContents'];
@@ -97,7 +97,7 @@ class AjaxRequestHandler
   /**
    * Gets the offer
    */
-  public function getOffer()
+  public function getOfferAjax()
   {
     $translationData = $this->getTranslationData($_POST['translatableContents']);
 
@@ -118,7 +118,7 @@ class AjaxRequestHandler
   /**
    * Creates the order
    */
-  public function createOrder()
+  public function createOrderAjax()
   {
     $translatableContents = $_POST['translatableContents'];
     $sourceLanguage = $_POST['orderSourceLanguage'];
@@ -142,7 +142,7 @@ class AjaxRequestHandler
         admin_url( 'admin-ajax.php' ) . '?action=sttr_callback'
       );
 
-      $this->ProcessTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes);
+      $this->processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes);
 
       $result = array(
         'message' => '
@@ -164,51 +164,9 @@ class AjaxRequestHandler
   /**
    * Send post changes to supertext
    */
-  public function sendSyncRequest()
+  public function sendSyncRequestAjax()
   {
-    $targetPostId = $_GET['targetPostId'];
-    $targetPost = get_post($targetPostId);
-    $postMeta = PostMeta::from($targetPostId);
-    $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
-    $newTranslatableContent = $this->getAllTranslatableContent($targetPostId);
-    $oldTranslatableContent = array();
-
-    try {
-      $revisions = wp_get_post_revisions($targetPostId);
-      $translationDate = strtotime($postMeta->get(PostMeta::TRANSLATION_DATE));
-
-      foreach($revisions as $revision){
-        if(strtotime($revision->post_modified) == $translationDate){
-          $oldTranslatableContent = $this->getAllTranslatableContent($revision->ID);
-          break;
-        }
-      }
-
-      if(empty($oldTranslatableContent)){
-        self::returnResponse(500, __('Could not retrieve old version', 'polylang-supertext'));
-      }
-
-      Wrapper::sendSyncRequest(
-        $this->library->getApiClient(),
-        $this->log->getLastOrderId($targetPostId),
-        $this->library->toSuperCode($sourceLanguageCode),
-        $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
-        $this->getTranslationData($oldTranslatableContent),
-        $this->getTranslationData($newTranslatableContent)
-      );
-
-      $postMeta->set(PostMeta::TRANSLATION_DATE, $targetPost->post_modified);
-
-      $result = array(
-        'message' => __('The changes have been sent successfully.', 'polylang-supertext')
-      );
-
-      $this->log->addEntry($targetPostId, __('Post changes have been sent to Supertext.', 'polylang-supertext'));
-
-      self::returnResponse(200, $result);
-    } catch (\Exception $e) {
-      self::returnResponse(500, $e->getMessage());
-    }
+    $this->sendSyncRequest($_GET['targetPostId']);
   }
 
   /**
@@ -251,7 +209,7 @@ class AjaxRequestHandler
    * @param $targetLanguage
    * @param $referenceHashes
    */
-  private function ProcessTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes)
+  private function processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes)
   {
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPost = $this->getTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
@@ -271,6 +229,56 @@ class AjaxRequestHandler
       $postMeta->set(PostMeta::IN_TRANSLATION, true);
       $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
       $postMeta->set(PostMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
+    }
+  }
+
+  /**
+   * Send post changes to supertext
+   * @param string $targetPostId the post id
+   */
+  public function sendSyncRequest($targetPostId)
+  {
+    $targetPost = get_post($targetPostId);
+    $postMeta = PostMeta::from($targetPostId);
+    $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
+    $newTranslatableContent = $this->getAllTranslatableContent($targetPostId);
+    $oldTranslatableContent = array();
+
+    try {
+      $revisions = wp_get_post_revisions($targetPostId);
+      $translationDate = strtotime($postMeta->get(PostMeta::TRANSLATION_DATE));
+
+      foreach($revisions as $revision){
+        if(strtotime($revision->post_modified) == $translationDate){
+          $oldTranslatableContent = $this->getAllTranslatableContent($revision->ID);
+          break;
+        }
+      }
+
+      if(empty($oldTranslatableContent)){
+        self::returnResponse(500, __('Could not retrieve old version', 'polylang-supertext'));
+      }
+
+      Wrapper::sendSyncRequest(
+        $this->library->getApiClient(),
+        $this->log->getLastOrderId($targetPostId),
+        $this->library->toSuperCode($sourceLanguageCode),
+        $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
+        $this->getTranslationData($oldTranslatableContent),
+        $this->getTranslationData($newTranslatableContent)
+      );
+
+      $postMeta->set(PostMeta::TRANSLATION_DATE, $targetPost->post_modified);
+
+      $result = array(
+        'message' => __('The changes have been sent successfully.', 'polylang-supertext')
+      );
+
+      $this->log->addEntry($targetPostId, __('Post changes have been sent to Supertext.', 'polylang-supertext'));
+
+      self::returnResponse(200, $result);
+    } catch (\Exception $e) {
+      self::returnResponse(500, $e->getMessage());
     }
   }
 
