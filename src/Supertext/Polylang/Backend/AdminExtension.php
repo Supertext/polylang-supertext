@@ -232,7 +232,7 @@ class AdminExtension
       'isTranslation' => $postMeta->is(PostMeta::TRANSLATION),
       'sourceLanguage' => __($sourceLanguageCode, 'polylang-supertext-langs'),
       'isInTranslation' => $postMeta->is(PostMeta::IN_TRANSLATION),
-      'hasChangedSinceLastTranslation' => $postMeta->get(PostMeta::TRANSLATION_DATE) <  get_post_field( 'post_modified', $this->currentPostId)
+      'hasChangedSinceLastTranslation' => strtotime($postMeta->get(PostMeta::TRANSLATION_DATE)) <  strtotime(get_post_field( 'post_modified', $this->currentPostId))
     );
 
     $logEntries = $this->log->getLogEntries($this->currentPostId);

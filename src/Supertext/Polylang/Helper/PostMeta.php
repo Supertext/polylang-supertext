@@ -24,16 +24,6 @@ class PostMeta
   {
     $translationProperties = get_post_meta($postId, self::TRANSLATION_PROPERTIES, true);
 
-    if(empty($translationProperties)){
-      $translationProperties = array(
-        self::TRANSLATION => false,
-        self::IN_TRANSLATION => false,
-        self::IN_TRANSLATION_REFERENCE_HASH => '',
-        self::SOURCE_LANGUAGE_CODE => '',
-        self::TRANSLATION_DATE => ''
-      );
-    }
-
     return new PostMeta($postId, $translationProperties);
   }
 

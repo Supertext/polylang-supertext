@@ -166,7 +166,14 @@ class AjaxRequestHandler
    */
   public function sendSyncRequestAjax()
   {
-    $this->sendSyncRequest($_GET['targetPostId']);
+    try {
+      $this->sendSyncRequest(get_post($_GET['targetPostId']));
+      self::returnResponse(200, array(
+        'message' => __('The changes have been sent successfully.', 'polylang-supertext')
+      ));
+    } catch (\Exception $e) {
+      self::returnResponse(500, $e->getMessage());
+    }
   }
 
   /**
@@ -229,57 +236,56 @@ class AjaxRequestHandler
       $postMeta->set(PostMeta::IN_TRANSLATION, true);
       $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
       $postMeta->set(PostMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
+
+      $translationDate = $postMeta->get(PostMeta::TRANSLATION_DATE);
+      if($translationDate !== null && strtotime($translationDate) < strtotime($targetPost->post_modified)){
+        try{
+          $this->sendSyncRequest($targetPost);
+        }catch (\Exception $e) {
+          $this->log->addEntry($targetPost->ID, __('Post changes could not be send to Supertext.', 'polylang-supertext'));
+        }
+      }
     }
   }
 
   /**
    * Send post changes to supertext
-   * @param string $targetPostId the post id
+   * @param object $targetPost the post
+   * @throws \Exception
    */
-  public function sendSyncRequest($targetPostId)
+  public function sendSyncRequest($targetPost)
   {
-    $targetPost = get_post($targetPostId);
+    $targetPostId = $targetPost->ID;
     $postMeta = PostMeta::from($targetPostId);
     $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
     $newTranslatableContent = $this->getAllTranslatableContent($targetPostId);
     $oldTranslatableContent = array();
 
-    try {
-      $revisions = wp_get_post_revisions($targetPostId);
-      $translationDate = strtotime($postMeta->get(PostMeta::TRANSLATION_DATE));
+    $revisions = wp_get_post_revisions($targetPostId);
+    $translationDate = strtotime($postMeta->get(PostMeta::TRANSLATION_DATE));
 
-      foreach($revisions as $revision){
-        if(strtotime($revision->post_modified) == $translationDate){
-          $oldTranslatableContent = $this->getAllTranslatableContent($revision->ID);
-          break;
-        }
+    foreach ($revisions as $revision) {
+      if (strtotime($revision->post_modified) == $translationDate) {
+        $oldTranslatableContent = $this->getAllTranslatableContent($revision->ID);
+        break;
       }
-
-      if(empty($oldTranslatableContent)){
-        self::returnResponse(500, __('Could not retrieve old version', 'polylang-supertext'));
-      }
-
-      Wrapper::sendSyncRequest(
-        $this->library->getApiClient(),
-        $this->log->getLastOrderId($targetPostId),
-        $this->library->toSuperCode($sourceLanguageCode),
-        $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
-        $this->getTranslationData($oldTranslatableContent),
-        $this->getTranslationData($newTranslatableContent)
-      );
-
-      $postMeta->set(PostMeta::TRANSLATION_DATE, $targetPost->post_modified);
-
-      $result = array(
-        'message' => __('The changes have been sent successfully.', 'polylang-supertext')
-      );
-
-      $this->log->addEntry($targetPostId, __('Post changes have been sent to Supertext.', 'polylang-supertext'));
-
-      self::returnResponse(200, $result);
-    } catch (\Exception $e) {
-      self::returnResponse(500, $e->getMessage());
     }
+
+    if (empty($oldTranslatableContent)) {
+      throw new \Exception(__('Could not retrieve old version', 'polylang-supertext'));
+    }
+
+    Wrapper::sendSyncRequest(
+      $this->library->getApiClient(),
+      $this->log->getLastOrderId($targetPostId),
+      $this->library->toSuperCode($sourceLanguageCode),
+      $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
+      $this->getTranslationData($oldTranslatableContent),
+      $this->getTranslationData($newTranslatableContent)
+    );
+
+    $postMeta->set(PostMeta::TRANSLATION_DATE, $targetPost->post_modified);
+    $this->log->addEntry($targetPostId, __('Post changes have been sent to Supertext.', 'polylang-supertext'));
   }
 
   /**
