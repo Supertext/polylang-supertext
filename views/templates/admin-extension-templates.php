@@ -93,10 +93,10 @@
       <div class="sttr-order-items">
         <ul>
           <# _.each(data.posts, function(post) { #>
-            <li class="{{post.isInTranslation ? 'hasError' : ''}}">
+            <li class="{{post.meta.inTranslation ? 'hasError' : ''}}">
               <a href="#sttr-order-content-selection-{{post.id}}" data-post-id="{{post.id}}">
                 <span class="dashicons dashicons-no-alt"></span>
-                {{post.title}} ({{post.languageCode}}{{post.isInTranslation ? ', <?php _e('blocked', 'polylang-supertext'); ?>' : ''}}{{post.isDraft ? ', <?php _e('draft', 'polylang-supertext'); ?>' : ''}})
+                {{post.title}} ({{post.languageCode}}{{post.meta.inTranslation ? ', <?php _e('blocked', 'polylang-supertext'); ?>' : ''}}{{post.isDraft ? ', <?php _e('draft', 'polylang-supertext'); ?>' : ''}})
               </a>
             </li>
           <# }); #>
@@ -106,7 +106,7 @@
         <# _.each(data.posts, function(post) { #>
           <div id="sttr-order-content-selection-{{post.id}}" style="display: none;">
             <h3>{{post.title}}</h3>
-            <# if(post.isInTranslation){ #>
+            <# if(post.meta.inTranslation){ #>
             <p class="notice notice-error">
               <span class="error-message"><?php _e('The post cannot be translated. It is blocked by a translation order in progress.', 'polylang-supertext');?></span>
             </p>
