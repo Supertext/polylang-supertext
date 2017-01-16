@@ -142,7 +142,8 @@ class AjaxRequestHandler
         admin_url( 'admin-ajax.php' ) . '?action=sttr_callback'
       );
 
-      $this->processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes);
+      $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
+      $this->processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes, isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']);
 
       $result = array(
         'message' => '
@@ -215,8 +216,9 @@ class AjaxRequestHandler
    * @param $sourceLanguage
    * @param $targetLanguage
    * @param $referenceHashes
+   * @param $syncTranslationChanges
    */
-  private function processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes)
+  private function processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $syncTranslationChanges)
   {
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPost = $this->getTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
@@ -238,7 +240,7 @@ class AjaxRequestHandler
       $postMeta->set(PostMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
 
       $translationDate = $postMeta->get(PostMeta::TRANSLATION_DATE);
-      if($translationDate !== null && strtotime($translationDate) < strtotime($targetPost->post_modified)){
+      if($syncTranslationChanges && $translationDate !== null && strtotime($translationDate) < strtotime($targetPost->post_modified)){
         try{
           $this->sendSyncRequest($targetPost);
         }catch (\Exception $e) {
