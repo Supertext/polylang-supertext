@@ -216,7 +216,7 @@ class Core
     $savedAcfFieldDefinitions = $library->getSettingOption('acfFields');
     if(count($savedAcfFieldDefinitions) && get_option(Constant::VERSION_OPTION) < 2.8){
       $savedFieldDefinitions = $library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
-      $savedFieldDefinitions[AcfContentAccessor::ID] = $savedAcfFieldDefinitions;
+      $savedFieldDefinitions['acf'] = $savedAcfFieldDefinitions;
       $library->saveSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS, $savedFieldDefinitions);
     }
   }
