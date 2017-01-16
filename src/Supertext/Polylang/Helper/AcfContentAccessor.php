@@ -13,7 +13,7 @@ class AcfContentAccessor extends AbstractPluginCustomFieldsContentAccessor
    * @return string
    */
   public function getName(){
-    return __('Advanced Custom Field (Plugin)', 'polylang-supertext');
+    return __('Advanced Custom Fields (Plugin)', 'polylang-supertext');
   }
 
   /**
