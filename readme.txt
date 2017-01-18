@@ -2,7 +2,7 @@
 Contributors: msebel, comotive, supertext
 Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 3.8
-Tested up to: 4.6.1
+Tested up to: 4.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,7 @@ Please note:
 Translatable custom fields must be defined in the settings. Plugin defined fields only needed to be selected. Supported plugins at the moment are:
 - Advanced Custom Fields
 - Yoast SEO
+- All In One SEO pack
 If the field is not available in one of the lists, you can define by adding self defined custom fields.
 
 Plugin has been tested with following page builders:
@@ -29,6 +30,7 @@ Plugin has been tested with following page builders:
 - Beaver Builder
 - BE page builder
 - Divi page builder
+- SiteOrigin page builder
 
 == Installation ==
 
@@ -49,6 +51,12 @@ You can create an account at [Supertext] (https://www.supertext.ch/en/signup) if
 Get the API key from the Settings page: [Account Settings] (https://www.supertext.ch/customer/accountsettings)
 
 == Changelog ==
+
+= 2.8 =
+* Added new feature to send translation changes back to Supertext
+* Added support for multisite
+* Added new default shortcode and custom fields settings
+* Various code improvements and fixes
 
 = 2.7 =
 * Extended shortcode replacement

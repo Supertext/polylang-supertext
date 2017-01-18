@@ -14,6 +14,7 @@ Please note:
 Translatable custom fields must be defined in the settings. Plugin defined fields only needed to be selected. Supported plugins at the moment are:
 - Advanced Custom Fields
 - Yoast SEO
+- All In One SEO pack
 If the field is not available in one of the lists, you can define by adding self defined custom fields.
 
 Plugin has been tested with following page builders:
@@ -21,6 +22,7 @@ Plugin has been tested with following page builders:
 - Beaver Builder
 - BE page builder
 - Divi page builder
+- SiteOrigin page builder
 
 ## Installation
 
