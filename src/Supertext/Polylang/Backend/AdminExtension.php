@@ -226,11 +226,8 @@ class AdminExtension
   {
     $postMeta = PostMeta::from($this->currentPostId);
 
-    $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
-
     $status = array(
       'isTranslation' => $postMeta->is(PostMeta::TRANSLATION),
-      'sourceLanguage' => __($sourceLanguageCode, 'polylang-supertext-langs'),
       'isInTranslation' => $postMeta->is(PostMeta::IN_TRANSLATION),
       'hasChangedSinceLastTranslation' => strtotime($postMeta->get(PostMeta::TRANSLATION_DATE)) <  strtotime(get_post_field( 'post_modified', $this->currentPostId))
     );
