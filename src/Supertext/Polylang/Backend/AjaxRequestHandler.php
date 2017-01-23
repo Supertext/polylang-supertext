@@ -244,7 +244,7 @@ class AjaxRequestHandler
         try{
           $this->sendSyncRequest($targetPost);
         }catch (\Exception $e) {
-          $this->log->addEntry($targetPost->ID, __('Post changes could not be send to Supertext.', 'polylang-supertext'));
+          $this->log->addEntry($targetPost->ID, __('Post changes could not be sent to Supertext.', 'polylang-supertext'));
         }
       }
     }

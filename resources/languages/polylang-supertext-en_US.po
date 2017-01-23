@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2017-01-18 19:53+0100\n"
-"PO-Revision-Date: 2017-01-18 19:53+0100\n"
+"POT-Creation-Date: 2017-01-23 17:00+0100\n"
+"PO-Revision-Date: 2017-01-23 17:00+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: en_US\n"
@@ -146,8 +146,8 @@ msgstr ""
 "%s."
 
 #: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:247
-msgid "Post changes could not be send to Supertext."
-msgstr "Post changes could not be send to Supertext."
+msgid "Post changes could not be sent to Supertext."
+msgstr "Post changes could not be sent to Supertext."
 
 #: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:277
 msgid "Could not retrieve old version"
@@ -403,8 +403,12 @@ msgid "This post is a translation."
 msgstr "This post is a translation."
 
 #: views/backend/meta-box.php:10
-msgid "This post has been modified."
-msgstr "This post has been modified."
+msgid ""
+"Its content has been modified and doesn't match the original translation "
+"anymore."
+msgstr ""
+"Its content has been modified and doesn't match the original translation "
+"anymore."
 
 #: views/backend/meta-box.php:16
 msgid "Log"
@@ -658,6 +662,9 @@ msgstr "remove setting"
 #: views/templates/settings-templates.php:32
 msgid "Attribute name..."
 msgstr "Attribute name..."
+
+#~ msgid "This post has been modified."
+#~ msgstr "This post has been modified."
 
 #~ msgid "Supertext Plugin Log"
 #~ msgstr "Supertext Plugin Log"

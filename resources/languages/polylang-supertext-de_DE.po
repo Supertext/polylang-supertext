@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2017-01-18 19:51+0100\n"
-"PO-Revision-Date: 2017-01-18 19:52+0100\n"
+"POT-Creation-Date: 2017-01-23 17:00+0100\n"
+"PO-Revision-Date: 2017-01-23 17:13+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_DE\n"
@@ -145,8 +145,8 @@ msgstr ""
 "lautet %s."
 
 #: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:247
-msgid "Post changes could not be send to Supertext."
-msgstr "Benderungen konnten nicht an Supertext gesendet werden."
+msgid "Post changes could not be sent to Supertext."
+msgstr "Änderungen konnten nicht an Supertext gesendet werden."
 
 #: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:277
 msgid "Could not retrieve old version"
@@ -402,8 +402,12 @@ msgid "This post is a translation."
 msgstr "Dieser Beitrag ist eine Übersetzung."
 
 #: views/backend/meta-box.php:10
-msgid "This post has been modified."
-msgstr "Dieser Beitrag wurde geändert."
+msgid ""
+"Its content has been modified and doesn't match the original translation "
+"anymore."
+msgstr ""
+"Dessen Inhalt wurde geändert und stimmt mit der ursprünglichen Übersetzung "
+"nicht mehr überein."
 
 #: views/backend/meta-box.php:16
 msgid "Log"
@@ -662,6 +666,9 @@ msgstr "Einstellungen entfernen"
 #: views/templates/settings-templates.php:32
 msgid "Attribute name..."
 msgstr "Attributname..."
+
+#~ msgid "This post has been modified."
+#~ msgstr "Dieser Beitrag wurde geändert."
 
 #~ msgid "This post is being translated."
 #~ msgstr "Der Beitrag wird übersetzt"
