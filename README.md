@@ -15,6 +15,7 @@ Translatable custom fields must be defined in the settings. Supported plugins at
 - Advanced Custom Fields
 - Yoast SEO
 - All In One SEO pack
+
 If the field is not available in one of the lists, you can define it by adding self defined custom fields.
 
 Plugin has been tested with following page builders:
