@@ -19,18 +19,21 @@ Simply order a translation instead of creating a new page with Polylang.
 You will be presented with services, prices and deadlines. Select the right one for you and you'll be notified by email once your translated page or post has been uploaded to your website.
 
 Please note:
-Translatable custom fields must be defined in the settings. Plugin defined fields only needed to be selected. Supported plugins at the moment are:
-- Advanced Custom Fields
-- Yoast SEO
-- All In One SEO pack
-If the field is not available in one of the lists, you can define by adding self defined custom fields.
+Translatable custom fields must be defined in the settings. Supported plugins at the moment are:
+
+*   Advanced Custom Fields
+*   Yoast SEO
+*   All In One SEO pack
+
+If the field is not available in one of the lists, you can define it by adding self defined custom fields.
 
 Plugin has been tested with following page builders:
-- Visual Composer
-- Beaver Builder
-- BE page builder
-- Divi page builder
-- SiteOrigin page builder
+
+*   Visual Composer
+*   Beaver Builder
+*   BE page builder
+*   Divi page builder
+*   SiteOrigin page builder
 
 == Installation ==
 
@@ -49,6 +52,15 @@ How to install the plugin
 A valid Supertext customer account for every WordPress user and the corresponding API key.
 You can create an account at [Supertext] (https://www.supertext.ch/en/signup) if you don't already have one.
 Get the API key from the Settings page: [Account Settings] (https://www.supertext.ch/customer/accountsettings)
+
+== Screenshots ==
+
+1. Just order your translation using the "Order translation" link instead of creating the new content yourself
+2. First order step for one post where you can select the content to be translated and the target language
+3. You need to order more than one post? Just use the bulk action "Order translation"
+4. First order step for multiple posts where you can select the content to be translated and the target language
+5. Second order step where you can select the service and deadline
+6. Order confirmation
 
 == Changelog ==
 

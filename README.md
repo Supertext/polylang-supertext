@@ -11,11 +11,11 @@ Simply order a translation instead of creating a new page with Polylang.
 You will be presented with services, prices and deadlines. Select the right one for you and you'll be notified by email once your translated page or post has been uploaded to your website.
 
 Please note:
-Translatable custom fields must be defined in the settings. Plugin defined fields only needed to be selected. Supported plugins at the moment are:
+Translatable custom fields must be defined in the settings. Supported plugins at the moment are:
 - Advanced Custom Fields
 - Yoast SEO
 - All In One SEO pack
-If the field is not available in one of the lists, you can define by adding self defined custom fields.
+If the field is not available in one of the lists, you can define it by adding self defined custom fields.
 
 Plugin has been tested with following page builders:
 - Visual Composer
