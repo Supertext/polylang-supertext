@@ -1,5 +1,5 @@
 === Supertext Translation ===
-Contributors: msebel, comotive, supertext
+Contributors: supertext, msebel, comotive
 Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 3.8
 Tested up to: 4.7.1
@@ -18,7 +18,8 @@ Supertext can translate content, titles, excerpts, image captions, shortcode arg
 Simply order a translation instead of creating a new page with Polylang.
 You will be presented with services, prices and deadlines. Select the right one for you and you'll be notified by email once your translated page or post has been uploaded to your website.
 
-Please note:
+**Please note**
+
 Translatable custom fields must be defined in the settings. Supported plugins at the moment are:
 
 *   Advanced Custom Fields
