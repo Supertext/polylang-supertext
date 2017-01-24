@@ -216,7 +216,7 @@ class AdminExtension
       return;
     }
 
-    add_meta_box(self::META_BOX, __('Supertext Translation', 'polylang-supertext'), array($this, 'displayMetaBoxView'), $this->screenBase, 'side');
+    add_meta_box(self::META_BOX, __('Supertext Translation', 'polylang-supertext'), array($this, 'displayMetaBoxView'), null, 'side');
   }
 
   /**
