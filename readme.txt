@@ -65,6 +65,10 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 2.9 =
+* Fixed migration issue
+* Added new/missing texts
+
 = 2.8 =
 * Added new feature to send translation changes back to Supertext
 * Added support for multisite
