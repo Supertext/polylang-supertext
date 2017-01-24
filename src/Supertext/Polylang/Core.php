@@ -203,7 +203,9 @@ class Core
     }
 
     $queryForLegacyTranslationFlag = new \WP_Query(array(
-      'meta_key' => '_in_st_translation'
+      'meta_key' => '_in_st_translation',
+      'post_status' => 'any',
+      'post_type' => get_post_types('', 'names'),
     ));
 
     foreach($queryForLegacyTranslationFlag->posts as $post){
