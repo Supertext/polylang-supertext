@@ -111,6 +111,13 @@ class WriteBack
   }
 
   /**
+   * @return int the order id
+   */
+  public function getOrderId(){
+    return intval($this->json->Id);
+  }
+
+  /**
    * Depricated, old reference check. Can be removed with next version.
    * @return array|null
    */

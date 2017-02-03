@@ -65,7 +65,7 @@ class Log
     $orderIdList = get_post_meta($postId, Log::META_ORDER_ID, true);
     $orderId = is_array($orderIdList) ? end($orderIdList) : 0;
 
-    return $orderId;
+    return intval($orderId);
   }
 
   /**

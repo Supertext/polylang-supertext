@@ -74,7 +74,7 @@ class CallbackHandler
     $writeBack = new WriteBack($json, $this->library);
 
     if(!$writeBack->isReferenceValid()){
-      self::returnResponse(403, array('message' => 'Error: reference is invalid.'));
+      self::returnResponse(403, array('message' => $this->getReferenceErrorMessage($writeBack)));
     }
 
     $this->writeBackTranslation($writeBack);
@@ -137,5 +137,28 @@ class CallbackHandler
       }
       self::returnResponse(500, array('message' => $message));
     }
+  }
+
+  /**
+   * @param WriteBack $writeBack
+   * @return string
+   */
+  private function getReferenceErrorMessage($writeBack)
+  {
+    $sourcePostIds = $writeBack->getSourcePostIds();
+    $orderId = $writeBack->getOrderId();
+    $isOrderIdMismatch = false;
+    $orderIdMessage = '';
+    foreach ($sourcePostIds as $sourcePostId) {
+      $postOrderId = $this->log->getLastOrderId($sourcePostId);
+      $isOrderIdMismatch = $isOrderIdMismatch || $orderId !== $postOrderId;
+      $orderIdMessage .= " The post $sourcePostId was last ordered with order $postOrderId.\n";
+    }
+
+    if(!$isOrderIdMismatch){
+      return 'Error: reference is invalid.';
+    }
+
+    return "Error: reference is invalid. You cannot use this order to write back. One or more posts of this order have been reordered:" . $orderIdMessage;
   }
 }
