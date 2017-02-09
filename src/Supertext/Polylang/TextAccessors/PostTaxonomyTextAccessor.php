@@ -1,13 +1,13 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 use Supertext\Polylang\Api\Multilang;
 
 /**
- * Class PostTaxonomyContentAccessor
- * @package Supertext\Polylang\Helper
+ * Class PostTaxonomyTextAccessor
+ * @package Supertext\Polylang\TextAccessors
  */
-class PostTaxonomyContentAccessor implements IContentAccessor
+class PostTaxonomyTextAccessor implements ITextAccessor
 {
   /**
    * Gets the content accessors name

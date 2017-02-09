@@ -1,14 +1,14 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
 use Supertext\Polylang\Api\Multilang;
 
 /**
- * Class PostMediaContentAccessor
- * @package Supertext\Polylang\Helper
+ * Class PostMediaTextAccessor
+ * @package Supertext\Polylang\TextAccessors
  */
-class PostMediaContentAccessor implements IContentAccessor
+class PostMediaTextAccessor implements ITextAccessor
 {
   /**
    * Gets the content accessors name

@@ -1,9 +1,13 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
 
-class DiviBuilderContentAccessor extends PostContentAccessor implements ITranslationAware, IAddDefaultSettings
+use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\Library;
+use Supertext\Polylang\Helper\TextProcessor;
+
+class DiviBuilderTextAccessor extends PostTextAccessor implements ITranslationAware, IAddDefaultSettings
 {
   /**
    * @var Library library

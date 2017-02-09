@@ -1,12 +1,13 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
+use Supertext\Polylang\Helper\TextProcessor;
 
 /**
- * Class PostContentAccessor
- * @package Supertext\Polylang\Helper
+ * Class PostTextAccessor
+ * @package Supertext\Polylang\TextAccessors
  */
-class PostContentAccessor implements IContentAccessor
+class PostTextAccessor implements ITextAccessor
 {
   /**
    * @var TextProcessor the text processor

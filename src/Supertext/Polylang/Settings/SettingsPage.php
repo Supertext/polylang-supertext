@@ -3,10 +3,12 @@
 namespace Supertext\Polylang\Settings;
 
 use Supertext\Polylang\Api\Multilang;
-use Supertext\Polylang\Helper\ISettingsAware;
 use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\PostMeta;
 use Supertext\Polylang\Helper\View;
+use Supertext\Polylang\TextAccessors\ITextAccessor;
+use Supertext\Polylang\TextAccessors\ISettingsAware;
 
 /**
  * The supertext / polylang main settings page
@@ -20,15 +22,19 @@ class SettingsPage extends AbstractPage
   const SHORTCODES_TAB = 'shortcodes';
   const WORKFLOW_TAB = 'workflow';
 
-  private $contentAccessors;
+  private $textAccessors;
   private $tabs = array();
   private $viewTemplates;
 
-  public function __construct($library, $contentAccessors)
+  /**
+   * @param Library $library
+   * @param ITextAccessor $textAccessors
+   */
+  public function __construct($library, $textAccessors)
   {
     parent::__construct($library);
 
-    $this->contentAccessors = $contentAccessors;
+    $this->textAccessors = $textAccessors;
 
     // Tabs definitions
     $this->tabs = array();
@@ -127,10 +133,10 @@ class SettingsPage extends AbstractPage
   {
     $viewBundle = array();
 
-    foreach($this->contentAccessors as $contentAccessor)
+    foreach($this->textAccessors as $textAccessor)
     {
-      if($contentAccessor instanceof ISettingsAware){
-        $viewBundle[] = $contentAccessor->getSettingsViewBundle();
+      if($textAccessor instanceof ISettingsAware){
+        $viewBundle[] = $textAccessor->getSettingsViewBundle();
       }
     }
 
@@ -154,7 +160,7 @@ class SettingsPage extends AbstractPage
   }
 
   /**
-   * @param $page page name
+   * @param string $page page name
    * @param string $currentTabId id of current tab
    * @return string all tabs as links
    */
@@ -173,7 +179,7 @@ class SettingsPage extends AbstractPage
   }
 
   /**
-   * @param $currentTabId the current tab id
+   * @param int $currentTabId the current tab id
    */
   private function addViews($currentTabId)
   {
@@ -192,7 +198,7 @@ class SettingsPage extends AbstractPage
   }
 
   /**
-   * @param $tabId the tab id
+   * @param int $tabId the tab id
    * @return string the page url with tab
    */
   private function getPageUrl($tabId)
@@ -253,10 +259,10 @@ class SettingsPage extends AbstractPage
 
   private function saveTranslatableFieldsSettings()
   {
-    foreach($this->contentAccessors as $contentAccessor)
+    foreach($this->textAccessors as $textAccessor)
     {
-      if($contentAccessor instanceof ISettingsAware){
-        $contentAccessor->saveSettings($_POST);
+      if($textAccessor instanceof ISettingsAware){
+        $textAccessor->saveSettings($_POST);
       }
     }
   }

@@ -1,8 +1,10 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
-class YoastSeoContentAccessor extends AbstractPluginCustomFieldsContentAccessor implements IAddDefaultSettings
+use Supertext\Polylang\Helper\Constant;
+
+class YoastSeoTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements IAddDefaultSettings
 {
   /**
    * Gets the content accessors name

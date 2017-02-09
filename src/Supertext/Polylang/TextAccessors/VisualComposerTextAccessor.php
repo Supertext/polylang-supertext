@@ -1,9 +1,13 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
 
-class VisualComposerContentAccessor extends PostContentAccessor implements IAddDefaultSettings
+use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\Library;
+use Supertext\Polylang\Helper\TextProcessor;
+
+class VisualComposerTextAccessor extends PostTextAccessor implements IAddDefaultSettings
 {
   /**
    * @var Library library

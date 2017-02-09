@@ -1,10 +1,10 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
 /**
  * Interface ITranslationAware
- * @package Supertext\Polylang\Helper
+ * @package Supertext\Polylang\TextAccessors
  */
 interface ITranslationAware
 {

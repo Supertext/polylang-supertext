@@ -1,12 +1,12 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
 /**
- * Interface IContentAccessor
- * @package Supertext\Polylang\Helper
+ * Interface ITextAccessor
+ * @package Supertext\Polylang\TextAccessors
  */
-interface IContentAccessor
+interface ITextAccessor
 {
   public function getName();
 

@@ -10,24 +10,24 @@ use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\AdminExtension;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
-use Supertext\Polylang\Helper\AllInOneSeoPackContentAccessor;
-use Supertext\Polylang\Helper\BePageBuilderContentAccessor;
-use Supertext\Polylang\Helper\DiviBuilderContentAccessor;
-use Supertext\Polylang\Helper\IAddDefaultSettings;
-use Supertext\Polylang\Helper\IContentAccessor;
 use Supertext\Polylang\Helper\Library;
-use Supertext\Polylang\Helper\BeaverBuilderContentAccessor;
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\CustomFieldsContentAccessor;
 use Supertext\Polylang\Helper\PostMeta;
-use Supertext\Polylang\Helper\PostTaxonomyContentAccessor;
-use Supertext\Polylang\Helper\SiteOriginContentAccessor;
 use Supertext\Polylang\Helper\TextProcessor;
-use Supertext\Polylang\Helper\PostContentAccessor;
-use Supertext\Polylang\Helper\PostMediaContentAccessor;
-use Supertext\Polylang\Helper\AcfContentAccessor;
-use Supertext\Polylang\Helper\VisualComposerContentAccessor;
-use Supertext\Polylang\Helper\YoastSeoContentAccessor;
+use Supertext\Polylang\TextAccessors\AcfTextAccessor;
+use Supertext\Polylang\TextAccessors\AllInOneSeoPackTextAccessor;
+use Supertext\Polylang\TextAccessors\BeaverBuilderTextAccessor;
+use Supertext\Polylang\TextAccessors\BePageBuilderTextAccessor;
+use Supertext\Polylang\TextAccessors\CustomFieldsTextAccessor;
+use Supertext\Polylang\TextAccessors\DiviBuilderTextAccessor;
+use Supertext\Polylang\TextAccessors\ITextAccessor;
+use Supertext\Polylang\TextAccessors\IAddDefaultSettings;
+use Supertext\Polylang\TextAccessors\PostTextAccessor;
+use Supertext\Polylang\TextAccessors\PostMediaTextAccessor;
+use Supertext\Polylang\TextAccessors\PostTaxonomyTextAccessor;
+use Supertext\Polylang\TextAccessors\SiteOriginTextAccessor;
+use Supertext\Polylang\TextAccessors\VisualComposerTextAccessor;
+use Supertext\Polylang\TextAccessors\YoastSeoTextAccessor;
 use Supertext\Polylang\Settings\SettingsPage;
 
 /**
@@ -57,9 +57,9 @@ class Core
    */
   private $adminExtension = null;
   /**
-   * @var IContentAccessor[] the array of content accessors
+   * @var ITextAccessor[] the array of content accessors
    */
-  private $contentAccessors = null;
+  private $textAccessors = null;
   /**
    * @var ContentProvider the content provider
    */
@@ -104,7 +104,7 @@ class Core
       load_plugin_textdomain('polylang-supertext-langs', false, 'polylang-supertext/resources/languages');
 
       // Load needed subcomponents in admin
-      $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getContentAccessors()));
+      $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getTextAccessors()));
       $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
       $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
 
@@ -242,14 +242,13 @@ class Core
 
   /**
    * Adds well known shortcode settings depending on installed plugins
-   * @param Library $library
    */
   private function addDefaultSettings()
   {
-    $contentAccessors = $this->getContentAccessors();
-    foreach($contentAccessors as $contentAccessor){
-      if($contentAccessor instanceof IAddDefaultSettings){
-        $contentAccessor->addDefaultSettings();
+    $textAccessors = $this->getTextAccessors();
+    foreach($textAccessors as $textAccessor){
+      if($textAccessor instanceof IAddDefaultSettings){
+        $textAccessor->addDefaultSettings();
       }
     }
   }
@@ -267,15 +266,15 @@ class Core
   }
 
   /**
-   * @return IContentAccessor[] the array of content accessors, might be instantiated only if needed
+   * @return ITextAccessor[] the array of content accessors, might be instantiated only if needed
    */
-  private function getContentAccessors()
+  private function getTextAccessors()
   {
-    if ($this->contentAccessors === null) {
-      $this->contentAccessors = $this->createContentAccessors();
+    if ($this->textAccessors === null) {
+      $this->textAccessors = $this->createTextAccessors();
     }
 
-    return $this->contentAccessors;
+    return $this->textAccessors;
   }
 
   /**
@@ -284,7 +283,7 @@ class Core
   private function getContentProvider()
   {
     if ($this->contentProvider === null) {
-      $this->contentProvider = new ContentProvider($this->getContentAccessors(), $this->getLibrary());
+      $this->contentProvider = new ContentProvider($this->getTextAccessors(), $this->getLibrary());
     }
 
     return $this->contentProvider;
@@ -304,53 +303,53 @@ class Core
 
   /**
    * Creates the array of content accessors
-   * @return IContentAccessor[] the array content accessors
+   * @return ITextAccessor[] the array content accessors
    */
-  private function createContentAccessors()
+  private function createTextAccessors()
   {
     $library = $this->getLibrary();
     $textProcessor = new TextProcessor($library);
 
-    $contentAccessors = array(
-      'post' => new PostContentAccessor($textProcessor),
-      'media' => new PostMediaContentAccessor(),
-      'taxonomy' => new PostTaxonomyContentAccessor(),
-      'custom-fields' => new CustomFieldsContentAccessor($textProcessor, $library)
+    $textAccessors = array(
+      'post' => new PostTextAccessor($textProcessor),
+      'media' => new PostMediaTextAccessor(),
+      'taxonomy' => new PostTaxonomyTextAccessor(),
+      'custom-fields' => new CustomFieldsTextAccessor($textProcessor, $library)
     );
 
     if (WordPress::isPluginActive('wordpress-seo/wp-seo.php')) {
-      $contentAccessors['yoast_seo'] = new YoastSeoContentAccessor($textProcessor, $library);
+      $textAccessors['yoast_seo'] = new YoastSeoTextAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('all-in-one-seo-pack/all_in_one_seo_pack.php')) {
-      $contentAccessors['all_in_one_seo'] = new AllInOneSeoPackContentAccessor($textProcessor, $library);
+      $textAccessors['all_in_one_seo'] = new AllInOneSeoPackTextAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
-      $contentAccessors['acf'] = new AcfContentAccessor($textProcessor, $library);
+      $textAccessors['acf'] = new AcfTextAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
-      $contentAccessors['be_page_builder'] = new BePageBuilderContentAccessor($textProcessor, $library);
+      $textAccessors['be_page_builder'] = new BePageBuilderTextAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php') || WordPress::isPluginActive('bb-plugin/fl-builder.php')) {
-      $contentAccessors['beaver_builder'] = new BeaverBuilderContentAccessor($textProcessor);
+      $textAccessors['beaver_builder'] = new BeaverBuilderTextAccessor($textProcessor);
     }
 
     if (WordPress::isPluginActive('siteorigin-panels/siteorigin-panels.php')) {
-      $contentAccessors['siteorigin_panels'] = new SiteOriginContentAccessor($textProcessor);
+      $textAccessors['siteorigin_panels'] = new SiteOriginTextAccessor($textProcessor);
     }
 
     if (WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')){
-      $contentAccessors['post'] = new VisualComposerContentAccessor($textProcessor, $library);
+      $textAccessors['post'] = new VisualComposerTextAccessor($textProcessor, $library);
     }
 
     if (WordPress::isPluginActive('divi-builder/divi-builder.php')) {
-      $contentAccessors['post'] = new DiviBuilderContentAccessor($textProcessor, $library);
+      $textAccessors['post'] = new DiviBuilderTextAccessor($textProcessor, $library);
     }
 
-    return $contentAccessors;
+    return $textAccessors;
   }
 
   /**

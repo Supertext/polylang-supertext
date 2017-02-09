@@ -12,7 +12,7 @@ class View
 
   /**
    * Initialize a new view
-   * @param $name The name of the view
+   * @param string $name The name of the view
    */
   public function __construct($name) {
     $this->name = $name;

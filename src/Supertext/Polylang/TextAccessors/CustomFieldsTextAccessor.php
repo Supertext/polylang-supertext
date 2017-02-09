@@ -1,14 +1,17 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
-use Comotive\Util\ArrayManipulation;
+use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\Library;
+use Supertext\Polylang\Helper\TextProcessor;
+use Supertext\Polylang\Helper\View;
 
 /**
- * Class CustomFieldsContentAccessor
- * @package Supertext\Polylang\Helper
+ * Class CustomFieldsTextAccessor
+ * @package Supertext\Polylang\TextAccessors
  */
-class CustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
+class CustomFieldsTextAccessor implements ITextAccessor, ISettingsAware
 {
   /**
    * @var TextProcessor text processor

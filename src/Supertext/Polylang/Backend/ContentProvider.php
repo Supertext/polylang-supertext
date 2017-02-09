@@ -2,8 +2,8 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Supertext\Polylang\Helper\IContentAccessor;
-use Supertext\Polylang\Helper\ITranslationAware;
+use Supertext\Polylang\TextAccessors\ITextAccessor;
+use Supertext\Polylang\TextAccessors\ITranslationAware;
 
 /**
  * Processes post content
@@ -12,9 +12,9 @@ use Supertext\Polylang\Helper\ITranslationAware;
 class ContentProvider
 {
   /**
-   * @var IContentAccessor[] the text accessors
+   * @var ITextAccessor[] the text accessors
    */
-  private $contentAccessors = null;
+  private $textAccessors = null;
 
   /**
    * @var \Supertext\Polylang\Helper\Library
@@ -22,12 +22,12 @@ class ContentProvider
   private $library;
 
   /**
-   * @param IContentAccessor[] $contentAccessors
+   * @param ITextAccessor[] $textAccessors
    * @param \Supertext\Polylang\Helper\Library $library
    */
-  public function __construct($contentAccessors, $library)
+  public function __construct($textAccessors, $library)
   {
-    $this->contentAccessors = $contentAccessors;
+    $this->textAccessors = $textAccessors;
     $this->library = $library;
   }
 
@@ -39,10 +39,10 @@ class ContentProvider
   {
     $result = array();
 
-    foreach ($this->contentAccessors as $id => $contentAccessor) {
+    foreach ($this->textAccessors as $id => $textAccessor) {
       $result[$id] = array(
-        'name' => $contentAccessor->getName(),
-        'fields' => $contentAccessor->getTranslatableFields($postId)
+        'name' => $textAccessor->getName(),
+        'fields' => $textAccessor->getTranslatableFields($postId)
       );
     }
 
@@ -60,8 +60,8 @@ class ContentProvider
   {
     $result = array();
 
-    foreach ($this->contentAccessors as $id => $contentAccessor) {
-      $texts = $contentAccessor->getRawTexts($post);
+    foreach ($this->textAccessors as $id => $textAccessor) {
+      $texts = $textAccessor->getRawTexts($post);
 
       if (count($texts) === 0) {
         continue;
@@ -85,12 +85,12 @@ class ContentProvider
   {
     $result = array();
 
-    foreach ($this->contentAccessors as $id => $contentAccessor) {
+    foreach ($this->textAccessors as $id => $textAccessor) {
       if (!isset($translatableFieldGroups[$id])) {
         continue;
       }
 
-      $texts = $contentAccessor->getTexts($post, $translatableFieldGroups[$id]['fields']);
+      $texts = $textAccessor->getTexts($post, $translatableFieldGroups[$id]['fields']);
 
       if (count($texts) === 0) {
         continue;
@@ -112,12 +112,12 @@ class ContentProvider
   public function saveTranslatedData($targetPost, $translationData)
   {
     foreach ($translationData as $id => $texts) {
-      if (!isset($this->contentAccessors[$id])) {
+      if (!isset($this->textAccessors[$id])) {
         continue;
       }
 
-      $contentAccessors = $this->contentAccessors[$id];
-      $contentAccessors->setTexts($targetPost, $texts);
+      $textAccessors = $this->textAccessors[$id];
+      $textAccessors->setTexts($targetPost, $texts);
     }
   }
 
@@ -127,9 +127,9 @@ class ContentProvider
    */
   public function prepareTargetPost($sourcePost, $targetPost)
   {
-    foreach ($this->contentAccessors as $id => $contentAccessor) {
-      if ($contentAccessor instanceof ITranslationAware) {
-        $contentAccessor->prepareTargetPost($sourcePost, $targetPost);
+    foreach ($this->textAccessors as $id => $textAccessor) {
+      if ($textAccessor instanceof ITranslationAware) {
+        $textAccessor->prepareTargetPost($sourcePost, $targetPost);
       }
     }
   }

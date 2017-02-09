@@ -1,12 +1,17 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
+
+use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\Library;
+use Supertext\Polylang\Helper\TextProcessor;
+use Supertext\Polylang\Helper\View;
 
 /**
- * Class PluginCustomFieldsContentAccessor
- * @package Supertext\Polylang\Helper
+ * Class PluginCustomFieldsTextAccessor
+ * @package Supertext\Polylang\TextAccessors
  */
-abstract class AbstractPluginCustomFieldsContentAccessor implements IContentAccessor, ISettingsAware
+abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, ISettingsAware
 {
   /**
    * @var TextProcessor text processor
@@ -173,6 +178,6 @@ abstract class AbstractPluginCustomFieldsContentAccessor implements IContentAcce
    */
   private function getPluginId()
   {
-    return lcfirst(str_replace('ContentAccessor', '', (new \ReflectionClass($this))->getShortName()));
+    return lcfirst(str_replace('TextAccessor', '', (new \ReflectionClass($this))->getShortName()));
   }
 }

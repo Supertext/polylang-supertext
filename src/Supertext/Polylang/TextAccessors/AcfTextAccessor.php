@@ -1,12 +1,12 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
 /**
- * Class AcfContentAccessor
- * @package Supertext\Polylang\Helper
+ * Class AcfTextAccessor
+ * @package Supertext\Polylang\TextAccessors
  */
-class AcfContentAccessor extends AbstractPluginCustomFieldsContentAccessor
+class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor
 {
   /**
    * Gets the content accessors name
@@ -41,6 +41,7 @@ class AcfContentAccessor extends AbstractPluginCustomFieldsContentAccessor
 
   /**
    * @param $fields
+   * @param string $metaKeyPrefix
    * @return array
    */
   private function getSubFieldDefinitions($fields, $metaKeyPrefix = '')

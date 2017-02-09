@@ -1,14 +1,15 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
 use FLBuilderModel;
+use Supertext\Polylang\Helper\TextProcessor;
 
 /**
- * Class BeaverBuilderContentAccessor
- * @package Supertext\Polylang\Helper
+ * Class BeaverBuilderTextAccessor
+ * @package Supertext\Polylang\TextAccessors
  */
-class BeaverBuilderContentAccessor implements IContentAccessor, ITranslationAware
+class BeaverBuilderTextAccessor implements ITextAccessor, ITranslationAware
 {
   /**
    * @var TextProcessor the text processor

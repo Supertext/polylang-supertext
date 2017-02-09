@@ -125,7 +125,7 @@ class AjaxRequestHandler
     $targetLanguage = $_POST['orderTargetLanguage'];
     $translationData = $this->getTranslationData($translatableContents);
     $sourcePostIds = array_keys($translatableContents);
-    $additionalInformation = $_POST['comment'] . ' Posts:' . implode(', ', $sourcePostIds);
+    $additionalInformation = $_POST['comment'] . ' Posts: ' . implode(', ', $sourcePostIds);
     $referenceHashes = $this->createReferenceHashes($sourcePostIds);
 
     try {

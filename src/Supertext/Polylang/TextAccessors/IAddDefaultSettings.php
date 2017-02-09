@@ -1,6 +1,6 @@
 <?php
 
-namespace Supertext\Polylang\Helper;
+namespace Supertext\Polylang\TextAccessors;
 
 interface IAddDefaultSettings
 {
