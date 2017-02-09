@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2017-01-23 17:00+0100\n"
-"PO-Revision-Date: 2017-01-23 17:00+0100\n"
+"POT-Creation-Date: 2017-02-09 17:39+0100\n"
+"PO-Revision-Date: 2017-02-09 17:39+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: fr_CH\n"
@@ -255,141 +255,141 @@ msgstr ""
 "<i>{0}</i> est déjà en cours de traduction vers la langue suivante: {1}  "
 "(Numéro de mandat: {2})"
 
-#: src/Supertext/Polylang/Helper/AcfContentAccessor.php:16
-msgid "Advanced Custom Fields (Plugin)"
-msgstr "Advanced Custom Fields (extension)"
-
-#: src/Supertext/Polylang/Helper/AllInOneSeoPackContentAccessor.php:13
-msgid "All In One SEO Pack (Plugin)"
-msgstr "All In One SEO Pack (Plugin)"
-
-#: src/Supertext/Polylang/Helper/AllInOneSeoPackContentAccessor.php:39
-msgid "SEO title"
-msgstr "Titre SEO"
-
-#: src/Supertext/Polylang/Helper/AllInOneSeoPackContentAccessor.php:45
-msgid "SEO description"
-msgstr "Description SEO"
-
-#: src/Supertext/Polylang/Helper/AllInOneSeoPackContentAccessor.php:51
-msgid "SEO keywords"
-msgstr "Mot-clé SEO"
-
-#: src/Supertext/Polylang/Helper/BePageBuilderContentAccessor.php:13
-msgid "BE page builder (Plugin)"
-msgstr "BE page builder (Plugin)"
-
-#: src/Supertext/Polylang/Helper/BePageBuilderContentAccessor.php:53
-#: src/Supertext/Polylang/Helper/PostContentAccessor.php:48
-msgid "Content"
-msgstr "Texte"
-
-#: src/Supertext/Polylang/Helper/BeaverBuilderContentAccessor.php:32
-msgid "Beaver Builder (Plugin)"
-msgstr "Beaver Builder (extension)"
-
-#: src/Supertext/Polylang/Helper/BeaverBuilderContentAccessor.php:44
-msgid "Beaver Builder content"
-msgstr "Contenu de Beaver Builder"
-
-#: src/Supertext/Polylang/Helper/CustomFieldsContentAccessor.php:39
-#: views/backend/settings-custom-fields.php:19
-msgid "General custom fields"
-msgstr "Champs personnalisés généraux"
-
-#: src/Supertext/Polylang/Helper/PostContentAccessor.php:30
-msgid "Post"
-msgstr "Article"
-
-#: src/Supertext/Polylang/Helper/PostContentAccessor.php:42
-msgid "Title"
-msgstr "Titre"
-
-#: src/Supertext/Polylang/Helper/PostContentAccessor.php:54
-msgid "Excerpt"
-msgstr "Extrait"
-
-#: src/Supertext/Polylang/Helper/PostMediaContentAccessor.php:19
-msgid "Media"
-msgstr "Médias"
-
-#: src/Supertext/Polylang/Helper/PostMediaContentAccessor.php:31
-msgid "Image captions"
-msgstr "Légendes d’images"
-
-#: src/Supertext/Polylang/Helper/PostTaxonomyContentAccessor.php:18
-msgid "Taxonomy"
-msgstr "Taxonomie"
-
-#: src/Supertext/Polylang/Helper/PostTaxonomyContentAccessor.php:31
-msgid "Categories"
-msgstr "Catégories"
-
-#: src/Supertext/Polylang/Helper/PostTaxonomyContentAccessor.php:39
-msgid "Tags"
-msgstr "Ètiquettes"
-
-#: src/Supertext/Polylang/Helper/SiteOriginContentAccessor.php:30
-msgid "Page Builder via SiteOrigin (Plugin)"
-msgstr "Page Builder via SiteOrigin (Plugin)"
-
-#: src/Supertext/Polylang/Helper/SiteOriginContentAccessor.php:42
-msgid "Builder content"
-msgstr "Contenu"
-
-#: src/Supertext/Polylang/Helper/YoastSeoContentAccessor.php:13
-msgid "Yoast SEO (Plugin)"
-msgstr "Yoast SEO (Plugin)"
-
-#: src/Supertext/Polylang/Helper/YoastSeoContentAccessor.php:39
-msgid "SEO-optimized title"
-msgstr "Titre optimisé SEO"
-
-#: src/Supertext/Polylang/Helper/YoastSeoContentAccessor.php:45
-msgid "SEO-optimized description"
-msgstr "Description optimisée SEO"
-
-#: src/Supertext/Polylang/Helper/YoastSeoContentAccessor.php:51
-msgid "Focus keywords"
-msgstr "Mot-clé focus"
-
-#: src/Supertext/Polylang/Helper/YoastSeoContentAccessor.php:57
-msgid "Facebook title"
-msgstr "Titre Facebook"
-
-#: src/Supertext/Polylang/Helper/YoastSeoContentAccessor.php:63
-msgid "Facebook description"
-msgstr "Descriptif Facebook"
-
-#: src/Supertext/Polylang/Settings/SettingsPage.php:46
+#: src/Supertext/Polylang/Settings/SettingsPage.php:52
 msgid "User and languages"
 msgstr "Utilisateur et langues"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:56
+#: src/Supertext/Polylang/Settings/SettingsPage.php:62
 msgid "Translatable fields"
 msgstr "Champs traduisibles"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:63
+#: src/Supertext/Polylang/Settings/SettingsPage.php:69
 #: views/backend/settings-shortcodes.php:11
 msgid "Shortcodes"
 msgstr "Shortcodes"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:72
+#: src/Supertext/Polylang/Settings/SettingsPage.php:78
 #: views/backend/settings-workflow.php:26
 msgid "Workflow"
 msgstr "Workflow"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:92
+#: src/Supertext/Polylang/Settings/SettingsPage.php:98
 msgid "Settings › Supertext"
 msgstr "Paramètres › Supertext"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:151
+#: src/Supertext/Polylang/Settings/SettingsPage.php:157
 msgid "Settings saved"
 msgstr "Paramètres enregistrés"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:190
+#: src/Supertext/Polylang/Settings/SettingsPage.php:196
 msgid "Save settings"
 msgstr "Enregistrer les paramètres"
+
+#: src/Supertext/Polylang/TextAccessors/AcfTextAccessor.php:16
+msgid "Advanced Custom Fields (Plugin)"
+msgstr "Advanced Custom Fields (extension)"
+
+#: src/Supertext/Polylang/TextAccessors/AllInOneSeoPackTextAccessor.php:15
+msgid "All In One SEO Pack (Plugin)"
+msgstr "All In One SEO Pack (Plugin)"
+
+#: src/Supertext/Polylang/TextAccessors/AllInOneSeoPackTextAccessor.php:41
+msgid "SEO title"
+msgstr "Titre SEO"
+
+#: src/Supertext/Polylang/TextAccessors/AllInOneSeoPackTextAccessor.php:47
+msgid "SEO description"
+msgstr "Description SEO"
+
+#: src/Supertext/Polylang/TextAccessors/AllInOneSeoPackTextAccessor.php:53
+msgid "SEO keywords"
+msgstr "Mot-clé SEO"
+
+#: src/Supertext/Polylang/TextAccessors/BePageBuilderTextAccessor.php:15
+msgid "BE page builder (Plugin)"
+msgstr "BE page builder (Plugin)"
+
+#: src/Supertext/Polylang/TextAccessors/BePageBuilderTextAccessor.php:55
+#: src/Supertext/Polylang/TextAccessors/PostTextAccessor.php:49
+msgid "Content"
+msgstr "Texte"
+
+#: src/Supertext/Polylang/TextAccessors/BeaverBuilderTextAccessor.php:33
+msgid "Beaver Builder (Plugin)"
+msgstr "Beaver Builder (extension)"
+
+#: src/Supertext/Polylang/TextAccessors/BeaverBuilderTextAccessor.php:45
+msgid "Beaver Builder content"
+msgstr "Contenu de Beaver Builder"
+
+#: src/Supertext/Polylang/TextAccessors/CustomFieldsTextAccessor.php:42
+#: views/backend/settings-custom-fields.php:19
+msgid "General custom fields"
+msgstr "Champs personnalisés généraux"
+
+#: src/Supertext/Polylang/TextAccessors/PostMediaTextAccessor.php:19
+msgid "Media"
+msgstr "Médias"
+
+#: src/Supertext/Polylang/TextAccessors/PostMediaTextAccessor.php:31
+msgid "Image captions"
+msgstr "Légendes d’images"
+
+#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:18
+msgid "Taxonomy"
+msgstr "Taxonomie"
+
+#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:31
+msgid "Categories"
+msgstr "Catégories"
+
+#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:39
+msgid "Tags"
+msgstr "Ètiquettes"
+
+#: src/Supertext/Polylang/TextAccessors/PostTextAccessor.php:31
+msgid "Post"
+msgstr "Article"
+
+#: src/Supertext/Polylang/TextAccessors/PostTextAccessor.php:43
+msgid "Title"
+msgstr "Titre"
+
+#: src/Supertext/Polylang/TextAccessors/PostTextAccessor.php:55
+msgid "Excerpt"
+msgstr "Extrait"
+
+#: src/Supertext/Polylang/TextAccessors/SiteOriginTextAccessor.php:32
+msgid "Page Builder via SiteOrigin (Plugin)"
+msgstr "Page Builder via SiteOrigin (Plugin)"
+
+#: src/Supertext/Polylang/TextAccessors/SiteOriginTextAccessor.php:44
+msgid "Builder content"
+msgstr "Contenu"
+
+#: src/Supertext/Polylang/TextAccessors/YoastSeoTextAccessor.php:15
+msgid "Yoast SEO (Plugin)"
+msgstr "Yoast SEO (Plugin)"
+
+#: src/Supertext/Polylang/TextAccessors/YoastSeoTextAccessor.php:41
+msgid "SEO-optimized title"
+msgstr "Titre optimisé SEO"
+
+#: src/Supertext/Polylang/TextAccessors/YoastSeoTextAccessor.php:47
+msgid "SEO-optimized description"
+msgstr "Description optimisée SEO"
+
+#: src/Supertext/Polylang/TextAccessors/YoastSeoTextAccessor.php:53
+msgid "Focus keywords"
+msgstr "Mot-clé focus"
+
+#: src/Supertext/Polylang/TextAccessors/YoastSeoTextAccessor.php:59
+msgid "Facebook title"
+msgstr "Titre Facebook"
+
+#: src/Supertext/Polylang/TextAccessors/YoastSeoTextAccessor.php:65
+msgid "Facebook description"
+msgstr "Descriptif Facebook"
 
 #: views/backend/meta-box.php:4
 msgid "Status"
