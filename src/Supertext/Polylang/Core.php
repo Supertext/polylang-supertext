@@ -172,7 +172,7 @@ class Core
 
     $library = $this->getLibrary();
     if ($library->getPluginStatus()->isPluginConfiguredProperly) {
-      $languages = Multilang::getLanguages();
+      $languages = $library->getConfiguredLanguages();
       foreach ($languages as $language) {
         $translation_array['languages'][$language->slug] = esc_js(__($library->toSuperCode($language->slug), 'polylang-supertext-langs'));
       }

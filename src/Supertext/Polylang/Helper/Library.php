@@ -134,7 +134,7 @@ class Library
       isset($options[Constant::SETTING_USER_MAP]) &&
       count($options[Constant::SETTING_USER_MAP]) > 0 &&
       isset($options[Constant::SETTING_LANGUAGE_MAP]) &&
-      count($options[Constant::SETTING_LANGUAGE_MAP]) == count(Multilang::getLanguages());
+      count($options[Constant::SETTING_LANGUAGE_MAP]) > 0;
   }
 
   /**
@@ -148,6 +148,27 @@ class Library
       strlen($cred['stUser']) > 0 &&
       strlen($cred['stApi']) > 0 &&
       $cred['stUser'] != Constant::DEFAULT_API_USER;
+  }
+
+  /**
+   * @return array configured languages
+   */
+  public function getConfiguredLanguages()
+  {
+    $languages = Multilang::getLanguages();
+    $languageMappings = $this->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
+    $languageMappingCodes = array_keys($languageMappings);
+    $configuredLanguages = array();
+
+    foreach($languages as $language){
+      if(!in_array($language->slug, $languageMappingCodes)){
+        continue;
+      }
+
+      array_push($configuredLanguages, $language);
+    }
+
+    return $configuredLanguages;
   }
 
   /**
