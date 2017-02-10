@@ -3,6 +3,8 @@
 Plugin Name: Supertext Translation
 Plugin URI: http://www.supertext.ch
 Description: This plugin allows you to order human translations for your pages and posts using Supertexts professional translation services.
+Text Domain: polylang-supertext
+Domain Path: /resources/languages
 Author: Supertext AG
 Version: 2.9
 Author URI: http://www.supertext.ch
