@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang;
 
-use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
 use Supertext\Polylang\Backend\Log;
@@ -20,7 +19,6 @@ use Supertext\Polylang\TextAccessors\BePageBuilderTextAccessor;
 use Supertext\Polylang\TextAccessors\CustomFieldsTextAccessor;
 use Supertext\Polylang\TextAccessors\DiviBuilderTextAccessor;
 use Supertext\Polylang\TextAccessors\ITextAccessor;
-use Supertext\Polylang\TextAccessors\IAddDefaultSettings;
 use Supertext\Polylang\TextAccessors\PostTextAccessor;
 use Supertext\Polylang\TextAccessors\PostMediaTextAccessor;
 use Supertext\Polylang\TextAccessors\PostTaxonomyTextAccessor;
@@ -43,6 +41,10 @@ class Core
    * @var Library the library of global functions
    */
   private $library = null;
+  /**
+   * @var SettingsPage the backend menu handler
+   */
+  private $settingsPage = null;
   /**
    * @var Menu the backend menu handler
    */
@@ -103,7 +105,8 @@ class Core
       load_plugin_textdomain('polylang-supertext-langs', false, 'polylang-supertext/resources/languages');
 
       // Load needed subcomponents in admin
-      $this->menu = new Menu(new SettingsPage($this->getLibrary(), $this->getTextAccessors()));
+      $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
+      $this->menu = new Menu($this->settingsPage);
       $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
       $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
 
@@ -240,19 +243,6 @@ class Core
   }
 
   /**
-   * Adds well known shortcode settings depending on installed plugins
-   */
-  private function addDefaultSettings()
-  {
-    $textAccessors = $this->getTextAccessors();
-    foreach($textAccessors as $textAccessor){
-      if($textAccessor instanceof IAddDefaultSettings){
-        $textAccessor->addDefaultSettings();
-      }
-    }
-  }
-
-  /**
    * @return Library gets the library, might be instantiated only if needed
    */
   private function getLibrary()
@@ -357,7 +347,7 @@ class Core
   private function checkEnvironment()
   {
     if (!get_option(Constant::ENVIRONMENT_ADJUSTED_OPTION, false)) {
-      $this->addDefaultSettings();
+      $this->settingsPage->addDefaultSettings();
       update_option(Constant::ENVIRONMENT_ADJUSTED_OPTION, true);
     }
   }

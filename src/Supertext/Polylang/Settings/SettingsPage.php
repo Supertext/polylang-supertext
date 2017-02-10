@@ -7,6 +7,7 @@ use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\PostMeta;
 use Supertext\Polylang\Helper\View;
+use Supertext\Polylang\TextAccessors\IAddDefaultSettings;
 use Supertext\Polylang\TextAccessors\ITextAccessor;
 use Supertext\Polylang\TextAccessors\ISettingsAware;
 
@@ -28,17 +29,14 @@ class SettingsPage extends AbstractPage
 
   /**
    * @param Library $library
-   * @param ITextAccessor $textAccessors
+   * @param ITextAccessor[] $textAccessors
    */
   public function __construct($library, $textAccessors)
   {
     parent::__construct($library);
 
     $this->textAccessors = $textAccessors;
-
-    // Tabs definitions
     $this->tabs = array();
-
     $this->viewTemplates = new View("templates/settings-templates");
   }
 
@@ -95,7 +93,7 @@ class SettingsPage extends AbstractPage
     // Display the page with typical entry infos
     echo '
       <div class="wrap">
-        <h2>' . __('Settings › Supertext', 'polylang-supertext') . '</h2>
+        <h1>' . __('Settings › Supertext', 'polylang-supertext') . '</h1>
         ' . $this->showSystemMessage() . '
         ' . $this->addTabs($currentTabId);
 
@@ -129,6 +127,21 @@ class SettingsPage extends AbstractPage
     wp_redirect($this->getPageUrl($currentTabId) . '&message=saved');
   }
 
+  /**
+   * Sets default settings
+   */
+  public function addDefaultSettings()
+  {
+    foreach($this->textAccessors as $textAccessor){
+      if($textAccessor instanceof IAddDefaultSettings){
+        $textAccessor->addDefaultSettings();
+      }
+    }
+  }
+
+  /**
+   * @return array
+   */
   private function getContentProviderSettingsViewBundles()
   {
     $viewBundle = array();
@@ -166,14 +179,17 @@ class SettingsPage extends AbstractPage
    */
   private function addTabs($currentTabId)
   {
-    $html = '<h2 class="nav-tab-wrapper">';
+    $html = '<div class="nav-tab-wrapper">';
 
     foreach ($this->tabs as $tabId => $tab) {
       $class = ($tabId == $currentTabId) ? 'nav-tab-active' : '';
       $html .= '<a class="nav-tab ' . $class . '" href="' . $this->getPageUrl($tabId) . '">' . $tab['name'] . '</a>';
     }
 
-    $html .= '</h2>';
+    $addDefaultSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-polylang-settings&addDefaultSettings=on');
+    $html .= '<a class="button button-highlighted button-tab-nav" href="'.$addDefaultSettingsUrl.'">Add default settings</a><div class="clearfix"></div>';
+
+    $html .= '</div>';
 
     return $html;
   }
@@ -342,6 +358,10 @@ class SettingsPage extends AbstractPage
   {
     if(!empty($_GET['setInTranslationFlagFalse'])){
       PostMeta::from($_GET['setInTranslationFlagFalse'])->set(PostMeta::IN_TRANSLATION, false);
+    }
+
+    if(!empty($_GET['addDefaultSettings'])){
+      $this->addDefaultSettings();
     }
   }
 } 

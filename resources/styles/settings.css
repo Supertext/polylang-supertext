@@ -3,7 +3,7 @@
  * https://wordpress.org/plugins/polylang-supertext/
  * @author Heinrich Muralt
  * @version 2.7.0
- * Copyright 2016 */
+ * Copyright 2017 */
 .frmServiceSupertextConfig {
   width: 830px; }
   .frmServiceSupertextConfig select {
@@ -14,6 +14,9 @@
 
 .postbox_admin img {
   cursor: pointer; }
+
+.nav-tab-wrapper .button-tab-nav {
+  float: right; }
 
 .postbox table th {
   text-align: left;

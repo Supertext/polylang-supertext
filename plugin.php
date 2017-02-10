@@ -12,7 +12,7 @@ License: GPLv2 or later
 */
 
 define('SUPERTEXT_PLUGIN_VERSION', 2.9);
-define('SUPERTEXT_PLUGIN_REVISION', 19);
+define('SUPERTEXT_PLUGIN_REVISION', 20);
 define('SUPERTEXT_POLYLANG_BASE_PATH', __DIR__);
 define('SUPERTEXT_POLYLANG_VIEW_PATH', __DIR__ . '/views/');
 define('SUPERTEXT_POLYLANG_RESOURCE_URL', plugin_dir_url(__FILE__) . 'resources');
