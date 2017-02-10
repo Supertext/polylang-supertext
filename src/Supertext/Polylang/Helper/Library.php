@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang\Helper;
 
-use Comotive\Util\WordPress;
 use Supertext\Polylang\Api\ApiClient;
 use Supertext\Polylang\Api\Multilang;
 
@@ -102,11 +101,20 @@ class Library
   }
 
   /**
+   * @param string $plugin plugin file path
+   * @return bool true if plugin is active
+   */
+  public function isPluginActive($plugin)
+  {
+    return in_array($plugin, (array) get_option('active_plugins', array())) || (is_multisite() && isset(get_site_option( 'active_sitewide_plugins')[$plugin]));
+  }
+
+  /**
    * @return bool
    */
   public function isPolylangActivated()
   {
-    return WordPress::isPluginActive('polylang/polylang.php') || WordPress::isPluginActive('polylang-pro/polylang.php');
+    return $this->isPluginActive('polylang/polylang.php') || $this->isPluginActive('polylang-pro/polylang.php');
   }
 
   /**

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2017-02-09 17:38+0100\n"
-"PO-Revision-Date: 2017-02-09 17:38+0100\n"
+"POT-Creation-Date: 2017-02-10 08:47+0100\n"
+"PO-Revision-Date: 2017-02-10 08:48+0100\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: it_CH\n"
@@ -15,31 +15,6 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
-
-#: src/Comotive/Helper/Metabox.php:382
-msgid "Choose picture"
-msgstr "Seleziona foto"
-
-#: src/Comotive/Helper/Metabox.php:385
-msgid "Remove picture"
-msgstr "Elimina foto"
-
-#: src/Comotive/Util/Date.php:322
-msgid "o'clock"
-msgstr "Ora"
-
-#: src/Comotive/Util/StringUtils.php:553
-#, php-format
-msgid "Your password must be at least %s long"
-msgstr "La password deve contenere almeno %s caratteri"
-
-#: src/Comotive/Util/StringUtils.php:556
-msgid "Your passwords do not match"
-msgstr "Le password non coincidono"
-
-#: src/Comotive/Util/StringUtils.php:560
-msgid "Please enter your password"
-msgstr "Inserire una password"
 
 #: src/Supertext/Polylang/Api/ApiClient.php:124
 msgid ""
@@ -177,24 +152,24 @@ msgstr "Impostazioni Supertext"
 msgid "Supertext"
 msgstr "Supertext"
 
-#: src/Supertext/Polylang/Core.php:153
+#: src/Supertext/Polylang/Core.php:152
 msgid "An error occurred"
 msgstr "Si è verificato un errore"
 
-#: src/Supertext/Polylang/Core.php:154
+#: src/Supertext/Polylang/Core.php:153
 msgid "A network error occurred"
 msgstr "Si è verificato un errore di rete"
 
-#: src/Supertext/Polylang/Core.php:155
+#: src/Supertext/Polylang/Core.php:154
 msgid "Validation error"
 msgstr "Errore di controllo"
 
-#: src/Supertext/Polylang/Core.php:156 src/Supertext/Polylang/Core.php:165
+#: src/Supertext/Polylang/Core.php:155 src/Supertext/Polylang/Core.php:164
 #: views/templates/admin-extension-templates.php:5
 msgid "Order translation"
 msgstr "Assegna incarico di traduzione"
 
-#: src/Supertext/Polylang/Core.php:157
+#: src/Supertext/Polylang/Core.php:156
 msgid ""
 "The post was not saved. If you proceed with the translation, the unsaved "
 "changes will be lost."
@@ -202,55 +177,55 @@ msgstr ""
 "L’articolo non è stato salvato. Se si desidera procedere con la traduzione, "
 "le modifiche non verranno considerate."
 
-#: src/Supertext/Polylang/Core.php:158
+#: src/Supertext/Polylang/Core.php:157
 msgid "Please only select posts in the same language."
 msgstr "Scegliere solamente articoli nella stessa lingua."
 
-#: src/Supertext/Polylang/Core.php:159
+#: src/Supertext/Polylang/Core.php:158
 msgid "Blocked posts cannot be translated."
 msgstr "Gli articoli bloccati non possono essere tradotti."
 
-#: src/Supertext/Polylang/Core.php:160
+#: src/Supertext/Polylang/Core.php:159
 msgid "Please select content to be translated."
 msgstr "Selezionare il contenuto da tradurre."
 
-#: src/Supertext/Polylang/Core.php:161
+#: src/Supertext/Polylang/Core.php:160
 msgid "Please select the target language."
 msgstr "Selezionare la lingua d’arrivo."
 
-#: src/Supertext/Polylang/Core.php:162
+#: src/Supertext/Polylang/Core.php:161
 msgid "Please choose a quote."
 msgstr "Selezionare un’offerta."
 
-#: src/Supertext/Polylang/Core.php:163
+#: src/Supertext/Polylang/Core.php:162
 msgid "Your Supertext translation order"
 msgstr "Incarico di traduzione a Supertext"
 
-#: src/Supertext/Polylang/Core.php:164 views/backend/meta-box.php:12
+#: src/Supertext/Polylang/Core.php:163 views/backend/meta-box.php:12
 msgid "Send changes to Supertext"
 msgstr "Invia le modifiche a Supertext"
 
-#: src/Supertext/Polylang/Core.php:166
+#: src/Supertext/Polylang/Core.php:165
 msgid "Cancel"
 msgstr "Interrompi"
 
-#: src/Supertext/Polylang/Core.php:167
+#: src/Supertext/Polylang/Core.php:166
 msgid "Back"
 msgstr "Indietro"
 
-#: src/Supertext/Polylang/Core.php:168
+#: src/Supertext/Polylang/Core.php:167
 msgid "Next"
 msgstr "Continua"
 
-#: src/Supertext/Polylang/Core.php:169
+#: src/Supertext/Polylang/Core.php:168
 msgid "Close window"
 msgstr "Chiudi finestra"
 
-#: src/Supertext/Polylang/Core.php:170
+#: src/Supertext/Polylang/Core.php:169
 msgid "Please select at least one post"
 msgstr "Selezionare almeno un articolo."
 
-#: src/Supertext/Polylang/Core.php:171
+#: src/Supertext/Polylang/Core.php:170
 msgid "<i>{0}</i> is already being translated into {1} (order id: {2})"
 msgstr "<i>{0}</i> viene già tradotto in {1} (numero dell’incarico: {2})"
 
@@ -411,6 +386,10 @@ msgstr "È stato modificato e non corrisponde alla traduzione originale."
 #: views/backend/meta-box.php:16
 msgid "Log"
 msgstr "Log"
+
+#: views/backend/meta-box.php:20
+msgid "M j, Y @ H:i:s"
+msgstr "j M, Y @ H:i:s"
 
 #: views/backend/settings-custom-fields.php:5
 msgid "Custom field name..."
@@ -662,6 +641,24 @@ msgstr "rimuovere l'impostazione"
 #: views/templates/settings-templates.php:32
 msgid "Attribute name..."
 msgstr "Nome attributo..."
+
+#~ msgid "Choose picture"
+#~ msgstr "Seleziona foto"
+
+#~ msgid "Remove picture"
+#~ msgstr "Elimina foto"
+
+#~ msgid "o'clock"
+#~ msgstr "Ora"
+
+#~ msgid "Your password must be at least %s long"
+#~ msgstr "La password deve contenere almeno %s caratteri"
+
+#~ msgid "Your passwords do not match"
+#~ msgstr "Le password non coincidono"
+
+#~ msgid "Please enter your password"
+#~ msgstr "Inserire una password"
 
 #~ msgid "Supertext Plugin Log"
 #~ msgstr "Log plugin Supertext"

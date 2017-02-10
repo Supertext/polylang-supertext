@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang;
 
-use Comotive\Util\WordPress;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Backend\ContentProvider;
 use Supertext\Polylang\Backend\Menu;
@@ -317,35 +316,35 @@ class Core
       'custom-fields' => new CustomFieldsTextAccessor($textProcessor, $library)
     );
 
-    if (WordPress::isPluginActive('wordpress-seo/wp-seo.php')) {
+    if ($library->isPluginActive('wordpress-seo/wp-seo.php')) {
       $textAccessors['yoast_seo'] = new YoastSeoTextAccessor($textProcessor, $library);
     }
 
-    if (WordPress::isPluginActive('all-in-one-seo-pack/all_in_one_seo_pack.php')) {
+    if ($library->isPluginActive('all-in-one-seo-pack/all_in_one_seo_pack.php')) {
       $textAccessors['all_in_one_seo'] = new AllInOneSeoPackTextAccessor($textProcessor, $library);
     }
 
-    if (WordPress::isPluginActive('advanced-custom-fields/acf.php') || WordPress::isPluginActive('advanced-custom-fields-pro/acf.php')) {
+    if ($library->isPluginActive('advanced-custom-fields/acf.php') || $library->isPluginActive('advanced-custom-fields-pro/acf.php')) {
       $textAccessors['acf'] = new AcfTextAccessor($textProcessor, $library);
     }
 
-    if (WordPress::isPluginActive('be-page-builder/be-page-builder.php')) {
+    if ($library->isPluginActive('be-page-builder/be-page-builder.php')) {
       $textAccessors['be_page_builder'] = new BePageBuilderTextAccessor($textProcessor, $library);
     }
 
-    if (WordPress::isPluginActive('beaver-builder-lite-version/fl-builder.php') || WordPress::isPluginActive('bb-plugin/fl-builder.php')) {
+    if ($library->isPluginActive('beaver-builder-lite-version/fl-builder.php') || $library->isPluginActive('bb-plugin/fl-builder.php')) {
       $textAccessors['beaver_builder'] = new BeaverBuilderTextAccessor($textProcessor);
     }
 
-    if (WordPress::isPluginActive('siteorigin-panels/siteorigin-panels.php')) {
+    if ($library->isPluginActive('siteorigin-panels/siteorigin-panels.php')) {
       $textAccessors['siteorigin_panels'] = new SiteOriginTextAccessor($textProcessor);
     }
 
-    if (WordPress::isPluginActive('js_composer/js_composer.php') || WordPress::isPluginActive('js_composer_salient/js_composer.php')){
+    if ($library->isPluginActive('js_composer/js_composer.php') || $library->isPluginActive('js_composer_salient/js_composer.php')){
       $textAccessors['post'] = new VisualComposerTextAccessor($textProcessor, $library);
     }
 
-    if (WordPress::isPluginActive('divi-builder/divi-builder.php')) {
+    if ($library->isPluginActive('divi-builder/divi-builder.php')) {
       $textAccessors['post'] = new DiviBuilderTextAccessor($textProcessor, $library);
     }
 

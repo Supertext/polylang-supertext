@@ -16,13 +16,8 @@
 <strong><?php _e('Log', 'polylang-supertext'); ?></strong>
 <div class="sttr-log-container">
   <?php
-  use Comotive\Util\Date;
   foreach ($logEntries as $entry) {
-    $datetime = '
-            ' . Date::getTime(Date::EU_DATE, $entry['datetime']) . ',
-            ' . Date::getTime(Date::EU_TIME, $entry['datetime']) . '
-          ';
-    echo '<p><strong>' . $datetime . '</strong>: ' . $entry['message'] . '</p>';
+    echo '<p><strong>' . date_i18n(__('M j, Y @ H:i:s', 'polylang-supertext'), $entry['datetime']) . '</strong>: ' . $entry['message'] . '</p>';
   }
   ?>
 </div>
