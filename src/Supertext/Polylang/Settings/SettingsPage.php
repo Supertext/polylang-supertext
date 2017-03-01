@@ -5,7 +5,7 @@ namespace Supertext\Polylang\Settings;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\Library;
-use Supertext\Polylang\Helper\PostMeta;
+use Supertext\Polylang\Helper\TranslationMeta;
 use Supertext\Polylang\Helper\View;
 use Supertext\Polylang\TextAccessors\IAddDefaultSettings;
 use Supertext\Polylang\TextAccessors\ITextAccessor;
@@ -357,7 +357,7 @@ class SettingsPage extends AbstractPage
   private function runHiddenFunctions()
   {
     if(!empty($_GET['setInTranslationFlagFalse'])){
-      PostMeta::from($_GET['setInTranslationFlagFalse'])->set(PostMeta::IN_TRANSLATION, false);
+      TranslationMeta::of($_GET['setInTranslationFlagFalse'])->set(TranslationMeta::IN_TRANSLATION, false);
     }
 
     if(!empty($_GET['addDefaultSettings'])){

@@ -10,7 +10,7 @@ use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\PostMeta;
+use Supertext\Polylang\Helper\TranslationMeta;
 use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\TextAccessors\AcfTextAccessor;
 use Supertext\Polylang\TextAccessors\AllInOneSeoPackTextAccessor;
@@ -211,10 +211,10 @@ class Core
     ));
 
     foreach($queryForLegacyTranslationFlag->posts as $post){
-      $postMeta = PostMeta::from($post->ID);
-      $postMeta->set(PostMeta::TRANSLATION, true);
-      $postMeta->set(PostMeta::IN_TRANSLATION, true);
-      $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, get_post_meta($post->ID, '_in_translation_ref_hash', true));
+      $meta = TranslationMeta::of($post->ID);
+      $meta->set(TranslationMeta::TRANSLATION, true);
+      $meta->set(TranslationMeta::IN_TRANSLATION, true);
+      $meta->set(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH, get_post_meta($post->ID, '_in_translation_ref_hash', true));
     }
 
     $savedAcfFieldDefinitions = $library->getSettingOption('acfFields');

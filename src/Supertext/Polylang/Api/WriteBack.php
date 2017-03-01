@@ -4,7 +4,7 @@ namespace Supertext\Polylang\Api;
 
 
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\PostMeta;
+use Supertext\Polylang\Helper\TranslationMeta;
 
 class WriteBack
 {
@@ -63,7 +63,7 @@ class WriteBack
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
-      $referenceHash = PostMeta::from($targetPostId)->get(PostMeta::IN_TRANSLATION_REFERENCE_HASH);
+      $referenceHash = TranslationMeta::of($targetPostId)->get(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH);
       $referenceData ^= hex2bin($referenceHash);
     }
 
@@ -127,7 +127,7 @@ class WriteBack
     $secureToken = $refData[1];
 
     $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
-    $referenceHash = PostMeta::from($targetPostId)->get(PostMeta::IN_TRANSLATION_REFERENCE_HASH);
+    $referenceHash = TranslationMeta::of($targetPostId)->get(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH);
 
     return !empty($referenceHash) && md5($referenceHash . $sourcePostId) === $secureToken;
   }

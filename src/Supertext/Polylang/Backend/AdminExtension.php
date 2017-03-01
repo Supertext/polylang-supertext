@@ -3,7 +3,7 @@
 namespace Supertext\Polylang\Backend;
 
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\PostMeta;
+use Supertext\Polylang\Helper\TranslationMeta;
 use Supertext\Polylang\Helper\View;
 
 /**
@@ -82,7 +82,7 @@ class AdminExtension
     $this->screenBase = $screen->base;
     $this->screenAction = empty($screen->action) ? empty($_GET['action']) ? '' : $_GET['action'] : $screen->action;
     $this->currentPostId = isset($_GET['post']) ? intval($_GET['post']) : 0;
-    $this->isCurrentPostInTranslation = isset($_GET['post'])  && PostMeta::from($this->currentPostId)->is(PostMeta::IN_TRANSLATION);
+    $this->isCurrentPostInTranslation = isset($_GET['post'])  && TranslationMeta::of($this->currentPostId)->is(TranslationMeta::IN_TRANSLATION);
   }
 
   /**
@@ -224,12 +224,12 @@ class AdminExtension
    */
   public function displayMetaBoxView()
   {
-    $postMeta = PostMeta::from($this->currentPostId);
+    $meta = TranslationMeta::of($this->currentPostId);
 
     $status = array(
-      'isTranslation' => $postMeta->is(PostMeta::TRANSLATION),
-      'isInTranslation' => $postMeta->is(PostMeta::IN_TRANSLATION),
-      'hasChangedSinceLastTranslation' => strtotime($postMeta->get(PostMeta::TRANSLATION_DATE)) <  strtotime(get_post_field( 'post_modified', $this->currentPostId))
+      'isTranslation' => $meta->is(TranslationMeta::TRANSLATION),
+      'isInTranslation' => $meta->is(TranslationMeta::IN_TRANSLATION),
+      'hasChangedSinceLastTranslation' => strtotime($meta->get(TranslationMeta::TRANSLATION_DATE)) <  strtotime(get_post_field( 'post_modified', $this->currentPostId))
     );
 
     $logEntries = $this->log->getLogEntries($this->currentPostId);
@@ -256,7 +256,7 @@ class AdminExtension
       return;
     }
 
-    if (PostMeta::from($postId)->is(PostMeta::IN_TRANSLATION)) {
+    if (TranslationMeta::of($postId)->is(TranslationMeta::IN_TRANSLATION)) {
       echo '<span class="dashicons dashicons-clock"></span>';
     }
   }

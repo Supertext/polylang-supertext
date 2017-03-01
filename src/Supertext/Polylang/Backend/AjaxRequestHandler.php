@@ -5,7 +5,7 @@ namespace Supertext\Polylang\Backend;
 use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\PostMeta;
+use Supertext\Polylang\Helper\TranslationMeta;
 
 /**
  * Provided ajax request handlers
@@ -63,7 +63,10 @@ class AjaxRequestHandler
         'id' => $postId,
         'title' => $post->post_title,
         'languageCode' => Multilang::getPostLanguage($postId),
-        'meta' => PostMeta::from($postId)->getPublicProperties(),
+        'meta' => TranslationMeta::of($postId)->get(array(
+          TranslationMeta::IN_TRANSLATION,
+          TranslationMeta::SOURCE_LANGUAGE_CODE
+        )),
         'isDraft' => $post->post_status == 'draft',
         'unfinishedTranslations' => $this->getUnfinishedTranslations($postId),
         'translatableFieldGroups' => $this->contentProvider->getTranslatableFieldGroups($postId)
@@ -233,13 +236,13 @@ class AjaxRequestHandler
       $this->log->addOrderId($sourcePostId, $order->Id);
       $this->log->addOrderId($targetPost->ID, $order->Id);
 
-      $postMeta = PostMeta::from($targetPost->ID);
-      $postMeta->set(PostMeta::TRANSLATION, true);
-      $postMeta->set(PostMeta::IN_TRANSLATION, true);
-      $postMeta->set(PostMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
-      $postMeta->set(PostMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
+      $meta = TranslationMeta::of($targetPost->ID);
+      $meta->set(TranslationMeta::TRANSLATION, true);
+      $meta->set(TranslationMeta::IN_TRANSLATION, true);
+      $meta->set(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
+      $meta->set(TranslationMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
 
-      $translationDate = $postMeta->get(PostMeta::TRANSLATION_DATE);
+      $translationDate = $meta->get(TranslationMeta::TRANSLATION_DATE);
       if($syncTranslationChanges && $translationDate !== null && strtotime($translationDate) < strtotime($targetPost->post_modified)){
         try{
           $this->sendSyncRequest($targetPost);
@@ -258,13 +261,13 @@ class AjaxRequestHandler
   public function sendSyncRequest($targetPost)
   {
     $targetPostId = $targetPost->ID;
-    $postMeta = PostMeta::from($targetPostId);
-    $sourceLanguageCode = $postMeta->get(PostMeta::SOURCE_LANGUAGE_CODE);
+    $meta = TranslationMeta::of($targetPostId);
+    $sourceLanguageCode = $meta->get(TranslationMeta::SOURCE_LANGUAGE_CODE);
     $newTranslatableContent = $this->getAllTranslatableContent($targetPostId);
     $oldTranslatableContent = array();
 
     $revisions = wp_get_post_revisions($targetPostId);
-    $translationDate = strtotime($postMeta->get(PostMeta::TRANSLATION_DATE));
+    $translationDate = strtotime($meta->get(TranslationMeta::TRANSLATION_DATE));
 
     foreach ($revisions as $revision) {
       if (strtotime($revision->post_modified) == $translationDate) {
@@ -286,7 +289,7 @@ class AjaxRequestHandler
       $this->getTranslationData($newTranslatableContent)
     );
 
-    $postMeta->set(PostMeta::TRANSLATION_DATE, $targetPost->post_modified);
+    $meta->set(TranslationMeta::TRANSLATION_DATE, $targetPost->post_modified);
     $this->log->addEntry($targetPostId, __('Post changes have been sent to Supertext.', 'polylang-supertext'));
   }
 
@@ -421,8 +424,9 @@ class AjaxRequestHandler
     $polylang->sync->copy_taxonomies($sourcePostId, $targetPostId, $target_lang);
     $polylang->sync->copy_post_metas($sourcePostId, $targetPostId, $target_lang);
 
+    TranslationMeta::of($targetPostId)->delete();
     //TODO refactor
-    delete_post_meta($targetPostId, PostMeta::TRANSLATION_PROPERTIES);
+
     delete_post_meta($targetPostId, Log::META_LOG);
     delete_post_meta($targetPostId, Log::META_ORDER_ID);
   }
@@ -496,7 +500,7 @@ class AjaxRequestHandler
     foreach ($languages as $language) {
       $targetPostId = Multilang::getPostInLanguage($sourcePostId, $language->slug);
 
-      if ($targetPostId == null || $targetPostId == $sourcePostId || !PostMeta::from($targetPostId)->is(PostMeta::IN_TRANSLATION)) {
+      if ($targetPostId == null || $targetPostId == $sourcePostId || !TranslationMeta::of($targetPostId)->is(TranslationMeta::IN_TRANSLATION)) {
         continue;
       }
 

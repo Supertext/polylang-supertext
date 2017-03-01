@@ -2,52 +2,73 @@
 
 namespace Supertext\Polylang\Helper;
 
-class PostMeta
+abstract class PostMeta
 {
-  const TRANSLATION_PROPERTIES = '_sttr_translation_properties';
-  const TRANSLATION = 'translation';
-  const IN_TRANSLATION = 'inTranslation';
-  const IN_TRANSLATION_REFERENCE_HASH = 'inTranslationRefHash';
-  const SOURCE_LANGUAGE_CODE = 'sourceLanguageCode';
-  const TRANSLATION_DATE = "translationDate";
-
   private $postId;
-  private $translationProperties;
+  private $metaKey;
+  private $fields = null;
 
-  private function __construct($postId, $translationProperties)
+  protected function __construct($postId, $metaKey)
   {
     $this->postId = $postId;
-    $this->translationProperties = $translationProperties;
+    $this->metaKey = $metaKey;
   }
 
-  public static function from($postId)
-  {
-    $translationProperties = get_post_meta($postId, self::TRANSLATION_PROPERTIES, true);
-
-    return new PostMeta($postId, $translationProperties);
-  }
-
+  /**
+   * @param $key string the key to test
+   * @return bool
+   */
   public function is($key)
   {
-    return isset($this->translationProperties[$key]) && $this->translationProperties[$key] === true;
+    if($this->fields === null){
+      $this->getFields();
+    }
+
+    return isset($this->fields[$key]) && $this->fields[$key] === true;
   }
 
-  public function get($key)
+  /**
+   * @param $keys array|string the key or array of keys to get the values of
+   * @return array|mixed|null
+   */
+  public function get($keys)
   {
-    return isset($this->translationProperties[$key]) ? $this->translationProperties[$key] : null;
+    if($this->fields === null){
+      $this->getFields();
+    }
+
+    if(is_string($keys)){
+      return isset($this->fields[$keys]) ? $this->fields[$keys] : null;
+    }
+
+    $values = array();
+
+    foreach($keys as $key){
+      $values[$key] = isset($this->fields[$key]) ? $this->fields[$key] : null;
+    }
+
+    return $values;
   }
 
-  public function getPublicProperties()
-  {
-    return array(
-      self::IN_TRANSLATION => $this->is(self::IN_TRANSLATION),
-      self::SOURCE_LANGUAGE_CODE => $this->translationProperties[self::SOURCE_LANGUAGE_CODE]
-    );
-  }
-
+  /**
+   * @param $key string the key to set
+   * @param $value mixed the value to set
+   */
   public function set($key, $value)
   {
-    $this->translationProperties[$key] = $value;
-    update_post_meta($this->postId, self::TRANSLATION_PROPERTIES, $this->translationProperties);
+    if($this->fields === null){
+      $this->getFields();
+    }
+
+    $this->fields[$key] = $value;
+    update_post_meta($this->postId, $this->metaKey, $this->fields);
+  }
+
+  public function delete(){
+    delete_post_meta($this->postId, $this->metaKey);
+  }
+
+  private function getFields(){
+    $this->fields = get_post_meta($this->postId, $this->metaKey, true);
   }
 }
