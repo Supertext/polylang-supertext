@@ -8,5 +8,17 @@ namespace Supertext\Polylang\TextAccessors;
  */
 interface ITranslationAware
 {
-  public function prepareTargetPost($sourcePost, $targetPost);
+  /**
+   * @param $sourcePostId
+   * @param $targetPostId
+   * @param $selectedTranslatableFields
+   */
+  public function getTranslationMetaData($sourcePostId, $targetPostId, $selectedTranslatableFields);
+
+  /**
+   * @param $sourcePostId
+   * @param $targetPostId
+   * @param $translationMetaData
+   */
+  public function prepareSettingTexts($sourcePostId, $targetPostId, $translationMetaData);
 }

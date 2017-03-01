@@ -111,18 +111,30 @@ class BeaverBuilderTextAccessor implements ITextAccessor, ITranslationAware
   }
 
   /**
-   * @param $sourcePost
-   * @param $targetPost
+   * @param $sourcePostId
+   * @param $targetPostId
+   * @param $selectedTranslatableFields
+   * @return array
    */
-  public function prepareTargetPost($sourcePost, $targetPost)
+  public function getTranslationMetaData($sourcePostId, $targetPostId, $selectedTranslatableFields)
   {
-    update_post_meta($targetPost->ID, '_fl_builder_enabled', get_post_meta($sourcePost->ID, '_fl_builder_enabled', true));
+    return array(
+      '_fl_builder_enabled' => get_post_meta($sourcePostId, '_fl_builder_enabled', true),
+      'layoutData' => FLBuilderModel::get_layout_data(null, $sourcePostId),
+      'layoutSettings' => FLBuilderModel::get_layout_settings(null, $sourcePostId)
+    );
+  }
 
-    $layoutData = FLBuilderModel::get_layout_data(null, $sourcePost->ID);
-    FLBuilderModel::update_layout_data($layoutData, null, $targetPost->ID);
-
-    $layoutSettings = FLBuilderModel::get_layout_settings(null, $sourcePost->ID);
-    FLBuilderModel::update_layout_settings($layoutSettings, null, $targetPost->ID);
+  /**
+   * @param $sourcePostId
+   * @param $targetPostId
+   * @param $translationMetaData
+   */
+  public function prepareSettingTexts($sourcePostId, $targetPostId, $translationMetaData)
+  {
+    update_post_meta($targetPostId, '_fl_builder_enabled', $translationMetaData['_fl_builder_enabled']);
+    FLBuilderModel::update_layout_data($translationMetaData['layoutData'], null, $targetPostId);
+    FLBuilderModel::update_layout_settings($translationMetaData['layoutSettings'], null, $targetPostId);
   }
 
   /**

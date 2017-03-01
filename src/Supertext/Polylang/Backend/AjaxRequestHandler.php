@@ -146,7 +146,7 @@ class AjaxRequestHandler
       );
 
       $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
-      $this->processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes, isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']);
+      $this->processTargetPosts($order, $translatableContents, $sourceLanguage, $targetLanguage, $referenceHashes, isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']);
 
       $result = array(
         'message' => '
@@ -215,15 +215,15 @@ class AjaxRequestHandler
 
   /**
    * @param $order
-   * @param $sourcePostIds
+   * @param $translatableContents
    * @param $sourceLanguage
    * @param $targetLanguage
    * @param $referenceHashes
    * @param $syncTranslationChanges
    */
-  private function processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $syncTranslationChanges)
+  private function processTargetPosts($order, $translatableContents, $sourceLanguage, $targetLanguage, $referenceHashes, $syncTranslationChanges)
   {
-    foreach ($sourcePostIds as $sourcePostId) {
+    foreach ($translatableContents as $sourcePostId => $translatableFieldGroups) {
       $targetPost = $this->getTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
 
       $message = sprintf(
@@ -241,6 +241,7 @@ class AjaxRequestHandler
       $meta->set(TranslationMeta::IN_TRANSLATION, true);
       $meta->set(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
       $meta->set(TranslationMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
+      $meta->set(TranslationMeta::DATA, $this->contentProvider->getTranslationMetaData($sourcePostId, $targetPost->ID, $translatableFieldGroups));
 
       $translationDate = $meta->get(TranslationMeta::TRANSLATION_DATE);
       if($syncTranslationChanges && $translationDate !== null && strtotime($translationDate) < strtotime($targetPost->post_modified)){

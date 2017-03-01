@@ -100,19 +100,20 @@ class CallbackHandler
 
       // Get the translation post object
       $targetPost = get_post($targetPostId);
+      $translationMeta = TranslationMeta::of($targetPost->ID);
       $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
 
       $isPostWritable =
         $targetPost->post_status == 'draft' ||
         ($targetPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
-        TranslationMeta::of($targetPost->ID)->is(TranslationMeta::IN_TRANSLATION);
+        $translationMeta>is(TranslationMeta::IN_TRANSLATION);
 
       if (!$isPostWritable) {
         $errors[$sourcePostId] = 'The post for saving the translation is not writable.';
         continue;
       }
 
-      $this->contentProvider->prepareTargetPost(get_post($sourcePostId), $targetPost);
+      $this->contentProvider->prepareSavingTranslationData($sourcePostId, $targetPostId, $translationMeta->get(TranslationMeta::DATA));
       $this->contentProvider->saveTranslatedData($targetPost, $translationData[$sourcePostId]);
 
       if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
@@ -123,9 +124,9 @@ class CallbackHandler
       wp_update_post($targetPost);
 
       // All good, set translation flag false
-      $meta = TranslationMeta::of($targetPost->ID);
-      $meta->set(TranslationMeta::IN_TRANSLATION, false);
-      $meta->set(TranslationMeta::TRANSLATION_DATE, get_post_field('post_modified', $targetPost->ID));
+      $translationMeta->set(TranslationMeta::IN_TRANSLATION, false);
+      $translationMeta->set(TranslationMeta::TRANSLATION_DATE, get_post_field('post_modified', $targetPost->ID));
+      $translationMeta->set(TranslationMeta::DATA, null);
 
       $this->log->addEntry($targetPostId, __('translation saved successfully', 'Polylang-Supertext'));
     }

@@ -106,31 +106,61 @@ class ContentProvider
   }
 
   /**
+   * @param $sourcePostId
+   * @param $targetPostId
+   * @param $translatableFieldGroups
+   * @return array|mixed|void
+   */
+  public function getTranslationMetaData($sourcePostId, $targetPostId, $translatableFieldGroups)
+  {
+    $result = array();
+
+    foreach ($this->textAccessors as $id => $textAccessor) {
+      if (!isset($translatableFieldGroups[$id]) || !($textAccessor instanceof ITranslationAware)) {
+        continue;
+      }
+
+      $texts = $textAccessor->getTranslationMetaData($sourcePostId, $targetPostId, $translatableFieldGroups[$id]['fields']);
+
+      $result[$id] = $texts;
+    }
+
+    return $result;
+  }
+
+  /**
+   * @param $sourcePostId
+   * @param $targetPostId
+   * @param $translationMetaData
+   * @return array|mixed|void
+   */
+  public function prepareSavingTranslationData($sourcePostId, $targetPostId, $translationMetaData)
+  {
+    $result = array();
+
+    foreach ($this->textAccessors as $id => $textAccessor) {
+      if (!isset($translationMetaData[$id]) || !($textAccessor instanceof ITranslationAware)) {
+        continue;
+      }
+
+      $textAccessor->prepareSettingTexts($sourcePostId, $targetPostId, $translationMetaData[$id]);
+    }
+
+    return $result;
+  }
+
+  /**
    * @param $targetPost
    * @param $translationData
    */
   public function saveTranslatedData($targetPost, $translationData)
   {
-    foreach ($translationData as $id => $texts) {
-      if (!isset($this->textAccessors[$id])) {
+    foreach ($this->textAccessors as $id => $textAccessor) {
+      if (!isset($translationData[$id])) {
         continue;
       }
-
-      $textAccessors = $this->textAccessors[$id];
-      $textAccessors->setTexts($targetPost, $texts);
-    }
-  }
-
-  /**
-   * @param $sourcePost
-   * @param $targetPost
-   */
-  public function prepareTargetPost($sourcePost, $targetPost)
-  {
-    foreach ($this->textAccessors as $id => $textAccessor) {
-      if ($textAccessor instanceof ITranslationAware) {
-        $textAccessor->prepareTargetPost($sourcePost, $targetPost);
-      }
+      $texts = $translationData[$id];
+      $textAccessor->setTexts($targetPost, $texts);
     }
   }
 }
