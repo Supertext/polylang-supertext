@@ -43,7 +43,7 @@ class AjaxRequestHandler
 
     add_action('wp_ajax_sttr_getPostTranslationInfo', array($this, 'getPostTranslationInfoAjax'));
     add_action('wp_ajax_sttr_getPostRawData', array($this, 'getPostRawDataAjax'));
-    add_action('wp_ajax_sttr_getPostTranslationData', array($this, 'getPostTranslationDataAjax'));
+    add_action('wp_ajax_sttr_getPostContentData', array($this, 'getPostContentDataAjax'));
     add_action('wp_ajax_sttr_getOffer', array($this, 'getOfferAjax'));
     add_action('wp_ajax_sttr_createOrder', array($this, 'createOrderAjax'));
     add_action('wp_ajax_sttr_sendSyncRequest', array($this, 'sendSyncRequestAjax'));
@@ -89,11 +89,11 @@ class AjaxRequestHandler
   /**
    * Gets the translation data of a post
    */
-  public function getPostTranslationDataAjax()
+  public function getPostContentDataAjax()
   {
     $postId = $_GET['postId'];
     $translatableFieldGroups = $_POST['translatableContents'];
-    $content = $this->contentProvider->getTranslationData(get_post($postId), $translatableFieldGroups[$postId]);
+    $content = $this->contentProvider->getContentData(get_post($postId), $translatableFieldGroups[$postId]);
     self::returnResponse(200, $content);
   }
 
@@ -102,14 +102,14 @@ class AjaxRequestHandler
    */
   public function getOfferAjax()
   {
-    $translationData = $this->getTranslationData($_POST['translatableContents']);
+    $content = $this->getContent($_POST['translatableContents']);
 
     try {
       $quote = Wrapper::getQuote(
         $this->library->getApiClient(),
         $this->library->toSuperCode($_POST['orderSourceLanguage']),
         $this->library->toSuperCode($_POST['orderTargetLanguage']),
-        $translationData
+        $content['data']
       );
 
       self::returnResponse(200, $quote);
@@ -126,7 +126,7 @@ class AjaxRequestHandler
     $translatableContents = $_POST['translatableContents'];
     $sourceLanguage = $_POST['orderSourceLanguage'];
     $targetLanguage = $_POST['orderTargetLanguage'];
-    $translationData = $this->getTranslationData($translatableContents);
+    $content = $this->getContent($translatableContents);
     $sourcePostIds = array_keys($translatableContents);
     $additionalInformation = $_POST['comment'] . ' Posts: ' . implode(', ', $sourcePostIds);
     $referenceHashes = $this->createReferenceHashes($sourcePostIds);
@@ -138,7 +138,7 @@ class AjaxRequestHandler
         get_bloginfo('name') . ' - ' . count($sourcePostIds) . ' post(s)' ,
         $this->library->toSuperCode($sourceLanguage),
         $this->library->toSuperCode($targetLanguage),
-        $translationData,
+        $content['data'],
         $_POST['translationType'],
         $additionalInformation,
         $referenceHashes[0],
@@ -146,7 +146,15 @@ class AjaxRequestHandler
       );
 
       $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
-      $this->processTargetPosts($order, $translatableContents, $sourceLanguage, $targetLanguage, $referenceHashes, isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']);
+      $this->processTargetPosts(
+        $order,
+        $sourcePostIds,
+        $sourceLanguage,
+        $targetLanguage,
+        $referenceHashes,
+        $content['metaData'],
+        isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']
+      );
 
       $result = array(
         'message' => '
@@ -184,16 +192,20 @@ class AjaxRequestHandler
    * @param $translatableContents
    * @return array
    */
-  private function getTranslationData($translatableContents)
+  private function getContent($translatableContents)
   {
-    $translationData = array();
+    $contentData = array(
+      'data' => array(),
+      'metaData' => array()
+    );
 
     foreach ($translatableContents as $postId => $translatableFieldGroups) {
       $post = get_post($postId);
-      $translationData[$postId] = $this->contentProvider->getTranslationData($post, $translatableFieldGroups);
+      $contentData['data'][$postId] = $this->contentProvider->getContentData($post, $translatableFieldGroups);
+      $contentData['metaData'][$postId] = $this->contentProvider->getContentMetaData($post, $translatableFieldGroups);
     }
 
-    return $translationData;
+    return $contentData;
   }
 
   /**
@@ -215,15 +227,16 @@ class AjaxRequestHandler
 
   /**
    * @param $order
-   * @param $translatableContents
+   * @param $sourcePostIds
    * @param $sourceLanguage
    * @param $targetLanguage
    * @param $referenceHashes
+   * @param $metaData
    * @param $syncTranslationChanges
    */
-  private function processTargetPosts($order, $translatableContents, $sourceLanguage, $targetLanguage, $referenceHashes, $syncTranslationChanges)
+  private function processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $metaData, $syncTranslationChanges)
   {
-    foreach ($translatableContents as $sourcePostId => $translatableFieldGroups) {
+    foreach ($sourcePostIds as $sourcePostId) {
       $targetPost = $this->getTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
 
       $message = sprintf(
@@ -241,7 +254,7 @@ class AjaxRequestHandler
       $meta->set(TranslationMeta::IN_TRANSLATION, true);
       $meta->set(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
       $meta->set(TranslationMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
-      $meta->set(TranslationMeta::DATA, $this->contentProvider->getTranslationMetaData($sourcePostId, $targetPost->ID, $translatableFieldGroups));
+      $meta->set(TranslationMeta::META_DATA, $metaData[$sourcePostId]);
 
       $translationDate = $meta->get(TranslationMeta::TRANSLATION_DATE);
       if($syncTranslationChanges && $translationDate !== null && strtotime($translationDate) < strtotime($targetPost->post_modified)){
@@ -286,8 +299,8 @@ class AjaxRequestHandler
       $this->log->getLastOrderId($targetPostId),
       $this->library->toSuperCode($sourceLanguageCode),
       $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
-      $this->getTranslationData($oldTranslatableContent),
-      $this->getTranslationData($newTranslatableContent)
+      $this->getContent($oldTranslatableContent)['data'],
+      $this->getContent($newTranslatableContent)['data']
     );
 
     $meta->set(TranslationMeta::TRANSLATION_DATE, $targetPost->post_modified);

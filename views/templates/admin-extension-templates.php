@@ -173,7 +173,7 @@
 
 <script type="text/html" id="tmpl-sttr-item-content">
   <div class="sttr-item-content">
-    <# _.each(data.translationData, function(group) { #>
+    <# _.each(data.contentData, function(group) { #>
       <b>{{group.name}}</b><br/>
       <# _.each(group.elements, function(element) { #>
         <i>{{element.path}}</i><br/>

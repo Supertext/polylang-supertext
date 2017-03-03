@@ -669,7 +669,7 @@ Supertext.Polylang = (function (win, doc, $) {
           {postId: postId}
         ),
         doPostRequest(
-          context.ajaxUrl + '?action=sttr_getPostTranslationData&postId='+postId,
+          context.ajaxUrl + '?action=sttr_getPostContentData&postId='+postId,
           $(selectors.contentStepForm).serializeArray()
         ),
         $.each(state.posts, function (index, post) {
@@ -679,13 +679,13 @@ Supertext.Polylang = (function (win, doc, $) {
 
           return null;
         })
-      ).done(function(rawData, translationData, postsResult){
+      ).done(function(rawData, contentData, postsResult){
 
-          var preparedTranslationData = getPreparedTranslationData(postsResult[0], translationData);
+          var preparedContentData = getPreparedContentData(postsResult[0], contentData);
 
           modal.showFullScreenContent(template.itemContent({
             rawData: JSON.stringify(rawData, null, 4),
-            translationData: preparedTranslationData
+            contentData: preparedContentData
           }));
         }
       );
@@ -694,21 +694,21 @@ Supertext.Polylang = (function (win, doc, $) {
     /**
      * Gets the prepared translation data for the template
      * @param postsResult
-     * @param translationData
+     * @param contentData
      * @returns {Array}
      */
-    function getPreparedTranslationData(post, translationData) {
-      var preparedTranslationData = [];
+    function getPreparedContentData(post, contentData) {
+      var preparedContentData = [];
 
       for (var group in post.translatableFieldGroups) {
-        if (!translationData.hasOwnProperty(group)) {
+        if (!contentData.hasOwnProperty(group)) {
           continue;
         }
 
         var groupName = post.translatableFieldGroups[group].name;
         var groupElements = [];
 
-        var queue = [{path: group, value: translationData[group]}];
+        var queue = [{path: group, value: contentData[group]}];
 
         while (queue.length > 0) {
           var element = queue.pop();
@@ -726,13 +726,13 @@ Supertext.Polylang = (function (win, doc, $) {
           }
         }
 
-        preparedTranslationData.push({
+        preparedContentData.push({
           name: groupName,
           elements: groupElements
         });
       }
 
-      return preparedTranslationData;
+      return preparedContentData;
     }
 
     /**

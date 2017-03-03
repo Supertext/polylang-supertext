@@ -9,7 +9,7 @@ use Supertext\Polylang\Helper\TextProcessor;
  * Class BeaverBuilderTextAccessor
  * @package Supertext\Polylang\TextAccessors
  */
-class BeaverBuilderTextAccessor implements ITextAccessor, ITranslationAware
+class BeaverBuilderTextAccessor implements ITextAccessor, IMetaDataAware
 {
   /**
    * @var TextProcessor the text processor
@@ -111,30 +111,28 @@ class BeaverBuilderTextAccessor implements ITextAccessor, ITranslationAware
   }
 
   /**
-   * @param $sourcePostId
-   * @param $targetPostId
+   * @param $post
    * @param $selectedTranslatableFields
    * @return array
    */
-  public function getTranslationMetaData($sourcePostId, $targetPostId, $selectedTranslatableFields)
+  public function getContentMetaData($post, $selectedTranslatableFields)
   {
     return array(
-      '_fl_builder_enabled' => get_post_meta($sourcePostId, '_fl_builder_enabled', true),
-      'layoutData' => FLBuilderModel::get_layout_data(null, $sourcePostId),
-      'layoutSettings' => FLBuilderModel::get_layout_settings(null, $sourcePostId)
+      '_fl_builder_enabled' => get_post_meta($post->ID, '_fl_builder_enabled', true),
+      'layoutData' => FLBuilderModel::get_layout_data(null, $post->ID),
+      'layoutSettings' => FLBuilderModel::get_layout_settings(null, $post->ID)
     );
   }
 
   /**
-   * @param $sourcePostId
-   * @param $targetPostId
+   * @param $post
    * @param $translationMetaData
    */
-  public function prepareSettingTexts($sourcePostId, $targetPostId, $translationMetaData)
+  public function setContentMetaData($post, $translationMetaData)
   {
-    update_post_meta($targetPostId, '_fl_builder_enabled', $translationMetaData['_fl_builder_enabled']);
-    FLBuilderModel::update_layout_data($translationMetaData['layoutData'], null, $targetPostId);
-    FLBuilderModel::update_layout_settings($translationMetaData['layoutSettings'], null, $targetPostId);
+    update_post_meta($post->ID, '_fl_builder_enabled', $translationMetaData['_fl_builder_enabled']);
+    FLBuilderModel::update_layout_data($translationMetaData['layoutData'], null, $post->ID);
+    FLBuilderModel::update_layout_settings($translationMetaData['layoutSettings'], null, $post->ID);
   }
 
   /**

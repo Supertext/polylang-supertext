@@ -3,7 +3,7 @@
 namespace Supertext\Polylang\Backend;
 
 use Supertext\Polylang\TextAccessors\ITextAccessor;
-use Supertext\Polylang\TextAccessors\ITranslationAware;
+use Supertext\Polylang\TextAccessors\IMetaDataAware;
 
 /**
  * Processes post content
@@ -81,7 +81,7 @@ class ContentProvider
    * @param $translatableFieldGroups
    * @return array|mixed|void
    */
-  public function getTranslationData($post, $translatableFieldGroups)
+  public function getContentData($post, $translatableFieldGroups)
   {
     $result = array();
 
@@ -106,61 +106,53 @@ class ContentProvider
   }
 
   /**
-   * @param $sourcePostId
-   * @param $targetPostId
+   * @param $post
+   * @param $contentData
+   */
+  public function saveContentData($post, $contentData)
+  {
+    foreach ($this->textAccessors as $id => $textAccessor) {
+      if (!isset($contentData[$id])) {
+        continue;
+      }
+
+      $textAccessor->setTexts($post, $contentData[$id]);
+    }
+  }
+
+  /**
+   * @param $post
    * @param $translatableFieldGroups
-   * @return array|mixed|void
+   * @return array
    */
-  public function getTranslationMetaData($sourcePostId, $targetPostId, $translatableFieldGroups)
+  public function getContentMetaData($post, $translatableFieldGroups)
   {
     $result = array();
 
     foreach ($this->textAccessors as $id => $textAccessor) {
-      if (!isset($translatableFieldGroups[$id]) || !($textAccessor instanceof ITranslationAware)) {
+      if (!isset($translatableFieldGroups[$id]) || !($textAccessor instanceof IMetaDataAware)) {
         continue;
       }
 
-      $texts = $textAccessor->getTranslationMetaData($sourcePostId, $targetPostId, $translatableFieldGroups[$id]['fields']);
-
-      $result[$id] = $texts;
+      $result[$id] = $textAccessor->getContentMetaData($post, $translatableFieldGroups[$id]['fields']);
     }
 
     return $result;
   }
 
   /**
-   * @param $sourcePostId
-   * @param $targetPostId
+   * @param $post
    * @param $translationMetaData
-   * @return array|mixed|void
+   * @return array
    */
-  public function prepareSavingTranslationData($sourcePostId, $targetPostId, $translationMetaData)
+  public function saveContentMetaData($post, $translationMetaData)
   {
-    $result = array();
-
     foreach ($this->textAccessors as $id => $textAccessor) {
-      if (!isset($translationMetaData[$id]) || !($textAccessor instanceof ITranslationAware)) {
+      if (!isset($translationMetaData[$id]) || !($textAccessor instanceof IMetaDataAware)) {
         continue;
       }
 
-      $textAccessor->prepareSettingTexts($sourcePostId, $targetPostId, $translationMetaData[$id]);
-    }
-
-    return $result;
-  }
-
-  /**
-   * @param $targetPost
-   * @param $translationData
-   */
-  public function saveTranslatedData($targetPost, $translationData)
-  {
-    foreach ($this->textAccessors as $id => $textAccessor) {
-      if (!isset($translationData[$id])) {
-        continue;
-      }
-      $texts = $translationData[$id];
-      $textAccessor->setTexts($targetPost, $texts);
+      $textAccessor->setContentMetaData($post, $translationMetaData[$id]);
     }
   }
 }

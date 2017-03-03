@@ -7,7 +7,7 @@ use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\TextProcessor;
 
-class DiviBuilderTextAccessor extends PostTextAccessor implements ITranslationAware, IAddDefaultSettings
+class DiviBuilderTextAccessor extends PostTextAccessor implements IMetaDataAware, IAddDefaultSettings
 {
   /**
    * @var Library library
@@ -57,25 +57,34 @@ class DiviBuilderTextAccessor extends PostTextAccessor implements ITranslationAw
     $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettings);
   }
 
-  public function getTranslationMetaData($sourcePostId, $targetPostId, $selectedTranslatableFields)
+  /**
+   * @param $post
+   * @param $selectedTranslatableFields
+   * @return array
+   */
+  public function getContentMetaData($post, $selectedTranslatableFields)
   {
     return array(
-      '_et_pb_use_builder' => get_post_meta($sourcePostId, '_et_pb_use_builder', true),
-      '_et_pb_ab_bounce_rate_limit' => get_post_meta($sourcePostId, '_et_pb_ab_bounce_rate_limit', true),
-      '_et_pb_ab_stats_refresh_interval' => get_post_meta($sourcePostId, '_et_pb_ab_stats_refresh_interval', true),
-      '_et_pb_enable_shortcode_tracking' => get_post_meta($sourcePostId, '_et_pb_enable_shortcode_tracking', true),
-      '_et_pb_custom_css' => get_post_meta($sourcePostId, '_et_pb_custom_css', true),
-      '_et_pb_light_text_color' => get_post_meta($sourcePostId, '_et_pb_light_text_color', true),
-      '_et_pb_dark_text_color' => get_post_meta($sourcePostId, '_et_pb_dark_text_color', true),
-      '_et_pb_content_area_background_color' => get_post_meta($sourcePostId, '_et_pb_content_area_background_color', true),
-      '_et_pb_section_background_color' => get_post_meta($sourcePostId, '_et_pb_section_background_color', true),
+      '_et_pb_use_builder' => get_post_meta($post->ID, '_et_pb_use_builder', true),
+      '_et_pb_ab_bounce_rate_limit' => get_post_meta($post->ID, '_et_pb_ab_bounce_rate_limit', true),
+      '_et_pb_ab_stats_refresh_interval' => get_post_meta($post->ID, '_et_pb_ab_stats_refresh_interval', true),
+      '_et_pb_enable_shortcode_tracking' => get_post_meta($post->ID, '_et_pb_enable_shortcode_tracking', true),
+      '_et_pb_custom_css' => get_post_meta($post->ID, '_et_pb_custom_css', true),
+      '_et_pb_light_text_color' => get_post_meta($post->ID, '_et_pb_light_text_color', true),
+      '_et_pb_dark_text_color' => get_post_meta($post->ID, '_et_pb_dark_text_color', true),
+      '_et_pb_content_area_background_color' => get_post_meta($post->ID, '_et_pb_content_area_background_color', true),
+      '_et_pb_section_background_color' => get_post_meta($post->ID, '_et_pb_section_background_color', true),
     );
   }
 
-  public function prepareSettingTexts($sourcePostId, $targetPostId, $translationMetaData)
+  /**
+   * @param $post
+   * @param $translationMetaData
+   */
+  public function setContentMetaData($post, $translationMetaData)
   {
     foreach($translationMetaData as $key => $value){
-      update_post_meta($targetPostId, $key, $value);
+      update_post_meta($post->ID, $key, $value);
     }
   }
 }

@@ -88,7 +88,7 @@ class CallbackHandler
   private function writeBackTranslation($writeBack)
   {
     $errors = array();
-    $translationData = $writeBack->getTranslationData();
+    $contentData = $writeBack->getContentData();
 
     foreach ($writeBack->getSourcePostIds() as $sourcePostId) {
       $targetPostId = Multilang::getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
@@ -113,8 +113,8 @@ class CallbackHandler
         continue;
       }
 
-      $this->contentProvider->prepareSavingTranslationData($sourcePostId, $targetPostId, $translationMeta->get(TranslationMeta::DATA));
-      $this->contentProvider->saveTranslatedData($targetPost, $translationData[$sourcePostId]);
+      $this->contentProvider->saveContentMetaData($targetPost, TranslationMeta::of($targetPostId)->get(TranslationMeta::META_DATA));
+      $this->contentProvider->saveContentData($targetPost, $contentData[$sourcePostId]);
 
       if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
         $targetPost->post_status = 'publish';
@@ -126,7 +126,6 @@ class CallbackHandler
       // All good, set translation flag false
       $translationMeta->set(TranslationMeta::IN_TRANSLATION, false);
       $translationMeta->set(TranslationMeta::TRANSLATION_DATE, get_post_field('post_modified', $targetPost->ID));
-      $translationMeta->set(TranslationMeta::DATA, null);
 
       $this->log->addEntry($targetPostId, __('translation saved successfully', 'Polylang-Supertext'));
     }

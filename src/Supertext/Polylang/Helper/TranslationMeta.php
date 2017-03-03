@@ -13,7 +13,7 @@ class TranslationMeta extends PostMeta
   const IN_TRANSLATION_REFERENCE_HASH = 'inTranslationRefHash';
   const SOURCE_LANGUAGE_CODE = 'sourceLanguageCode';
   const TRANSLATION_DATE = "translationDate";
-  const DATA = "data";
+  const META_DATA = "metaData";
 
   private static $translationProperties = '_sttr_translation_properties';
 

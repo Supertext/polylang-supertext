@@ -186,7 +186,7 @@ class Wrapper
    * @param $groups
    * @return array
    */
-  public static function buildTranslationData($groups)
+  public static function buildContentData($groups)
   {
     $result = array();
 

@@ -36,7 +36,7 @@ class WriteBack
    * Translation data
    * @var null|array
    */
-  private $translationData = null;
+  private $contentData = null;
 
   /**
    * @param $json
@@ -85,18 +85,18 @@ class WriteBack
   /**
    * @return array|null
    */
-  public function getTranslationData(){
-    if($this->translationData == null){
+  public function getContentData(){
+    if($this->contentData == null){
       $groups = $this->json->Groups;
 
       if(strpos($this->json->ReferenceData, '-') !== false){
         $groups = $this->convertGroupsFromLegacyFormat($groups);
       }
 
-      $this->translationData = Wrapper::buildTranslationData($groups);
+      $this->contentData = Wrapper::buildContentData($groups);
     }
 
-    return $this->translationData;
+    return $this->contentData;
   }
 
   /**
@@ -104,7 +104,7 @@ class WriteBack
    */
   public function getSourcePostIds(){
     if($this->postIds == null){
-      $this->postIds = array_keys($this->getTranslationData());
+      $this->postIds = array_keys($this->getContentData());
     }
 
     return $this->postIds;
