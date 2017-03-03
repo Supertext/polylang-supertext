@@ -65,6 +65,10 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 3.1 =
+* Fixed ACF content accessor to support accordions
+* Various code improvements
+
 = 3.0 =
 * Extended settings page to add default settings
 * Allow the use of the plugin even though not all languages are supported
