@@ -51,10 +51,10 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
     }
 
     $translatableFields = array();
-    $meta_keys = array_keys($postCustomFields);
+    $metaKeys = array_keys($postCustomFields);
 
     foreach ($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition) {
-      if (count(preg_grep('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $meta_keys)) > 0) {
+      if (count(preg_grep('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $metaKeys)) > 0) {
         $translatableFields[] = array(
           'title' => $savedFieldDefinition['label'],
           'name' => $savedFieldDefinition['meta_key_regex'],
@@ -86,13 +86,13 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
 
     $postCustomFields = get_post_meta($post->ID);
 
-    foreach($postCustomFields as $meta_key => $value){
-      foreach($selectedTranslatableFields as $meta_key_regex => $selected){
-        if (!preg_match('/^' . $meta_key_regex . '$/', $meta_key)) {
+    foreach($postCustomFields as $metaKey => $value){
+      foreach($selectedTranslatableFields as $metaKeyRegex => $selected){
+        if (!preg_match('/^' . $metaKeyRegex . '$/', $metaKey)) {
           continue;
         }
 
-        $texts[$meta_key] = $this->textProcessor->replaceShortcodes($value[0]);
+        $texts[$metaKey] = $this->textProcessor->replaceShortcodes($value[0]);
       }
     }
 

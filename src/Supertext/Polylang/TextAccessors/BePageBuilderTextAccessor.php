@@ -37,6 +37,10 @@ class BePageBuilderTextAccessor extends AbstractPluginCustomFieldsTextAccessor i
     );
 
     $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettings);
+
+    $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
+    $savedFieldDefinitions[$this->pluginId] = $this->getFieldDefinitions()[0]['sub_field_definitions'];
+    $this->library->saveSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS, $savedFieldDefinitions);
   }
 
   /**
