@@ -150,9 +150,11 @@ class CallbackHandler
     $isOrderIdMismatch = false;
     $orderIdMessage = '';
     foreach ($sourcePostIds as $sourcePostId) {
-      $postOrderId = $this->log->getLastOrderId($sourcePostId);
+      $targetLanguageCode = $writeBack->getTargetLanguageCode();
+      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguageCode);
+      $postOrderId = $this->log->getLastOrderId($targetPostId);
       $isOrderIdMismatch = $isOrderIdMismatch || $orderId !== $postOrderId;
-      $orderIdMessage .= " The post $sourcePostId was last ordered with order $postOrderId.\n";
+      $orderIdMessage .= " The post $sourcePostId was last ordered with order $postOrderId for $targetLanguageCode.\n";
     }
 
     if(!$isOrderIdMismatch){
