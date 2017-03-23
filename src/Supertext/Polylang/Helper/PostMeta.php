@@ -21,7 +21,7 @@ abstract class PostMeta
   public function is($key)
   {
     if($this->fields === null){
-      $this->getFields();
+      $this->setFieldsFromPostMeta();
     }
 
     return isset($this->fields[$key]) && $this->fields[$key] === true;
@@ -34,7 +34,7 @@ abstract class PostMeta
   public function get($keys)
   {
     if($this->fields === null){
-      $this->getFields();
+      $this->setFieldsFromPostMeta();
     }
 
     if(is_string($keys)){
@@ -57,7 +57,7 @@ abstract class PostMeta
   public function set($key, $value)
   {
     if($this->fields === null){
-      $this->getFields();
+      $this->setFieldsFromPostMeta();
     }
 
     $this->fields[$key] = $value;
@@ -68,7 +68,7 @@ abstract class PostMeta
     delete_post_meta($this->postId, $this->metaKey);
   }
 
-  private function getFields(){
+  private function setFieldsFromPostMeta(){
     $this->fields = get_post_meta($this->postId, $this->metaKey, true);
   }
 }
