@@ -70,5 +70,9 @@ abstract class PostMeta
 
   private function setFieldsFromPostMeta(){
     $this->fields = get_post_meta($this->postId, $this->metaKey, true);
+
+    if($this->fields == null){
+      $this->fields = array();
+    }
   }
 }
