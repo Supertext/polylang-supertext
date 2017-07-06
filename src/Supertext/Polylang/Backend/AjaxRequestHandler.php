@@ -400,9 +400,6 @@ class AjaxRequestHandler
 
     foreach ($sourceAttachments as $sourceAttachment) {
       $sourceAttachmentId = $sourceAttachment->ID;
-      $sourceAttachmentLink = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
-      $sourceAttachmentMetadata = get_post_meta($sourceAttachmentId, '_wp_attached_file', true);
-
       $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, $targetLang);
 
       if ($targetAttachmentId == null) {
@@ -410,8 +407,13 @@ class AjaxRequestHandler
         $targeAttachment->ID = null;
         $targeAttachment->post_parent = $targetPostId;
         $targetAttachmentId = wp_insert_attachment($targeAttachment);
-        add_post_meta($targetAttachmentId, '_wp_attachment_metadata', $sourceAttachmentMetadata);
-        add_post_meta($targetAttachmentId, '_wp_attached_file', $sourceAttachmentLink);
+
+        foreach ( array( '_wp_attachment_metadata', '_wp_attached_file', '_wp_attachment_image_alt' ) as $key ) {
+          if ( $meta = get_post_meta( $sourceAttachmentId, $key , true ) ) {
+            add_post_meta($targetAttachmentId, $key, $meta);
+          }
+        }
+
         self::setLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
       } else {
         $targetAttachment = get_post($targetAttachmentId);
