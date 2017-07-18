@@ -106,7 +106,7 @@ class CallbackHandler
       $isPostWritable =
         $targetPost->post_status == 'draft' ||
         ($targetPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
-        $translationMeta>is(TranslationMeta::IN_TRANSLATION);
+        $translationMeta->is(TranslationMeta::IN_TRANSLATION);
 
       if (!$isPostWritable) {
         $errors[$sourcePostId] = 'The post for saving the translation is not writable.';
