@@ -45,7 +45,7 @@ class Wrapper
     $result = array();
 
     foreach ($json->Languages as $entry) {
-      $result[(string)$entry->Code] = (string)$entry->Name;
+      $result[(string)$entry->Code] = (string)$entry->Title;
     }
 
     return $result;
