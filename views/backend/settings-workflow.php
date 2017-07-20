@@ -50,3 +50,12 @@ if(!isset($options[$selectedApiServer])){
     </p>
   </div>
 </div>
+<pre>
+<?php
+
+$pmta = new \Supertext\Polylang\TextAccessors\PostMediaTextAccessor(new \Supertext\Polylang\Helper\Library());
+
+print_r($pmta->getTexts(get_post(649), array('post_image'=>true)));
+
+?>
+  </pre>

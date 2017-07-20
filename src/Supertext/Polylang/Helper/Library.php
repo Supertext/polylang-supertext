@@ -45,6 +45,30 @@ class Library
     return null;
   }
 
+  /**
+   * @param $sourcePostId
+   * @param $targetPostId
+   * @param $sourceLanguage
+   * @param $targetLanguage
+   */
+  public function setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
+  {
+    Multilang::setPostLanguage($targetPostId, $targetLanguage);
+
+    $postsLanguageMappings = array(
+      $sourceLanguage => $sourcePostId,
+      $targetLanguage => $targetPostId
+    );
+
+    foreach (Multilang::getLanguages() as $language) {
+      $languagePostId = Multilang::getPostInLanguage($sourcePostId, $language->slug);
+      if ($languagePostId) {
+        $postsLanguageMappings[$language->slug] = $languagePostId;
+      }
+    }
+
+    Multilang::savePostTranslations($postsLanguageMappings);
+  }
 
   /**
    * @param int $userId wordpress user

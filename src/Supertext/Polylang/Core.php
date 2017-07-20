@@ -302,7 +302,7 @@ class Core
 
     $textAccessors = array(
       'post' => new PostTextAccessor($textProcessor),
-      'media' => new PostMediaTextAccessor(),
+      'media' => new PostMediaTextAccessor($library),
       'taxonomy' => new PostTaxonomyTextAccessor(),
       'custom-fields' => new CustomFieldsTextAccessor($textProcessor, $library)
     );

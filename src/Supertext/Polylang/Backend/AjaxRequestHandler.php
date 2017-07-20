@@ -276,14 +276,12 @@ class AjaxRequestHandler
 
     $targetPostId = $this->targetPostCreator->createNewPost($sourcePost->ID, $sourcePost->post_type, $targetLanguage);
 
-    self::setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
+    $this->library->setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
 
     $targetPost = get_post($targetPostId);
     $targetPost->post_status = self::TRANSLATION_POST_STATUS;
     $targetPost->post_title = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
     wp_update_post($targetPost);
-
-    self::addImageAttachments($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
 
     return $targetPostId;
   }
@@ -379,72 +377,6 @@ class AjaxRequestHandler
     // Get the supertext key
     $superCode = $this->library->toSuperCode($polyCode);
     return __($superCode, 'polylang-supertext-langs');
-  }
-
-  /**
-   * @param $sourcePostId
-   * @param $targetPostId
-   * @param $sourceLang
-   * @param $targetLang
-   */
-  private static function addImageAttachments($sourcePostId, $targetPostId, $sourceLang, $targetLang)
-  {
-    $sourceAttachments = get_children(array(
-        'post_parent' => $sourcePostId,
-        'post_type' => 'attachment',
-        'post_mime_type' => 'image',
-        'orderby' => 'menu_order ASC, ID',
-        'order' => 'DESC')
-    );
-
-    foreach ($sourceAttachments as $sourceAttachment) {
-      $sourceAttachmentId = $sourceAttachment->ID;
-      $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, $targetLang);
-
-      if ($targetAttachmentId == null) {
-        $targeAttachment = $sourceAttachment;
-        $targeAttachment->ID = null;
-        $targeAttachment->post_parent = $targetPostId;
-        $targetAttachmentId = wp_insert_attachment($targeAttachment);
-
-        foreach ( array( '_wp_attachment_metadata', '_wp_attached_file', '_wp_attachment_image_alt' ) as $key ) {
-          if ( $meta = get_post_meta( $sourceAttachmentId, $key , true ) ) {
-            add_post_meta($targetAttachmentId, $key, $meta);
-          }
-        }
-
-        self::setLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLang, $targetLang);
-      } else {
-        $targetAttachment = get_post($targetAttachmentId);
-        $targetAttachment->post_parent = $targetPostId;
-        wp_insert_attachment($targetAttachment);
-      }
-    }
-  }
-
-  /**
-   * @param $sourcePostId
-   * @param $targetPostId
-   * @param $sourceLanguage
-   * @param $targetLanguage
-   */
-  private static function setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
-  {
-    Multilang::setPostLanguage($targetPostId, $targetLanguage);
-
-    $postsLanguageMappings = array(
-      $sourceLanguage => $sourcePostId,
-      $targetLanguage => $targetPostId
-    );
-
-    foreach (Multilang::getLanguages() as $language) {
-      $languagePostId = Multilang::getPostInLanguage($sourcePostId, $language->slug);
-      if ($languagePostId) {
-        $postsLanguageMappings[$language->slug] = $languagePostId;
-      }
-    }
-
-    Multilang::savePostTranslations($postsLanguageMappings);
   }
 
   /**

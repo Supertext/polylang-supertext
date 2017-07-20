@@ -1,7 +1,7 @@
 === Supertext Translation ===
 Contributors: supertext, msebel, comotive
 Tags: internationalization, polylang, translation, service, supertext
-Requires at least: 3.8
+Requires at least: 4.0
 Tested up to: 4.7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
