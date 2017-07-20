@@ -8,6 +8,7 @@ use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\AdminExtension;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
+use Supertext\Polylang\Backend\TargetPostCreator;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TranslationMeta;
@@ -108,7 +109,7 @@ class Core
       $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
       $this->menu = new Menu($this->settingsPage);
       $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
-      $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider());
+      $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider(), new TargetPostCreator());
 
       $this->checkVersion();
       $this->checkEnvironment();

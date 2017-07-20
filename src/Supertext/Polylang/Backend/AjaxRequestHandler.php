@@ -13,6 +13,9 @@ use Supertext\Polylang\Helper\TranslationMeta;
  */
 class AjaxRequestHandler
 {
+  /**
+   * Post status for created target posts
+   */
   const TRANSLATION_POST_STATUS = 'draft';
 
   /**
@@ -31,15 +34,22 @@ class AjaxRequestHandler
   private $contentProvider;
 
   /**
+   * @var TargetPostCreator
+   */
+  private $targetPostCreator;
+
+  /**
    * @param \Supertext\Polylang\Helper\Library $library
    * @param Log $log
    * @param ContentProvider $contentProvider
+   * @param $targetPostCreator TargetPostCreator
    */
-  public function __construct($library, $log, $contentProvider)
+  public function __construct($library, $log, $contentProvider, $targetPostCreator)
   {
     $this->library = $library;
     $this->log = $log;
     $this->contentProvider = $contentProvider;
+    $this->targetPostCreator = $targetPostCreator;
 
     add_action('wp_ajax_sttr_getPostTranslationInfo', array($this, 'getPostTranslationInfoAjax'));
     add_action('wp_ajax_sttr_getPostRawData', array($this, 'getPostRawDataAjax'));
@@ -132,7 +142,10 @@ class AjaxRequestHandler
     $referenceHashes = $this->createReferenceHashes($sourcePostIds);
 
     try {
+      //create needed target posts
+      $targetPostIds = $this->createTargetPosts($sourcePostIds, $sourceLanguage, $targetLanguage);
 
+      //order
       $order = Wrapper::createOrder(
         $this->library->getApiClient(),
         get_bloginfo('name') . ' - ' . count($sourcePostIds) . ' post(s)' ,
@@ -145,10 +158,12 @@ class AjaxRequestHandler
         admin_url( 'admin-ajax.php' ) . '?action=sttr_callback'
       );
 
+      //process posts
       $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
       $this->processTargetPosts(
         $order,
         $sourcePostIds,
+        $targetPostIds,
         $sourceLanguage,
         $targetLanguage,
         $referenceHashes,
@@ -226,6 +241,54 @@ class AjaxRequestHandler
   }
 
   /**
+   * @param $sourcePostIds
+   * @param $sourceLanguage
+   * @param $targetLanguage
+   * @return array
+   */
+  private function createTargetPosts($sourcePostIds, $sourceLanguage, $targetLanguage){
+    $targetPostIds = array();
+
+    foreach ($sourcePostIds as $sourcePostId) {
+      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
+
+      if ($targetPostId != null) {
+        $targetPostIds[$sourcePostId] = $targetPostId;
+        continue;
+      }
+
+      $targetPostIds[$sourcePostId] = $this->createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
+    }
+
+    return $targetPostIds;
+  }
+
+  /**
+   * @param $sourcePostId
+   * @param $sourceLanguage
+   * @param $targetLanguage
+   * @return array|null|\WP_Post
+   * @throws PostCreationException
+   */
+  private function createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage)
+  {
+    $sourcePost = get_post($sourcePostId);
+
+    $targetPostId = $this->targetPostCreator->createNewPost($sourcePost->ID, $sourcePost->post_type, $targetLanguage);
+
+    self::setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
+
+    $targetPost = get_post($targetPostId);
+    $targetPost->post_status = self::TRANSLATION_POST_STATUS;
+    $targetPost->post_title = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
+    wp_update_post($targetPost);
+
+    self::addImageAttachments($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
+
+    return $targetPostId;
+  }
+
+  /**
    * @param $order
    * @param $sourcePostIds
    * @param $sourceLanguage
@@ -234,10 +297,10 @@ class AjaxRequestHandler
    * @param $metaData
    * @param $syncTranslationChanges
    */
-  private function processTargetPosts($order, $sourcePostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $metaData, $syncTranslationChanges)
+  private function processTargetPosts($order, $sourcePostIds, $targetPostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $metaData, $syncTranslationChanges)
   {
     foreach ($sourcePostIds as $sourcePostId) {
-      $targetPost = $this->getTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
+      $targetPost = get_post($targetPostIds[$sourcePostId]);
 
       $message = sprintf(
         __('Translation order into %s has been placed successfully. Your order number is %s.', 'polylang-supertext'),
@@ -320,70 +383,6 @@ class AjaxRequestHandler
 
   /**
    * @param $sourcePostId
-   * @param $sourceLanguage
-   * @param $targetLanguage
-   * @return array|null|\WP_Post
-   */
-  private function getTargetPost($sourcePostId, $sourceLanguage, $targetLanguage)
-  {
-    $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
-
-    if ($targetPostId == null) {
-      $targetPost = $this->createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
-      $this->log->addEntry($targetPost->ID, __('The post to be translated has been created.', 'polylang-supertext'));
-      return $targetPost;
-    }
-
-    return get_post($targetPostId);
-  }
-
-  /**
-   * @param $sourcePostId
-   * @param $sourceLanguage
-   * @param $targetLanguage
-   * @return array|null|\WP_Post
-   * @internal param $options
-   */
-  private function createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage)
-  {
-    $targetPostId = self::createNewPostFrom($sourcePostId);
-    $targetPost = get_post($targetPostId);
-
-    self::addImageAttachments($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
-    self::copyPostMetas($sourcePostId, $targetPostId, $targetLanguage);
-
-    wp_update_post($targetPost);
-
-    self::setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
-
-    return $targetPost;
-  }
-
-  /**
-   * @param $sourcePostId
-   * @return int|\WP_Error
-   */
-  private static function createNewPostFrom($sourcePostId)
-  {
-    $sourcePost = get_post($sourcePostId);
-
-    $targetPostData = array(
-      'post_author' => wp_get_current_user()->ID,
-      'post_mime_type' => $sourcePost->post_mime_type,
-      'post_password' => $sourcePost->post_password,
-      'post_status' => self::TRANSLATION_POST_STATUS,
-      'post_title' => $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]',
-      'post_type' => $sourcePost->post_type,
-      'menu_order' => $sourcePost->menu_order,
-      'comment_status' => $sourcePost->comment_status,
-      'ping_status' => $sourcePost->ping_status,
-    );
-
-    return wp_insert_post($targetPostData);
-  }
-
-  /**
-   * @param $sourcePostId
    * @param $targetPostId
    * @param $sourceLang
    * @param $targetLang
@@ -421,30 +420,6 @@ class AjaxRequestHandler
         wp_insert_attachment($targetAttachment);
       }
     }
-  }
-
-  /**
-   * Copy post metas using polylang
-   * @param $sourcePostId
-   * @param $targetPostId
-   * @param $target_lang
-   */
-  private static function copyPostMetas($sourcePostId, $targetPostId, $target_lang)
-  {
-    global $polylang;
-
-    if (empty($polylang)) {
-      return;
-    }
-
-    $polylang->sync->copy_taxonomies($sourcePostId, $targetPostId, $target_lang);
-    $polylang->sync->copy_post_metas($sourcePostId, $targetPostId, $target_lang);
-
-    TranslationMeta::of($targetPostId)->delete();
-    //TODO refactor
-
-    delete_post_meta($targetPostId, Log::META_LOG);
-    delete_post_meta($targetPostId, Log::META_ORDER_ID);
   }
 
   /**
