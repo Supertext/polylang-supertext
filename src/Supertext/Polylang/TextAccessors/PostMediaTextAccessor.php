@@ -77,6 +77,39 @@ class PostMediaTextAccessor implements ITextAccessor
       return $texts;
     }
 
+    $texts = $this->addAttachmentTexts($post, $texts);
+
+    $texts= $this->addUnattachedAttachmentTexts($post, $texts);
+
+    return $texts;
+  }
+
+  /**
+   * @param $post
+   * @param $texts
+   */
+  public function setTexts($post, $texts)
+  {
+    foreach ($texts as $sourceAttachmentId => $text) {
+
+      $sourceLanguage = Multilang::getPostLanguage($sourceAttachmentId);
+      $targetLanguage = Multilang::getPostLanguage($post->ID);
+      $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, $targetLanguage);
+
+      if($targetAttachmentId == null){
+        $targetAttachmentId = $this->createTargetAttachment($post, $sourceAttachmentId, $sourceLanguage, $targetLanguage);
+      }
+
+      $this->updateTargetAttachment($targetAttachmentId, $text);
+    }
+  }
+
+  /**
+   * @param $post
+   * @param $texts
+   */
+  private function addAttachmentTexts($post, $texts)
+  {
     $attachments = get_children(
       array(
         'post_parent' => $post->ID,
@@ -95,6 +128,15 @@ class PostMediaTextAccessor implements ITextAccessor
       );
     }
 
+    return $texts;
+  }
+
+  /**
+   * @param $post
+   * @param $texts
+   */
+  private function addUnattachedAttachmentTexts($post, $texts)
+  {
     $hasMatches = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches) > 0;
 
     if(!$hasMatches){
@@ -140,41 +182,6 @@ class PostMediaTextAccessor implements ITextAccessor
 
   /**
    * @param $post
-   * @param $texts
-   */
-  public function setTexts($post, $texts)
-  {
-    foreach ($texts as $sourceAttachmentId => $text) {
-
-      $sourceLanguage = Multilang::getPostLanguage($sourceAttachmentId);
-      $targetLanguage = Multilang::getPostLanguage($post->ID);
-      $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, $targetLanguage);
-
-      if($targetAttachmentId == null){
-        $targetAttachmentId = $this->createTargetAttachment($post, $sourceAttachmentId, $sourceLanguage, $targetLanguage);
-      }
-
-      $targetAttachment = get_post($targetAttachmentId);
-
-      foreach($text as $key => $value){
-        if ($key === 'image_alt') {
-          update_post_meta(
-            $targetAttachment->ID,
-            '_wp_attachment_image_alt',
-            addslashes(html_entity_decode($value, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
-          );
-          continue;
-        }
-
-        $targetAttachment->{$key} = html_entity_decode($value, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-      }
-
-      wp_update_post($targetAttachment);
-    }
-  }
-
-  /**
-   * @param $post
    * @param $sourceAttachmentId
    * @param $sourceLanguage
    * @param $targetLanguage
@@ -196,5 +203,29 @@ class PostMediaTextAccessor implements ITextAccessor
 
     $this->library->setLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLanguage, $targetLanguage);
     return $targetAttachmentId;
+  }
+
+  /**
+   * @param $targetAttachmentId
+   * @param $text
+   */
+  private function updateTargetAttachment($targetAttachmentId, $text)
+  {
+    $targetAttachment = get_post($targetAttachmentId);
+
+    foreach ($text as $key => $value) {
+      if ($key === 'image_alt') {
+        update_post_meta(
+          $targetAttachment->ID,
+          '_wp_attachment_image_alt',
+          addslashes(html_entity_decode($value, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
+        );
+        continue;
+      }
+
+      $targetAttachment->{$key} = html_entity_decode($value, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+    }
+
+    wp_update_post($targetAttachment);
   }
 }
