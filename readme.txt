@@ -2,7 +2,7 @@
 Contributors: supertext, msebel, comotive
 Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 4.0
-Tested up to: 4.7.3
+Tested up to: 4.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,11 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 6. Order confirmation
 
 == Changelog ==
+
+= 3.3 =
+* Added support for WooCommerce
+* Fixed write back bug
+* Various code improvements
 
 = 3.2 =
 * Added support for PHP 7.1
