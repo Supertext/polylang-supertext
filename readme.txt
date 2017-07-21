@@ -65,6 +65,10 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 3.4 =
+* Fixed post creation bug
+* Various code improvements
+
 = 3.3 =
 * Added support for WooCommerce
 * Fixed write back bug
