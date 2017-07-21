@@ -55,6 +55,7 @@ class AjaxRequestHandler
     add_action('wp_ajax_sttr_getPostRawData', array($this, 'getPostRawDataAjax'));
     add_action('wp_ajax_sttr_getPostContentData', array($this, 'getPostContentDataAjax'));
     add_action('wp_ajax_sttr_getOffer', array($this, 'getOfferAjax'));
+    add_action('wp_ajax_sttr_getCreatePostData', array($this, 'getCreatePostDataAjax'));
     add_action('wp_ajax_sttr_createOrder', array($this, 'createOrderAjax'));
     add_action('wp_ajax_sttr_sendSyncRequest', array($this, 'sendSyncRequestAjax'));
   }
@@ -126,6 +127,32 @@ class AjaxRequestHandler
     } catch (\Exception $e) {
       self::returnResponse(500, $e->getMessage());
     }
+  }
+
+  public function getCreatePostDataAjax(){
+    $translatableContents = $_POST['translatableContents'];
+    $targetLanguage = $_POST['orderTargetLanguage'];
+    $sourcePostIds = array_keys($translatableContents);
+
+    $result = array();
+    foreach($sourcePostIds as $sourcePostId){
+      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
+
+      if ($targetPostId != null) {
+        continue;
+      }
+
+      $sourcePost = get_post($sourcePostId);
+
+      array_push($result, array(
+        'from_post' => $sourcePost->ID,
+        'post_type' => $sourcePost->post_type,
+        'new_lang' => $targetLanguage,
+        TargetPostCreator::IS_TRANSLATION_QUERY_PARAMETER  => 1
+      ));
+    }
+
+    self::returnResponse(200, $result);
   }
 
   /**
@@ -274,7 +301,7 @@ class AjaxRequestHandler
   {
     $sourcePost = get_post($sourcePostId);
 
-    $targetPostId = $this->targetPostCreator->createNewPost($sourcePost->ID, $sourcePost->post_type, $targetLanguage);
+    $targetPostId = $this->targetPostCreator->createNewPost($sourcePost->ID);
 
     $this->library->setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
 

@@ -811,10 +811,24 @@ Supertext.Polylang = (function (win, doc, $) {
      * Loads confirmation step
      */
     self.loadData = function () {
+      var postData = state.contentFormData.concat(state.quoteFormData);
+
       return doPostRequest(
-        context.ajaxUrl + '?action=sttr_createOrder',
-        state.contentFormData.concat(state.quoteFormData)
-      );
+        context.ajaxUrl + '?action=sttr_getCreatePostData',
+        postData)
+        .then(function (createPostsData) {
+          var requests = $.map(createPostsData, function (createPostData) {
+            return doGetRequest(context.newPostUrl, createPostData);
+          });
+
+          return $.when.apply($, requests);
+        })
+        .then(function () {
+          return doPostRequest(
+            context.ajaxUrl + '?action=sttr_createOrder',
+            postData
+          );
+        });
     };
 
     /**

@@ -184,7 +184,8 @@ class AdminExtension
       'currentPostId' => $this->currentPostId,
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,
       'resourceUrl' => get_bloginfo('wpurl'),
-      'ajaxUrl' => admin_url( 'admin-ajax.php' )
+      'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+      'newPostUrl' => admin_url('post-new.php')
     );
 
     $contextJson = json_encode($context);
