@@ -3,10 +3,10 @@
 namespace Supertext\Polylang\Backend;
 
 /**
- * Class TargetPostCreator Workaround class to create new posts. No function call found that would duplicate posts correctly using polylang.
+ * Class TargetPostCreationTracker Workaround class to create new posts. No function call found that would duplicate posts correctly using polylang.
  * @package Supertext\Polylang\Backend
  */
-class TargetPostCreator
+class TargetPostCreationTracker
 {
   /**
    * new post url query argument flag

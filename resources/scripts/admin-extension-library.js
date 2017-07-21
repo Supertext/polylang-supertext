@@ -814,7 +814,7 @@ Supertext.Polylang = (function (win, doc, $) {
       var postData = state.contentFormData.concat(state.quoteFormData);
 
       return doPostRequest(
-        context.ajaxUrl + '?action=sttr_getCreatePostData',
+        context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
         postData)
         .then(function (createPostsData) {
           var requests = $.map(createPostsData, function (createPostData) {

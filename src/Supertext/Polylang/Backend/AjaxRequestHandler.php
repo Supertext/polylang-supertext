@@ -34,28 +34,28 @@ class AjaxRequestHandler
   private $contentProvider;
 
   /**
-   * @var TargetPostCreator
+   * @var TargetPostCreationTracker
    */
-  private $targetPostCreator;
+  private $targetPostCreationTracker;
 
   /**
    * @param \Supertext\Polylang\Helper\Library $library
    * @param Log $log
    * @param ContentProvider $contentProvider
-   * @param $targetPostCreator TargetPostCreator
+   * @param $targetPostCreationTracker TargetPostCreationTracker
    */
-  public function __construct($library, $log, $contentProvider, $targetPostCreator)
+  public function __construct($library, $log, $contentProvider, $targetPostCreationTracker)
   {
     $this->library = $library;
     $this->log = $log;
     $this->contentProvider = $contentProvider;
-    $this->targetPostCreator = $targetPostCreator;
+    $this->targetPostCreationTracker = $targetPostCreationTracker;
 
     add_action('wp_ajax_sttr_getPostTranslationInfo', array($this, 'getPostTranslationInfoAjax'));
     add_action('wp_ajax_sttr_getPostRawData', array($this, 'getPostRawDataAjax'));
     add_action('wp_ajax_sttr_getPostContentData', array($this, 'getPostContentDataAjax'));
     add_action('wp_ajax_sttr_getOffer', array($this, 'getOfferAjax'));
-    add_action('wp_ajax_sttr_getCreatePostData', array($this, 'getCreatePostDataAjax'));
+    add_action('wp_ajax_sttr_getNewPostQueryParams', array($this, 'getNewPostQueryParamsAjax'));
     add_action('wp_ajax_sttr_createOrder', array($this, 'createOrderAjax'));
     add_action('wp_ajax_sttr_sendSyncRequest', array($this, 'sendSyncRequestAjax'));
   }
@@ -129,7 +129,7 @@ class AjaxRequestHandler
     }
   }
 
-  public function getCreatePostDataAjax(){
+  public function getNewPostQueryParamsAjax(){
     $translatableContents = $_POST['translatableContents'];
     $targetLanguage = $_POST['orderTargetLanguage'];
     $sourcePostIds = array_keys($translatableContents);
@@ -148,7 +148,7 @@ class AjaxRequestHandler
         'from_post' => $sourcePost->ID,
         'post_type' => $sourcePost->post_type,
         'new_lang' => $targetLanguage,
-        TargetPostCreator::IS_TRANSLATION_QUERY_PARAMETER  => 1
+        TargetPostCreationTracker::IS_TRANSLATION_QUERY_PARAMETER  => 1
       ));
     }
 
@@ -301,7 +301,7 @@ class AjaxRequestHandler
   {
     $sourcePost = get_post($sourcePostId);
 
-    $targetPostId = $this->targetPostCreator->createNewPost($sourcePost->ID);
+    $targetPostId = $this->targetPostCreationTracker->createNewPost($sourcePost->ID);
 
     $this->library->setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
 
