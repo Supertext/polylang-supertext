@@ -9,6 +9,17 @@ use Supertext\Polylang\Api\Multilang;
  */
 class PostTaxonomyTextAccessor implements ITextAccessor
 {
+   public function __construct()
+   {
+     $this->knownTranslatableTaxonomies = array(
+       'category' => __('Categories', 'polylang-supertext'),
+       'post_tag' => __('Tags', 'polylang-supertext'),
+       'product_cat' => __('Categories', 'polylang-supertext'),
+       'product_tag' => __('Tags', 'polylang-supertext'),
+     );
+
+   }
+
   /**
    * Gets the content accessors name
    * @return string
@@ -26,18 +37,15 @@ class PostTaxonomyTextAccessor implements ITextAccessor
   {
     $translatableFields = array();
 
-    if(count(wp_get_object_terms($postId, 'category'))){
-      $translatableFields[] = array(
-        'title' => __('Categories', 'polylang-supertext'),
-        'name' => 'post_categories',
-        'checkedPerDefault' => false
-      );
-    }
+    foreach($this->knownTranslatableTaxonomies as $name => $title)
+    {
+      if(!count(wp_get_object_terms($postId, $name))) {
+        continue;
+      }
 
-    if(count(wp_get_object_terms($postId, 'post_tag'))) {
       $translatableFields[] = array(
-        'title' => __('Tags', 'polylang-supertext'),
-        'name' => 'post_tags',
+        'title' => $title,
+        'name' => $name,
         'checkedPerDefault' => false
       );
     }
@@ -51,7 +59,13 @@ class PostTaxonomyTextAccessor implements ITextAccessor
    */
   public function getRawTexts($post)
   {
-    return $this->getTexts($post, array('post_categories' => true, 'post_tags' => true));
+    $selectedTranslatableFields = array();
+    foreach($this->knownTranslatableTaxonomies as $name => $title)
+    {
+      $selectedTranslatableFields[$name] = true;
+    }
+
+    return $this->getTexts($post, $selectedTranslatableFields);
   }
 
   /**
@@ -61,21 +75,17 @@ class PostTaxonomyTextAccessor implements ITextAccessor
    */
   public function getTexts($post, $selectedTranslatableFields)
   {
-    $texts = array('category' => array(), 'post_tag' => array());
+    $texts = array();
 
-    if ($selectedTranslatableFields['post_categories']) {
-      $terms = wp_get_object_terms($post->ID, 'category');
-
-      foreach($terms as $term){
-        $texts['category'][$term->term_id] = $term->name;
+    foreach($selectedTranslatableFields as $name => $selected){
+      if(!$selected){
+        continue;
       }
-    }
 
-    if ($selectedTranslatableFields['post_tags']) {
-      $terms = wp_get_object_terms($post->ID, 'post_tag');
+      $terms = wp_get_object_terms($post->ID, $name);
 
       foreach($terms as $term){
-        $texts['post_tag'][$term->term_id] = $term->name;
+        $texts[$name][$term->term_id] = $term->name;
       }
     }
 
