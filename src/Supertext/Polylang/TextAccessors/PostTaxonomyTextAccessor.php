@@ -39,7 +39,8 @@ class PostTaxonomyTextAccessor implements ITextAccessor
 
     foreach($this->knownTranslatableTaxonomies as $name => $title)
     {
-      if(!count(wp_get_object_terms($postId, $name))) {
+      $terms = wp_get_object_terms($postId, $name);
+      if(is_wp_error($terms) || !count($terms)) {
         continue;
       }
 
@@ -83,6 +84,9 @@ class PostTaxonomyTextAccessor implements ITextAccessor
       }
 
       $terms = wp_get_object_terms($post->ID, $name);
+      if(is_wp_error($terms)) {
+        continue;
+      }
 
       foreach($terms as $term){
         $texts[$name][$term->term_id] = $term->name;
