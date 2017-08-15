@@ -226,8 +226,8 @@ class Library
     // Try to find credentials
     $userId = intval($userId);
     $credentials = $this->getUserCredentials($userId);
-    $workflowSetting = $this->getSettingOption(Constant::SETTING_WORKFLOW);
-    $apiServerUrl = !empty($workflowSetting['apiServerUrl']) ? $workflowSetting['apiServerUrl'] : Constant::LIVE_API;
+    $apiSettings = $this->getSettingOption(Constant::SETTING_API);
+    $apiServerUrl = !empty($apiSettings['apiServerUrl']) ? $apiSettings['apiServerUrl'] : Constant::LIVE_API;
     $local = explode('_', get_locale());
     $communicationLanguage = $local[0].'-'.$local[1];
 

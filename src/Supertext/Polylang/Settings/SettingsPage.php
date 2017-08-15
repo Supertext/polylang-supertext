@@ -73,11 +73,12 @@ class SettingsPage extends AbstractPage
 
     // Workflow settings tab
     $this->tabs[self::WORKFLOW_TAB] = array(
-      'name' => __('Workflow', 'polylang-supertext'),
+      'name' => __('Workflow and API', 'polylang-supertext'),
       'viewBundles' => array(
-        array('view' => new View('backend/settings-workflow'))
+        array('view' => new View('backend/settings-workflow')),
+        array('view' => new View('backend/settings-api'))
       ),
-      'saveFunction' => 'saveWorkflowSettings'
+      'saveFunction' => 'saveWorkflowAndApiSettings'
     );
   }
 
@@ -339,16 +340,20 @@ class SettingsPage extends AbstractPage
   /**
    * Saves workflow settings to options
    */
-  private function saveWorkflowSettings()
+  private function saveWorkflowAndApiSettings()
   {
-    $settingsToSave = array(
+    $workflowSettingsToSave = array(
       'publishOnCallback' => !empty($_POST['publishOnCallback']),
       'overridePublishedPosts' => !empty($_POST['overridePublishedPosts']),
-      'syncTranslationChanges' => !empty($_POST['syncTranslationChanges']),
+      'syncTranslationChanges' => !empty($_POST['syncTranslationChanges'])
+    );
+
+    $apiSettingsToSave = array(
       'apiServerUrl' => !empty($_POST['apiServerUrl']) ? $_POST['apiServerUrl'] : Constant::LIVE_API,
     );
 
-    $this->library->saveSettingOption(Constant::SETTING_WORKFLOW, $settingsToSave);
+    $this->library->saveSettingOption(Constant::SETTING_WORKFLOW, $workflowSettingsToSave);
+    $this->library->saveSettingOption(Constant::SETTING_API, $apiSettingsToSave);
   }
 
   /**

@@ -58,6 +58,10 @@ class Constant
    */
   const SETTING_WORKFLOW = 'workflow';
   /**
+   * $var string name of the subsetting for workflow settings
+   */
+  const SETTING_API = 'api';
+  /**
    * @var string the default supertext api user
    */
   const DEFAULT_API_USER = 'public_user';

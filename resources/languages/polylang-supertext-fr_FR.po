@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2017-02-10 08:48+0100\n"
-"PO-Revision-Date: 2017-02-10 08:51+0100\n"
+"POT-Creation-Date: 2017-08-15 09:52+0200\n"
+"PO-Revision-Date: 2017-08-15 09:53+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: fr_FR\n"
@@ -88,29 +88,33 @@ msgstr ""
 "Votre article a été envoyé à Supertext pour être traduit. Votre numéro de "
 "commande est le suivant: %s."
 
-#: src/Supertext/Polylang/Backend/AdminExtension.php:219
+#: src/Supertext/Polylang/Backend/AdminExtension.php:220
 msgid "Supertext Translation"
 msgstr "Supertext Translation"
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:150
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:203
 msgid "The order has been placed successfully."
 msgstr "La commande a été passée avec succès."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:151
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:204
 #, php-format
 msgid "Your order number is %s."
 msgstr "Votre numéro de commande est le suivant: %s."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:152
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:205
 #, php-format
 msgid "The post will be translated by %s."
 msgstr "L’article sera traduit pour %sh."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:173
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:226
 msgid "The changes have been sent successfully."
 msgstr "Les modifications de l’article ont été envoyées avec succès."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:227
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:310
+msgid "In translation"
+msgstr "En traduction"
+
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:331
 #, php-format
 msgid ""
 "Translation order into %s has been placed successfully. Your order number is "
@@ -119,25 +123,17 @@ msgstr ""
 "Votre commande pour la traduction en %s a été transmise avec succès. Votre "
 "numéro de commande est le suivant: %s."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:247
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:352
 msgid "Post changes could not be sent to Supertext."
 msgstr "Les modifications de l’article n’ont pas pu être envoyées à Supertext."
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:277
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:382
 msgid "Could not retrieve old version"
 msgstr "L’ancienne version de l’article n’a pas pu être récupérée"
 
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:290
+#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:395
 msgid "Post changes have been sent to Supertext."
 msgstr "Les modifications de l’article ont été envoyées à Supertext."
-
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:316
-msgid "The post to be translated has been created."
-msgstr "L’article à traduire a été créé."
-
-#: src/Supertext/Polylang/Backend/AjaxRequestHandler.php:358
-msgid "In translation"
-msgstr "En traduction"
 
 #: src/Supertext/Polylang/Backend/CallbackHandler.php:130
 msgid "translation saved successfully"
@@ -151,24 +147,24 @@ msgstr "Paramètres Supertext"
 msgid "Supertext"
 msgstr "Supertext"
 
-#: src/Supertext/Polylang/Core.php:152
+#: src/Supertext/Polylang/Core.php:156
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
-#: src/Supertext/Polylang/Core.php:153
+#: src/Supertext/Polylang/Core.php:157
 msgid "A network error occurred"
 msgstr "Une erreur de réseau est survenue"
 
-#: src/Supertext/Polylang/Core.php:154
+#: src/Supertext/Polylang/Core.php:158
 msgid "Validation error"
 msgstr "Erreur de validation"
 
-#: src/Supertext/Polylang/Core.php:155 src/Supertext/Polylang/Core.php:164
+#: src/Supertext/Polylang/Core.php:159 src/Supertext/Polylang/Core.php:168
 #: views/templates/admin-extension-templates.php:5
 msgid "Order translation"
 msgstr "Envoyer un mandat de traduction"
 
-#: src/Supertext/Polylang/Core.php:156
+#: src/Supertext/Polylang/Core.php:160
 msgid ""
 "The post was not saved. If you proceed with the translation, the unsaved "
 "changes will be lost."
@@ -176,91 +172,90 @@ msgstr ""
 "L’article n’a pas été enregistré. Si vous poursuivez avec la traduction, les "
 "modifications seront rejetées."
 
-#: src/Supertext/Polylang/Core.php:157
+#: src/Supertext/Polylang/Core.php:161
 msgid "Please only select posts in the same language."
 msgstr "Veuillez sélectionner uniquement des articles dans une même langue."
 
-#: src/Supertext/Polylang/Core.php:158
+#: src/Supertext/Polylang/Core.php:162
 msgid "Blocked posts cannot be translated."
 msgstr "Les articles bloqués ne peuvent pas être traduits."
 
-#: src/Supertext/Polylang/Core.php:159
+#: src/Supertext/Polylang/Core.php:163
 msgid "Please select content to be translated."
 msgstr "Veuillez sélectionner le contenu à traduire."
 
-#: src/Supertext/Polylang/Core.php:160
+#: src/Supertext/Polylang/Core.php:164
 msgid "Please select the target language."
 msgstr "Veuillez sélectionner la langue cible."
 
-#: src/Supertext/Polylang/Core.php:161
+#: src/Supertext/Polylang/Core.php:165
 msgid "Please choose a quote."
 msgstr "Veuillez sélectionner une offre."
 
-#: src/Supertext/Polylang/Core.php:162
+#: src/Supertext/Polylang/Core.php:166
 msgid "Your Supertext translation order"
 msgstr "Votre mandat de traduction à Supertext"
 
-#: src/Supertext/Polylang/Core.php:163 views/backend/meta-box.php:12
+#: src/Supertext/Polylang/Core.php:167 views/backend/meta-box.php:12
 msgid "Send changes to Supertext"
 msgstr "Synchroniser les modifications"
 
-#: src/Supertext/Polylang/Core.php:165
+#: src/Supertext/Polylang/Core.php:169
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/Supertext/Polylang/Core.php:166
+#: src/Supertext/Polylang/Core.php:170
 msgid "Back"
 msgstr "Retour"
 
-#: src/Supertext/Polylang/Core.php:167
+#: src/Supertext/Polylang/Core.php:171
 msgid "Next"
 msgstr "Suivant"
 
-#: src/Supertext/Polylang/Core.php:168
+#: src/Supertext/Polylang/Core.php:172
 msgid "Close window"
 msgstr "Fermer la fenêtre"
 
-#: src/Supertext/Polylang/Core.php:169
+#: src/Supertext/Polylang/Core.php:173
 msgid "Please select at least one post"
 msgstr "Veuillez choisir au moins un article"
 
-#: src/Supertext/Polylang/Core.php:170
+#: src/Supertext/Polylang/Core.php:174
 msgid "<i>{0}</i> is already being translated into {1} (order id: {2})"
 msgstr ""
 "<i>{0}</i> est déjà en cours de traduction vers la langue suivante: {1}  "
 "(Numéro de mandat: {2})"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:52
+#: src/Supertext/Polylang/Settings/SettingsPage.php:50
 msgid "User and languages"
 msgstr "Utilisateur et langues"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:62
+#: src/Supertext/Polylang/Settings/SettingsPage.php:60
 msgid "Translatable fields"
 msgstr "Champs traduisibles"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:69
+#: src/Supertext/Polylang/Settings/SettingsPage.php:67
 #: views/backend/settings-shortcodes.php:11
 msgid "Shortcodes"
 msgstr "Shortcodes"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:78
-#: views/backend/settings-workflow.php:26
-msgid "Workflow"
-msgstr "Workflow"
+#: src/Supertext/Polylang/Settings/SettingsPage.php:76
+msgid "Workflow and API"
+msgstr "Workflow et API"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:98
+#: src/Supertext/Polylang/Settings/SettingsPage.php:97
 msgid "Settings › Supertext"
 msgstr "Paramètres › Supertext"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:157
+#: src/Supertext/Polylang/Settings/SettingsPage.php:171
 msgid "Settings saved"
 msgstr "Paramètres enregistrés"
 
-#: src/Supertext/Polylang/Settings/SettingsPage.php:196
+#: src/Supertext/Polylang/Settings/SettingsPage.php:213
 msgid "Save settings"
 msgstr "Enregistrer les paramètres"
 
-#: src/Supertext/Polylang/TextAccessors/AcfTextAccessor.php:16
+#: src/Supertext/Polylang/TextAccessors/AcfTextAccessor.php:18
 msgid "Advanced Custom Fields (Plugin)"
 msgstr "Advanced Custom Fields (extension)"
 
@@ -284,7 +279,7 @@ msgstr "Mot-clé SEO"
 msgid "BE page builder (Plugin)"
 msgstr "BE page builder (Plugin)"
 
-#: src/Supertext/Polylang/TextAccessors/BePageBuilderTextAccessor.php:55
+#: src/Supertext/Polylang/TextAccessors/BePageBuilderTextAccessor.php:59
 #: src/Supertext/Polylang/TextAccessors/PostTextAccessor.php:49
 msgid "Content"
 msgstr "Texte"
@@ -302,25 +297,27 @@ msgstr "Contenu de Beaver Builder"
 msgid "General custom fields"
 msgstr "Champs personnalisés généraux"
 
-#: src/Supertext/Polylang/TextAccessors/PostMediaTextAccessor.php:19
+#: src/Supertext/Polylang/TextAccessors/PostMediaTextAccessor.php:33
 msgid "Media"
 msgstr "Médias"
 
-#: src/Supertext/Polylang/TextAccessors/PostMediaTextAccessor.php:31
+#: src/Supertext/Polylang/TextAccessors/PostMediaTextAccessor.php:45
 msgid "Image captions"
 msgstr "Légendes d’images"
 
-#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:18
-msgid "Taxonomy"
-msgstr "Taxonomie"
-
-#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:31
+#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:15
+#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:17
 msgid "Categories"
 msgstr "Catégories"
 
-#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:39
+#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:16
+#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:18
 msgid "Tags"
 msgstr "Ètiquettes"
+
+#: src/Supertext/Polylang/TextAccessors/PostTaxonomyTextAccessor.php:29
+msgid "Taxonomy"
+msgstr "Taxonomie"
 
 #: src/Supertext/Polylang/TextAccessors/PostTextAccessor.php:31
 msgid "Post"
@@ -393,6 +390,26 @@ msgstr "Log"
 #: views/backend/meta-box.php:20
 msgid "M j, Y @ H:i:s"
 msgstr "j F Y \\à G \\h i \\m\\i\\n"
+
+#: views/backend/settings-api.php:10
+msgid "Live"
+msgstr "Live"
+
+#: views/backend/settings-api.php:11
+msgid "Development"
+msgstr "Développement"
+
+#: views/backend/settings-api.php:15 views/backend/settings-api.php:17
+msgid "Other"
+msgstr "Autre"
+
+#: views/backend/settings-api.php:23
+msgid "API"
+msgstr "API"
+
+#: views/backend/settings-api.php:25
+msgid "API Server"
+msgstr "Serveur API"
 
 #: views/backend/settings-custom-fields.php:5
 msgid "Custom field name..."
@@ -489,34 +506,21 @@ msgstr "Supprimer un utilisateur"
 msgid "Add user"
 msgstr "Ajouter un utilisateur"
 
-#: views/backend/settings-workflow.php:13
-msgid "Live"
-msgstr "Live"
-
 #: views/backend/settings-workflow.php:14
-msgid "Development"
-msgstr "Développement"
+msgid "Workflow"
+msgstr "Workflow"
 
-#: views/backend/settings-workflow.php:18
-#: views/backend/settings-workflow.php:20
-msgid "Other"
-msgstr "Autre"
-
-#: views/backend/settings-workflow.php:29
+#: views/backend/settings-workflow.php:17
 msgid "Automatically publish translations"
 msgstr "Publier automatiquement les traductions"
 
-#: views/backend/settings-workflow.php:33
+#: views/backend/settings-workflow.php:21
 msgid "Allow Supertext to overwrite published posts"
 msgstr "Autoriser Supertext à écraser les articles publiés"
 
-#: views/backend/settings-workflow.php:37
+#: views/backend/settings-workflow.php:25
 msgid "Synchronize translation changes"
 msgstr "Synchroniser les modifications de la traduction"
-
-#: views/backend/settings-workflow.php:40
-msgid "API Server"
-msgstr "Serveur API"
 
 #: views/templates/admin-extension-templates.php:62
 msgid "Loading"
@@ -644,6 +648,9 @@ msgstr "Supprimer le réglage"
 #: views/templates/settings-templates.php:32
 msgid "Attribute name..."
 msgstr "Nom de l’attribut..."
+
+#~ msgid "The post to be translated has been created."
+#~ msgstr "L’article à traduire a été créé."
 
 #~ msgid "Choose picture"
 #~ msgstr "Choisir une image"
