@@ -65,7 +65,11 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
-= 3.3 =
+= 3.6 =
+* Fixed taxonomy text accessor bug
+* Added service type setting
+
+= 3.5 =
 * Added support for WooCommerce product categories and tags
 
 = 3.4 =
