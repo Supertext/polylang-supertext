@@ -2,9 +2,6 @@
 
 namespace Supertext\Polylang\Api;
 
-use Supertext\Polylang\Core;
-use Supertext\Polylang\Helper\Constant;
-
 /**
  * Wrapper class for external api calls to supertext
  * @package Supertext\Polylang\Api
@@ -56,18 +53,20 @@ class Wrapper
    * @param string $sourceLanguage polylang source language
    * @param string $targetLanguage polylang target language
    * @param array $data data to be quoted for translation
+   * @param $serviceType
    * @return array
    * @throws ApiConnectionException
    * @throws ApiDataException
    */
-  public static function getQuote($apiClient, $sourceLanguage, $targetLanguage, $data)
+  public static function getQuote($apiClient, $sourceLanguage, $targetLanguage, $data, $serviceType)
   {
     $json = array(
       'ContentType' => 'text/html',
       'Currency' => 'eur', //not used by Supertext API, API returns prices in currency of authenticated user
       'Groups' => self::buildSupertextData($data),
       'SourceLang' => $sourceLanguage,
-      'TargetLang' => $targetLanguage
+      'TargetLang' => $targetLanguage,
+      'ServiceTypeId' => $serviceType
     );
 
     $httpResult = $apiClient->postRequest('translation/quote', json_encode($json), true);
@@ -124,11 +123,12 @@ class Wrapper
    * @param string $additionalInformation
    * @param string $referenceData
    * @param string $callback the callback url
+   * @param $serviceType
    * @return array|object api result info
    * @throws ApiConnectionException
    * @throws ApiDataException
    */
-  public static function createOrder($apiClient, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $additionalInformation, $referenceData, $callback)
+  public static function createOrder($apiClient, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $additionalInformation, $referenceData, $callback, $serviceType)
   {
     $product = explode(':', $translationType);
 
@@ -148,7 +148,8 @@ class Wrapper
       'SourceLang' => $sourceLanguage,
       'TargetLang' => $targetLanguage,
       'AdditionalInformation' => $additionalInformation,
-      'Groups' => self::buildSupertextData($data)
+      'Groups' => self::buildSupertextData($data),
+      'ServiceTypeId' => $serviceType
     );
 
     $httpResult = $apiClient->postRequest('translation/order', json_encode($json), true);
@@ -206,12 +207,13 @@ class Wrapper
 
   /**
    * @param ApiClient $apiClient
+   * @param $lastOrderId
    * @param $sourceLanguage
    * @param $targetLanguage
    * @param $oldData
    * @param $newData
    * @return array|mixed|object
-   * @throws ApiDataException
+   * @throws ApiConnectionException
    */
   public static function sendSyncRequest($apiClient, $lastOrderId, $sourceLanguage, $targetLanguage, $oldData, $newData)
   {

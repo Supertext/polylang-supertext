@@ -18,6 +18,10 @@ class Constant
    */
   const LIVE_API = 'https://www.supertext.ch/api/v1/';
   /**
+   * @var string live api endpoints
+   */
+  const DEFAULT_SERVICE_TYPE = 4;
+  /**
    * @var string the settings option
    */
   const SETTINGS_OPTION = 'polylang_supertext_settings';

@@ -120,7 +120,8 @@ class AjaxRequestHandler
         $this->library->getApiClient(),
         $this->library->toSuperCode($_POST['orderSourceLanguage']),
         $this->library->toSuperCode($_POST['orderTargetLanguage']),
-        $content['data']
+        $content['data'],
+        $this->getServiceType()
       );
 
       self::returnResponse(200, $quote);
@@ -182,7 +183,8 @@ class AjaxRequestHandler
         $_POST['translationType'],
         $additionalInformation,
         $referenceHashes[0],
-        admin_url( 'admin-ajax.php' ) . '?action=sttr_callback'
+        admin_url( 'admin-ajax.php' ) . '?action=sttr_callback',
+        $this->getServiceType()
       );
 
       //process posts
@@ -460,5 +462,12 @@ class AjaxRequestHandler
     }
 
     return $unfinishedTranslations;
+  }
+
+  private function getServiceType()
+  {
+    $apiSettings = $this->library->getSettingOption(Constant::SETTING_API);
+    $serviceType = !empty($apiSettings['serviceType']) ? $apiSettings['serviceType'] : Constant::DEFAULT_SERVICE_TYPE;
+    return $serviceType;
   }
 }

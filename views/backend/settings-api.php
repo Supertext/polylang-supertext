@@ -17,6 +17,8 @@ if(!isset($options[$selectedApiServer])){
   $options[''] = __('Other', 'polylang-supertext').'...';
 }
 
+$selectedServiceType = isset($apiSettings['serviceType']) ? $apiSettings['serviceType'] : Constant::DEFAULT_SERVICE_TYPE;
+
 ?>
 <div class="postbox postbox_admin">
   <div class="inside">
@@ -32,6 +34,10 @@ if(!isset($options[$selectedApiServer])){
         ?>
       </select>
       <input type="text" class="sttr-api-url" id="sttr-api-url" name="apiServerUrl" value="<?php echo $selectedApiServer; ?>">
+    </p>
+    <p>
+      <label for="sttr-service-type"><?php _e('Service type', 'polylang-supertext'); ?></label>
+      <input type="number" min="1" max="5" id="sttr-service-type" name="serviceType" value="<?php echo $selectedServiceType; ?>">
     </p>
   </div>
 </div>
