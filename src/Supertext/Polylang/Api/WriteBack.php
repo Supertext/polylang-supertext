@@ -54,10 +54,6 @@ class WriteBack
    */
   public function isReferenceValid()
   {
-    if(strpos($this->json->ReferenceData, '-') !== false){
-      return $this->isReferenceValidLegacy();
-    }
-
     $sourcePostIds = $this->getSourcePostIds();
 
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
@@ -115,21 +111,6 @@ class WriteBack
    */
   public function getOrderId(){
     return intval($this->json->Id);
-  }
-
-  /**
-   * Depricated, old reference check. Can be removed with next version.
-   * @return array|null
-   */
-  private function isReferenceValidLegacy(){
-    $refData = explode('-', $this->json->ReferenceData, 2);
-    $sourcePostId = $refData[0];
-    $secureToken = $refData[1];
-
-    $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
-    $referenceHash = TranslationMeta::of($targetPostId)->get(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH);
-
-    return !empty($referenceHash) && md5($referenceHash . $sourcePostId) === $secureToken;
   }
 
   /**
