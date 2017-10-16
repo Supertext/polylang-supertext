@@ -118,16 +118,44 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     foreach ($fields as $field) {
       $metaKey = $metaKeyPrefix . $field['name'];
       $fieldId = isset($field['ID']) ? $field['ID'] : $field['id'];
+      $subFieldDefinitions = array();
+
+      if($field['type'] === "flexible_content"){
+        $subFieldDefinitions = $this->getFlexibleContentFieldDefinitions($field['layouts'], $metaKey, $fieldId);
+      } elseif(isset($field['sub_fields'])) {
+        $subFieldDefinitions = $this->getSubFieldDefinitions($field['sub_fields'], $metaKey . self::META_KEY_DELIMITER);
+      }
 
       $group[] = array(
         'id' => 'field_'.$fieldId,
         'label' => $field['label'],
         'type' => 'field',
         'meta_key_regex' => $metaKey,
-        'sub_field_definitions' => isset($field['sub_fields']) ? $this->getSubFieldDefinitions($field['sub_fields'], $metaKey . self::META_KEY_DELIMITER) : array()
+        'sub_field_definitions' => $subFieldDefinitions
       );
     }
 
     return $group;
+  }
+
+  private function getFlexibleContentFieldDefinitions($layouts, $metaKey, $flexibleContentFieldId)
+  {
+    $subFieldDefinitions = array();
+
+    $layoutId = 0;
+    foreach ($layouts as $layout) {
+      $layoutSubFieldDefinitions = $this->getSubFieldDefinitions($layout['sub_fields'], $metaKey . self::META_KEY_DELIMITER);
+
+      $subFieldDefinitions[] = array(
+        'id' => 'layout_' . $flexibleContentFieldId . '_' . $layoutId,
+        'label' => $layout['label'],
+        'type' => 'field',
+        'sub_field_definitions' => $layoutSubFieldDefinitions
+      );
+
+      ++$layoutId;
+    }
+
+    return $subFieldDefinitions;
   }
 }
