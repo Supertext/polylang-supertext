@@ -417,23 +417,37 @@
   visibility: hidden;
 }
 
-.sttr-order-item-details{
+.sttr-order-item-details {
   overflow: hidden;
   padding: 16px;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+
+  label {
+    margin-right: 5px;
+    white-space: nowrap;
+  }
+
+  .notice {
+    margin: 0 0 20px 0;
+    box-shadow: none;
+  }
+
+  .column {
+    width: 50%;
+    float:left;
+  }
 }
 
-.sttr-order-item-details .translatable-content-table{
-  margin: 0 0 15px 0;
-}
-
-.sttr-order-item-details h3 {
-  margin-top: 0;
-  margin-bottom: 16px;
-}
-
-.sttr-order-item-details .notice {
-  margin: 0 0 20px 0;
-  box-shadow: none;
+@media screen and (max-width: 480px) {
+  .sttr-order-item-details {
+    .column {
+      float: none;
+    }
+  }
 }
 
 .sttr-order-list .button{

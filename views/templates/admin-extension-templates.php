@@ -119,31 +119,27 @@
               <?php _e('Please select the content to be translated.', 'polylang-supertext');?>
             </p>
             <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
-              <b>{{translatableFieldGroup.name}}</b>
-              <table class="translatable-content-table">
-                <tbody>
+              <h2>{{translatableFieldGroup.name}}</h2>
+
                 <# if(translatableFieldGroup.fields.length){ #>
-                <tr>
-                  <# _.each(translatableFieldGroup.fields, function(field) { #>
-                    <td>
+
+                  <# _.each(translatableFieldGroup.fields, function(field, index) { #>
+                  <div class="column">
+                    <label>
                       <# if(field.checkedPerDefault){ #>
                         <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{groupId}}][fields][{{field.name}}]" checked="checked">
-                        <# } else { #>
+                      <# } else { #>
                         <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{groupId}}][fields][{{field.name}}]">
                       <# } #>
-                    </td>
-                    <td>
-                      <label for="sttr-{{post.id}}-{{groupId}}-{{field.name}}">{{field.title}}</label>
-                    </td>
-                    <# }); #>
-                </tr>
+                      {{field.title}}
+                    </label>
+                  </div>
+                  <# }); #>
+
                 <# } else { #>
-                <tr>
-                  <td>- <?php _e('Not present in this post', 'polylang-supertext');?></td>
-                </tr>
+                  - <?php _e('Not present in this post', 'polylang-supertext');?>
                 <# } #>
-                </tbody>
-              </table>
+                <div class="clearfix"></div>
             <# }); #>
           </div>
         <# }); #>
