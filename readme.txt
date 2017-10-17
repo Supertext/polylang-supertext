@@ -65,6 +65,11 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 3.7 =
+* Added support for ACF flexible content
+* Removed deprecated code
+* Changed content selection layout (first order step)
+
 = 3.6 =
 * Fixed taxonomy text accessor bug
 * Added service type setting
