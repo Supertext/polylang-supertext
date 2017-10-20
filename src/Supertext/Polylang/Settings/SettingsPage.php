@@ -113,13 +113,14 @@ class SettingsPage extends AbstractPage
   public function control()
   {
     $this->runHiddenFunctions();
-    $this->initTabs();
 
     $currentTabId = $this->getCurrentTabId();
 
     if ($currentTabId == null || !isset($_POST['saveStPlSettings'])) {
       return;
     }
+
+    $this->initTabs();
 
     $saveFunction = $this->tabs[$currentTabId]['saveFunction'];
     $this->$saveFunction();
