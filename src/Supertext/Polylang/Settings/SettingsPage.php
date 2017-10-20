@@ -36,15 +36,16 @@ class SettingsPage extends AbstractPage
     parent::__construct($library);
 
     $this->textAccessors = $textAccessors;
-    $this->tabs = array();
+    $this->tabs = array(
+      self::USERS_TAB => array(),
+      self::TRANSLATABLE_FIELDS_TAB => array(),
+      self::SHORTCODES_TAB => array(),
+      self::WORKFLOW_TAB => array(),
+    );
     $this->viewTemplates = new View("templates/settings-templates");
   }
 
   public function initTabs(){
-    if(count($this->tabs)){
-      return;
-    }
-
     // User and language settings tab
     $this->tabs[self::USERS_TAB] = array(
       'name' => __('User and languages', 'polylang-supertext'),
