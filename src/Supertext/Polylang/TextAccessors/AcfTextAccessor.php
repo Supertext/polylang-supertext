@@ -68,11 +68,11 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     $acfFieldDefinition = array();
 
     foreach ($fieldGroups as $fieldGroup) {
-      $fieldGroupId = isset($fieldGroup['ID']) ? $fieldGroup['ID'] : $fieldGroup['id'];
+      $fieldGroupId = $fieldGroup['key'];
       $fields = function_exists( 'acf_get_fields' ) ? acf_get_fields($fieldGroup) : apply_filters('acf/field_group/get_fields', array(), $fieldGroupId);
 
       $acfFieldDefinition[] = array(
-        'id' => 'group_'.$fieldGroupId,
+        'id' => $fieldGroupId,
         'label' => $fieldGroup['title'],
         'type' => 'group',
         'sub_field_definitions' => $this->getSubFieldDefinitions($fields)
@@ -119,21 +119,23 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
       $metaKey = $metaKeyPrefix . $field['name'];
       $fieldId = $field['key'];
 
-      $subFieldDefinitions = array();
+      $newElement = array(
+        'id' => $fieldId,
+        'label' => $field['label']
+      );
 
       if($field['type'] === "flexible_content"){
-        $subFieldDefinitions = $this->getFlexibleContentFieldDefinitions($field['layouts'], $metaKey, $fieldId);
+        $newElement['type'] = 'group';
+        $newElement['sub_field_definitions'] = $this->getFlexibleContentFieldDefinitions($field['layouts'], $metaKey, $fieldId);
       } elseif(isset($field['sub_fields'])) {
-        $subFieldDefinitions = $this->getSubFieldDefinitions($field['sub_fields'], $metaKey . self::META_KEY_DELIMITER);
+        $newElement['type'] = 'group';
+        $newElement['sub_field_definitions'] = $this->getSubFieldDefinitions($field['sub_fields'], $metaKey . self::META_KEY_DELIMITER);
+      } else {
+        $newElement['type'] = 'field';
+        $newElement['meta_key_regex'] = $metaKey;
       }
 
-      $group[] = array(
-        'id' => $fieldId,
-        'label' => $field['label'],
-        'type' => 'field',
-        'meta_key_regex' => $metaKey,
-        'sub_field_definitions' => $subFieldDefinitions
-      );
+      $group[] = $newElement;
     }
 
     return $group;
@@ -150,7 +152,7 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
       $subFieldDefinitions[] = array(
         'id' => $flexibleContentFieldId . '_layout_' . $layoutId,
         'label' => $layout['label'],
-        'type' => 'field',
+        'type' => 'group',
         'sub_field_definitions' => $layoutSubFieldDefinitions
       );
 
