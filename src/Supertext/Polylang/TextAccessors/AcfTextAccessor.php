@@ -117,7 +117,8 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
 
     foreach ($fields as $field) {
       $metaKey = $metaKeyPrefix . $field['name'];
-      $fieldId = isset($field['ID']) ? $field['ID'] : $field['id'];
+      $fieldId = $field['key'];
+
       $subFieldDefinitions = array();
 
       if($field['type'] === "flexible_content"){
@@ -127,7 +128,7 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
       }
 
       $group[] = array(
-        'id' => 'field_'.$fieldId,
+        'id' => $fieldId,
         'label' => $field['label'],
         'type' => 'field',
         'meta_key_regex' => $metaKey,
@@ -147,7 +148,7 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
       $layoutSubFieldDefinitions = $this->getSubFieldDefinitions($layout['sub_fields'], $metaKey . self::META_KEY_DELIMITER);
 
       $subFieldDefinitions[] = array(
-        'id' => 'layout_' . $flexibleContentFieldId . '_' . $layoutId,
+        'id' => $flexibleContentFieldId . '_layout_' . $layoutId,
         'label' => $layout['label'],
         'type' => 'field',
         'sub_field_definitions' => $layoutSubFieldDefinitions
