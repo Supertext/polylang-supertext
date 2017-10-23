@@ -11,7 +11,6 @@ use Supertext\Polylang\Backend\CallbackHandler;
 use Supertext\Polylang\Backend\TargetPostCreationTracker;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Helper\TranslationMeta;
 use Supertext\Polylang\Helper\TextProcessor;
 use Supertext\Polylang\TextAccessors\AcfTextAccessor;
 use Supertext\Polylang\TextAccessors\AllInOneSeoPackTextAccessor;
@@ -197,33 +196,15 @@ class Core
    */
   public static function onActivation()
   {
-    $library = new Library();
+    $versionMigration = new VersionMigration(new Library());
 
-    $options = $library->getSettingOption();
+    $previousInstalledVersion = get_option(Constant::VERSION_OPTION);
 
-    if (isset($options[Helper\Constant::SETTING_CUSTOM_FIELDS]) && get_option(Constant::VERSION_OPTION) < 1.8) {
-      $library->saveSettingOption(Helper\Constant::SETTING_CUSTOM_FIELDS, array());
+    if(!$previousInstalledVersion){
+      return;
     }
 
-    $queryForLegacyTranslationFlag = new \WP_Query(array(
-      'meta_key' => '_in_st_translation',
-      'post_status' => 'any',
-      'post_type' => get_post_types('', 'names'),
-    ));
-
-    foreach($queryForLegacyTranslationFlag->posts as $post){
-      $meta = TranslationMeta::of($post->ID);
-      $meta->set(TranslationMeta::TRANSLATION, true);
-      $meta->set(TranslationMeta::IN_TRANSLATION, true);
-      $meta->set(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH, get_post_meta($post->ID, '_in_translation_ref_hash', true));
-    }
-
-    $savedAcfFieldDefinitions = $library->getSettingOption('acfFields');
-    if(count($savedAcfFieldDefinitions) && get_option(Constant::VERSION_OPTION) < 2.8){
-      $savedFieldDefinitions = $library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
-      $savedFieldDefinitions['acf'] = $savedAcfFieldDefinitions;
-      $library->saveSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS, $savedFieldDefinitions);
-    }
+    $versionMigration->migrate($previousInstalledVersion, SUPERTEXT_PLUGIN_VERSION);
   }
 
   /**
@@ -358,8 +339,11 @@ class Core
    */
   private function checkVersion()
   {
-    if (get_option(Constant::VERSION_OPTION) != SUPERTEXT_PLUGIN_VERSION) {
-      Core::onActivation();
+    $previousInstalledVersion = get_option(Constant::VERSION_OPTION);
+
+    if ($previousInstalledVersion != SUPERTEXT_PLUGIN_VERSION) {
+      $versionMigration = new VersionMigration($this->getLibrary());
+      $versionMigration->migrate($previousInstalledVersion, SUPERTEXT_PLUGIN_VERSION);
       update_option(Constant::VERSION_OPTION, SUPERTEXT_PLUGIN_VERSION);
     }
   }
