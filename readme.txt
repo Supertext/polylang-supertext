@@ -66,9 +66,8 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 == Changelog ==
 
 = 3.8 =
-* Fixed ACF flexible content merge issue when added a new field
+* Optimized tab initialisation (and with this change fixed issue when adding a new field to flexible content layout, ACF bug)
 * Changed acf settings structure
-
 
 = 3.7 =
 * Added support for ACF flexible content
