@@ -65,6 +65,9 @@ Get the API key from the Settings page: [Account Settings] (https://www.supertex
 
 == Changelog ==
 
+= 3.9 =
+* Added support for media translation
+
 = 3.8 =
 * Optimized tab initialisation (and with this change fixed issue when adding a new field to flexible content layout, ACF bug)
 * Changed acf settings structure
