@@ -939,6 +939,10 @@ Supertext.Polylang = (function (win, doc, $) {
       postIds.push($(this).val());
     });
 
+    $('input[name="media[]"]:checked').each(function () {
+      postIds.push($(this).val());
+    });
+
     if (postIds.length > 0) {
       state.postIds = postIds;
       startOrderProcess();
@@ -1335,7 +1339,7 @@ Supertext.Polylang = (function (win, doc, $) {
 
       if (context.screen == 'post') {
         initializePostScreen();
-      } else if (context.screen == 'edit') {
+      } else if (context.screen == 'edit' || context.screen == 'upload') {
         initializeEditScreen();
       }
     },

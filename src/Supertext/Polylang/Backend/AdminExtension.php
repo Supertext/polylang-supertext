@@ -69,9 +69,13 @@ class AdminExtension
     add_action('add_meta_boxes', array($this, 'addMetaBox'));
 
     add_filter('manage_posts_columns', array($this, 'addTranslationStatusColumn'), 100);
+    add_filter('manage_media_columns', array($this, 'addTranslationStatusColumn'), 100);
     add_action('manage_posts_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
+    add_action('manage_media_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
     add_filter('manage_pages_columns', array($this, 'addTranslationStatusColumn'), 100);
+    add_filter('manage_media_columns', array($this, 'addTranslationStatusColumn'), 100);
     add_action('manage_pages_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
+    add_action('manage_media_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
   }
 
   /**
@@ -291,7 +295,7 @@ class AdminExtension
   }
 
   private function isPostsScreen(){
-    return $this->screenBase == 'edit';
+    return $this->screenBase == 'edit' || $this->screenBase == 'upload';
   }
 
   private function isSettingsScreen(){
