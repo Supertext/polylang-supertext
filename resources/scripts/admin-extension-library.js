@@ -817,9 +817,26 @@ Supertext.Polylang = (function (win, doc, $) {
         context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
         postData)
         .then(function (createPostsData) {
-          var requests = $.map(createPostsData, function (createPostData) {
-            return doGetRequest(context.newPostUrl, createPostData);
-          });
+          var requests = [];
+
+          if(context.screen == 'upload'){
+            $.each(createPostsData, function (index, createPostData) {
+              var columnClass = '.column-language_' + createPostData['new_lang'];
+              var addTranslationAnchors = $(columnClass + ' a');
+
+              addTranslationAnchors.each(function (index, anchor) {
+                var href = $(anchor).attr('href');
+
+                if (href.indexOf('from_media=' + createPostData['from_post']) > -1) {
+                  requests.push(doGetRequest(href, {}));
+                }
+              });
+            });
+          }else{
+            requests = $.map(createPostsData, function (createPostData) {
+              return doGetRequest(context.newPostUrl, createPostData);
+            });
+          }
 
           return $.when.apply($, requests);
         })
