@@ -8,7 +8,7 @@ namespace Supertext\Polylang\TextAccessors;
  */
 class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements IMetaDataAware
 {
-  const META_KEY_DELIMITER = '_\\d+_';
+  const META_KEY_DELIMITER = '_(\\d+_)?';
 
   /**
    * Gets the content accessors name
