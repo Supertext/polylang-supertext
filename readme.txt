@@ -49,14 +49,14 @@ How to install the plugin
 = How do I order a translation? =
 
 1. Go to the post you would like to be translated by Supertext.
-2. Click on <b>Order translation</b> underneath the language you want the text to be translated into. <img src="https://ps.w.org/polylang-supertext/assets/screenshot-1.png" />
+2. Click on _Order translation_ underneath the language you want the text to be translated into. ![Order translation](https://ps.w.org/polylang-supertext/assets/screenshot-1.png)
 3. Select the service you want from the prices and deadlines presented. Supertext will translate your post and notify you once the translation has been uploaded to your website.
 
-= What do I need to use this plugin? =
+= What do I require to use this plugin? =
 
 A valid Supertext customer account for every WordPress user and the corresponding API key.
-You can create an account at [Supertext] (https://www.supertext.ch/en/signup) if you don't already have one.
-Get the API key from the Settings page: [Account Settings] (https://www.supertext.ch/customer/accountsettings)
+You can create an account at [Supertext](https://www.supertext.ch/en/signup) if you don't already have one.
+Get the API key from the Settings page: [Account Settings](https://www.supertext.ch/customer/accountsettings)
 
 == Screenshots ==
 
