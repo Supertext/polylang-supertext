@@ -40,13 +40,17 @@ Plugin has been tested with following page builders:
 
 How to install the plugin
 
-1. Upload polylang-supertext to the /wp-content/plugins/ directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
+1. Upload polylang-supertext to the /wp-content/plugins/ directory.
+2. Activate the plugin through the "Plugins" menu in WordPress.
 3. Go to Settings > Supertext to provide API keys and language mappings. If relevant, define translatable custom fields and shortcode arguments.
-4. Go to a page/post you would like to be translated by Supertext
-5. Select the service you want from the prices and deadlines presented. Supertext will translate your page/post and notify you once the translation has been uploaded to your website.
 
 == Frequently Asked Questions ==
+
+= How do I order a translation? =
+
+1. Go to the post you would like to be translated by Supertext.
+2. Click on <b>Order translation</b> underneath the language you want the text to be translated into. <img src="https://ps.w.org/polylang-supertext/assets/screenshot-1.png" />
+3. Select the service you want from the prices and deadlines presented. Supertext will translate your post and notify you once the translation has been uploaded to your website.
 
 = What do I need to use this plugin? =
 
