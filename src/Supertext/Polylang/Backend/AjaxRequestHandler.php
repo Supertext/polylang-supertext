@@ -17,6 +17,7 @@ class AjaxRequestHandler
    * Post status for created target posts
    */
   const TRANSLATION_POST_STATUS = 'draft';
+  const MAX_TITLE_LENGTH = 80;
 
   /**
    * @var \Supertext\Polylang\Helper\Library
@@ -166,7 +167,6 @@ class AjaxRequestHandler
     $targetLanguage = $_POST['orderTargetLanguage'];
     $content = $this->getContent($translatableContents);
     $sourcePostIds = array_keys($translatableContents);
-    $additionalInformation = $_POST['orderComment'] . ' Posts: ' . implode(', ', $sourcePostIds);
     $referenceHashes = $this->createReferenceHashes($sourcePostIds);
 
     try {
@@ -176,12 +176,12 @@ class AjaxRequestHandler
       //order
       $order = Wrapper::createOrder(
         $this->library->getApiClient(),
-        get_bloginfo('name') . ' - ' . count($sourcePostIds) . ' post(s)' ,
+        $this->getOrderTitle($content['postTitles'], $sourcePostIds),
         $this->library->toSuperCode($sourceLanguage),
         $this->library->toSuperCode($targetLanguage),
         $content['data'],
         $_POST['translationType'],
-        $additionalInformation,
+        $this->getAdditionalInformation($content['postTitles'], $sourcePostIds, $targetPostIds),
         $referenceHashes[0],
         admin_url( 'admin-ajax.php' ) . '?action=sttr_callback',
         $this->getServiceType()
@@ -239,17 +239,54 @@ class AjaxRequestHandler
   private function getContent($translatableContents)
   {
     $contentData = array(
+      'postTitles' => array(),
       'data' => array(),
       'metaData' => array()
     );
 
     foreach ($translatableContents as $postId => $translatableFieldGroups) {
       $post = get_post($postId);
+      $contentData['postTitles'][$postId] = $post->post_title;
       $contentData['data'][$postId] = $this->contentProvider->getContentData($post, $translatableFieldGroups);
       $contentData['metaData'][$postId] = $this->contentProvider->getContentMetaData($post, $translatableFieldGroups);
     }
 
     return $contentData;
+  }
+
+    /**
+     * @param $postTitles
+     * @param $sourcePostIds
+     * @return string
+     */
+    private function getOrderTitle($postTitles, $sourcePostIds)
+    {
+        $postsCount = count($sourcePostIds);
+        $suffix = $postsCount > 1 ? ' + ' . ($postsCount - 1) . ' post(s)' : '';
+        $mainTitle = $postTitles[$sourcePostIds[0]];
+
+        if(strlen($mainTitle) > AjaxRequestHandler::MAX_TITLE_LENGTH ){
+            $mainTitle = substr($mainTitle, 0, AjaxRequestHandler::MAX_TITLE_LENGTH) . '...';
+        }
+
+        return $mainTitle . $suffix;
+    }
+
+    /**
+     * @param $postTitles
+     * @param $sourcePostIds
+     * @param $targetPostIds
+     * @return string
+     */
+  private function getAdditionalInformation($postTitles, $sourcePostIds, $targetPostIds)
+  {
+      $additionalInformation = $_POST['orderComment'] . ' | ';
+
+      foreach ($sourcePostIds as $sourcePostId) {
+        $additionalInformation .= $postTitles[$sourcePostId] . '(source: ' . $sourcePostId . ', target: ' . $targetPostIds[$sourcePostId] . ') | ';
+      }
+
+      return $additionalInformation;
   }
 
   /**
