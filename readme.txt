@@ -92,6 +92,10 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 3.10 =
+* Fixed comment issue
+* Enhanced sent order title and information
+
 = 3.9 =
 * Added support for media translation
 * Fixed ACF tab support
