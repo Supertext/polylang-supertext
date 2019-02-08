@@ -53,6 +53,11 @@ class AdminExtension
   private $isCurrentPostInTranslation = false;
 
   /**
+   * @var array
+   */
+  private $newPostUrls = Array();
+
+  /**
    * Various filters to change and/or display things
    */
   public function __construct($library, $log)
@@ -76,6 +81,8 @@ class AdminExtension
     add_filter('manage_media_columns', array($this, 'addTranslationStatusColumn'), 100);
     add_action('manage_pages_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
     add_action('manage_media_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
+
+    add_filter('pll_get_new_post_translation_link', array($this, 'addNewPostUrl'), 100, 3);
   }
 
   /**
@@ -189,7 +196,7 @@ class AdminExtension
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,
       'resourceUrl' => get_bloginfo('wpurl'),
       'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-      'newPostUrl' => admin_url('post-new.php')
+      'newPostUrls' => $this->newPostUrls
     );
 
     $contextJson = json_encode($context);
@@ -248,6 +255,17 @@ class AdminExtension
       'syncTranslationChanges' => isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges'],
       'logEntries' => $logEntries
     ));
+  }
+
+  public function addNewPostUrl($link, $language, $post_id)
+  {
+    if(!isset($this->newPostUrls[$post_id])){
+      $this->newPostUrls[$post_id] = Array();
+    }
+    
+    $this->newPostUrls[$post_id][$language->slug] = $link;
+
+    return $link;
   }
 
   /**

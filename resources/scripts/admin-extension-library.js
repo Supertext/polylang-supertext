@@ -834,7 +834,7 @@ Supertext.Polylang = (function (win, doc, $) {
             });
           }else{
             requests = $.map(createPostsData, function (createPostData) {
-              return doGetRequest(context.newPostUrl, createPostData);
+              return doGetRequest(context.newPostUrls[createPostData.from_post][createPostData.new_lang]);
             });
           }
 
