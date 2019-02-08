@@ -259,15 +259,15 @@ Supertext.Settings.Shortcodes = (function ($) {
       var $shortcodeSettings = $("#shortcode-settings");
 
       $.each(savedShortcodes, function(name, shortcode){
-        addShortcodeSetting($shortcodeSettings, name, shortcode['content_encoding']);
+        addShortcodeSetting($shortcodeSettings, name, shortcode.content_encoding);
         var $container = $shortcodeSettings.find('.shortcode-setting-container:last .shortcode-setting-attributes');
         var shortcodeIndex = $shortcodeSettings.data('lastIndex');
 
-        $.each(shortcode['attributes'], function(index, attribute){
-          addAttributeInput($container, shortcodeIndex, attribute['name'], attribute['encoding']);
+        $.each(shortcode.attributes, function(index, attribute){
+          addAttributeInput($container, shortcodeIndex, attribute.name, attribute.encoding);
         });
       });
-
+      
       $('#shortcodesSettingsForm .shortcode-add-setting')
         .click(function(){
           addShortcodeSetting($shortcodeSettings);

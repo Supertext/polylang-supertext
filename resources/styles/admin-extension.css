@@ -3,7 +3,7 @@
  * https://wordpress.org/plugins/polylang-supertext/
  * @author Heinrich Muralt
  * @version 2.7.0
- * Copyright 2017 */
+ * Copyright 2019 */
 .clearfix:after {
   content: "";
   display: table;
@@ -39,7 +39,8 @@
   margin-left: -455px;
   border: 1px solid #888;
   background-color: #fcfcfc;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   -webkit-animation-name: sttr-appear;
   -webkit-animation-duration: 0.4s;
   animation-name: sttr-appear;
@@ -62,6 +63,12 @@
 
 .sttr-modal-content h2 {
   font-size: 14px; }
+
+@-webkit-keyframes sttr-appear {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
 
 @keyframes sttr-appear {
   from {
@@ -86,6 +93,12 @@
   animation-name: sttr-appear;
   animation-duration: 0.3s; }
 
+@-webkit-keyframes sttr-appear {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+
 @keyframes sttr-appear {
   from {
     opacity: 0; }
@@ -106,7 +119,8 @@
   color: #666;
   border: none;
   border-radius: 0;
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
   background: none;
   cursor: pointer;
   outline: none; }
@@ -163,6 +177,7 @@
   height: 20px;
   border: 8px solid #ddd;
   border-top-color: #0085ba;
+  -webkit-animation: spin 1s infinite linear;
   animation: spin 1s infinite linear;
   margin: auto; }
 
@@ -177,10 +192,20 @@
   border-top: 1px solid #ddd;
   overflow: auto; }
 
-@keyframes spin {
+@-webkit-keyframes spin {
   0% {
+    -webkit-transform: rotate(0deg);
     transform: rotate(0deg); }
   100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
 
 .sttr-modal input, .sttr-modal select {
@@ -225,6 +250,7 @@
   background: #ddd;
   border: 2px solid #FFF;
   border-radius: 50%;
+  -webkit-box-shadow: 0 0 0 2px #ddd;
   box-shadow: 0 0 0 2px #ddd;
   color: #fff;
   text-align: center;
@@ -232,6 +258,7 @@
 
 .sttr-order-progress-bar ul li.active:before {
   background: #0085ba;
+  -webkit-box-shadow: 0 0 0 2px #0085ba;
   box-shadow: 0 0 0 2px #0085ba;
   z-index: 99999; }
 
@@ -302,14 +329,16 @@
 
 .sttr-order-items li a:focus,
 .sttr-order-items li a:hover {
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
   border-color: #eee; }
 
 .sttr-order-items li.active a,
 .sttr-order-items li.active a:hover {
   margin-right: -2px;
   border-color: #ddd;
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
   color: #444; }
 
 .sttr-order-items li.hasError a {
@@ -336,7 +365,8 @@
     white-space: nowrap; }
   .sttr-order-item-details .notice {
     margin: 0 0 20px 0;
-    box-shadow: none; }
+    -webkit-box-shadow: none;
+            box-shadow: none; }
   .sttr-order-item-details .column {
     width: 50%;
     float: left; }

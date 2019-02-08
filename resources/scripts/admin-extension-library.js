@@ -713,7 +713,7 @@ Supertext.Polylang = (function (win, doc, $) {
         while (queue.length > 0) {
           var element = queue.pop();
 
-          if (typeof element.value !== 'object' && typeof element.value !== 'array') {
+          if (typeof element.value !== 'object' && !(element.value instanceof Array)) {
             groupElements.push(element);
             continue;
           }
@@ -821,13 +821,13 @@ Supertext.Polylang = (function (win, doc, $) {
 
           if(context.screen == 'upload'){
             $.each(createPostsData, function (index, createPostData) {
-              var columnClass = '.column-language_' + createPostData['new_lang'];
+              var columnClass = '.column-language_' + createPostData.new_lang;
               var addTranslationAnchors = $(columnClass + ' a');
 
               addTranslationAnchors.each(function (index, anchor) {
                 var href = $(anchor).attr('href');
 
-                if (href.indexOf('from_media=' + createPostData['from_post']) > -1) {
+                if (href.indexOf('from_media=' + createPostData.from_post) > -1) {
                   requests.push(doGetRequest(href, {}));
                 }
               });

@@ -1,14 +1,12 @@
 'use strict';
 
-var Promise = require('es6-promise').Promise;
-
 var
   gulp = require('gulp'),
   sass = require('gulp-sass'),
   autoprefixer = require('gulp-autoprefixer'),
   minifyCSS = require('gulp-minify-css'),
   rename = require('gulp-rename'),
-  header  = require('gulp-header'),
+  header = require('gulp-header'),
   jshint = require('gulp-jshint'),
   uglify = require('gulp-uglify'),
   packageInfo = require('./package.json');
@@ -31,30 +29,42 @@ var
     '\n'
   ].join('');
 
-gulp.task('styles', function() {
+function styles() {
+  console.info("Running styles...");
+
   return gulp.src(paths.stylesDir + '/*.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(autoprefixer('last 2 version'))
-    .pipe(header(banner, { packageInfo : packageInfo }))
+    .pipe(header(banner, {
+      packageInfo: packageInfo
+    }))
     .pipe(gulp.dest(paths.stylesDir))
     .pipe(minifyCSS())
-    .pipe(rename({ suffix: '.min' }))
+    .pipe(rename({
+      suffix: '.min'
+    }))
     .pipe(gulp.dest(paths.stylesDir));
-});
+}
 
-gulp.task('scripts',function(){
+function scripts() {
+  console.info("Running scripts...");
+
   gulp.src(paths.scriptsDir + '/*-library.js')
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(uglify())
-    .pipe(header(banner, { packageInfo: packageInfo }))
-    .pipe(rename({ suffix: '.min' }))
+    .pipe(header(banner, {
+      packageInfo: packageInfo
+    }))
+    .pipe(rename({
+      suffix: '.min'
+    }))
     .pipe(gulp.dest(paths.scriptsDir));
-});
+}
 
-gulp.task('default', function() {
-  gulp.start('scripts', 'styles');
+function defaultTask() {
+  gulp.watch(paths.stylesDir + '/*.scss').on('change', styles);
+  gulp.watch(paths.scriptsDir + '/*-library.js').on('change', scripts);
+}
 
-  gulp.watch(paths.stylesDir + '/*.scss', ['styles']);
-  gulp.watch(paths.scriptsDir + '/*-library.js', ['scripts']);
-});
+exports.default = defaultTask
