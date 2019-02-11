@@ -8,7 +8,6 @@ use Supertext\Polylang\Backend\Log;
 use Supertext\Polylang\Backend\AdminExtension;
 use Supertext\Polylang\Backend\AjaxRequestHandler;
 use Supertext\Polylang\Backend\CallbackHandler;
-use Supertext\Polylang\Backend\TargetPostCreationTracker;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TextProcessor;
@@ -108,13 +107,17 @@ class Core
       $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
       $this->menu = new Menu($this->settingsPage);
       $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
-      $this->ajaxRequestHandler = new AjaxRequestHandler($this->getLibrary(), $this->getLog(), $this->getContentProvider(), new TargetPostCreationTracker());
-
+      $this->ajaxRequestHandler = new AjaxRequestHandler(
+        $this->getLibrary(),
+        $this->getLog(),
+        $this->getContentProvider()
+      );
+      
       $this->checkVersion();
       $this->checkEnvironment();
     }
 
-    add_action( 'wp_ajax_nopriv_sttr_callback', array($this, 'handleCallback'));
+    add_action('wp_ajax_nopriv_sttr_callback', array($this, 'handleCallback'));
   }
 
   /**
@@ -187,7 +190,8 @@ class Core
   /**
    * Handles a callback
    */
-  public function handleCallback(){
+  public function handleCallback()
+  {
     $this->getCallbackHandler()->handleRequest();
   }
 
@@ -200,7 +204,7 @@ class Core
 
     $previousInstalledVersion = get_option(Constant::VERSION_OPTION);
 
-    if(!$previousInstalledVersion){
+    if (!$previousInstalledVersion) {
       return;
     }
 
@@ -312,7 +316,7 @@ class Core
       $textAccessors['siteorigin_panels'] = new SiteOriginTextAccessor($textProcessor);
     }
 
-    if ($library->isPluginActive('js_composer/js_composer.php') || $library->isPluginActive('js_composer_salient/js_composer.php')){
+    if ($library->isPluginActive('js_composer/js_composer.php') || $library->isPluginActive('js_composer_salient/js_composer.php')) {
       $textAccessors['post'] = new VisualComposerTextAccessor($textProcessor, $library);
     }
 

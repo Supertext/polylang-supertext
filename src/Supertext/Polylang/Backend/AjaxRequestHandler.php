@@ -13,10 +13,6 @@ use Supertext\Polylang\Helper\TranslationMeta;
  */
 class AjaxRequestHandler
 {
-  /**
-   * Post status for created target posts
-   */
-  const TRANSLATION_POST_STATUS = 'draft';
   const MAX_TITLE_LENGTH = 80;
 
   /**
@@ -35,22 +31,15 @@ class AjaxRequestHandler
   private $contentProvider;
 
   /**
-   * @var TargetPostCreationTracker
-   */
-  private $targetPostCreationTracker;
-
-  /**
    * @param \Supertext\Polylang\Helper\Library $library
    * @param Log $log
    * @param ContentProvider $contentProvider
-   * @param $targetPostCreationTracker TargetPostCreationTracker
    */
-  public function __construct($library, $log, $contentProvider, $targetPostCreationTracker)
+  public function __construct($library, $log, $contentProvider)
   {
     $this->library = $library;
     $this->log = $log;
     $this->contentProvider = $contentProvider;
-    $this->targetPostCreationTracker = $targetPostCreationTracker;
 
     add_action('wp_ajax_sttr_getPostTranslationInfo', array($this, 'getPostTranslationInfoAjax'));
     add_action('wp_ajax_sttr_getPostRawData', array($this, 'getPostRawDataAjax'));
@@ -147,10 +136,8 @@ class AjaxRequestHandler
       $sourcePost = get_post($sourcePostId);
 
       array_push($result, array(
-        'from_post' => $sourcePost->ID,
-        'post_type' => $sourcePost->post_type,
-        'new_lang' => $targetLanguage,
-        TargetPostCreationTracker::IS_TRANSLATION_QUERY_PARAMETER  => 1
+        'fromPost' => $sourcePost->ID,
+        'newLang' => $targetLanguage
       ));
     }
 
@@ -171,7 +158,7 @@ class AjaxRequestHandler
 
     try {
       //create needed target posts
-      $targetPostIds = $this->createTargetPosts($sourcePostIds, $sourceLanguage, $targetLanguage);
+      $targetPostIds = $this->getTargetPostIds($sourcePostIds, $sourceLanguage, $targetLanguage);
 
       //order
       $order = Wrapper::createOrder(
@@ -312,44 +299,20 @@ class AjaxRequestHandler
    * @param $targetLanguage
    * @return array
    */
-  private function createTargetPosts($sourcePostIds, $sourceLanguage, $targetLanguage){
+  private function getTargetPostIds($sourcePostIds, $sourceLanguage, $targetLanguage){
     $targetPostIds = array();
 
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
 
-      if ($targetPostId != null) {
-        $targetPostIds[$sourcePostId] = $targetPostId;
-        continue;
+      if ($targetPostId == null) {
+        throw new Exception("Could not find target post of source post $sourcePostId.");
       }
 
-      $targetPostIds[$sourcePostId] = $this->createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage);
+      $targetPostIds[$sourcePostId] = $targetPostId;
     }
 
     return $targetPostIds;
-  }
-
-  /**
-   * @param $sourcePostId
-   * @param $sourceLanguage
-   * @param $targetLanguage
-   * @return array|null|\WP_Post
-   * @throws PostCreationException
-   */
-  private function createTargetPost($sourcePostId, $sourceLanguage, $targetLanguage)
-  {
-    $sourcePost = get_post($sourcePostId);
-
-    $targetPostId = $this->targetPostCreationTracker->createNewPost($sourcePost->ID);
-
-    $this->library->setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage);
-
-    $targetPost = get_post($targetPostId);
-    $targetPost->post_status = self::TRANSLATION_POST_STATUS;
-    $targetPost->post_title = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
-    wp_update_post($targetPost);
-
-    return $targetPostId;
   }
 
   /**

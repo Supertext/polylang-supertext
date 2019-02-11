@@ -101,4 +101,12 @@ class Constant
    * @var reference bitmask. If changed all translations jobs are invalidated.
    */
   const REFERENCE_BITMASK = '9682059641ba9a50a1c15abf4e23e26327139f570783c04900af023ac9569ecb';
+  /**
+   * @var string flag new post to be saved automatically.
+   */
+  const NEW_POST_AUTO_SAVE_FLAG = 'sttr_auto_save';
+  /**
+   * @var string default post status for translation posts.
+   */
+  const TRANSLATION_POST_STATUS = 'draft';
 }

@@ -5,6 +5,7 @@ namespace Supertext\Polylang\Backend;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TranslationMeta;
 use Supertext\Polylang\Helper\View;
+use Supertext\Polylang\Api\Multilang;
 
 /**
  * Serves as a helper for the translation inject to the user
@@ -83,6 +84,11 @@ class AdminExtension
     add_action('manage_media_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
 
     add_filter('pll_get_new_post_translation_link', array($this, 'addNewPostUrl'), 100, 3);
+
+    if(isset($_GET[Constant::NEW_POST_AUTO_SAVE_FLAG]) && isset($_GET['from_post']) && isset($_GET['new_lang'])){
+      add_filter('wp_insert_post_data', array($this, 'setNewTargetPostData'), 1000, 1);
+      add_action('save_post', array($this, 'assignLanguageToNewTargetPost'), 10, 1);
+    }
   }
 
   /**
@@ -196,7 +202,8 @@ class AdminExtension
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,
       'resourceUrl' => get_bloginfo('wpurl'),
       'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-      'newPostUrls' => $this->newPostUrls
+      'newPostUrls' => $this->newPostUrls,
+      'newPostAutoSaveFlag' => Constant::NEW_POST_AUTO_SAVE_FLAG
     );
 
     $contextJson = json_encode($context);
@@ -262,8 +269,8 @@ class AdminExtension
     if(!isset($this->newPostUrls[$post_id])){
       $this->newPostUrls[$post_id] = Array();
     }
-    
-    $this->newPostUrls[$post_id][$language->slug] = $link;
+
+    $this->newPostUrls[$post_id][$language->slug] = urldecode(html_entity_decode($link));
 
     return $link;
   }
@@ -306,6 +313,27 @@ class AdminExtension
     }
 
     return $newColumns;
+  }
+
+  /**
+   * Sets default data for new target post
+   * @param $data post data as array
+   */
+  public function setNewTargetPostData($data){
+    $sourcePost = get_post($_GET['from_post']);
+
+    $data['post_status'] = Constant::TRANSLATION_POST_STATUS;
+    $data['post_title'] = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
+    
+    return $data;
+  }
+
+  /**
+   * Sets new_lang (PLL GET parameter) as language of the target post and sets the target post as translation of from_post (PLL GET parameter)
+   * @param $targetPostId target post id
+   */
+  public function assignLanguageToNewTargetPost($targetPostId) {
+    $this->library->setLanguage($_GET['from_post'], $targetPostId, Multilang::getPostLanguage($_GET['from_post']), $_GET['new_lang']);
   }
 
   private function isEditPostScreen(){
