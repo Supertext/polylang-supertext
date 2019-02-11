@@ -11,7 +11,7 @@ use Supertext\Polylang\Helper\Library;
  */
 class PostMediaTextAccessor implements ITextAccessor
 {
-  private const POST_TYPE = 'attachment';
+  const POST_TYPE = 'attachment';
 
   /**
    * @var Library library
