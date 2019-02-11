@@ -11,6 +11,8 @@ use Supertext\Polylang\Helper\Library;
  */
 class PostMediaTextAccessor implements ITextAccessor
 {
+  private const POST_TYPE = 'attachment';
+
   /**
    * @var Library library
    */
@@ -59,8 +61,9 @@ class PostMediaTextAccessor implements ITextAccessor
     return get_children(
       array(
         'post_parent' => $post->ID,
-        'post_type' => 'attachment',
-        'post_mime_type' => 'image')
+        'post_type' => self::POST_TYPE,
+        'post_mime_type' => 'image'
+      )
     );
   }
 
@@ -77,9 +80,13 @@ class PostMediaTextAccessor implements ITextAccessor
       return $texts;
     }
 
+    if ($post->post_type === self::POST_TYPE) {
+      return array('image_alt' => get_post_meta($post->ID, '_wp_attachment_image_alt', true));
+    }
+
     $texts = $this->addAttachmentTexts($post, $texts);
 
-    $texts= $this->addUnattachedAttachmentTexts($post, $texts);
+    $texts = $this->addUnattachedAttachmentTexts($post, $texts);
 
     return $texts;
   }
@@ -90,13 +97,18 @@ class PostMediaTextAccessor implements ITextAccessor
    */
   public function setTexts($post, $texts)
   {
+    if ($post->post_type === self::POST_TYPE) {
+      $this->updateImageAlt($post->ID, $texts['image_alt']);
+      return;
+    }
+
     foreach ($texts as $sourceAttachmentId => $text) {
 
       $sourceLanguage = Multilang::getPostLanguage($sourceAttachmentId);
       $targetLanguage = Multilang::getPostLanguage($post->ID);
       $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, $targetLanguage);
 
-      if($targetAttachmentId == null){
+      if ($targetAttachmentId == null) {
         $targetAttachmentId = $this->createTargetAttachment($post, $sourceAttachmentId, $sourceLanguage, $targetLanguage);
       }
 
@@ -113,10 +125,11 @@ class PostMediaTextAccessor implements ITextAccessor
     $attachments = get_children(
       array(
         'post_parent' => $post->ID,
-        'post_type' => 'attachment',
+        'post_type' => self::POST_TYPE,
         'post_mime_type' => 'image',
         'orderby' => 'menu_order ASC, ID',
-        'order' => 'DESC')
+        'order' => 'DESC'
+      )
     );
 
     foreach ($attachments as $attachment) {
@@ -139,31 +152,31 @@ class PostMediaTextAccessor implements ITextAccessor
   {
     $hasMatches = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches) > 0;
 
-    if(!$hasMatches){
+    if (!$hasMatches) {
       return $texts;
     }
 
     $siteHost = parse_url(site_url())['host'];
 
-    foreach($matches[1] as $imageSrc){
+    foreach ($matches[1] as $imageSrc) {
       $url = $imageSrc;
       $parsedUrl = parse_url($imageSrc);
 
-      if(empty($parsedUrl['scheme']) && empty($parsedUrl['host'])){
+      if (empty($parsedUrl['scheme']) && empty($parsedUrl['host'])) {
         $url = site_url($imageSrc);
-      }else if($parsedUrl['host'] != $siteHost){
+      } else if ($parsedUrl['host'] != $siteHost) {
         continue;
       }
 
       $attachmentId = attachment_url_to_postid($url);
 
-      if($attachmentId == null){
+      if ($attachmentId == null) {
         continue;
       }
 
       $attachmentId = Multilang::getPostInLanguage($attachmentId, Multilang::getPostLanguage($post->ID));
 
-      if(isset($texts[$attachmentId])){
+      if (isset($texts[$attachmentId])) {
         continue;
       }
 
@@ -215,11 +228,7 @@ class PostMediaTextAccessor implements ITextAccessor
 
     foreach ($text as $key => $value) {
       if ($key === 'image_alt') {
-        update_post_meta(
-          $targetAttachment->ID,
-          '_wp_attachment_image_alt',
-          addslashes(html_entity_decode($value, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
-        );
+        $this->updateImageAlt($targetAttachment->ID, $value);
         continue;
       }
 
@@ -227,5 +236,13 @@ class PostMediaTextAccessor implements ITextAccessor
     }
 
     wp_update_post($targetAttachment);
+  }
+
+  private function updateImageAlt($postId, $value){
+    update_post_meta(
+      $postId,
+      '_wp_attachment_image_alt',
+      addslashes(html_entity_decode($value, ENT_COMPAT | ENT_HTML401, 'UTF-8'))
+    );
   }
 }
