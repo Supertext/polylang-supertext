@@ -2,7 +2,7 @@
 Contributors: supertext, msebel, comotive
 Tags: internationalization, polylang, translation, service, supertext
 Requires at least: 4.0
-Tested up to: 5.0.3
+Tested up to: 5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,9 @@ Did you translate the site title but it is still displayed in only one language?
 6. Order confirmation
 
 == Changelog ==
+
+= 3.12 =
+* Fixed ACF plugin bug when writing back
 
 = 3.11 =
 * Fixed image alternative text bug
