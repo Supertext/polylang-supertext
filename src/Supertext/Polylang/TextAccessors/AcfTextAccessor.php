@@ -28,10 +28,10 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     $metaData = array();
 
     $postCustomFields = get_post_meta($post->ID);
-
+    $metaKeys = array_keys($postCustomFields);
     $subParentMetaKeys = $this->getSubParentMetaKeys(array_keys($selectedTranslatableFields));
 
-    foreach($postCustomFields as $metaKey => $value){
+    foreach($metaKeys as $metaKey){
       if(isset($metaData[$metaKey])){
         continue;
       }
@@ -41,7 +41,7 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
           continue;
         }
 
-        $metaData[$metaKey] = $value[0];
+        $metaData[$metaKey] = get_post_meta($post->ID, $metaKey, true);
       }
     }
 

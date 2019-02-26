@@ -158,7 +158,7 @@ class AjaxRequestHandler
 
     try {
       //create needed target posts
-      $targetPostIds = $this->getTargetPostIds($sourcePostIds, $sourceLanguage, $targetLanguage);
+      $targetPostIds = $this->getTargetPostIds($sourcePostIds, $targetLanguage);
 
       //order
       $order = Wrapper::createOrder(
@@ -295,11 +295,10 @@ class AjaxRequestHandler
 
   /**
    * @param $sourcePostIds
-   * @param $sourceLanguage
    * @param $targetLanguage
    * @return array
    */
-  private function getTargetPostIds($sourcePostIds, $sourceLanguage, $targetLanguage){
+  private function getTargetPostIds($sourcePostIds, $targetLanguage){
     $targetPostIds = array();
 
     foreach ($sourcePostIds as $sourcePostId) {
