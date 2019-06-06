@@ -51,8 +51,8 @@ $selectTemplate = '' .
     <table id="tblStFields">
       <thead>
         <tr>
-          <th>Wordpress <?php _e('User', 'polylang-supertext'); ?></th>
-          <th>Supertext <?php _e('User', 'polylang-supertext'); ?></th>
+          <th><?php _e('WordPress User', 'polylang-supertext'); ?></th>
+          <th><?php _e('Supertext User', 'polylang-supertext'); ?></th>
           <th colspan="2"><?php _e('API Key', 'polylang-supertext'); ?></th>
         </tr>
       </thead>
