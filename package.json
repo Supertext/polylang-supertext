@@ -13,15 +13,15 @@
     "url": "https://github.com/Supertext/polylang-supertext/issues"
   },
   "devDependencies": {
-    "es6-promise": "^4.2.5",
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "^6.0.0",
-    "gulp-header": "^2.0.7",
+    "es6-promise": "^4.2.8",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-header": "^2.0.9",
     "gulp-jshint": "^2.1.0",
     "gulp-minify-css": "^1.2.4",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
-    "gulp-uglify": "^3.0.1",
-    "jshint": "^2.10.1"
+    "gulp-uglify": "^3.0.2",
+    "jshint": "^2.10.2"
   }
 }
