@@ -121,6 +121,7 @@ class AdminExtension
       wp_enqueue_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE);
 
       wp_enqueue_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE);
+      wp_enqueue_script(Constant::BLOCK_EDITOR_SCRIPT_HANDLE);
     }
   }
 

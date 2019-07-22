@@ -890,14 +890,15 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function injectOrderLinks() {
     $('.pll-translation-column').each(function () {
-      var languageRow = $(this).parent();
-      var languageCode = languageRow
-        .find('.pll-translation-column input')
+      var translationColumn = $(this);
+      var languageCode = translationColumn
+        .find('*[lang]')
         .first()
-        .attr('id')
-        .replace('htr_lang_', '');
+        .attr('lang');
 
-      languageRow.after(template.orderLinkRow({targetLanguageCode: languageCode}));
+      var targetLanguageCode = languageCode.substr(0, languageCode.indexOf("-"));
+
+      translationColumn.parent().after(template.orderLinkRow({targetLanguageCode: targetLanguageCode}));
     });
   }
 
@@ -1348,7 +1349,8 @@ Supertext.Polylang = (function (win, doc, $) {
       }
     },
     openOrderForm: openOrderForm,
-    sendSyncRequest: sendSyncRequest
+    sendSyncRequest: sendSyncRequest,
+    injectOrderLinks: injectOrderLinks
   };
 
 })(window, document, jQuery);

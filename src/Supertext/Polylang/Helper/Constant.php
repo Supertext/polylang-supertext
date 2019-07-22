@@ -94,6 +94,10 @@ class Constant
    */
   const JSTREE_SCRIPT_HANDLE = 'polylang-supertext-jstree-scripts';
   /**
+   * @var string the block editor extension script handle
+   */
+  const BLOCK_EDITOR_SCRIPT_HANDLE = 'polylang-supertext-block-editor-scripts';
+  /**
    * @var string the jquery ui complete handle
    */
   const JQUERY_UI_AUTOCOMPLETE = 'jquery-ui-autocomplete';
