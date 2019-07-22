@@ -7,7 +7,6 @@
 }
 
 .postbox_admin {
-
   h3 {
     padding: 3px;
   }
@@ -18,17 +17,17 @@
 }
 
 .nav-tab-wrapper .button-tab-nav {
-  float:right;
+  float: right;
 }
 
 .postbox {
-
   table th {
     text-align: left;
     font-weight: bold;
   }
 
-  input, select {
+  input,
+  select {
     font-size: 13px;
   }
 
@@ -42,8 +41,7 @@
 }
 
 #shortcodesSettingsForm {
-
-  .shortcode-setting-container{
+  .shortcode-setting-container {
     max-width: 780px;
     margin: 10px 0;
     background: #ddd;
@@ -53,7 +51,7 @@
     float: left;
     padding: 10px;
 
-    input{
+    input {
       width: 154px;
     }
   }
@@ -66,17 +64,16 @@
     margin-bottom: 5px;
   }
 
-  .shortcode-remove-setting{
+  .shortcode-remove-setting {
     margin: 0 0 10px 10px;
   }
 
-  .shortcode-attribute-add-input{
+  .shortcode-attribute-add-input {
     margin-top: 0px;
   }
 }
 
 #translatablefieldsSettingsForm {
-
   .custom-field-input {
     margin-bottom: 3px;
   }
@@ -90,4 +87,3 @@
     vertical-align: bottom;
   }
 }
-

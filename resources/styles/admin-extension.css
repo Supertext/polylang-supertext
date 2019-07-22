@@ -208,7 +208,8 @@
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
 
-.sttr-modal input, .sttr-modal select {
+.sttr-modal input,
+.sttr-modal select {
   font-size: 13px; }
 
 .sttr-order-progress-bar {
@@ -248,7 +249,7 @@
   line-height: 30px;
   font-size: 13px;
   background: #ddd;
-  border: 2px solid #FFF;
+  border: 2px solid #fff;
   border-radius: 50%;
   -webkit-box-shadow: 0 0 0 2px #ddd;
   box-shadow: 0 0 0 2px #ddd;
@@ -390,8 +391,14 @@
   padding: 2px 20px;
   display: block; }
 
-.sttr-order-item-quote table tbody tr:not(.first-group-row):not(.last-group-row):hover,
-.sttr-order-item-quote table tbody tr:not(.first-group-row):not(.last-group-row):focus {
+.sttr-order-item-quote
+table
+tbody
+tr:not(.first-group-row):not(.last-group-row):hover,
+.sttr-order-item-quote
+table
+tbody
+tr:not(.first-group-row):not(.last-group-row):focus {
   background-color: rgba(0, 0, 0, 0.08);
   cursor: pointer; }
 

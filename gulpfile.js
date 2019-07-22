@@ -4,7 +4,7 @@ var
   gulp = require('gulp'),
   sass = require('gulp-sass'),
   autoprefixer = require('gulp-autoprefixer'),
-  minifyCSS = require('gulp-minify-css'),
+  cleanCSS = require('gulp-clean-css'),
   rename = require('gulp-rename'),
   header = require('gulp-header'),
   jshint = require('gulp-jshint'),
@@ -39,7 +39,7 @@ function styles() {
       packageInfo: packageInfo
     }))
     .pipe(gulp.dest(paths.stylesDir))
-    .pipe(minifyCSS())
+    .pipe(cleanCSS())
     .pipe(rename({
       suffix: '.min'
     }))

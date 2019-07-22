@@ -57,29 +57,29 @@
   background: #fff;
 }
 
-.sttr-modal-content hr{
+.sttr-modal-content hr {
   margin-top: 15px;
 }
 
-.sttr-modal-content h2{
+.sttr-modal-content h2 {
   font-size: 14px;
 }
 
 @-webkit-keyframes sttr-appear {
   from {
-    opacity: 0
+    opacity: 0;
   }
   to {
-    opacity: 1
+    opacity: 1;
   }
 }
 
 @keyframes sttr-appear {
   from {
-    opacity: 0
+    opacity: 0;
   }
   to {
-    opacity: 1
+    opacity: 1;
   }
 }
 
@@ -92,7 +92,7 @@
   top: 102px;
 }
 
-.sttr-modal-notice .notice{
+.sttr-modal-notice .notice {
   margin: 0;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
@@ -104,19 +104,19 @@
 
 @-webkit-keyframes sttr-appear {
   from {
-    opacity: 0
+    opacity: 0;
   }
   to {
-    opacity: 1
+    opacity: 1;
   }
 }
 
 @keyframes sttr-appear {
   from {
-    opacity: 0
+    opacity: 0;
   }
   to {
-    opacity: 1
+    opacity: 1;
   }
 }
 
@@ -126,8 +126,8 @@
   right: 0;
   width: 50px;
   height: 50px;
-  padding:0;
-  margin:0;
+  padding: 0;
+  margin: 0;
   font-size: 20px;
   font-weight: bold;
   text-align: center;
@@ -147,9 +147,9 @@
   cursor: pointer;
 }
 
-.sttr-modal-icon-close .dashicons{
-  padding:5px;
-  margin:0;
+.sttr-modal-icon-close .dashicons {
+  padding: 5px;
+  margin: 0;
 }
 
 .sttr-modal-header {
@@ -165,7 +165,7 @@
   line-height: 50px;
 }
 
-.sttr-modal-header .logo{
+.sttr-modal-header .logo {
   float: left;
   padding: 9px 0 0 10px;
 }
@@ -173,8 +173,8 @@
 .sttr-modal-body {
   position: absolute;
   left: 0;
-  top:50px;
-  right:0;
+  top: 50px;
+  right: 0;
   bottom: 61px;
   margin: 0;
   padding: 0 16px;
@@ -184,7 +184,7 @@
   overflow: auto;
 }
 
-.sttr-modal-body .loader{
+.sttr-modal-body .loader {
   position: absolute;
   top: 49%;
   left: 0;
@@ -193,7 +193,7 @@
   text-align: center;
 }
 
-.sttr-modal-body .loader .spin{
+.sttr-modal-body .loader .spin {
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -206,10 +206,10 @@
 
 .sttr-modal-full-body {
   position: absolute;
-  left:0;
-  top:50px;
-  right:0;
-  bottom:0;
+  left: 0;
+  top: 50px;
+  right: 0;
+  bottom: 0;
   margin: 0;
   padding: 16px 16px 0 16px;
   border-top: 1px solid #ddd;
@@ -237,7 +237,8 @@
   }
 }
 
-.sttr-modal input, .sttr-modal select{
+.sttr-modal input,
+.sttr-modal select {
   font-size: 13px;
 }
 
@@ -283,7 +284,7 @@
   line-height: 30px;
   font-size: 13px;
   background: #ddd;
-  border: 2px solid #FFF;
+  border: 2px solid #fff;
   border-radius: 50%;
   -webkit-box-shadow: 0 0 0 2px #ddd;
   -moz-box-shadow: 0 0 0 2px #ddd;
@@ -330,7 +331,7 @@
   content: "6";
 }
 
-.sttr-order-list{
+.sttr-order-list {
   margin-left: 300px;
   border: 2px solid #ddd;
 }
@@ -357,7 +358,7 @@
     margin-left: 150px;
   }
 
-  .sttr-order-items{
+  .sttr-order-items {
     width: 149px;
     margin-left: -150px;
   }
@@ -371,9 +372,9 @@
 }
 
 .sttr-order-items ul,
-.sttr-order-items li{
-  margin:0;
-  padding:0;
+.sttr-order-items li {
+  margin: 0;
+  padding: 0;
 }
 
 .sttr-order-items li a {
@@ -386,8 +387,7 @@
 }
 
 .sttr-order-items li a:focus,
-.sttr-order-items li a:hover
-{
+.sttr-order-items li a:hover {
   box-shadow: none;
   border-color: #eee;
 }
@@ -400,20 +400,20 @@
   color: #444;
 }
 
-.sttr-order-items li.hasError a{
+.sttr-order-items li.hasError a {
   color: red;
 }
 
-.sttr-order-items li a .dashicons-no-alt{
+.sttr-order-items li a .dashicons-no-alt {
   float: right;
   visibility: hidden;
 }
 
-.sttr-order-items li a:hover .dashicons-no-alt{
+.sttr-order-items li a:hover .dashicons-no-alt {
   visibility: visible;
 }
 
-.sttr-order-items li.active a:hover .dashicons-no-alt{
+.sttr-order-items li.active a:hover .dashicons-no-alt {
   visibility: hidden;
 }
 
@@ -438,7 +438,7 @@
 
   .column {
     width: 50%;
-    float:left;
+    float: left;
   }
 }
 
@@ -450,43 +450,48 @@
   }
 }
 
-.sttr-order-list .button{
-  float:right;
+.sttr-order-list .button {
+  float: right;
   margin: 0 16px 16px 0;
 }
 
-.sttr-order-list .remove-item .dashicons{
+.sttr-order-list .remove-item .dashicons {
   margin-top: 4px;
 }
 
-.sttr-order-item-quote table{
-
+.sttr-order-item-quote table {
 }
 
-.sttr-order-item-quote table tbody tr input{
+.sttr-order-item-quote table tbody tr input {
   padding-right: 0;
   margin-right: 0;
 }
-.sttr-order-item-quote table tbody tr label{
+.sttr-order-item-quote table tbody tr label {
   padding: 2px 20px;
   display: block;
 }
-.sttr-order-item-quote table tbody tr:not(.first-group-row):not(.last-group-row):hover,
-.sttr-order-item-quote table tbody tr:not(.first-group-row):not(.last-group-row):focus{
+.sttr-order-item-quote
+  table
+  tbody
+  tr:not(.first-group-row):not(.last-group-row):hover,
+.sttr-order-item-quote
+  table
+  tbody
+  tr:not(.first-group-row):not(.last-group-row):focus {
   background-color: rgba(0, 0, 0, 0.08);
-  cursor: pointer
+  cursor: pointer;
 }
-.sttr-order-item-quote table thead td{
+.sttr-order-item-quote table thead td {
   padding: 0 10px;
 }
-.sttr-order-item-quote table tbody td{
+.sttr-order-item-quote table tbody td {
   padding: 0;
   margin: 0;
 }
 .sttr-order-item-quote table tbody tr.first-group-row td {
   padding-top: 5px;
 }
-.sttr-order-item-quote table tbody tr + tr.first-group-row td{
+.sttr-order-item-quote table tbody tr + tr.first-group-row td {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   padding-top: 8px;
 }
@@ -495,18 +500,18 @@
   height: 8px;
   overflow: hidden;
 }
-.sttr-order-item-quote table tbody .quality-group-cell{
+.sttr-order-item-quote table tbody .quality-group-cell {
   vertical-align: top;
   padding-right: 10px;
 }
-.sttr-order-item-quote table .selection-cell{
-  margin:0;
+.sttr-order-item-quote table .selection-cell {
+  margin: 0;
   padding-right: 2px;
   overflow: hidden;
 }
 
-.sttr-item-content img{
-  display:none;
+.sttr-item-content img {
+  display: none;
 }
 
 .sttr-item-content pre {
@@ -519,7 +524,7 @@
 }
 
 .sttr-modal-footer {
-  position:absolute;
+  position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
@@ -529,7 +534,7 @@
   overflow: hidden;
 }
 
-.sttr-modal-footer .button{
+.sttr-modal-footer .button {
   float: right;
   margin-top: 15px;
   margin-left: 10px;

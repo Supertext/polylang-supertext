@@ -22,7 +22,8 @@
   text-align: left;
   font-weight: bold; }
 
-.postbox input, .postbox select {
+.postbox input,
+.postbox select {
   font-size: 13px; }
 
 .postbox .button-add {
