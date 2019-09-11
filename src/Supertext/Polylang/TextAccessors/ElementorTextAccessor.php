@@ -14,7 +14,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
   /**
    * @var Array the text keys of the settings array
    */
-  private static $textKeys = array('editor', 'caption', 'title', 'text');
+  private static $textKeys = array('editor', 'caption', 'title', 'text', 'html');
 
   /**
    * @var TextProcessor the text processor
