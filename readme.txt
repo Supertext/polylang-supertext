@@ -92,6 +92,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 3.14 =
+* Added support for Elementor
+
 = 3.13 =
 * Fixed order links for new Polylang block editor sidebar
 * Upgraded npm dependencies for gulp
