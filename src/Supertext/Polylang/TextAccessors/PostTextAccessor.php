@@ -15,11 +15,20 @@ class PostTextAccessor implements ITextAccessor
   private $textProcessor;
 
   /**
+   * @var bool
+   */
+  private $isPostContentCheckedPerDefault = true;
+
+  /**
    * @param TextProcessor $textProcessor
    */
   public function __construct($textProcessor)
   {
     $this->textProcessor = $textProcessor;
+  }
+
+  public function uncheckPostContentPerDefault(){
+    $this->isPostContentCheckedPerDefault = false;
   }
 
   /**
@@ -48,7 +57,7 @@ class PostTextAccessor implements ITextAccessor
     $translatableFields[] = array(
       'title' => __('Content', 'polylang-supertext'),
       'name' => 'post_content',
-      'checkedPerDefault' => true
+      'checkedPerDefault' => $this->isPostContentCheckedPerDefault
     );
 
     $translatableFields[] = array(

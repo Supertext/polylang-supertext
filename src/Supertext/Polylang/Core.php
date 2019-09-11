@@ -311,6 +311,7 @@ class Core
     }
 
     if ($library->isPluginActive('beaver-builder-lite-version/fl-builder.php') || $library->isPluginActive('bb-plugin/fl-builder.php')) {
+      $textAccessors['post']->uncheckPostContentPerDefault();
       $textAccessors['beaver_builder'] = new BeaverBuilderTextAccessor($textProcessor);
     }
 
@@ -327,6 +328,7 @@ class Core
     }
 
     if ($library->isPluginActive('elementor/elementor.php')) {
+      $textAccessors['post']->uncheckPostContentPerDefault();
       $textAccessors['elementor'] = new ElementorTextAccessor($textProcessor);
     }
 
