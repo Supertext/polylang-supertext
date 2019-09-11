@@ -16,6 +16,7 @@ use Supertext\Polylang\TextAccessors\AllInOneSeoPackTextAccessor;
 use Supertext\Polylang\TextAccessors\BeaverBuilderTextAccessor;
 use Supertext\Polylang\TextAccessors\BePageBuilderTextAccessor;
 use Supertext\Polylang\TextAccessors\CustomFieldsTextAccessor;
+use Supertext\Polylang\TextAccessors\ElementorTextAccessor;
 use Supertext\Polylang\TextAccessors\DiviBuilderTextAccessor;
 use Supertext\Polylang\TextAccessors\ITextAccessor;
 use Supertext\Polylang\TextAccessors\PostTextAccessor;
@@ -323,6 +324,10 @@ class Core
 
     if ($library->isPluginActive('divi-builder/divi-builder.php')) {
       $textAccessors['post'] = new DiviBuilderTextAccessor($textProcessor, $library);
+    }
+
+    if ($library->isPluginActive('elementor/elementor.php')) {
+      $textAccessors['elementor'] = new ElementorTextAccessor($textProcessor);
     }
 
     return $textAccessors;
