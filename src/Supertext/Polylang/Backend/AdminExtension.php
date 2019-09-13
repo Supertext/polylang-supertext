@@ -44,6 +44,11 @@ class AdminExtension
   private $screenAction = null;
 
   /**
+   * @var bool
+   */
+  private $isBlockEditor = false;
+
+  /**
    * @var null|array
    */
   private $currentPostId = null;
@@ -98,6 +103,7 @@ class AdminExtension
   {
     $this->screenBase = $screen->base;
     $this->screenAction = empty($screen->action) ? empty($_GET['action']) ? '' : $_GET['action'] : $screen->action;
+    $this->isBlockEditor = method_exists($screen, 'is_block_editor') && $screen->is_block_editor();
     $this->currentPostId = isset($_GET['post']) ? intval($_GET['post']) : 0;
     $this->isCurrentPostInTranslation = isset($_GET['post'])  && TranslationMeta::of($this->currentPostId)->is(TranslationMeta::IN_TRANSLATION);
   }
@@ -121,6 +127,9 @@ class AdminExtension
       wp_enqueue_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE);
 
       wp_enqueue_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE);
+    }
+
+    if($this->isEditPostScreen() && $this->isBlockEditor){
       wp_enqueue_script(Constant::BLOCK_EDITOR_SCRIPT_HANDLE);
     }
   }
