@@ -94,6 +94,7 @@ Did you translate the site title but it is still displayed in only one language?
 
 = 3.14 =
 * Added support for Elementor
+* Fixed enqueuing block editor script on block editor page only
 
 = 3.13 =
 * Fixed order links for new Polylang block editor sidebar
