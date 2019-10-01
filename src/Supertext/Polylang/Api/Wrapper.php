@@ -273,7 +273,7 @@ class Wrapper
           break;
         }
 
-        if (!isset($groupArray[$key])) {
+        if (!isset($currentArray[$key])) {
           $currentArray[$key] = array();
         }
 
