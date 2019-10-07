@@ -61,7 +61,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
    */
   public function getRawTexts($post)
   {
-    return Plugin::$instance->documents->get( $post->ID )->get_json_meta( '_elementor_data' );
+    return $this->getElementorData($post->ID);
   }
 
   /**
@@ -77,7 +77,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
       return $texts;
     }
 
-    $elements = Plugin::$instance->documents->get( $post->ID )->get_json_meta( '_elementor_data' );
+    $elements = $this->getElementorData($post->ID);
 
     $texts = $this->getTextProperties($elements);
 
@@ -90,11 +90,11 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
    */
   public function setTexts($post, $texts)
   {
-    $elements = Plugin::$instance->documents->get( $post->ID )->get_json_meta( '_elementor_data' );
+    $elements = $this->getElementorData($post->ID);
 
     $this->setTextProperties($elements, $texts);
 
-    update_post_meta($post->ID, '_elementor_data', json_encode($elements));
+    update_post_meta($post->ID, '_elementor_data', wp_slash(json_encode($elements)));
   }
 
   /**
@@ -105,7 +105,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
   public function getContentMetaData($post, $selectedTranslatableFields)
   {
     return array(
-      '_elementor_data' => get_post_meta($post->ID, '_elementor_data', true),
+      '_elementor_data' => $this->getElementorData($post->ID),
       '_elementor_template_type' => get_post_meta($post->ID, '_elementor_template_type', true),
       '_elementor_controls_usage' => get_post_meta($post->ID, '_elementor_controls_usage', true),
       '_elementor_css' => get_post_meta($post->ID, '_elementor_css', true)
@@ -118,10 +118,15 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
    */
   public function setContentMetaData($post, $translationMetaData)
   {
-    update_post_meta($post->ID, '_elementor_data', $translationMetaData['_elementor_data']);
+    update_post_meta($post->ID, '_elementor_data', wp_slash(json_encode($translationMetaData['_elementor_data'])));
     update_post_meta($post->ID, '_elementor_template_type', $translationMetaData['_elementor_template_type']);
     update_post_meta($post->ID, '_elementor_controls_usage', $translationMetaData['_elementor_controls_usage']);
     update_post_meta($post->ID, '_elementor_css', $translationMetaData['_elementor_css']);
+  }
+
+  private function getElementorData($postId)
+  {
+    return  json_decode(get_post_meta($postId, '_elementor_data', true), true);
   }
 
   /**
@@ -133,18 +138,17 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
     $texts = array();
 
     foreach ($elements as $index => $element) {
-      if(is_array($element['elements']) && count($element['elements'])){
+      if (is_array($element['elements']) && count($element['elements'])) {
         $texts[$index]['elements'] = $this->getTextProperties($element['elements']);
       }
 
       $settings = $element['settings'];
 
-      foreach(ElementorTextAccessor::$textKeys as $textKey){
-        if(isset($settings[$textKey])){
+      foreach (ElementorTextAccessor::$textKeys as $textKey) {
+        if (isset($settings[$textKey])) {
           $texts[$index]['settings'][$textKey] = $this->textProcessor->replaceShortcodes($settings[$textKey]);
         }
       }
-    
     }
 
     return $texts;
@@ -157,7 +161,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
   private function setTextProperties(&$entries, $texts)
   {
     foreach ($texts as $key => $value) {
-      if(is_array($value)){
+      if (is_array($value)) {
         $this->setTextProperties($entries[$key], $value);
         continue;
       }
