@@ -142,12 +142,41 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
         $texts[$index]['elements'] = $this->getTextProperties($element['elements']);
       }
 
-      $settings = $element['settings'];
+      if(!isset($element['settings'])){
+        continue;
+      }
 
-      foreach (ElementorTextAccessor::$textKeys as $textKey) {
-        if (isset($settings[$textKey])) {
-          $texts[$index]['settings'][$textKey] = $this->textProcessor->replaceShortcodes($settings[$textKey]);
+      $settingsTexts = $this->getSettingsTextProperties($element['settings']);
+
+      if (empty($settingsTexts)) {
+        continue;
+      }
+
+      $texts[$index]['settings'] = $settingsTexts;
+    }
+
+    return $texts;
+  }
+
+  private function getSettingsTextProperties($settings)
+  {
+    $texts = array();
+
+    foreach (array_keys($settings) as $settingsKey) {
+      $value = $settings[$settingsKey];
+
+      if (is_array($value)) {
+        $subTexts = $this->getSettingsTextProperties($value);
+
+        if (!empty($subTexts)) {
+          $texts[$settingsKey] = $subTexts;
         }
+
+        continue;
+      }
+
+      if (in_array($settingsKey, ElementorTextAccessor::$textKeys)) {
+        $texts[$settingsKey] = $this->textProcessor->replaceShortcodes($value);
       }
     }
 
