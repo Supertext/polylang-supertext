@@ -92,6 +92,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 3.15 =
+* Fixed Elementor page builder bugs
+
 = 3.14 =
 * Added support for Elementor
 * Fixed enqueuing block editor script on block editor page only
