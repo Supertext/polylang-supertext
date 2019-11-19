@@ -113,4 +113,8 @@ class Constant
    * @var string default post status for translation posts.
    */
   const TRANSLATION_POST_STATUS = 'draft';
+  /**
+   * @var string tag filter for translatable block attributes.
+   */
+  const FILTER_TRANSLATABLE_BLOCK_ATTRIBUTES = 'sttr_translatable_block_attributes';
 }

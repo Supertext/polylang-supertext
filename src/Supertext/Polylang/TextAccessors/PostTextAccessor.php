@@ -2,6 +2,7 @@
 
 namespace Supertext\Polylang\TextAccessors;
 
+use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TextProcessor;
 
 /**
@@ -99,7 +100,8 @@ class PostTextAccessor implements ITextAccessor
 
     if ($selectedTranslatableFields['post_content'] && use_block_editor_for_post($post)) {
       $blocks = parse_blocks($post->post_content);
-      $texts['post_content_block_attributes'] = $this->getBlockAttributes($blocks);
+      $translatableBlockAttributes = apply_filters(Constant::FILTER_TRANSLATABLE_BLOCK_ATTRIBUTES, array());
+      $texts['post_content_block_attributes'] = $this->getBlockAttributes($blocks, $translatableBlockAttributes);
     }
 
     if ($selectedTranslatableFields['post_excerpt']) {
@@ -131,20 +133,27 @@ class PostTextAccessor implements ITextAccessor
     }
   }
 
-  private function getBlockAttributes($blocks)
+  private function getBlockAttributes($blocks, $translatableBlockAttributes)
   {
     $blockAttributes = array();
 
     foreach ($blocks as $index => $block) {
       if(!empty($block['innerBlocks'])){
-        $blockAttributes[$index]['inner-blocks'] = getBlockAttributes($block['innerBlocks']);
+        $innerBlockAttributes = getBlockAttributes($block['innerBlocks']);
+        
+        if(!empty($innerBlockAttributes)){
+          $blockAttributes[$index]['inner-blocks'] = $innerBlockAttributes;
+        }
       }
 
-      if (empty($block['attrs'])) {
+      $blockName = $block['blockName'];
+
+      if(empty($block['attrs']) || !isset($translatableBlockAttributes[$blockName]))
+      {
         continue;
       }
 
-      $blockAttributesTexts = $this->getBlockAttributesTexts($block['attrs']);
+      $blockAttributesTexts = $this->getBlockAttributesTexts($block['attrs'], $translatableBlockAttributes[$blockName]);
 
       if (empty($blockAttributesTexts)) {
         continue;
@@ -156,12 +165,12 @@ class PostTextAccessor implements ITextAccessor
     return $blockAttributes;
   }
 
-  private function getBlockAttributesTexts($attributes)
+  private function getBlockAttributesTexts($attributes, $translatableBlockAttributeKeys)
   {
     $blockAttributesTexts = array();
 
     foreach ($attributes as $key => $value) {
-      if (!is_string($value)) {
+      if (!in_array($key, $translatableBlockAttributeKeys)) {
         continue;
       }
 
