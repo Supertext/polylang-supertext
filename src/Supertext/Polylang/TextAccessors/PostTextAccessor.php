@@ -136,18 +136,17 @@ class PostTextAccessor implements ITextAccessor
   private function getBlockAttributes($blocks, $translatableBlockAttributes)
   {
     $blockAttributes = array();
-
     foreach ($blocks as $index => $block) {
       if (!empty($block['innerBlocks'])) {
-        $innerBlockAttributes = getBlockAttributes($block['innerBlocks']);
+        $innerBlockAttributes = $this->getBlockAttributes($block['innerBlocks'], $translatableBlockAttributes);
 
         if (!empty($innerBlockAttributes)) {
-          $blockAttributes[$index]['inner-blocks'] = $innerBlockAttributes;
+          $blockAttributes[$index] = array('inner-blocks' => $innerBlockAttributes);
         }
       }
 
       $blockName = $block['blockName'];
-
+    
       if (empty($block['attrs']) || !isset($translatableBlockAttributes[$blockName])) {
         continue;
       }
@@ -158,7 +157,11 @@ class PostTextAccessor implements ITextAccessor
         continue;
       }
 
-      $blockAttributes[$index] = $blockAttributesTexts;
+      if(isset($blockAttributes[$index])){
+        $blockAttributes[$index]['attrs'] = $blockAttributesTexts;
+      }else{
+        $blockAttributes[$index] = array('attrs' => $blockAttributesTexts);
+      }
     }
 
     return $blockAttributes;
@@ -179,7 +182,7 @@ class PostTextAccessor implements ITextAccessor
     return $blockAttributesTexts;
   }
 
-  public function setTranslatableBlockAttributes($blockAttributes, $blocks, $content)
+  private function setTranslatableBlockAttributes($blockAttributes, $blocks, $content)
   {
     $newContent = $content;
 
@@ -189,13 +192,12 @@ class PostTextAccessor implements ITextAccessor
       }
 
       $blockName = str_replace('/', '\/', str_replace('core/', '', $block['blockName']));
+ 
+      if(isset($blockAttributes[$index]['inner-blocks'])){
+        $newContent = $this->setTranslatableBlockAttributes($blockAttributes[$index]['inner-blocks'], $block['innerBlocks'], $newContent);
+      }
 
-      foreach ($blockAttributes[$index] as $key => $value) {
-        if ($key === 'inner-blocks') {
-          $newContent = setTranslatableBlockAttributes($blockAttributes[$index]['inner-blocks'], $block['innerBlocks'], $newContent);
-          continue;
-        }
-
+      foreach ($blockAttributes[$index]['attrs'] as $key => $value) {
         $oldValue = $block['attrs'][$key];
         $regex = "/(<!--\s*wp:$blockName\s*{.*\"$key\"\s*:\s*)\"$oldValue\"/";
         $newContent = preg_replace($regex, "$1\"$value\"", $newContent);
