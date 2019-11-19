@@ -119,7 +119,7 @@ class PostTextAccessor implements ITextAccessor
   {
     foreach ($texts as $id => $text) {
       if ($id === 'post_content_block_attributes') {
-        $post->post_content = $this->setTranslatableBlockAttributes($text, $post->post_content);
+        $post->post_content = $this->setTranslatableBlockAttributes($text, parse_blocks($post->post_content), $post->post_content);
         continue;
       }
 
@@ -138,18 +138,17 @@ class PostTextAccessor implements ITextAccessor
     $blockAttributes = array();
 
     foreach ($blocks as $index => $block) {
-      if(!empty($block['innerBlocks'])){
+      if (!empty($block['innerBlocks'])) {
         $innerBlockAttributes = getBlockAttributes($block['innerBlocks']);
-        
-        if(!empty($innerBlockAttributes)){
+
+        if (!empty($innerBlockAttributes)) {
           $blockAttributes[$index]['inner-blocks'] = $innerBlockAttributes;
         }
       }
 
       $blockName = $block['blockName'];
 
-      if(empty($block['attrs']) || !isset($translatableBlockAttributes[$blockName]))
-      {
+      if (empty($block['attrs']) || !isset($translatableBlockAttributes[$blockName])) {
         continue;
       }
 
@@ -180,51 +179,29 @@ class PostTextAccessor implements ITextAccessor
     return $blockAttributesTexts;
   }
 
-  private function setTranslatableBlockAttributes($blockAttributes, $content)
+  public function setTranslatableBlockAttributes($blockAttributes, $blocks, $content)
   {
-    $newContent = '';
-    $blocks = parse_blocks($content);
+    $newContent = $content;
 
     foreach ($blocks as $index => $block) {
-      if (isset($blockAttributes[$index])) {
-        foreach ($blockAttributes[$index] as $key => $value) {
-          $block['attrs'][$key] = $value;
-        }
+      if (!isset($blockAttributes[$index])) {
+        continue;
       }
 
-      $newContent .= $this->serializeBlock($block);
+      $blockName = str_replace('/', '\/', str_replace('core/', '', $block['blockName']));
+
+      foreach ($blockAttributes[$index] as $key => $value) {
+        if ($key === 'inner-blocks') {
+          $newContent = setTranslatableBlockAttributes($blockAttributes[$index]['inner-blocks'], $block['innerBlocks'], $newContent);
+          continue;
+        }
+
+        $oldValue = $block['attrs'][$key];
+        $regex = "/(<!--\s*wp:$blockName\s*{.*\"$key\"\s*:\s*)\"$oldValue\"/";
+        $newContent = preg_replace($regex, "$1\"$value\"", $newContent);
+      }
     }
 
     return $newContent;
-  }
-
-  private function serializeBlock($block)
-  {
-    if (!isset($block['blockName'])) {
-      return false;
-    }
-    $name = $block['blockName'];
-    if (0 === strpos($name, 'core/')) {
-      $name = substr($name, strlen('core/'));
-    }
-    if (empty($block['attrs'])) {
-      $opening_tag_suffix = '';
-    } else {
-      $opening_tag_suffix = ' ' . json_encode($block['attrs']);
-    }
-    if (empty($block['innerHTML'])) {
-      return sprintf(
-        '<!-- wp:%s%s /-->',
-        $name,
-        $opening_tag_suffix
-      );
-    } else {
-      return sprintf(
-        '<!-- wp:%1$s%2$s -->%3$s<!-- /wp:%1$s -->',
-        $name,
-        $opening_tag_suffix,
-        $block['innerHTML']
-      );
-    }
   }
 }
