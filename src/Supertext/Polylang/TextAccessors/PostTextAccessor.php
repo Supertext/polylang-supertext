@@ -98,7 +98,8 @@ class PostTextAccessor implements ITextAccessor
     }
 
     if ($selectedTranslatableFields['post_content'] && use_block_editor_for_post($post)) {
-      $texts['post_content_block_attributes'] = $this->getTranslatableBlockAttributes($post);
+      $blocks = parse_blocks($post->post_content);
+      $texts['post_content_block_attributes'] = $this->getBlockAttributes($blocks);
     }
 
     if ($selectedTranslatableFields['post_excerpt']) {
@@ -130,51 +131,54 @@ class PostTextAccessor implements ITextAccessor
     }
   }
 
-  private function getTranslatableBlockAttributes($post)
+  private function getBlockAttributes($blocks)
   {
-    $translatableBlockAttributes = array();
-    $blocks = parse_blocks($post->post_content);
+    $blockAttributes = array();
 
     foreach ($blocks as $index => $block) {
+      if(!empty($block['innerBlocks'])){
+        $blockAttributes[$index]['inner-blocks'] = getBlockAttributes($block['innerBlocks']);
+      }
+
       if (empty($block['attrs'])) {
         continue;
       }
 
-      $translatableBlockAttributesTexts = $this->getTranslatableBlockAttributesTexts($block['attrs']);
+      $blockAttributesTexts = $this->getBlockAttributesTexts($block['attrs']);
 
-      if (empty($translatableBlockAttributesTexts)) {
+      if (empty($blockAttributesTexts)) {
         continue;
       }
 
-      $translatableBlockAttributes[$index] = $translatableBlockAttributesTexts;
+      $blockAttributes[$index] = $blockAttributesTexts;
     }
 
-    return $translatableBlockAttributes;
+    return $blockAttributes;
   }
 
-  private function getTranslatableBlockAttributesTexts($attributes)
+  private function getBlockAttributesTexts($attributes)
   {
-    $translatableBlockAttributesTexts = array();
+    $blockAttributesTexts = array();
 
     foreach ($attributes as $key => $value) {
       if (!is_string($value)) {
         continue;
       }
 
-      $translatableBlockAttributesTexts[$key] = $value;
+      $blockAttributesTexts[$key] = $value;
     }
 
-    return $translatableBlockAttributesTexts;
+    return $blockAttributesTexts;
   }
 
-  private function setTranslatableBlockAttributes($translatableBlockAttributes, $content)
+  private function setTranslatableBlockAttributes($blockAttributes, $content)
   {
     $newContent = '';
     $blocks = parse_blocks($content);
 
     foreach ($blocks as $index => $block) {
-      if (isset($translatableBlockAttributes[$index])) {
-        foreach ($translatableBlockAttributes[$index] as $key => $value) {
+      if (isset($blockAttributes[$index])) {
+        foreach ($blockAttributes[$index] as $key => $value) {
           $block['attrs'][$key] = $value;
         }
       }
