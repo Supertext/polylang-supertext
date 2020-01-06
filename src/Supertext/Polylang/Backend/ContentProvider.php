@@ -63,7 +63,7 @@ class ContentProvider
     foreach ($this->textAccessors as $id => $textAccessor) {
       $texts = $textAccessor->getRawTexts($post);
 
-      if (count($texts) === 0) {
+      if (empty($texts)) {
         continue;
       }
 
