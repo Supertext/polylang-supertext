@@ -117,19 +117,22 @@ class PostTextAccessor implements ITextAccessor
    */
   public function setTexts($post, $texts)
   {
-    foreach ($texts as $id => $text) {
-      if ($id === 'post_content_block_attributes') {
-        $post->post_content = $this->setTranslatableBlockAttributes($text, parse_blocks($post->post_content), $post->post_content);
-        continue;
+    if (isset($texts['post_content'])) {
+      $decodedContent = html_entity_decode($texts['post_content'], ENT_COMPAT | ENT_HTML401, 'UTF-8');
+
+      if (isset($texts['post_content_block_attributes'])) {
+        $decodedContent = $this->setTranslatableBlockAttributes($texts['post_content_block_attributes'], parse_blocks($decodedContent), $decodedContent);
       }
 
-      $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+      $post->post_content = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+    }
 
-      if ($id === 'post_content') {
-        $decodedContent = $this->textProcessor->replaceShortcodeNodes($decodedContent);
-      }
+    if (isset($texts['post_title'])) {
+      $post->post_title = html_entity_decode($texts['post_title'], ENT_COMPAT | ENT_HTML401, 'UTF-8');
+    }
 
-      $post->{$id} = $decodedContent;
+    if (isset($texts['post_excerpt'])) {
+      $post->post_excerpt = html_entity_decode($texts['post_excerpt'], ENT_COMPAT | ENT_HTML401, 'UTF-8');
     }
   }
 
@@ -146,7 +149,7 @@ class PostTextAccessor implements ITextAccessor
       }
 
       $blockName = $block['blockName'];
-    
+
       if (empty($block['attrs']) || !isset($translatableBlockAttributes[$blockName])) {
         continue;
       }
@@ -157,9 +160,9 @@ class PostTextAccessor implements ITextAccessor
         continue;
       }
 
-      if(isset($blockAttributes[$index])){
+      if (isset($blockAttributes[$index])) {
         $blockAttributes[$index]['attrs'] = $blockAttributesTexts;
-      }else{
+      } else {
         $blockAttributes[$index] = array('attrs' => $blockAttributesTexts);
       }
     }
@@ -192,8 +195,8 @@ class PostTextAccessor implements ITextAccessor
       }
 
       $blockName = str_replace('/', '\/', str_replace('core/', '', $block['blockName']));
- 
-      if(isset($blockAttributes[$index]['inner-blocks'])){
+
+      if (isset($blockAttributes[$index]['inner-blocks'])) {
         $newContent = $this->setTranslatableBlockAttributes($blockAttributes[$index]['inner-blocks'], $block['innerBlocks'], $newContent);
       }
 
