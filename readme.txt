@@ -92,6 +92,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 3.17 =
+* Switched to new order API version 1.1
+
 = 3.16 =
 * Added support for block attributes
 

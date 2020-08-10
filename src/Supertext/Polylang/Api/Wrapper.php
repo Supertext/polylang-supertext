@@ -25,7 +25,7 @@ class Wrapper
    */
   public static function getLanguageMapping($apiClient, $languageCode, $languageName)
   {
-    $httpResult = $apiClient->postRequest('translation/LanguageMapping/' . $languageCode);
+    $httpResult = $apiClient->postRequest('v1/translation/LanguageMapping/' . $languageCode);
 
     $json = json_decode($httpResult);
 
@@ -69,7 +69,7 @@ class Wrapper
       'ServiceTypeId' => $serviceType
     );
 
-    $httpResult = $apiClient->postRequest('translation/quote', json_encode($json), true);
+    $httpResult = $apiClient->postRequest('v1/translation/quote', json_encode($json), true);
     $json = json_decode($httpResult);
 
     if ($json->WordCount == 0) {
@@ -104,7 +104,7 @@ class Wrapper
       }
 
       $result['options'][] = array(
-        'id' => $option->OrderTypeId,
+        'id' => $option->OrderTypeConfigurationId,
         'name' => trim($option->Name),
         'items' => $deliveryOptions
       );
@@ -138,7 +138,7 @@ class Wrapper
       'Currency' => 'eur',
       'DeliveryId' => $product[1],
       'OrderName' => $title,
-      'OrderTypeId' => $product[0],
+      'OrderTypeConfigurationId' => $product[0],
       'ReferenceData' => $referenceData,
       'Referrer' => 'WordPress Supertext Plugin',
       'SystemName' => get_bloginfo('name'),
@@ -152,14 +152,15 @@ class Wrapper
       'ServiceTypeId' => $serviceType
     );
 
-    $httpResult = $apiClient->postRequest('translation/order', json_encode($json), true);
+    $httpResult = $apiClient->postRequest('v1.1/translation/order', json_encode($json), true);
     $json = json_decode($httpResult);
+    $order = $json[0];
 
-    if (empty($json->Deadline) || empty($json->Id)) {
+    if (empty($order->Deadline) || empty($order->Id)) {
       throw new ApiDataException(_('Could not create an order with Supertext.', 'polylang-supertext'));
     }
 
-    return $json;
+    return  $order;
   }
 
   /**
@@ -225,7 +226,7 @@ class Wrapper
       'NewFinalContentGroups' => self::buildSupertextData($newData)
     );
 
-    $apiClient->postRequest('translationmemory/syncrequests', json_encode($json), true);
+    $apiClient->postRequest('v1/translationmemory/syncrequests', json_encode($json), true);
   }
 
   /**
