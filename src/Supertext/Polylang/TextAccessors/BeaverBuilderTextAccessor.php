@@ -81,7 +81,7 @@ class BeaverBuilderTextAccessor implements ITextAccessor, IMetaDataAware
 
       $settingsTextProperties = $this->getTextProperties($layoutObject->settings);
 
-      if(!count($settingsTextProperties)){
+      if (!count($settingsTextProperties)) {
         continue;
       }
 
@@ -144,11 +144,11 @@ class BeaverBuilderTextAccessor implements ITextAccessor, IMetaDataAware
     $texts = array();
 
     foreach ($settings as $key => $value) {
-      if (stripos($key, 'text') === false && stripos($key, 'title') === false && stripos($key, 'html') === false && stripos($key, 'widget-') === false) {
+      if (substr($key, -strlen('text')) !== 'text' && substr($key, -strlen('title')) !== 'title' && substr($key, -strlen('html')) !== 'html' && stripos($key, 'widget-') === false) {
         continue;
       }
 
-      if(is_object($value) || is_array($value)){
+      if (is_object($value) || is_array($value)) {
         $texts[$key] = $this->getTextProperties($value);
         continue;
       }
@@ -166,10 +166,10 @@ class BeaverBuilderTextAccessor implements ITextAccessor, IMetaDataAware
   private function setTextProperties($settings, $texts)
   {
     foreach ($texts as $key => $text) {
-      if(is_array($text)){
-        if(is_object($settings)){
+      if (is_array($text)) {
+        if (is_object($settings)) {
           $this->setTextProperties($settings->{$key}, $text);
-        }else if(is_array($settings)){
+        } else if (is_array($settings)) {
           $this->setTextProperties($settings[$key], $text);
         }
         continue;
@@ -177,9 +177,9 @@ class BeaverBuilderTextAccessor implements ITextAccessor, IMetaDataAware
 
       $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
 
-      if(is_object($settings)){
+      if (is_object($settings)) {
         $settings->{$key} = $this->textProcessor->replaceShortcodeNodes($decodedContent);
-      }else if(is_array($settings)){
+      } else if (is_array($settings)) {
         $settings[$key] = $this->textProcessor->replaceShortcodeNodes($decodedContent);
       }
     }
