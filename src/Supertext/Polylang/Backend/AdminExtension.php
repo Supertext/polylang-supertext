@@ -6,6 +6,7 @@ use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TranslationMeta;
 use Supertext\Polylang\Helper\View;
 use Supertext\Polylang\Api\Multilang;
+use WPML_Post_Status_Display;
 
 /**
  * Serves as a helper for the translation inject to the user
@@ -205,8 +206,37 @@ class AdminExtension
 
     $pluginStatus = $this->library->getPluginStatus();
 
+    // replacement for Polylang filter 'pll_get_new_post_translation_link' -> adds posts url to javascript context
+    if(Multilang::is_wpml()) {
+
+      $allLanguages = Multilang::getLanguages();
+      global $posts;
+
+      if (count((array)$posts) > 0) {
+        foreach ($posts as $thePost) {
+
+          $postId = $thePost->ID;
+          foreach ($allLanguages as $language) {
+            $newPostLink = Multilang::generate_wpml_link($postId, $language->slug, Multilang::getPostLanguage($postId), $postId);
+            $this->addNewPostUrl($newPostLink, $language, $postId);
+          }
+        }
+      } else {
+        global $post;
+        $postId = $post->ID;
+
+        foreach ($allLanguages as $language) {
+          $newPostLink = Multilang::generate_wpml_link($postId, $language->slug, Multilang::getPostLanguage($postId), $postId);
+          $this->addNewPostUrl($newPostLink, $language, $postId);
+        }
+      }
+    }
+
     $context = array(
-      'enable' => $pluginStatus->isPolylangActivated && $pluginStatus->isCurlActivated && $pluginStatus->isPluginConfiguredProperly && $pluginStatus->isCurrentUserConfigured,
+      'enable' => $pluginStatus->isPolylangActivated &&
+        $pluginStatus->isCurlActivated &&
+        $pluginStatus->isPluginConfiguredProperly &&
+        $pluginStatus->isCurrentUserConfigured,
       'screen' => $this->screenBase,
       'currentPostId' => $this->currentPostId,
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,
@@ -221,6 +251,7 @@ class AdminExtension
     echo '<script type="text/javascript">
             var Supertext = Supertext || {};
             Supertext.Context = '.$contextJson.';
+            console.log(Supertext.Context);
           </script>';
   }
 
@@ -276,6 +307,7 @@ class AdminExtension
 
   public function addNewPostUrl($link, $language, $post_id)
   {
+
     if(!isset($this->newPostUrls[$post_id])){
       $this->newPostUrls[$post_id] = Array();
     }
@@ -334,7 +366,7 @@ class AdminExtension
 
     $data['post_status'] = Constant::TRANSLATION_POST_STATUS;
     $data['post_title'] = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
-    
+
     return $data;
   }
 
@@ -357,4 +389,4 @@ class AdminExtension
   private function isSettingsScreen(){
     return $this->screenBase == 'settings_page_supertext-polylang-settings';
   }
-} 
+}

@@ -6,6 +6,7 @@ use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TranslationMeta;
+use Supertext\Polylang\Core;
 
 /**
  * Provided ajax request handlers
@@ -241,39 +242,39 @@ class AjaxRequestHandler
     return $contentData;
   }
 
-    /**
-     * @param $postTitles
-     * @param $sourcePostIds
-     * @return string
-     */
-    private function getOrderTitle($postTitles, $sourcePostIds)
-    {
-        $postsCount = count($sourcePostIds);
-        $suffix = $postsCount > 1 ? ' + ' . ($postsCount - 1) . ' post(s)' : '';
-        $mainTitle = $postTitles[$sourcePostIds[0]];
+  /**
+   * @param $postTitles
+   * @param $sourcePostIds
+   * @return string
+   */
+  private function getOrderTitle($postTitles, $sourcePostIds)
+  {
+    $postsCount = count($sourcePostIds);
+    $suffix = $postsCount > 1 ? ' + ' . ($postsCount - 1) . ' post(s)' : '';
+    $mainTitle = $postTitles[$sourcePostIds[0]];
 
-        if(strlen($mainTitle) > AjaxRequestHandler::MAX_TITLE_LENGTH ){
-            $mainTitle = substr($mainTitle, 0, AjaxRequestHandler::MAX_TITLE_LENGTH) . '...';
-        }
-
-        return $mainTitle . $suffix;
+    if(strlen($mainTitle) > AjaxRequestHandler::MAX_TITLE_LENGTH ){
+      $mainTitle = substr($mainTitle, 0, AjaxRequestHandler::MAX_TITLE_LENGTH) . '...';
     }
 
-    /**
-     * @param $postTitles
-     * @param $sourcePostIds
-     * @param $targetPostIds
-     * @return string
-     */
+    return $mainTitle . $suffix;
+  }
+
+  /**
+   * @param $postTitles
+   * @param $sourcePostIds
+   * @param $targetPostIds
+   * @return string
+   */
   private function getAdditionalInformation($postTitles, $sourcePostIds, $targetPostIds)
   {
-      $additionalInformation = $_POST['orderComment'] . ' | ';
+    $additionalInformation = $_POST['orderComment'] . ' | ';
 
-      foreach ($sourcePostIds as $sourcePostId) {
-        $additionalInformation .= $postTitles[$sourcePostId] . '(source: ' . $sourcePostId . ', target: ' . $targetPostIds[$sourcePostId] . ') | ';
-      }
+    foreach ($sourcePostIds as $sourcePostId) {
+      $additionalInformation .= $postTitles[$sourcePostId] . '(source: ' . $sourcePostId . ', target: ' . $targetPostIds[$sourcePostId] . ') | ';
+    }
 
-      return $additionalInformation;
+    return $additionalInformation;
   }
 
   /**
@@ -303,6 +304,8 @@ class AjaxRequestHandler
 
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
+
+      // Problem: getPostLanguage returns null
 
       if ($targetPostId == null) {
         throw new \Exception("Could not find target post of source post $sourcePostId.");
