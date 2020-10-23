@@ -304,8 +304,10 @@ class AjaxRequestHandler
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
 
+      // Problem: getPostLanguage returns null
+
       if ($targetPostId == null) {
-        throw new Exception("Could not find target post of source post $sourcePostId.");
+        throw new \Exception("Could not find target post of source post $sourcePostId.");
       }
 
       $targetPostIds[$sourcePostId] = $targetPostId;

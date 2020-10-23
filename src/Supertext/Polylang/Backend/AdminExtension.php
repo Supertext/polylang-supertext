@@ -205,8 +205,37 @@ class AdminExtension
 
     $pluginStatus = $this->library->getPluginStatus();
 
+    // replacement for Polylang filter 'pll_get_new_post_translation_link' -> adds posts url to javascript context
+    if(Multilang::is_wpml()) {
+
+      $allLanguages = Multilang::getLanguages();
+      global $posts;
+
+      if (count((array)$posts) > 0) {
+        foreach ($posts as $thePost) {
+
+          $postId = $thePost->ID;
+          foreach ($allLanguages as $language) {
+            $newPostLink = Multilang::generate_wpml_link($postId, $language->slug, Multilang::getPostLanguage($postId), $postId);
+            $this->addNewPostUrl($newPostLink, $language, $postId);
+          }
+        }
+      } else {
+        global $post;
+        $postId = $post->ID;
+
+        foreach ($allLanguages as $language) {
+          $newPostLink = Multilang::generate_wpml_link($postId, $language->slug, Multilang::getPostLanguage($postId), $postId);
+          $this->addNewPostUrl($newPostLink, $language, $postId);
+        }
+      }
+    }
+
     $context = array(
-      'enable' => $pluginStatus->isPolylangActivated && $pluginStatus->isCurlActivated && $pluginStatus->isPluginConfiguredProperly && $pluginStatus->isCurrentUserConfigured,
+      'enable' => $pluginStatus->isPolylangActivated &&
+        $pluginStatus->isCurlActivated &&
+        $pluginStatus->isPluginConfiguredProperly &&
+        $pluginStatus->isCurrentUserConfigured,
       'screen' => $this->screenBase,
       'currentPostId' => $this->currentPostId,
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,

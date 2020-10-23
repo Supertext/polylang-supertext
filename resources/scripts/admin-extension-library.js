@@ -876,7 +876,7 @@ Supertext.Polylang = (function (win, doc, $) {
    * Initialize on post screen
    */
   function initializePostScreen() {
-    if ($('#post-translations').length == 1) {
+    if ($('#post-translations').length == 1 || $('#icl_div').length == 1) {
       injectOrderLinks();
     }
 
@@ -899,6 +899,20 @@ Supertext.Polylang = (function (win, doc, $) {
       var targetLanguageCode = languageCode.substr(0, languageCode.indexOf("-"));
 
       translationColumn.parent().after(template.orderLinkRow({targetLanguageCode: targetLanguageCode}));
+    });
+
+    $('#icl_untranslated_table tr').each(function(){
+      var translationColumn = $(this);
+
+      if(translationColumn.is('tr:first-child') || translationColumn.is('tr:last-child') || translationColumn.text().trim().length == 0){
+        return;
+      }
+
+      var languageCode = translationColumn
+        .find('input[name="icl_dupes[]"]')
+        .attr('value');
+
+      translationColumn.after(template.orderLinkRow({targetLanguageCode: languageCode}));
     });
   }
 
