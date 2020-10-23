@@ -6,12 +6,12 @@ Description: This plugin allows you to order human translations for your pages a
 Text Domain: polylang-supertext
 Domain Path: /resources/languages
 Author: Supertext AG
-Version: 3.16
+Version: 3.17
 Author URI: http://www.supertext.ch
 License: GPLv2 or later
 */
 
-define('SUPERTEXT_PLUGIN_VERSION', '3.16');
+define('SUPERTEXT_PLUGIN_VERSION', '3.17');
 define('SUPERTEXT_PLUGIN_REVISION', 33);
 define('SUPERTEXT_POLYLANG_BASE_PATH', __DIR__);
 define('SUPERTEXT_POLYLANG_VIEW_PATH', __DIR__ . '/views/');

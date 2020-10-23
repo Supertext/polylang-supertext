@@ -12,11 +12,11 @@ class Constant
   /**
    * @var string development api endpoints
    */
-  const DEV_API = 'https://dev.supertext.ch/api/v1/';
+  const DEV_API = 'https://dev.supertext.ch/api/';
   /**
    * @var string live api endpoints
    */
-  const LIVE_API = 'https://www.supertext.ch/api/v1/';
+  const LIVE_API = 'https://www.supertext.ch/api/';
   /**
    * @var string live api endpoints
    */

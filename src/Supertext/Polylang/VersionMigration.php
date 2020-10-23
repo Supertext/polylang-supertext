@@ -11,14 +11,15 @@ use Supertext\Polylang\TextAccessors\AcfTextAccessor;
 class VersionMigration
 {
   /**
-   * @type Library
+   * @type Library Supertext\Polylang\Helper\Library
    */
   private $library;
 
   /**
-   * @param $library Helper\Library
+   * @param $library Supertext\Polylang\Helper\Library
    */
-  public function __construct($library){
+  public function __construct($library)
+  {
 
     $this->library = $library;
   }
@@ -27,22 +28,25 @@ class VersionMigration
   {
     $options = $this->library->getSettingOption();
 
-    if($previousVersion < 1.8){
+    if ($previousVersion < 1.8) {
       $this->clearCustomFieldSettings($options);
     }
 
-    if($previousVersion < 2.8){
+    if ($previousVersion < 2.8) {
       $this->migrateAcfSettings();
     }
 
-    if($previousVersion < 3.8 && ($this->library->isPluginActive('advanced-custom-fields/acf.php') || $this->library->isPluginActive('advanced-custom-fields-pro/acf.php'))){
+    if ($previousVersion < 3.8 && ($this->library->isPluginActive('advanced-custom-fields/acf.php') || $this->library->isPluginActive('advanced-custom-fields-pro/acf.php'))) {
       $this->migrateAcfIds();
     }
 
     $this->migrateOldTranslationDataToTranslationMeta();
+
+    $this->updateApiServerUrl();
   }
 
-  public function replaceAfcIds() {
+  public function replaceAfcIds()
+  {
     $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
     $savedAcfFieldDefinitions = $savedFieldDefinitions['acf'];
     $acfTextAccessor = new AcfTextAccessor(new TextProcessor($this->library), $this->library);
@@ -54,7 +58,7 @@ class VersionMigration
         continue;
       }
 
-      foreach($savedAcfFieldDefinitions as &$savedAcfFieldDefinition){
+      foreach ($savedAcfFieldDefinitions as &$savedAcfFieldDefinition) {
         if (isset($field['meta_key_regex']) && $savedAcfFieldDefinition['meta_key_regex'] == $field['meta_key_regex']) {
           $savedAcfFieldDefinition['id'] = $field['id'];
         }
@@ -75,14 +79,15 @@ class VersionMigration
     }
   }
 
-  private function migrateOldTranslationDataToTranslationMeta() {
+  private function migrateOldTranslationDataToTranslationMeta()
+  {
     $queryForLegacyTranslationFlag = new \WP_Query(array(
       'meta_key' => '_in_st_translation',
       'post_status' => 'any',
       'post_type' => get_post_types('', 'names'),
     ));
 
-    foreach($queryForLegacyTranslationFlag->posts as $post){
+    foreach ($queryForLegacyTranslationFlag->posts as $post) {
       $meta = TranslationMeta::of($post->ID);
       $meta->set(TranslationMeta::TRANSLATION, true);
       $meta->set(TranslationMeta::IN_TRANSLATION, true);
@@ -93,7 +98,7 @@ class VersionMigration
   private function migrateAcfSettings()
   {
     $savedAcfFieldDefinitions = $this->library->getSettingOption('acfFields');
-    if(count($savedAcfFieldDefinitions)){
+    if (count($savedAcfFieldDefinitions)) {
       $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
       $savedFieldDefinitions['acf'] = $savedAcfFieldDefinitions;
       $this->library->saveSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS, $savedFieldDefinitions);
@@ -104,10 +109,22 @@ class VersionMigration
   {
     $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
 
-    if(empty($savedFieldDefinitions['acf'])){
+    if (empty($savedFieldDefinitions['acf'])) {
       return;
     }
 
     add_action('wp_loaded', array($this, "replaceAfcIds"));
+  }
+
+  private function updateApiServerUrl()
+  {
+    $apiSettings = $this->library->getSettingOption(Constant::SETTING_API);
+    $apiServerUrl = $apiSettings['apiServerUrl'];
+    $version = "v1/";
+
+    if (!empty($apiServerUrl) && substr($apiServerUrl, -strlen($version)) === $version) {
+      $apiSettings['apiServerUrl'] = substr($apiServerUrl, 0, strlen($apiServerUrl) - strlen($version));
+      $this->library->saveSettingOption(Constant::SETTING_API, $apiSettings);
+    }
   }
 }
