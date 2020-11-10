@@ -4,10 +4,10 @@
 
 This plugin allows the user to send a WordPress post or page to Supertext for translation.
 Once completed, the translation will be automatically inserted into a new page or post in your WordPress installation.
-This works for every post type that is translatable by Polylang.
+This works for every post type that is translatable by Polylang or WPML.
 
 Supertext can translate content, titles, excerpts, image captions, shortcode arguments and custom fields.
-Simply order a translation instead of creating a new page with Polylang.
+Simply order a translation instead of creating a new page.
 You will be presented with services, prices and deadlines. Select the right one for you and you'll be notified by email once your translated page or post has been uploaded to your website.
 
 **Please note**
@@ -58,7 +58,7 @@ Get the API key from the Settings page: [Account Settings](https://www.supertext
 
 **How to translate the site title and tagline?**
 
-The site title and the tagline are part of the general settings of your WordPress. You can translate these texts using the _String translations_ feature of Polylang:
+The site title and the tagline are part of the general settings of your WordPress. You can translate these texts using the _String translations_ feature of Polylang/WPML:
 Languages -> Strings translations
 
 Did you translate the site title but it is still displayed in only one language? In this case you can check if the themes header is using the correct WordPress functions to get the title/tagline (wp_title() or get_bloginfo()).
