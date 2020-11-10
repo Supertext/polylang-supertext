@@ -22,7 +22,9 @@
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "gulp-uglify": "^3.0.2",
-    "jshint": "^2.10.2"
+    "jshint": "^2.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "gulp": "^4.0.2"
+  }
 }

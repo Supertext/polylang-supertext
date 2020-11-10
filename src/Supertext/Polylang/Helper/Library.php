@@ -53,7 +53,8 @@ class Library
    */
   public function setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
   {
-    Multilang::setPostLanguage($targetPostId, $targetLanguage);
+    $sourceTrid = apply_filters( 'wpml_element_trid', NULL, $sourcePostId, 'post_' . get_post_type($sourcePostId));
+    Multilang::setPostLanguage($targetPostId, $targetLanguage, $sourceTrid);
 
     $postsLanguageMappings = array(
       $sourceLanguage => $sourcePostId,
@@ -138,7 +139,7 @@ class Library
    */
   public function isPolylangActivated()
   {
-    return $this->isPluginActive('polylang/polylang.php') || $this->isPluginActive('polylang-pro/polylang.php');
+    return $this->isPluginActive('polylang/polylang.php') || $this->isPluginActive('polylang-pro/polylang.php') || $this->isPluginActive('sitepress-multilingual-cms/sitepress.php');
   }
 
   /**

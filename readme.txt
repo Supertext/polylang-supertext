@@ -92,6 +92,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 3.18 =
+* Added support for WPML
+
 = 3.17 =
 * Switched to new order API version 1.1
 

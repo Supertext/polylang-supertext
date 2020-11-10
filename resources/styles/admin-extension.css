@@ -3,7 +3,7 @@
  * https://wordpress.org/plugins/polylang-supertext/
  * @author Heinrich Muralt
  * @version 2.7.0
- * Copyright 2019 */
+ * Copyright 2020 */
 .clearfix:after {
   content: "";
   display: table;
@@ -458,3 +458,10 @@ tr:not(.first-group-row):not(.last-group-row):focus {
 .sttr-log-container {
   max-height: 250px;
   overflow: auto; }
+
+#icl_translate_options .sttr-order-link-row td:first-child {
+  display: none; }
+
+#icl_translate_options .sttr-order-link-row td:nth-child(2) {
+  width: 1px;
+  text-align: right; }

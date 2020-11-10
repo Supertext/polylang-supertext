@@ -49,6 +49,10 @@ foreach ($languages as $language) {
 
 // Wenn gar keine Mehrsprachigkeit vorhanden ist melden
 if (count($languages) > 0) {
+  $translateTool = 'Polylang';
+  if(function_exists('icl_object_id')){
+    $translateTool = 'WPML';
+  }
   echo '
     <div class="postbox postbox_admin">
       <div class="inside">
@@ -56,7 +60,7 @@ if (count($languages) > 0) {
         <table border="0" cellpadding="0" margin="0">
         <thead>
         <tr>
-            <th width="200">Polylang</th>
+            <th width="200">' . $translateTool . '</th>
             <th>Supertext</th>
           </tr>
         </thead>

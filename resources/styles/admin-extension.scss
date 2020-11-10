@@ -544,3 +544,18 @@
   max-height: 250px;
   overflow: auto;
 }
+
+// WPML Adjustings
+
+#icl_translate_options {
+  .sttr-order-link-row {
+    td:first-child {
+      display: none;
+    }
+
+    td:nth-child(2) {
+      width: 1px;
+      text-align: right;
+    }
+  }
+}

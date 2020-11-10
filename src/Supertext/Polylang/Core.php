@@ -84,7 +84,6 @@ class Core
 
   /**
    * @return Core return the core instance
-   * @deprecated
    */
   public static function getInstance()
   {
@@ -147,14 +146,15 @@ class Core
     wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/admin-extension-library' . $suffix . '.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION, true);
     wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library' . $suffix . '.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION);
     wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree' . $suffix . '.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
+    if (@PLL_PREFIX !== 'PLL_PREFIX') {
+      $blockEditorScriptDeps = array('wp-blocks', 'wp-dom-ready', 'wp-edit-post');
 
-    $blockEditorScriptDeps = array('wp-blocks', 'wp-dom-ready', 'wp-edit-post');
-    
-    if ($this->getLibrary()->isPolylangActivated()) {
-      array_push($blockEditorScriptDeps, PLL_PREFIX . 'block-editor-plugin');
+      if ($this->getLibrary()->isPolylangActivated()) {
+        array_push($blockEditorScriptDeps, PLL_PREFIX . 'block-editor-plugin');
+      }
+
+      wp_register_script(Constant::BLOCK_EDITOR_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/block-editor-library' . $suffix . '.js', $blockEditorScriptDeps, SUPERTEXT_PLUGIN_REVISION);
     }
-
-    wp_register_script(Constant::BLOCK_EDITOR_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/block-editor-library' . $suffix . '.js', $blockEditorScriptDeps, SUPERTEXT_PLUGIN_REVISION);
   }
 
   /**
