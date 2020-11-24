@@ -818,10 +818,11 @@ Supertext.Polylang = (function (win, doc, $) {
         postData)
         .then(function (createPostsData) {
           var requests = [];
-          var autoSaveQueryParam = {};
-          autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
-
+  
           requests = $.map(createPostsData, function (createPostData) {
+            var autoSaveQueryParam = {};
+            autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
+            autoSaveQueryParam.source_post = createPostData.fromPost;
             return doGetRequest(context.newPostUrls[createPostData.fromPost][createPostData.newLang], autoSaveQueryParam);
           });
 
