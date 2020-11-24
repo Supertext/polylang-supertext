@@ -59,11 +59,6 @@ class AdminExtension
   private $isCurrentPostInTranslation = false;
 
   /**
-   * @var array
-   */
-  private $newPostUrls = Array();
-
-  /**
    * Various filters to change and/or display things
    */
   public function __construct($library, $log)
@@ -88,11 +83,10 @@ class AdminExtension
     add_action('manage_pages_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
     add_action('manage_media_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
 
-    add_filter('pll_get_new_post_translation_link', array($this, 'addNewPostUrl'), 100, 3);
-
-    if(isset($_GET[Constant::NEW_POST_AUTO_SAVE_FLAG]) && isset($_GET['from_post']) && isset($_GET['new_lang'])){
+    if(isset($_GET[Constant::NEW_POST_AUTO_SAVE_FLAG]) && isset($_GET['source_post'])){
+      
       add_filter('wp_insert_post_data', array($this, 'setNewTargetPostData'), 1000, 1);
-      add_action('save_post', array($this, 'assignLanguageToNewTargetPost'), 10, 1);
+      add_action('save_post', array('Supertext\Polylang\Api\Multilang', 'assignLanguageToNewTargetPost'), 10, 1);
     }
   }
 
@@ -204,32 +198,7 @@ class AdminExtension
     }
 
     $pluginStatus = $this->library->getPluginStatus();
-
-    // replacement for Polylang filter 'pll_get_new_post_translation_link' -> adds posts url to javascript context
-    if(Multilang::is_wpml()) {
-
-      $allLanguages = Multilang::getLanguages();
-      global $posts;
-
-      if (count((array)$posts) > 0) {
-        foreach ($posts as $thePost) {
-
-          $postId = $thePost->ID;
-          foreach ($allLanguages as $language) {
-            $newPostLink = Multilang::generate_wpml_link($postId, $language->slug, Multilang::getPostLanguage($postId), $postId);
-            $this->addNewPostUrl($newPostLink, $language, $postId);
-          }
-        }
-      } else {
-        global $post;
-        $postId = $post->ID;
-
-        foreach ($allLanguages as $language) {
-          $newPostLink = Multilang::generate_wpml_link($postId, $language->slug, Multilang::getPostLanguage($postId), $postId);
-          $this->addNewPostUrl($newPostLink, $language, $postId);
-        }
-      }
-    }
+    $newPostUrls = Multilang::getNewPostUrls();
 
     $context = array(
       'enable' => $pluginStatus->isPolylangActivated &&
@@ -241,7 +210,7 @@ class AdminExtension
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,
       'resourceUrl' => get_bloginfo('wpurl'),
       'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-      'newPostUrls' => $this->newPostUrls,
+      'newPostUrls' => $newPostUrls,
       'newPostAutoSaveFlag' => Constant::NEW_POST_AUTO_SAVE_FLAG
     );
 
@@ -303,17 +272,6 @@ class AdminExtension
     ));
   }
 
-  public function addNewPostUrl($link, $language, $post_id)
-  {
-    if(!isset($this->newPostUrls[$post_id])){
-      $this->newPostUrls[$post_id] = Array();
-    }
-
-    $this->newPostUrls[$post_id][$language->slug] = urldecode(html_entity_decode($link));
-
-    return $link;
-  }
-
   /**
    * Sets the translation status column cell
    * @param $column
@@ -359,8 +317,8 @@ class AdminExtension
    * @param $data post data as array
    */
   public function setNewTargetPostData($data){
-    $sourcePost = get_post($_GET['from_post']);
-
+    $sourcePost = get_post($_GET['source_post']);
+    
     $data['post_status'] = Constant::TRANSLATION_POST_STATUS;
     $data['post_title'] = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
     
