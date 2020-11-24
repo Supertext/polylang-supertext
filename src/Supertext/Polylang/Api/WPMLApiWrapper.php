@@ -122,15 +122,45 @@ class WPMLApiWrapper implements IMultilangApi
         return $this->newPostUrls;
     }
 
+
+    /**
+     * Assign a language to a target post
+     * @param $targetPostId target post id
+     */
+    public function assignLanguageToNewTargetPost(
+        $sourcePostId,
+        $targetPostId,
+        $targetLanguage
+    ) {
+        $postType = get_post_type($sourcePostId);
+        $trid = empty($_GET['trid']) ? apply_filters('wpml_element_trid', NULL, $sourcePostId, 'post_' . $postType) : $_GET['trid'];
+
+        $this->setPostLanguage($targetPostId, $postType, $targetLanguage, $trid);
+    }
+
+    /**
+     * Assign a language to a target term
+     * @param $targetTermId target term id
+     */
+    public function assignLanguageToNewTargetTerm(
+        $sourceTermId,
+        $targetTermId,
+        $targetLanguage,
+        $taxonomy
+    ) {
+        $trid = empty($_GET['trid']) ? apply_filters('wpml_element_trid', NULL, $sourceTermId, 'post_' . $taxonomy) : $_GET['trid'];
+
+        $this->setTermLanguage($targetTermId, $taxonomy, $targetLanguage, $trid);
+    }
+
     /**
      * Set the language of a post
      * @param $postId
      * @param $language
      * @param $trid
      */
-    public function setPostLanguage($postId, $language, $trid = false)
+    private function setPostLanguage($postId, $postType, $language, $trid)
     {
-        $postType = get_post_type($postId);
         do_action('wpml_set_element_language_details', array(
             'element_id' => $postId,
             'element_type' => 'post_' . $postType,
@@ -145,81 +175,14 @@ class WPMLApiWrapper implements IMultilangApi
      * @param $termId
      * @param $language
      */
-    public function setTermLanguage($termId, $language)
+    private function setTermLanguage($termId, $taxonomy, $language, $trid)
     {
-        $termType = get_term_by('id', $termId)->taxonomy;
         do_action('wpml_set_element_language_details', array(
             'element_id' => $termId,
-            'element_type' => 'tax_' . $termType,
-            'trid' => false,
+            'element_type' => 'tax_' . $taxonomy,
+            'trid' => $trid,
             'language_code' => $language
         ));
         // for args explanation visit: https://wpml.org/wpml-hook/wpml_set_element_language_details/
-    }
-
-    /**
-     * Save the translation settings for a post
-     * @param array $arr an associative array of translations with language code as key and post id as value
-     */
-   public function savePostTranslations($arr)
-    {
-        /* foreach ($arr as $langCode => $postId) {
-            $postTrid = apply_filters('wpml_element_trid', null, $postId);
-            $postType = get_post_type($postId);
-
-            $postSrcLang = apply_filters('wpml_element_language_details',  null, array('element_id' => $postId, 'element_type' => $postType));
-            global $wpdb;
-            $wpdb->update(
-                $wpdb->prefix . 'icl_translations',
-                array(
-                    'trid' => $postTrid,
-                    'language_code' => $langCode,
-                    'source_language_code' => $postSrcLang
-                ),
-                array(
-                    'element_type' => $postType,
-                    'element_id' => $postId
-                )
-            );
-        }
-        // source: https://wordpress.stackexchange.com/questions/20143/plugin-wpml-how-to-create-a-translation-of-a-post-using-the-wpml-api
-        // source: https://wordpress.stackexchange.com/questions/147652/how-to-update-records-using-wpdb*/
-    }
-
-    /**
-     * Save the translation settings for a term
-     * @param array $arr an associative array of translations with language code as key and term id as value
-     */
-    public function saveTermTranslations($arr)
-    {
-        foreach ($arr as $langCode => $termId) {
-            $termTrid = apply_filters('wpml_element_trid', null, $termId);
-            $tridSrcLang = apply_filters('wpml_element_language_details',  null, array('element_id' => $termId, 'element_type' => 'tax_category'))->source_language_code;
-            global $wpdb;
-            $wpdb->update(
-                $wpdb->prefix . 'icl_translations',
-                array(
-                    'trid' => $termTrid,
-                    'language_code' => $langCode,
-                    'source_language_code' => $tridSrcLang
-                ),
-                array(
-                    'element_type' => 'tax_category',
-                    'element_id' => $termId
-                )
-            );
-        }
-    }
-
-    /**
-     * Assign a language to a target post using query strings as parameters
-     * @param $targetPostId target post id
-     */
-    public function assignLanguageToNewTargetPost($targetPostId)
-    {
-        $trid = $_GET['trid'];
-        $targetLanguage = $_GET['lang'];
-
-        $this->setPostLanguage($targetPostId, $targetLanguage, $trid);
     }
 }

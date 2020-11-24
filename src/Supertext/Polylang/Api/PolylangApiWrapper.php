@@ -112,66 +112,17 @@ class PolylangApiWrapper implements IMultilangApi
     }
 
     /**
-     * Set the language of a post
-     * @param $postId
-     * @param $language
-     * @param $trid
-     */
-    public function setPostLanguage($postId, $language, $trid = false)
-    {
-        if (function_exists('pll_set_post_language')) {
-            pll_set_post_language($postId, $language);
-        }
-    }
-
-    /**
-     * Set the language of a term
-     * @param $termId
-     * @param $language
-     */
-    public function setTermLanguage($termId, $language)
-    {
-        if (function_exists('pll_set_term_language')) {
-            pll_set_term_language($termId, $language);
-        }
-    }
-
-    /**
-     * Save the translation settings for a post
-     * @param array $arr an associative array of translations with language code as key and post id as value
-     */
-    public function savePostTranslations($arr)
-    {
-        if (function_exists('pll_save_post_translations')) {
-            pll_save_post_translations($arr);
-        }
-    }
-
-    /**
-     * Save the translation settings for a term
-     * @param array $arr an associative array of translations with language code as key and term id as value
-     */
-    public function saveTermTranslations($arr)
-    {
-        if (function_exists('pll_save_term_translations')) {
-            pll_save_term_translations($arr);
-        }
-    }
-
-    /**
-     * Assign a language to a target post using query strings as parameters
+     * Assign a language to a target post
      * @param $targetPostId target post id
      */
-    public function assignLanguageToNewTargetPost($targetPostId)
-    {
-        $targetLanguage = $_GET['new_lang'];
-        $sourcePostId = $_GET['from_post'];
-        $sourceLanguage = $this->getPostLanguage($sourcePostId);
-
+    public function assignLanguageToNewTargetPost(
+        $sourcePostId,
+        $targetPostId,
+        $targetLanguage
+    ) {
         $this->setPostLanguage($targetPostId, $targetLanguage);
 
         $postsLanguageMappings = array(
-            $sourceLanguage => $sourcePostId,
             $targetLanguage => $targetPostId
         );
 
@@ -183,5 +134,78 @@ class PolylangApiWrapper implements IMultilangApi
         }
 
         $this->savePostTranslations($postsLanguageMappings);
+    }
+
+    /**
+     * Assign a language to a target term
+     * @param $targetTermId target term id
+     */
+    public function assignLanguageToNewTargetTerm(
+        $sourceTermId,
+        $targetTermId,
+        $targetLanguage,
+        $taxonomy
+    ) {
+        $this->setTermLanguage($targetTermId, $targetLanguage);
+
+        $termsLanguageMappings = array(
+            $targetLanguage => $targetTermId
+        );
+
+        foreach ($this->getLanguages() as $language) {
+            $languageTermId = $this->getTermInLanguage($sourceTermId, $language->slug);
+            if ($languageTermId) {
+                $termsLanguageMappings[$language->slug] = $languageTermId;
+            }
+        }
+
+        $this->saveTermTranslations($termsLanguageMappings);
+    }
+
+    /**
+     * Set the language of a post
+     * @param $postId
+     * @param $language
+     * @param $trid
+     */
+    private function setPostLanguage($postId, $language, $trid = false)
+    {
+        if (function_exists('pll_set_post_language')) {
+            pll_set_post_language($postId, $language);
+        }
+    }
+
+    /**
+     * Set the language of a term
+     * @param $termId
+     * @param $language
+     */
+    private function setTermLanguage($termId, $language)
+    {
+        if (function_exists('pll_set_term_language')) {
+            pll_set_term_language($termId, $language);
+        }
+    }
+
+    /**
+     * Save the translation settings for a post
+     * @param array $arr an associative array of translations with language code as key and post id as value
+     */
+    private function savePostTranslations($arr)
+    {
+        if (function_exists('pll_save_post_translations')) {
+            pll_save_post_translations($arr);
+        }
+    }
+
+    /**
+     * Save the translation settings for a term
+     * @param array $arr an associative array of translations with language code as key and term id as value
+     */
+    private function saveTermTranslations($arr)
+    {
+        if (function_exists('pll_save_term_translations')) {
+            pll_save_term_translations($arr);
+        }
     }
 }

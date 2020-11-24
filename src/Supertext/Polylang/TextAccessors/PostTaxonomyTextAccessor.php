@@ -124,7 +124,8 @@ class PostTaxonomyTextAccessor implements ITextAccessor
 
           $translationTermId = $translationTerm['term_id'];
 
-          $this->SetTermLanguages($translationTermId, $postLanguage, $sourceTermId);
+          $this->library->getMultilangApi()->assignLanguageToNewTargetTerm($sourceTermId, $translationTermId, $postLanguage, $taxonomy);
+
         } else {
           wp_update_term($translationTermId, $taxonomy, array(
             'name' => $term,
@@ -135,28 +136,5 @@ class PostTaxonomyTextAccessor implements ITextAccessor
         wp_set_object_terms($post->ID, array(intval($translationTermId)), $taxonomy, true);
       }
     }
-  }
-
-  /**
-   * @param $translationTermId
-   * @param $postLanguage
-   * @param $sourceTermId
-   */
-  private function SetTermLanguages($translationTermId, $postLanguage, $sourceTermId)
-  {
-    $this->library->getMultilangApi()->setTermLanguage($translationTermId, $postLanguage);
-
-    $termsLanguageMappings = array(
-      $postLanguage => $translationTermId
-    );
-
-    foreach ($this->library->getMultilangApi()->getLanguages() as $language) {
-      $languageTermId = $this->library->getMultilangApi()->getTermInLanguage($sourceTermId, $language->slug);
-      if ($languageTermId) {
-        $termsLanguageMappings[$language->slug] = $languageTermId;
-      }
-    }
-
-    $this->library->getMultilangApi()->saveTermTranslations($termsLanguageMappings);
   }
 }

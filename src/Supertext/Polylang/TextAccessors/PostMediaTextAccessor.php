@@ -213,7 +213,8 @@ class PostMediaTextAccessor implements ITextAccessor
       }
     }
 
-    $this->library->setLanguage($sourceAttachmentId, $targetAttachmentId, $sourceLanguage, $targetLanguage);
+    $this->library->getMultilangApi()->assignLanguageToNewTargetPost($sourceAttachmentId, $targetAttachmentId, $targetLanguage);
+    
     return $targetAttachmentId;
   }
 

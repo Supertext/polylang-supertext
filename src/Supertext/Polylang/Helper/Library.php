@@ -61,32 +61,6 @@ class Library
   }
 
   /**
-   * @param $sourcePostId
-   * @param $targetPostId
-   * @param $sourceLanguage
-   * @param $targetLanguage
-   */
-  public function setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
-  {
-    $sourceTrid = apply_filters('wpml_element_trid', NULL, $sourcePostId, 'post_' . get_post_type($sourcePostId));
-    $this->getMultilangApi()->setPostLanguage($targetPostId, $targetLanguage, $sourceTrid);
-
-    $postsLanguageMappings = array(
-      $sourceLanguage => $sourcePostId,
-      $targetLanguage => $targetPostId
-    );
-
-    foreach ($this->getMultilangApi()->getLanguages() as $language) {
-      $languagePostId = $this->getMultilangApi()->getPostInLanguage($sourcePostId, $language->slug);
-      if ($languagePostId) {
-        $postsLanguageMappings[$language->slug] = $languagePostId;
-      }
-    }
-
-    $this->getMultilangApi()->savePostTranslations($postsLanguageMappings);
-  }
-
-  /**
    * @param int $userId wordpress user
    * @return array user configuration for supertext api calls
    */

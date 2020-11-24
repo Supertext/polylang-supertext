@@ -47,35 +47,23 @@ interface IMultilangApi
   public function getNewPostUrls();
 
   /**
-   * Set the language of a post
-   * @param $postId
-   * @param $language
-   * @param $trid
-   */
-  public function setPostLanguage($postId, $language, $trid = false);
-
-  /**
-   * Set the language of a term
-   * @param $termId
-   * @param $language
-   */
-  public function setTermLanguage($termId, $language);
-
-  /**
-   * Save the translation settings for a post
-   * @param array $arr an associative array of translations with language code as key and post id as value
-   */
-  public function savePostTranslations($arr);
-
-  /**
-   * Save the translation settings for a term
-   * @param array $arr an associative array of translations with language code as key and term id as value
-   */
-  public function saveTermTranslations($arr);
-
-  /**
-   * Assign a language to a target post using query strings as parameters
+   * Assign a language to a target post
    * @param $targetPostId target post id
    */
-  public function assignLanguageToNewTargetPost($targetPostId);
+  public function assignLanguageToNewTargetPost(
+    $sourcePostId,
+    $targetPostId,
+    $targetLanguage
+  );
+
+  /**
+   * Assign a language to a target term
+   * @param $targetTermId target term id
+   */
+  public function assignLanguageToNewTargetTerm(
+    $sourceTermId,
+    $targetTermId,
+    $targetLanguage,
+    $taxonomy
+  );
 }

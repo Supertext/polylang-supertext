@@ -823,6 +823,7 @@ Supertext.Polylang = (function (win, doc, $) {
             var autoSaveQueryParam = {};
             autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
             autoSaveQueryParam.source_post = createPostData.fromPost;
+            autoSaveQueryParam.target_lang = createPostData.newLang;
             return doGetRequest(context.newPostUrls[createPostData.fromPost][createPostData.newLang], autoSaveQueryParam);
           });
 

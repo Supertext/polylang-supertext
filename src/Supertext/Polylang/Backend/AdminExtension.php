@@ -84,7 +84,7 @@ class AdminExtension
 
     if (isset($_GET[Constant::NEW_POST_AUTO_SAVE_FLAG]) && isset($_GET['source_post'])) {
       add_filter('wp_insert_post_data', array($this, 'setNewTargetPostData'), 1000, 1);
-      add_action('save_post', array($this->library->getMultilangApi(), 'assignLanguageToNewTargetPost'), 10, 1);
+      add_action('save_post', array($this, 'assignLanguageToNewTargetPost'), 10, 1);
     }
   }
 
@@ -323,6 +323,10 @@ class AdminExtension
     $data['post_title'] = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
 
     return $data;
+  }
+
+  public function assignLanguageToNewTargetPost($targetPostId){
+    $this->library->getMultilangApi()->assignLanguageToNewTargetPost($_GET['source_post'], $targetPostId, $_GET['target_lang']);
   }
 
   private function isEditPostScreen()
