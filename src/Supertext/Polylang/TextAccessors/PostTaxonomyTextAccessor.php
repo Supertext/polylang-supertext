@@ -1,7 +1,8 @@
 <?php
 
 namespace Supertext\Polylang\TextAccessors;
-use Supertext\Polylang\Api\Multilang;
+
+use Supertext\Polylang\Helper\Library;
 
 /**
  * Class PostTaxonomyTextAccessor
@@ -9,16 +10,24 @@ use Supertext\Polylang\Api\Multilang;
  */
 class PostTaxonomyTextAccessor implements ITextAccessor
 {
-   public function __construct()
-   {
-     $this->knownTranslatableTaxonomies = array(
-       'category' => __('Categories', 'polylang-supertext'),
-       'post_tag' => __('Tags', 'polylang-supertext'),
-       'product_cat' => __('Categories', 'polylang-supertext'),
-       'product_tag' => __('Tags', 'polylang-supertext'),
-     );
+  /**
+   * @var Library library
+   */
+  protected $library;
 
-   }
+  /**
+   * @param Library $library
+   */
+  public function __construct($library)
+  {
+    $this->library = $library;
+    $this->knownTranslatableTaxonomies = array(
+      'category' => __('Categories', 'polylang-supertext'),
+      'post_tag' => __('Tags', 'polylang-supertext'),
+      'product_cat' => __('Categories', 'polylang-supertext'),
+      'product_tag' => __('Tags', 'polylang-supertext'),
+    );
+  }
 
   /**
    * Gets the content accessors name
@@ -37,10 +46,9 @@ class PostTaxonomyTextAccessor implements ITextAccessor
   {
     $translatableFields = array();
 
-    foreach($this->knownTranslatableTaxonomies as $name => $title)
-    {
+    foreach ($this->knownTranslatableTaxonomies as $name => $title) {
       $terms = wp_get_object_terms($postId, $name);
-      if(is_wp_error($terms) || !count($terms)) {
+      if (is_wp_error($terms) || !count($terms)) {
         continue;
       }
 
@@ -61,8 +69,7 @@ class PostTaxonomyTextAccessor implements ITextAccessor
   public function getRawTexts($post)
   {
     $selectedTranslatableFields = array();
-    foreach($this->knownTranslatableTaxonomies as $name => $title)
-    {
+    foreach ($this->knownTranslatableTaxonomies as $name => $title) {
       $selectedTranslatableFields[$name] = true;
     }
 
@@ -78,17 +85,17 @@ class PostTaxonomyTextAccessor implements ITextAccessor
   {
     $texts = array();
 
-    foreach($selectedTranslatableFields as $name => $selected){
-      if(!$selected){
+    foreach ($selectedTranslatableFields as $name => $selected) {
+      if (!$selected) {
         continue;
       }
 
       $terms = wp_get_object_terms($post->ID, $name);
-      if(is_wp_error($terms)) {
+      if (is_wp_error($terms)) {
         continue;
       }
 
-      foreach($terms as $term){
+      foreach ($terms as $term) {
         $texts[$name][$term->term_id] = $term->name;
       }
     }
@@ -102,24 +109,24 @@ class PostTaxonomyTextAccessor implements ITextAccessor
    */
   public function setTexts($post, $texts)
   {
-    $postLanguage = Multilang::getPostLanguage($post->ID);
+    $postLanguage = $this->library->getMultilang()->getPostLanguage($post->ID);
 
-    foreach($texts as $taxonomy => $terms){
-      foreach($terms as $sourceTermId => $term){
-        $translationTermId = Multilang::getTermInLanguage($sourceTermId, $postLanguage);
+    foreach ($texts as $taxonomy => $terms) {
+      foreach ($terms as $sourceTermId => $term) {
+        $translationTermId = $this->library->getMultilang()->getTermInLanguage($sourceTermId, $postLanguage);
 
-        if($translationTermId == null)
-        {
+        if ($translationTermId == null) {
           $translationTerm = wp_insert_term($term, $taxonomy);
 
-          if($translationTerm instanceof \WP_Error){
+          if ($translationTerm instanceof \WP_Error) {
             continue;
           }
 
           $translationTermId = $translationTerm['term_id'];
 
-          $this->SetTermLanguages($translationTermId, $postLanguage, $sourceTermId);
-        }else{
+          $this->library->getMultilang()->assignLanguageToNewTargetTerm($sourceTermId, $translationTermId, $postLanguage, $taxonomy);
+
+        } else {
           wp_update_term($translationTermId, $taxonomy, array(
             'name' => $term,
             'slug' => sanitize_title($term)
@@ -129,28 +136,5 @@ class PostTaxonomyTextAccessor implements ITextAccessor
         wp_set_object_terms($post->ID, array(intval($translationTermId)), $taxonomy, true);
       }
     }
-  }
-
-  /**
-   * @param $translationTermId
-   * @param $postLanguage
-   * @param $sourceTermId
-   */
-  private function SetTermLanguages($translationTermId, $postLanguage, $sourceTermId)
-  {
-    Multilang::setTermLanguage($translationTermId, $postLanguage);
-
-    $termsLanguageMappings = array(
-      $postLanguage => $translationTermId
-    );
-
-    foreach (Multilang::getLanguages() as $language) {
-      $languageTermId = Multilang::getTermInLanguage($sourceTermId, $language->slug);
-      if ($languageTermId) {
-        $termsLanguageMappings[$language->slug] = $languageTermId;
-      }
-    }
-
-    Multilang::saveTermTranslations($termsLanguageMappings);
   }
 }
