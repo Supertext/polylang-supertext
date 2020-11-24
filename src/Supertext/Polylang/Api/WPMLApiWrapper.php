@@ -148,7 +148,7 @@ class WPMLApiWrapper implements IMultilangApi
         $targetLanguage,
         $taxonomy
     ) {
-        $trid = empty($_GET['trid']) ? apply_filters('wpml_element_trid', NULL, $sourceTermId, 'post_' . $taxonomy) : $_GET['trid'];
+        $trid = empty($_GET['trid']) ? apply_filters('wpml_element_trid', NULL, $sourceTermId, 'tax_' . $taxonomy) : $_GET['trid'];
 
         $this->setTermLanguage($targetTermId, $taxonomy, $targetLanguage, $trid);
     }
