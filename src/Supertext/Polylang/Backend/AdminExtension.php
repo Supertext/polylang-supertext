@@ -83,10 +83,9 @@ class AdminExtension
     add_action('manage_pages_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
     add_action('manage_media_custom_column', array($this, 'displayTranslationStatusColumn'), 12, 2);
 
-    if(isset($_GET[Constant::NEW_POST_AUTO_SAVE_FLAG]) && isset($_GET['source_post'])){
-      
+    if (isset($_GET[Constant::NEW_POST_AUTO_SAVE_FLAG]) && isset($_GET['source_post'])) {
       add_filter('wp_insert_post_data', array($this, 'setNewTargetPostData'), 1000, 1);
-      add_action('save_post', array('Supertext\Polylang\Api\Multilang', 'assignLanguageToNewTargetPost'), 10, 1);
+      add_action('save_post', array($this, 'assignLanguageToNewTargetPost'), 10, 1);
     }
   }
 
@@ -117,13 +116,13 @@ class AdminExtension
       wp_enqueue_script(Constant::JQUERY_UI_AUTOCOMPLETE);
     }
 
-    if ($this->isEditPostScreen()|| $this->isPostsScreen()) {
+    if ($this->isEditPostScreen() || $this->isPostsScreen()) {
       wp_enqueue_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE);
 
       wp_enqueue_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE);
     }
 
-    if($this->isEditPostScreen() && $this->isBlockEditor){
+    if ($this->isEditPostScreen() && $this->isBlockEditor) {
       wp_enqueue_script(Constant::BLOCK_EDITOR_SCRIPT_HANDLE);
     }
   }
@@ -131,7 +130,8 @@ class AdminExtension
   /**
    * Show plugin informations
    */
-  public function showPluginStatusMessages(){
+  public function showPluginStatusMessages()
+  {
     if (!$this->isEditPostScreen() && !$this->isPostsScreen() && !$this->isSettingsScreen()) {
       return;
     }
@@ -146,11 +146,11 @@ class AdminExtension
       ';
     }
 
-    if($this->isSettingsScreen()){
+    if ($this->isSettingsScreen()) {
       return;
     }
 
-    if(!$pluginStatus->isPolylangActivated){
+    if (!$pluginStatus->isPolylangActivated) {
       echo '
         <div class="notice notice-warning is-dismissible">
           <p>' . __('The Supertext Translation plugin cannot be used. Polylang is not installed or hasn\'t been activated.', 'polylang-supertext') . '</p>
@@ -158,7 +158,7 @@ class AdminExtension
       ';
     }
 
-    if(!$pluginStatus->isPluginConfiguredProperly){
+    if (!$pluginStatus->isPluginConfiguredProperly) {
       echo '
         <div class="notice notice-warning is-dismissible">
           <p>' . __('The Supertext Translation plugin cannot be used. It hasn\'t been configured correctly.', 'polylang-supertext') . '</p>
@@ -209,7 +209,7 @@ class AdminExtension
       'currentPostId' => $this->currentPostId,
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,
       'resourceUrl' => get_bloginfo('wpurl'),
-      'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+      'ajaxUrl' => admin_url('admin-ajax.php'),
       'newPostUrls' => $newPostUrls,
       'newPostAutoSaveFlag' => Constant::NEW_POST_AUTO_SAVE_FLAG
     );
@@ -218,7 +218,7 @@ class AdminExtension
 
     echo '<script type="text/javascript">
             var Supertext = Supertext || {};
-            Supertext.Context = '.$contextJson.';
+            Supertext.Context = ' . $contextJson . ';
           </script>';
   }
 
@@ -239,7 +239,7 @@ class AdminExtension
   public function addMetaBox()
   {
     //return if not edit screen and not existing post
-    if(!$this->isEditPostScreen() || $this->currentPostId <= 0){
+    if (!$this->isEditPostScreen() || $this->currentPostId <= 0) {
       return;
     }
 
@@ -256,7 +256,7 @@ class AdminExtension
     $status = array(
       'isTranslation' => $meta->is(TranslationMeta::TRANSLATION),
       'isInTranslation' => $meta->is(TranslationMeta::IN_TRANSLATION),
-      'hasChangedSinceLastTranslation' => strtotime($meta->get(TranslationMeta::TRANSLATION_DATE)) <  strtotime(get_post_field( 'post_modified', $this->currentPostId))
+      'hasChangedSinceLastTranslation' => strtotime($meta->get(TranslationMeta::TRANSLATION_DATE)) <  strtotime(get_post_field('post_modified', $this->currentPostId))
     );
 
     $logEntries = $this->log->getLogEntries($this->currentPostId);
@@ -316,32 +316,37 @@ class AdminExtension
    * Sets default data for new target post
    * @param $data post data as array
    */
-  public function setNewTargetPostData($data){
+  public function setNewTargetPostData($data)
+  {
     $sourcePost = get_post($_GET['source_post']);
-    
+
     $data['post_status'] = Constant::TRANSLATION_POST_STATUS;
     $data['post_title'] = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
-    
+
     return $data;
   }
 
   /**
-   * Sets new_lang (PLL GET parameter) as language of the target post and sets the target post as translation of from_post (PLL GET parameter)
+   * Sets language of the target post and sets the target post as translation of the source post
    * @param $targetPostId target post id
    */
-  public function assignLanguageToNewTargetPost($targetPostId) {
-    $this->library->setLanguage($_GET['from_post'], $targetPostId, Multilang::getPostLanguage($_GET['from_post']), $_GET['new_lang']);
+  public function assignLanguageToNewTargetPost($targetPostId)
+  {
+    Multilang::assignLanguageToNewTargetPost($targetPostId);
   }
 
-  private function isEditPostScreen(){
+  private function isEditPostScreen()
+  {
     return $this->screenBase == 'post' && $this->screenAction == 'edit';
   }
 
-  private function isPostsScreen(){
+  private function isPostsScreen()
+  {
     return $this->screenBase == 'edit' || $this->screenBase == 'upload';
   }
 
-  private function isSettingsScreen(){
+  private function isSettingsScreen()
+  {
     return $this->screenBase == 'settings_page_supertext-polylang-settings';
   }
-} 
+}

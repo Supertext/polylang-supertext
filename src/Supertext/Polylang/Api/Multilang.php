@@ -103,6 +103,15 @@ class Multilang
     self::getMultilangApi()->saveTermTranslations($arr);
   }
 
+   /**
+   * Assign a language to a target post using query strings as parameters
+   * @param $targetPostId target post id
+   */
+  public static function assignLanguageToNewTargetPost($targetPostId)
+  {
+    self::getMultilangApi()->assignLanguageToNewTargetPost($targetPostId);
+  }
+
   /**
    * Get whether WPML is active or not
    */

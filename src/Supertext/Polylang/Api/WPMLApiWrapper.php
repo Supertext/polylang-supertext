@@ -217,23 +217,9 @@ class WPMLApiWrapper implements IMultilangApi
      */
     public function assignLanguageToNewTargetPost($targetPostId)
     {
-        $sourceTrid = $_GET['trid'];
+        $trid = $_GET['trid'];
         $targetLanguage = $_GET['lang'];
 
-        $this->setPostLanguage($targetPostId, $targetLanguage, $sourceTrid);
-
-        /*$postsLanguageMappings = array(
-            $sourceLanguage => $sourcePostId,
-            $targetLanguage => $targetPostId
-        );
-
-        foreach ($this->getLanguages() as $language) {
-            $languagePostId = $this->getPostInLanguage($sourcePostId, $language->slug);
-            if ($languagePostId) {
-                $postsLanguageMappings[$language->slug] = $languagePostId;
-            }
-        }
-
-        $this->savePostTranslations($postsLanguageMappings);*/
+        $this->setPostLanguage($targetPostId, $targetLanguage, $trid);
     }
 }
