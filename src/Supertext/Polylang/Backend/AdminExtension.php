@@ -150,10 +150,10 @@ class AdminExtension
       return;
     }
 
-    if (!$pluginStatus->isPolylangActivated) {
+    if (!$pluginStatus->isMultilangActivated) {
       echo '
         <div class="notice notice-warning is-dismissible">
-          <p>' . __('The Supertext Translation plugin cannot be used. Polylang is not installed or hasn\'t been activated.', 'polylang-supertext') . '</p>
+          <p>' . __('The Supertext Translation plugin cannot be used. Polylang or WPML is not installed or hasn\'t been activated.', 'polylang-supertext') . '</p>
         </div>
       ';
     }
@@ -201,7 +201,7 @@ class AdminExtension
     $newPostUrls = Multilang::getNewPostUrls();
 
     $context = array(
-      'enable' => $pluginStatus->isPolylangActivated &&
+      'enable' => $pluginStatus->isMultilangActivated &&
         $pluginStatus->isCurlActivated &&
         $pluginStatus->isPluginConfiguredProperly &&
         $pluginStatus->isCurrentUserConfigured,

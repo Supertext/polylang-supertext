@@ -53,7 +53,7 @@ class Library
    */
   public function setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
   {
-    $sourceTrid = apply_filters( 'wpml_element_trid', NULL, $sourcePostId, 'post_' . get_post_type($sourcePostId));
+    $sourceTrid = apply_filters('wpml_element_trid', NULL, $sourcePostId, 'post_' . get_post_type($sourcePostId));
     Multilang::setPostLanguage($targetPostId, $targetLanguage, $sourceTrid);
 
     $postsLanguageMappings = array(
@@ -100,7 +100,7 @@ class Library
   {
     $options = get_option(Constant::SETTINGS_OPTION, array());
 
-    if(!isset($subSetting)){
+    if (!isset($subSetting)) {
       return $options;
     }
 
@@ -121,7 +121,8 @@ class Library
   /**
    * Deletes the setting option
    */
-  public function deleteSettingOption(){
+  public function deleteSettingOption()
+  {
     delete_option(Constant::SETTINGS_OPTION);
   }
 
@@ -131,7 +132,7 @@ class Library
    */
   public function isPluginActive($plugin)
   {
-    return in_array($plugin, (array) get_option('active_plugins', array())) || (is_multisite() && isset(get_site_option( 'active_sitewide_plugins')[$plugin]));
+    return in_array($plugin, (array) get_option('active_plugins', array())) || (is_multisite() && isset(get_site_option('active_sitewide_plugins')[$plugin]));
   }
 
   /**
@@ -139,20 +140,38 @@ class Library
    */
   public function isPolylangActivated()
   {
-    return $this->isPluginActive('polylang/polylang.php') || $this->isPluginActive('polylang-pro/polylang.php') || $this->isPluginActive('sitepress-multilingual-cms/sitepress.php');
+    return $this->isPluginActive('polylang/polylang.php') || $this->isPluginActive('polylang-pro/polylang.php');
   }
 
   /**
    * @return bool
    */
-  public function isCurlActivated(){
+  public function isWPMLActivated()
+  {
+    return $this->isPluginActive('sitepress-multilingual-cms/sitepress.php');
+  }
+
+  /**
+   * @return bool
+   */
+  public function isMultilangActivated()
+  {
+    return $this->isPolylangActivated() || $this->isWPMLActivated();
+  }
+
+  /**
+   * @return bool
+   */
+  public function isCurlActivated()
+  {
     return function_exists('curl_exec');
   }
 
   /**
    * @return bool
    */
-  public function isPluginConfiguredProperly(){
+  public function isPluginConfiguredProperly()
+  {
     $options = $this->getSettingOption();
 
     return
@@ -165,7 +184,8 @@ class Library
   /**
    * @return bool
    */
-  public function isCurrentUserConfigured(){
+  public function isCurrentUserConfigured()
+  {
     $userId = get_current_user_id();
     $cred = $this->getUserCredentials($userId);
 
@@ -185,8 +205,8 @@ class Library
     $languageMappingCodes = array_keys($languageMappings);
     $configuredLanguages = array();
 
-    foreach($languages as $language){
-      if(!in_array($language->slug, $languageMappingCodes)){
+    foreach ($languages as $language) {
+      if (!in_array($language->slug, $languageMappingCodes)) {
         continue;
       }
 
@@ -200,10 +220,12 @@ class Library
    * Gets the plugin status
    * @return null|\stdClass
    */
-  public function getPluginStatus(){
-    if($this->pluginStatus == null){
+  public function getPluginStatus()
+  {
+    if ($this->pluginStatus == null) {
       $this->pluginStatus =  new \stdClass();
-      $this->pluginStatus->isPolylangActivated = $this->isPolylangActivated();
+      $this->pluginStatus->isMultilangActivated = $this->isMultilangActivated();
+      $this->pluginStatus->isWPMLActivated = $this->isWPMLActivated();
       $this->pluginStatus->isCurlActivated = $this->isCurlActivated();
       $this->pluginStatus->isPluginConfiguredProperly = $this->isPluginConfiguredProperly();
       $this->pluginStatus->isCurrentUserConfigured = $this->isCurrentUserConfigured();
@@ -230,7 +252,7 @@ class Library
     $apiSettings = $this->getSettingOption(Constant::SETTING_API);
     $apiServerUrl = !empty($apiSettings['apiServerUrl']) ? $apiSettings['apiServerUrl'] : Constant::LIVE_API;
     $local = explode('_', get_locale());
-    $communicationLanguage = $local[0].'-'.$local[1];
+    $communicationLanguage = $local[0] . '-' . $local[1];
 
     // Get the ready to call instance
     return ApiClient::getInstance(
