@@ -13,19 +13,19 @@ use Supertext\Polylang\Api\WPMLApiWrapper;
 class Library
 {
   private $pluginStatus = null;
-  private $multilangApi = null;
+  private $multilang = null;
 
   /**
    * Make multilang API available through the library.
-   * @return \Supertext\Polylang\Api\IMultilangApi
+   * @return \Supertext\Polylang\Api\IMultilang
    */
-  public function getMultilangApi()
+  public function getMultilang()
   {
-    if ($this->multilangApi == null) {
-      $this->multilangApi = $this->isWPMLActivated() ? new WPMLApiWrapper() : new PolylangApiWrapper();
+    if ($this->multilang == null) {
+      $this->multilang = $this->isWPMLActivated() ? new WPMLApiWrapper() : new PolylangApiWrapper();
     }
 
-    return $this->multilangApi;
+    return $this->multilang;
   }
 
   /**
@@ -189,7 +189,7 @@ class Library
    */
   public function getConfiguredLanguages()
   {
-    $languages = $this->getMultilangApi()->getLanguages();
+    $languages = $this->getMultilang()->getLanguages();
     $languageMappings = $this->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
     $languageMappingCodes = array_keys($languageMappings);
     $configuredLanguages = array();

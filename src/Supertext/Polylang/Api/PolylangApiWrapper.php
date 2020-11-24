@@ -6,7 +6,7 @@ namespace Supertext\Polylang\Api;
  * Class PolylangApiWrapper
  * @package Supertext\Polylang\Api
  */
-class PolylangApiWrapper implements IMultilangApi
+class PolylangApiWrapper implements IMultilang
 {
     private $newPostUrls = array();
 

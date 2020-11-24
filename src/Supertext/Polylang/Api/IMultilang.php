@@ -2,7 +2,7 @@
 
 namespace Supertext\Polylang\Api;
 
-interface IMultilangApi
+interface IMultilang
 {
   /**
    * Get all configured languages

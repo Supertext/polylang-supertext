@@ -197,7 +197,7 @@ class AdminExtension
     }
 
     $pluginStatus = $this->library->getPluginStatus();
-    $newPostUrls = $this->library->getMultilangApi()->getNewPostUrls();
+    $newPostUrls = $this->library->getMultilang()->getNewPostUrls();
 
     $context = array(
       'enable' => $pluginStatus->isMultilangActivated &&
@@ -326,7 +326,7 @@ class AdminExtension
   }
 
   public function assignLanguageToNewTargetPost($targetPostId){
-    $this->library->getMultilangApi()->assignLanguageToNewTargetPost($_GET['source_post'], $targetPostId, $_GET['target_lang']);
+    $this->library->getMultilang()->assignLanguageToNewTargetPost($_GET['source_post'], $targetPostId, $_GET['target_lang']);
   }
 
   private function isEditPostScreen()

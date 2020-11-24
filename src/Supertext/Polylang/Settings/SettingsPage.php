@@ -262,7 +262,7 @@ class SettingsPage extends AbstractPage
     }
 
     $languageMap = array();
-    foreach ($this->library->getMultilangApi()->getLanguages() as $language) {
+    foreach ($this->library->getMultilang()->getLanguages() as $language) {
       if(empty($_POST['sel_st_language_'.$language->slug])){
         continue;
       }

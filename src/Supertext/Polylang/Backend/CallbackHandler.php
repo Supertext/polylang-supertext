@@ -90,7 +90,7 @@ class CallbackHandler
     $contentData = $writeBack->getContentData();
 
     foreach ($writeBack->getSourcePostIds() as $sourcePostId) {
-      $targetPostId = $this->library->getMultilangApi()->getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
+      $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
 
       if ($targetPostId == null) {
         $errors[$sourcePostId] = 'There is no linked post for saving the translation.';
@@ -150,7 +150,7 @@ class CallbackHandler
     $orderIdMessage = '';
     foreach ($sourcePostIds as $sourcePostId) {
       $targetLanguageCode = $writeBack->getTargetLanguageCode();
-      $targetPostId = $this->library->getMultilangApi()->getPostInLanguage($sourcePostId, $targetLanguageCode);
+      $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $targetLanguageCode);
       $postOrderId = $this->log->getLastOrderId($targetPostId);
       $isOrderIdMismatch = $isOrderIdMismatch || $orderId !== $postOrderId;
       $orderIdMessage .= " The post $sourcePostId was last ordered with order $postOrderId for $targetLanguageCode.\n";

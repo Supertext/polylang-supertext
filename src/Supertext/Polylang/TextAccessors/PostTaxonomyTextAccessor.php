@@ -109,11 +109,11 @@ class PostTaxonomyTextAccessor implements ITextAccessor
    */
   public function setTexts($post, $texts)
   {
-    $postLanguage = $this->library->getMultilangApi()->getPostLanguage($post->ID);
+    $postLanguage = $this->library->getMultilang()->getPostLanguage($post->ID);
 
     foreach ($texts as $taxonomy => $terms) {
       foreach ($terms as $sourceTermId => $term) {
-        $translationTermId = $this->library->getMultilangApi()->getTermInLanguage($sourceTermId, $postLanguage);
+        $translationTermId = $this->library->getMultilang()->getTermInLanguage($sourceTermId, $postLanguage);
 
         if ($translationTermId == null) {
           $translationTerm = wp_insert_term($term, $taxonomy);
@@ -124,7 +124,7 @@ class PostTaxonomyTextAccessor implements ITextAccessor
 
           $translationTermId = $translationTerm['term_id'];
 
-          $this->library->getMultilangApi()->assignLanguageToNewTargetTerm($sourceTermId, $translationTermId, $postLanguage, $taxonomy);
+          $this->library->getMultilang()->assignLanguageToNewTargetTerm($sourceTermId, $translationTermId, $postLanguage, $taxonomy);
 
         } else {
           wp_update_term($translationTermId, $taxonomy, array(

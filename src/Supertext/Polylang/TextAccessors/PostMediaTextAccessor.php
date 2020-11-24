@@ -103,9 +103,9 @@ class PostMediaTextAccessor implements ITextAccessor
 
     foreach ($texts as $sourceAttachmentId => $text) {
 
-      $sourceLanguage = $this->library->getMultilangApi()->getPostLanguage($sourceAttachmentId);
-      $targetLanguage = $this->library->getMultilangApi()->getPostLanguage($post->ID);
-      $targetAttachmentId = $this->library->getMultilangApi()->getPostInLanguage($sourceAttachmentId, $targetLanguage);
+      $sourceLanguage = $this->library->getMultilang()->getPostLanguage($sourceAttachmentId);
+      $targetLanguage = $this->library->getMultilang()->getPostLanguage($post->ID);
+      $targetAttachmentId = $this->library->getMultilang()->getPostInLanguage($sourceAttachmentId, $targetLanguage);
 
       if ($targetAttachmentId == null) {
         $targetAttachmentId = $this->createTargetAttachment($post, $sourceAttachmentId, $sourceLanguage, $targetLanguage);
@@ -173,7 +173,7 @@ class PostMediaTextAccessor implements ITextAccessor
         continue;
       }
 
-      $attachmentId = $this->library->getMultilangApi()->getPostInLanguage($attachmentId, $this->library->getMultilangApi()->getPostLanguage($post->ID));
+      $attachmentId = $this->library->getMultilang()->getPostInLanguage($attachmentId, $this->library->getMultilang()->getPostLanguage($post->ID));
 
       if (isset($texts[$attachmentId])) {
         continue;
@@ -213,7 +213,7 @@ class PostMediaTextAccessor implements ITextAccessor
       }
     }
 
-    $this->library->getMultilangApi()->assignLanguageToNewTargetPost($sourceAttachmentId, $targetAttachmentId, $targetLanguage);
+    $this->library->getMultilang()->assignLanguageToNewTargetPost($sourceAttachmentId, $targetAttachmentId, $targetLanguage);
     
     return $targetAttachmentId;
   }

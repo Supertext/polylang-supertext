@@ -7,7 +7,7 @@ $languageMappings = $library->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
 
 // Laod Languages from Polylang to match with supertext api
 $htmlLanguageDropdown = '';
-$languages = $library->getMultilangApi()->getLanguages();
+$languages = $library->getMultilang()->getLanguages();
 
 // Create the language matcher dropdown
 foreach ($languages as $language) {
