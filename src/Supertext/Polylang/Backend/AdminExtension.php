@@ -5,7 +5,6 @@ namespace Supertext\Polylang\Backend;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TranslationMeta;
 use Supertext\Polylang\Helper\View;
-use Supertext\Polylang\Api\Multilang;
 
 /**
  * Serves as a helper for the translation inject to the user
@@ -85,7 +84,7 @@ class AdminExtension
 
     if (isset($_GET[Constant::NEW_POST_AUTO_SAVE_FLAG]) && isset($_GET['source_post'])) {
       add_filter('wp_insert_post_data', array($this, 'setNewTargetPostData'), 1000, 1);
-      add_action('save_post', array($this, 'assignLanguageToNewTargetPost'), 10, 1);
+      add_action('save_post', array($this->library->getMultilangApi(), 'assignLanguageToNewTargetPost'), 10, 1);
     }
   }
 
@@ -198,7 +197,7 @@ class AdminExtension
     }
 
     $pluginStatus = $this->library->getPluginStatus();
-    $newPostUrls = Multilang::getNewPostUrls();
+    $newPostUrls = $this->library->getMultilangApi()->getNewPostUrls();
 
     $context = array(
       'enable' => $pluginStatus->isMultilangActivated &&
@@ -324,15 +323,6 @@ class AdminExtension
     $data['post_title'] = $sourcePost->post_title . ' [' . __('In translation', 'polylang-supertext') . '...]';
 
     return $data;
-  }
-
-  /**
-   * Sets language of the target post and sets the target post as translation of the source post
-   * @param $targetPostId target post id
-   */
-  public function assignLanguageToNewTargetPost($targetPostId)
-  {
-    Multilang::assignLanguageToNewTargetPost($targetPostId);
   }
 
   private function isEditPostScreen()

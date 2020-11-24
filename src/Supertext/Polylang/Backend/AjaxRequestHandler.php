@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang\Backend;
 
-use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TranslationMeta;
@@ -63,7 +62,7 @@ class AjaxRequestHandler
       $translationInfo[] = array(
         'id' => $postId,
         'title' => $post->post_title,
-        'languageCode' => Multilang::getPostLanguage($postId),
+        'languageCode' => $this->library->getMultilangApi()->getPostLanguage($postId),
         'meta' => TranslationMeta::of($postId)->get(array(
           TranslationMeta::IN_TRANSLATION,
           TranslationMeta::SOURCE_LANGUAGE_CODE
@@ -127,7 +126,7 @@ class AjaxRequestHandler
 
     $result = array();
     foreach($sourcePostIds as $sourcePostId){
-      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
+      $targetPostId = $this->library->getMultilangApi()->getPostInLanguage($sourcePostId, $targetLanguage);
 
       if ($targetPostId != null) {
         continue;
@@ -302,7 +301,7 @@ class AjaxRequestHandler
     $targetPostIds = array();
 
     foreach ($sourcePostIds as $sourcePostId) {
-      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $targetLanguage);
+      $targetPostId = $this->library->getMultilangApi()->getPostInLanguage($sourcePostId, $targetLanguage);
 
       // Problem: getPostLanguage returns null
 
@@ -389,7 +388,7 @@ class AjaxRequestHandler
       $this->library->getApiClient(),
       $this->log->getLastOrderId($targetPostId),
       $this->library->toSuperCode($sourceLanguageCode),
-      $this->library->toSuperCode(Multilang::getPostLanguage($targetPostId)),
+      $this->library->toSuperCode($this->library->getMultilangApi()->getPostLanguage($targetPostId)),
       $this->getContent($oldTranslatableContent)['data'],
       $this->getContent($newTranslatableContent)['data']
     );
@@ -449,9 +448,9 @@ class AjaxRequestHandler
   {
     $unfinishedTranslations = array();
 
-    $languages = Multilang::getLanguages();
+    $languages = $this->library->getMultilangApi()->getLanguages();
     foreach ($languages as $language) {
-      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $language->slug);
+      $targetPostId = $this->library->getMultilangApi()->getPostInLanguage($sourcePostId, $language->slug);
 
       if ($targetPostId == null || $targetPostId == $sourcePostId || !TranslationMeta::of($targetPostId)->is(TranslationMeta::IN_TRANSLATION)) {
         continue;

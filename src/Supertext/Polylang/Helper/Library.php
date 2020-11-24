@@ -3,7 +3,8 @@
 namespace Supertext\Polylang\Helper;
 
 use Supertext\Polylang\Api\ApiClient;
-use Supertext\Polylang\Api\Multilang;
+use Supertext\Polylang\Api\PolylangApiWrapper;
+use Supertext\Polylang\Api\WPMLApiWrapper;
 
 /**
  * Class Library
@@ -12,6 +13,20 @@ use Supertext\Polylang\Api\Multilang;
 class Library
 {
   private $pluginStatus = null;
+  private $multilangApi = null;
+
+  /**
+   * Make multilang API available through the library.
+   * @return \Supertext\Polylang\Api\IMultilangApi
+   */
+  public function getMultilangApi()
+  {
+    if ($this->multilangApi == null) {
+      $this->multilangApi = $this->isWPMLActivated() ? new WPMLApiWrapper() : new PolylangApiWrapper();
+    }
+
+    return $this->multilangApi;
+  }
 
   /**
    * @param string $languageCode polylang language code
@@ -54,21 +69,21 @@ class Library
   public function setLanguage($sourcePostId, $targetPostId, $sourceLanguage, $targetLanguage)
   {
     $sourceTrid = apply_filters('wpml_element_trid', NULL, $sourcePostId, 'post_' . get_post_type($sourcePostId));
-    Multilang::setPostLanguage($targetPostId, $targetLanguage, $sourceTrid);
+    $this->getMultilangApi()->setPostLanguage($targetPostId, $targetLanguage, $sourceTrid);
 
     $postsLanguageMappings = array(
       $sourceLanguage => $sourcePostId,
       $targetLanguage => $targetPostId
     );
 
-    foreach (Multilang::getLanguages() as $language) {
-      $languagePostId = Multilang::getPostInLanguage($sourcePostId, $language->slug);
+    foreach ($this->getMultilangApi()->getLanguages() as $language) {
+      $languagePostId = $this->getMultilangApi()->getPostInLanguage($sourcePostId, $language->slug);
       if ($languagePostId) {
         $postsLanguageMappings[$language->slug] = $languagePostId;
       }
     }
 
-    Multilang::savePostTranslations($postsLanguageMappings);
+    $this->getMultilangApi()->savePostTranslations($postsLanguageMappings);
   }
 
   /**
@@ -200,7 +215,7 @@ class Library
    */
   public function getConfiguredLanguages()
   {
-    $languages = Multilang::getLanguages();
+    $languages = $this->getMultilangApi()->getLanguages();
     $languageMappings = $this->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
     $languageMappingCodes = array_keys($languageMappings);
     $configuredLanguages = array();

@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang\Settings;
 
-use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\Library;
 use Supertext\Polylang\Helper\TranslationMeta;
@@ -263,7 +262,7 @@ class SettingsPage extends AbstractPage
     }
 
     $languageMap = array();
-    foreach (Multilang::getLanguages() as $language) {
+    foreach ($this->library->getMultilangApi()->getLanguages() as $language) {
       if(empty($_POST['sel_st_language_'.$language->slug])){
         continue;
       }

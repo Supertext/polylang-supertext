@@ -58,7 +58,7 @@ class WriteBack
 
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
     foreach ($sourcePostIds as $sourcePostId) {
-      $targetPostId = Multilang::getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
+      $targetPostId = $this->library->getMultilangApi()->getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
       $referenceHash = TranslationMeta::of($targetPostId)->get(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH);
       $referenceData ^= hex2bin($referenceHash);
     }

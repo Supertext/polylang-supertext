@@ -2,7 +2,6 @@
 
 namespace Supertext\Polylang\TextAccessors;
 
-use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Helper\Library;
 
 /**
@@ -104,9 +103,9 @@ class PostMediaTextAccessor implements ITextAccessor
 
     foreach ($texts as $sourceAttachmentId => $text) {
 
-      $sourceLanguage = Multilang::getPostLanguage($sourceAttachmentId);
-      $targetLanguage = Multilang::getPostLanguage($post->ID);
-      $targetAttachmentId = Multilang::getPostInLanguage($sourceAttachmentId, $targetLanguage);
+      $sourceLanguage = $this->library->getMultilangApi()->getPostLanguage($sourceAttachmentId);
+      $targetLanguage = $this->library->getMultilangApi()->getPostLanguage($post->ID);
+      $targetAttachmentId = $this->library->getMultilangApi()->getPostInLanguage($sourceAttachmentId, $targetLanguage);
 
       if ($targetAttachmentId == null) {
         $targetAttachmentId = $this->createTargetAttachment($post, $sourceAttachmentId, $sourceLanguage, $targetLanguage);
@@ -174,7 +173,7 @@ class PostMediaTextAccessor implements ITextAccessor
         continue;
       }
 
-      $attachmentId = Multilang::getPostInLanguage($attachmentId, Multilang::getPostLanguage($post->ID));
+      $attachmentId = $this->library->getMultilangApi()->getPostInLanguage($attachmentId, $this->library->getMultilangApi()->getPostLanguage($post->ID));
 
       if (isset($texts[$attachmentId])) {
         continue;
