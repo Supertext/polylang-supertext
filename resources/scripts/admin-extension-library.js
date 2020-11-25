@@ -48,6 +48,10 @@ Supertext.Template = (function (win, doc, $, wp) {
        */
       contentStep: 'sttr-content-step',
       /**
+       * The content step id for proofreading
+       */
+      contentStepPr: 'sttr-content-step-pr',
+      /**
        * The item content id
        */
       itemContent: 'sttr-item-content',
@@ -55,6 +59,10 @@ Supertext.Template = (function (win, doc, $, wp) {
        * The quote step id
        */
       quoteStep: 'sttr-quote-step',
+      /**
+       * The quote step id for proofreading
+       */
+      quoteStepPr: 'sttr-quote-step-pr',
       /**
        * The confirmation step id
        */
@@ -75,7 +83,11 @@ Supertext.Template = (function (win, doc, $, wp) {
           };
         });
       }
-    };
+    },
+    /**
+     * set to true if it's proofreading
+     */
+    isProofreading = false;
 
   function getHtml(templateId, data) {
     if (!templates.hasOwnProperty(templateId)) {
@@ -493,7 +505,7 @@ Supertext.Polylang = (function (win, doc, $) {
           return;
         }
 
-        fail(l10n.errorValidationSelectContent);
+        fail(Supertext.Polylang.isProofreading ? l10n.errorValidationSelectContentPr : l10n.errorValidationSelectContent);
       },
       targetLanguage: function (fail) {
         if ($(selectors.orderTargetLanguageSelect).val() === '') {
@@ -533,11 +545,19 @@ Supertext.Polylang = (function (win, doc, $) {
      * @param data
      */
     self.addStepElements = function () {
-      $(selectors.orderStep).html(template.contentStep({
-        posts: state.posts,
-        targetLanguageCode: state.targetLanguageCode,
-        languages: l10n.languages
-      }));
+      if(Supertext.Polylang.isProofreading){
+        $(selectors.orderStep).html(template.contentStepPr({
+          posts: state.posts,
+          targetLanguageCode: state.targetLanguageCode,
+          languages: l10n.languages
+        }));
+      }else {
+        $(selectors.orderStep).html(template.contentStep({
+          posts: state.posts,
+          targetLanguageCode: state.targetLanguageCode,
+          languages: l10n.languages
+        }));
+      }
     };
 
     /**
@@ -553,6 +573,13 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     self.saveForm = function () {
       state.contentFormData = $(selectors.contentStepForm).serializeArray();
+
+      if(Supertext.Polylang.isProofreading){
+        state.contentFormData.push(
+          {name: 'orderTargetLanguage', value: $(selectors.orderSourceLanguageInput).attr('data-fallback-lang')},
+          {name: 'serviceType', value: 3}
+        );
+      }
     };
 
     /**
@@ -740,6 +767,17 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     function setLanguages() {
       var sourceLanguageCode = state.posts[0].languageCode;
+
+      if(Supertext.Polylang.isProofreading){
+        var getLang = $(selectors.orderSourceLanguageInput).attr('data-fallback-lang');
+
+        if(sourceLanguageCode === false){
+          state.posts[0].languageCode = getLang;
+        }
+
+        sourceLanguageCode = getLang;
+      }
+
       $(selectors.orderSourceLanguageLabel).html(l10n.languages[sourceLanguageCode]);
       $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
 
@@ -761,7 +799,7 @@ Supertext.Polylang = (function (win, doc, $) {
   var quoteStep = function () {
     var self = this;
 
-    self.nextButtonName = l10n.orderTranslation;
+    self.nextButtonName = Supertext.Polylang.isProofreading ? l10n.orderProofreading : l10n.orderTranslation;
 
     self.validationRules = {
       quote: function (fail) {
@@ -786,11 +824,19 @@ Supertext.Polylang = (function (win, doc, $) {
      * @param data
      */
     self.addStepElements = function (data) {
-      $(selectors.orderStep).html(template.quoteStep({
-        wordCount: data.wordCount,
-        language: data.language,
-        options: data.options
-      }));
+      if(Supertext.Polylang.isProofreading){
+        $(selectors.orderStep).html(template.quoteStepPr({
+          wordCount: data.wordCount,
+          language: data.language,
+          options: data.options
+        }));
+      }else {
+        $(selectors.orderStep).html(template.quoteStep({
+          wordCount: data.wordCount,
+          language: data.language,
+          options: data.options
+        }));
+      }
     };
 
     /**
@@ -813,21 +859,27 @@ Supertext.Polylang = (function (win, doc, $) {
     self.loadData = function () {
       var postData = state.contentFormData.concat(state.quoteFormData);
 
+      if(Supertext.Polylang.isProofreading){
+        postData.push({name: 'isProofreading', value: 1});
+      }
+
       return doPostRequest(
         context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
         postData)
         .then(function (createPostsData) {
-          var requests = [];
-  
-          requests = $.map(createPostsData, function (createPostData) {
-            var autoSaveQueryParam = {};
-            autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
-            autoSaveQueryParam.source_post = createPostData.fromPost;
-            autoSaveQueryParam.target_lang = createPostData.newLang;
-            return doGetRequest(context.newPostUrls[createPostData.fromPost][createPostData.newLang], autoSaveQueryParam);
-          });
+          if(!Supertext.Polylang.isProofreading) {
+            var requests = [];
 
-          return $.when.apply($, requests);
+            requests = $.map(createPostsData, function (createPostData) {
+              var autoSaveQueryParam = {};
+              autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
+              autoSaveQueryParam.source_post = createPostData.fromPost;
+              autoSaveQueryParam.target_lang = createPostData.newLang;
+              return doGetRequest(context.newPostUrls[createPostData.fromPost][createPostData.newLang], autoSaveQueryParam);
+            });
+
+            return $.when.apply($, requests);
+          }
         })
         .then(function () {
           return doPostRequest(
@@ -979,7 +1031,7 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function startOrderProcess() {
     steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
-    openModal(l10n.orderModalTitle);
+    openModal(Supertext.Polylang.isProofreading ? l10n.orderModalTitlePr : l10n.orderModalTitle);
     addOrderProgressBar();
     addCancelButton();
     addBackButton();
@@ -1294,9 +1346,19 @@ Supertext.Polylang = (function (win, doc, $) {
    * Opens the order form in a thickbox
    * @param targetLanguageCode
    */
-  function openOrderForm(targetLanguageCode) {
+  function openOrderForm(targetLanguageCode, isProofreading) {
+    this.isProofreading = isProofreading !== undefined;
+
     if (hasUnsavedChanges() && !confirm(l10n.confirmUnsavedPost)) {
       return;
+    }
+
+    if(Supertext.Polylang.isProofreading) {
+      selectors.contentStepForm = '#sttr-content-step-form-pr';
+      selectors.quoteStepForm = '#sttr-quote-step-form-pr';
+    }else{
+      selectors.contentStepForm = '#sttr-content-step-form';
+      selectors.quoteStepForm = '#sttr-quote-step-form';
     }
 
     state.postIds = [context.currentPostId];

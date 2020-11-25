@@ -2,6 +2,7 @@
 
 namespace Supertext\Polylang\Backend;
 
+use Supertext\Polylang\Proofreading\Proofreading;
 use Supertext\Polylang\Helper\Constant;
 use Supertext\Polylang\Helper\TranslationMeta;
 use Supertext\Polylang\Helper\View;
@@ -242,7 +243,8 @@ class AdminExtension
       return;
     }
 
-    add_meta_box(self::META_BOX, __('Supertext Translation', 'polylang-supertext'), array($this, 'displayMetaBoxView'), null, 'side');
+    add_meta_box(self::META_BOX, __('Supertext', 'polylang-supertext'), array($this, 'displayMetaBoxView'), null, 'side');
+    Proofreading::getInstance()->setupMetabox();
   }
 
   /**
@@ -269,6 +271,17 @@ class AdminExtension
       'syncTranslationChanges' => isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges'],
       'logEntries' => $logEntries
     ));
+  }
+
+  public function addNewPostUrl($link, $language, $post_id)
+  {
+    if(!isset($this->newPostUrls[$post_id])){
+      $this->newPostUrls[$post_id] = Array();
+    }
+
+    $this->newPostUrls[$post_id][$language->slug] = urldecode(html_entity_decode($link));
+
+    return $link;
   }
 
   /**

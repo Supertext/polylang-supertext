@@ -167,6 +167,74 @@
   </form>
 </script>
 
+<script type="text/html" id="tmpl-sttr-content-step-pr">
+  <form id="sttr-content-step-form-pr">
+    <h2><?php _e('Content to be proofreaded', 'polylang-supertext'); ?></h2>
+
+    <div class="sttr-order-list">
+      <div class="sttr-order-items">
+        <ul>
+          <# _.each(data.posts, function(post) { #>
+          <li class="{{post.meta.inTranslation ? 'hasError' : ''}}">
+            <a href="#sttr-order-content-selection-{{post.id}}" data-post-id="{{post.id}}">
+              <span class="dashicons dashicons-no-alt"></span>
+              {{post.title}} ({{post.languageCode}}{{post.meta.inTranslation ? ', <?php _e('blocked', 'polylang-supertext'); ?>' : ''}}{{post.isDraft ? ', <?php _e('draft', 'polylang-supertext'); ?>' : ''}})
+            </a>
+          </li>
+          <# }); #>
+        </ul>
+      </div>
+      <div class="sttr-order-item-details">
+        <# _.each(data.posts, function(post) { #>
+        <div id="sttr-order-content-selection-{{post.id}}" style="display: none;">
+          <h3>{{post.title}}</h3>
+          <# if(post.meta.inTranslation){ #>
+          <p class="notice notice-error">
+            <span class="error-message"><?php _e('The post cannot be proofreaded. It is blocked by a proofread order in progress.', 'polylang-supertext');?></span>
+          </p>
+          <# }else if(post.isDraft){ #>
+          <p class="notice notice-warning">
+            <span><?php _e('The post status is <b>draft</b>. Are you sure you want to order a proofread for this article?', 'polylang-supertext');?></span>
+          </p>
+          <# } #>
+          <p>
+            <?php _e('Please select the content to be proofreaded.', 'polylang-supertext');?>
+          </p>
+          <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
+          <h2>{{translatableFieldGroup.name}}</h2>
+
+          <# if(translatableFieldGroup.fields.length){ #>
+
+          <# _.each(translatableFieldGroup.fields, function(field, index) { #>
+          <div class="column">
+            <label>
+              <# if(field.checkedPerDefault){ #>
+              <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{groupId}}][fields][{{field.name}}]" checked="checked">
+              <# } else { #>
+              <input type="checkbox" id="sttr-{{post.id}}-{{groupId}}-{{field.name}}" name="translatableContents[{{post.id}}][{{groupId}}][fields][{{field.name}}]">
+              <# } #>
+              {{field.title}}
+            </label>
+          </div>
+          <# }); #>
+
+          <# } else { #>
+          - <?php _e('Not present in this post', 'polylang-supertext');?>
+          <# } #>
+          <div class="clearfix"></div>
+          <# }); #>
+        </div>
+        <# }); #>
+      </div>
+      <div class="clearfix"></div>
+      <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post', 'plugin-supertext');?></button>
+      <button id="sttr-order-show-item-content" class="button button-secondary"><?php _e('Show content', 'plugin-supertext');?></button>
+      <div class="clearfix"></div>
+      <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language" data-fallback-lang="<?php echo get_bloginfo('language') ?>"/>
+    </div>
+  </form>
+</script>
+
 <script type="text/html" id="tmpl-sttr-item-content">
   <div class="sttr-item-content">
     <# _.each(data.contentData, function(group) { #>
@@ -218,6 +286,49 @@
             <# }); #>
               <tr class="last-group-row"></tr>
               <# }); #>
+        </tbody>
+      </table>
+    </div>
+    <h2><?php _e('Your comment to Supertext', 'polylang-supertext'); ?></h2>
+    <p><textarea name="orderComment" id="sttr-order-comment"></textarea></p>
+  </form>
+</script>
+
+<script type="text/html" id="tmpl-sttr-quote-step-pr">
+  <form id="sttr-quote-step-form-pr">
+    <h2><?php _e('Service and deadline', 'polylang-supertext'); ?></h2>
+    <p><?php _e('Select the proofreading service and deadline for proofreading <b>{{data.wordCount}} words</b>:', 'polylang-supertext'); ?></p>
+    <div class="sttr-order-item-quote">
+      <table cellspacing="0" cellpadding="2" border="0">
+        <tbody>
+        <# _.each(data.options, function(option) { #>
+        <tr class="first-group-row">
+          <td class="quality-group-cell" rowspan="{{option.items.length+1}}">
+            <b>{{option.name}}</b>
+          </td>
+          <td class="selection-cell">&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <# _.each(option.items, function(item) { #>
+        <tr>
+          <td class="selection-cell">
+            <input type="radio" value="{{option.id}}:{{item.id}}" id="sttr-rad-translation-type-{{option.id}}-{{item.id}}" name="translationType">
+          </td>
+          <td>
+            <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.name}}</label>
+          </td>
+          <td align="right" class="ti-deadline">
+            <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.date}}</label>
+          </td>
+          <td align="right" class="ti-deadline">
+            <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.price}}</label>
+          </td>
+        </tr>
+        <# }); #>
+        <tr class="last-group-row"></tr>
+        <# }); #>
         </tbody>
       </table>
     </div>

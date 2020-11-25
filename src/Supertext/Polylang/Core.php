@@ -26,6 +26,7 @@ use Supertext\Polylang\TextAccessors\SiteOriginTextAccessor;
 use Supertext\Polylang\TextAccessors\VisualComposerTextAccessor;
 use Supertext\Polylang\TextAccessors\YoastSeoTextAccessor;
 use Supertext\Polylang\Settings\SettingsPage;
+use Supertext\Polylang\Proofreading\Proofreading;
 
 /**
  * Core Class that initializes the plugins features
@@ -75,6 +76,11 @@ class Core
   private $callbackHandler = null;
 
   /**
+   * @var Proofreading the proofreading handler
+   */
+  private $proofreading = null;
+
+  /**
    * Creates the instance and saves reference
    */
   public function __construct()
@@ -112,6 +118,9 @@ class Core
         $this->getLog(),
         $this->getContentProvider()
       );
+
+      // Load the proofreading class
+      $this->proofreading = new Proofreading();
 
       $this->checkVersion();
       $this->checkEnvironment();
@@ -172,9 +181,11 @@ class Core
       'errorValidationNotAllPostInSameLanguage' => esc_js(__('Please only select posts in the same language.', 'polylang-supertext')),
       'errorValidationSomePostInTranslation' => esc_js(__('Blocked posts cannot be translated.', 'polylang-supertext')),
       'errorValidationSelectContent' => esc_js(__('Please select content to be translated.', 'polylang-supertext')),
+      'errorValidationSelectContentPr' => esc_js(__('Please select content to be proofreaded.', 'polylang-supertext')),
       'errorValidationSelectTargetLanguage' => esc_js(__('Please select the target language.', 'polylang-supertext')),
       'errorValidationSelectQuote' => esc_js(__('Please choose a quote.', 'polylang-supertext')),
       'orderModalTitle' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
+      'orderModalTitlePr' => esc_js(__('Your Supertext proofread order', 'polylang-supertext')),
       'sendChangesModalTitle' => esc_js(__('Send changes to Supertext', 'polylang-supertext')),
       'orderTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
       'cancel' => esc_js(__('Cancel', 'polylang-supertext')),
@@ -183,6 +194,7 @@ class Core
       'close' => esc_js(__('Close window', 'polylang-supertext')),
       'alertPleaseSelect' => esc_js(__('Please select at least one post', 'polylang-supertext')),
       'alreadyBeingTranslatedInto' => esc_js(__('<i>{0}</i> is already being translated into {1} (order id: {2})', 'polylang-supertext')),
+      'orderProofreading' =>  esc_js(__('Order proofread', 'polylang-supertext')),
     );
 
     $library = $this->getLibrary();
