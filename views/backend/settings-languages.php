@@ -1,6 +1,5 @@
 <?php
 use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Api\Multilang;
 use Supertext\Polylang\Api\Wrapper;
 
 /** @var \Supertext\Polylang\Helper\Library $library */
@@ -8,18 +7,18 @@ $languageMappings = $library->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
 
 // Laod Languages from Polylang to match with supertext api
 $htmlLanguageDropdown = '';
-$languages = Multilang::getLanguages();
+$languages = $library->getMultilang()->getLanguages();
 
 // Create the language matcher dropdown
 foreach ($languages as $language) {
   // Get anonymous wrapper to get languages
-  try{
+  try {
     $stMapping = Wrapper::getLanguageMapping($library->getApiClient(), $language->slug, $language->name);
-  }catch (Exception $e){
+  } catch (Exception $e) {
     echo '
         <div class="updated fade error">
         <p>
-        '.$e->getMessage().'
+        ' . $e->getMessage() . '
         </p>
         </div>
       ';
@@ -36,7 +35,7 @@ foreach ($languages as $language) {
   }
   $languageDropdown = '
     <select name="sel_st_language_' . $language->slug . '" id="sel_st_language_' . $language->slug . '">
-      <option value="">'.__('Please select', 'polylang-supertext').'...</option>
+      <option value="">' . __('Please select', 'polylang-supertext') . '...</option>
       ' . $languageDropdown . '
     </select>';
 
@@ -50,7 +49,7 @@ foreach ($languages as $language) {
 // Wenn gar keine Mehrsprachigkeit vorhanden ist melden
 if (count($languages) > 0) {
   $translateTool = 'Polylang';
-  if(function_exists('icl_object_id')){
+  if ($library->isWPMLActivated()) {
     $translateTool = 'WPML';
   }
   echo '
