@@ -177,6 +177,7 @@ class Core
       'networkError' => esc_js(__('A network error occurred', 'polylang-supertext')),
       'validationError' => esc_js(__('Validation error', 'polylang-supertext')),
       'offerTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
+      'offerProofread' => esc_js(__('Order proofread', 'polylang-supertext')),
       'confirmUnsavedPost' => esc_js(__('The post was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'polylang-supertext')),
       'errorValidationNotAllPostInSameLanguage' => esc_js(__('Please only select posts in the same language.', 'polylang-supertext')),
       'errorValidationSomePostInTranslation' => esc_js(__('Blocked posts cannot be translated.', 'polylang-supertext')),

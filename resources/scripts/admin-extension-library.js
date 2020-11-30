@@ -352,6 +352,11 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     orderTranslationBulkActionValue = 'orderTranslation',
     /**
+     * Order proofread bulk action option value
+     * @type {string}
+     */
+    orderProofreadBulkActionValue = 'orderProofread',
+    /**
      * The selectors of different html elements
      */
     selectors = {
@@ -990,6 +995,8 @@ Supertext.Polylang = (function (win, doc, $) {
   function initializeEditScreen() {
     $('<option>').val(orderTranslationBulkActionValue).text(l10n.offerTranslation).appendTo("select[name='action']");
     $('<option>').val(orderTranslationBulkActionValue).text(l10n.offerTranslation).appendTo("select[name='action2']");
+    $('<option>').val(orderProofreadBulkActionValue).text(l10n.offerProofread).appendTo("select[name='action']");
+    $('<option>').val(orderProofreadBulkActionValue).text(l10n.offerProofread).appendTo("select[name='action2']");
 
     $('#doaction, #doaction2').click(onBulkActionApply);
   }
@@ -1001,7 +1008,12 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function onBulkActionApply(e) {
     var selectName = $(this).attr('id').substr(2);
-    if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue) {
+    Supertext.Polylang.isProofreading = $('select[name="' + selectName + '"]').val() === orderProofreadBulkActionValue;
+
+    selectors.contentStepForm = '#sttr-content-step-form' + (Supertext.Polylang.isProofreading ? '-pr' : '');
+    selectors.quoteStepForm = '#sttr-quote-step-form' + (Supertext.Polylang.isProofreading ? '-pr' : '');
+
+    if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue && !Supertext.Polylang.isProofreading) {
       return true;
     }
 
