@@ -7,7 +7,7 @@ $htmlListTree = $this->convertToHtmlListTree($fieldDefinitions);
   <div class="inside">
     <h3><?php echo $pluginName; ?></h3>
     <p>
-      <?php _e('Please select the custom fields that can be used for translations.', 'polylang-supertext'); ?>
+      <?php _e('Please select the custom fields that can be used for translations.', 'supertext'); ?>
     </p>
     <div id="fieldDefinitionsTree<?php echo $pluginId; ?>">
       <?php echo $htmlListTree; ?>
