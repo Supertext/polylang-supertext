@@ -2,7 +2,6 @@
 
 namespace Supertext\Backend;
 
-use LBWP\Module\General\Cms\SystemLog;
 use Supertext\Api\Wrapper;
 use Supertext\Helper\Constant;
 use Supertext\Helper\TranslationMeta;
@@ -111,9 +110,6 @@ class AjaxRequestHandler
   public function getOfferAjax()
   {
     $content = $this->getContent($_POST['translatableContents']);
-
-    /*$check = $this->library->getApiClient();
-    SystemLog::add('getOfferAjax', 'debug', 'check', array($check));*/
 
     try {
       $laguageCodes = array(

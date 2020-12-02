@@ -5,7 +5,6 @@ namespace Supertext\Helper;
 use Supertext\Api\ApiClient;
 use Supertext\Api\PolylangApiWrapper;
 use Supertext\Api\WPMLApiWrapper;
-use LBWP\Module\General\Cms\SystemLog;
 
 /**
  * Class Library

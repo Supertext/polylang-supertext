@@ -6,7 +6,6 @@ use Supertext\Proofreading\Proofreading;
 use Supertext\Helper\Constant;
 use Supertext\Helper\TranslationMeta;
 use Supertext\Helper\View;
-use LBWP\Module\General\Cms\SystemLog;
 
 /**
  * Serves as a helper for the translation inject to the user
