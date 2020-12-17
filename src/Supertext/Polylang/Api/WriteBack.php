@@ -85,10 +85,6 @@ class WriteBack
     if($this->contentData == null){
       $groups = $this->json->Groups;
 
-      if(strpos($this->json->ReferenceData, '-') !== false){
-        $groups = $this->convertGroupsFromLegacyFormat($groups);
-      }
-
       $this->contentData = Wrapper::buildContentData($groups);
     }
 
@@ -111,28 +107,5 @@ class WriteBack
    */
   public function getOrderId(){
     return intval($this->json->Id);
-  }
-
-  /**
-   * Old to new format. Can be removed with next version.
-   * @return array|null
-   */
-  private function convertGroupsFromLegacyFormat($groups)
-  {
-    $refData = explode('-', $this->json->ReferenceData, 2);
-    $postId = $refData[0];
-
-    foreach($groups as &$group){
-
-      if($group->GroupId == 'media'){
-        foreach($group->items as &$item){
-          $item->Id = str_replace('attachment__', '', $item->Id);
-        }
-      }
-
-      $group->GroupId = $postId.Wrapper::KEY_SEPARATOR.$group->GroupId;
-    }
-
-    return $groups;
   }
 }
