@@ -12,7 +12,7 @@ class WPMLApiWrapper implements IMultilang
 
     public function __construct()
     {
-        add_filter('wpml_link_to_translation', array($this, 'addNewPostUrl'), 100, 3);
+        add_filter('wpml_link_to_translation', array($this, 'addNewPostUrl'), 10, 3);
     }
 
     /**
