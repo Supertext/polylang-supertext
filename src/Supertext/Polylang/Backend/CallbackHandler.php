@@ -38,19 +38,46 @@ class CallbackHandler
   /**
    * Handles a callback request
    */
-  public function handleRequest(){
+  public function handleRequest()
+  {
     $requestBody = file_get_contents('php://input');
     $json = json_decode($requestBody);
 
-    if($requestBody === true || !empty($json)){
-      try{
-        $this->handleWriteBackRequest($json);
-      }catch (\Exception $e){
+    if ($requestBody === true || !empty($json)) {
+      try {
+        $this->handleExternalWriteBackRequest($json);
+      } catch (\Exception $e) {
         self::returnResponse(500, array('message' => $e->getMessage()));
       }
-    }else{
+    } else {
       self::returnResponse(400, array('message' => 'Invalid request body'));
     }
+  }
+
+  /**
+   * @param $json
+   */
+  public function handleInternalWriteBackRequest($json)
+  {
+    $writeBack = new WriteBack($json, $this->library);
+
+    $this->writeBackTranslation($writeBack);
+  }
+
+  /**
+   * @param $json
+   */
+  private function handleExternalWriteBackRequest($json)
+  {
+    $writeBack = new WriteBack($json, $this->library);
+
+    if (!$writeBack->isReferenceValid()) {
+      self::returnResponse(403, array('message' => $this->getReferenceErrorMessage($writeBack)));
+    }
+
+    $this->writeBackTranslation($writeBack);
+
+    self::returnResponse(200, array('message' => 'The translation was saved successfully'));
   }
 
   /**
@@ -63,22 +90,6 @@ class CallbackHandler
     http_response_code($code);
     echo json_encode($body);
     die();
-  }
-
-  /**
-   * @param $json
-   */
-  private function handleWriteBackRequest($json)
-  {
-    $writeBack = new WriteBack($json, $this->library);
-
-    if(!$writeBack->isReferenceValid()){
-      self::returnResponse(403, array('message' => $this->getReferenceErrorMessage($writeBack)));
-    }
-
-    $this->writeBackTranslation($writeBack);
-
-    self::returnResponse(200, array('message' => 'The translation was saved successfully'));
   }
 
   /**
@@ -129,10 +140,10 @@ class CallbackHandler
       $this->log->addEntry($targetPostId, __('translation saved successfully', 'Polylang-Supertext'));
     }
 
-    if(count($errors)){
+    if (count($errors)) {
       $message = 'Errors: ';
-      foreach($errors as $sourcePostId => $error){
-        $message .= "Concerning post with id $sourcePostId" .' -> ' . $error;
+      foreach ($errors as $sourcePostId => $error) {
+        $message .= "Concerning post with id $sourcePostId" . ' -> ' . $error;
       }
       self::returnResponse(500, array('message' => $message));
     }
@@ -156,7 +167,7 @@ class CallbackHandler
       $orderIdMessage .= " The post $sourcePostId was last ordered with order $postOrderId for $targetLanguageCode.\n";
     }
 
-    if(!$isOrderIdMismatch){
+    if (!$isOrderIdMismatch) {
       return 'Error: reference is invalid.';
     }
 

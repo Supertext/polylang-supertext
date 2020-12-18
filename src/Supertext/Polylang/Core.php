@@ -26,6 +26,7 @@ use Supertext\Polylang\TextAccessors\SiteOriginTextAccessor;
 use Supertext\Polylang\TextAccessors\VisualComposerTextAccessor;
 use Supertext\Polylang\TextAccessors\YoastSeoTextAccessor;
 use Supertext\Polylang\Settings\SettingsPage;
+use Supertext\Polylang\Settings\ToolsPage;
 
 /**
  * Core Class that initializes the plugins features
@@ -105,7 +106,7 @@ class Core
 
       // Load needed subcomponents in admin
       $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
-      $this->menu = new Menu($this->settingsPage);
+      $this->menu = new Menu($this->settingsPage, new ToolsPage($this->getLibrary(), array($this->getCallbackHandler(), "handleInternalWriteBackRequest")));
       $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
       $this->ajaxRequestHandler = new AjaxRequestHandler(
         $this->getLibrary(),
