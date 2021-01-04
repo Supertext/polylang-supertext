@@ -92,6 +92,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 3.22 =
+* Fixed language mapping bug that prevented writing translations back
+
 = 3.21 =
 * Added manual write back feature
 
