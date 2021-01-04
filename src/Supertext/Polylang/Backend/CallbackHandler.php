@@ -61,6 +61,10 @@ class CallbackHandler
   {
     $writeBack = new WriteBack($json, $this->library);
 
+    if (!$writeBack->isReferenceValid()) {
+      throw new \Exception("Invalid reference.");
+    }
+
     $this->writeBackTranslation($writeBack);
   }
 

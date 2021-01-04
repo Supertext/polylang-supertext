@@ -22,7 +22,7 @@ class ToolsPage extends AbstractPage
   public function __construct($library, $writeBackCallback)
   {
     parent::__construct($library);
-    
+
     $this->writeBackCallback = $writeBackCallback;
     $this->view = new View('backend/tools-manual-writeback');
   }
@@ -58,14 +58,18 @@ class ToolsPage extends AbstractPage
 
     $json = json_decode(stripslashes($_POST['writebackData']));
 
-    if($json === null){
+    if ($json === null) {
       return;
     }
 
-    call_user_func($this->writeBackCallback, $json);
+    try {
+      call_user_func($this->writeBackCallback, $json);
 
-    // Redirect to same page with message
-    wp_redirect($this->getPageUrl() . '&message=saved');
+      // Redirect to same page with message
+      wp_redirect($this->getPageUrl() . '&message=saved');
+    } catch (\Exception $e) {
+      wp_redirect($this->getPageUrl() . '&message=failed');
+    }
   }
 
   /**
@@ -73,15 +77,25 @@ class ToolsPage extends AbstractPage
    */
   private function showSystemMessage()
   {
-    if (!isset($_REQUEST['message']) || $_REQUEST['message'] !== 'saved') {
+    if (!isset($_REQUEST['message'])) {
       return '';
     }
 
-    return '
+    if ($_REQUEST['message'] === 'saved') {
+      return '
         <div id="message" class="updated fade">
           <p>' . __('Writeback successful', 'polylang-supertext') . '</p>
         </div>
       ';
+    }
+
+    if ($_REQUEST['message'] === 'failed') {
+      return '
+        <div id="message" class="error fade">
+          <p>' . __('Writeback failed', 'polylang-supertext') . '</p>
+        </div>
+      ';
+    }
   }
 
   /**
