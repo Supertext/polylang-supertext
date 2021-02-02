@@ -25,7 +25,10 @@ class Wrapper
    */
   public static function getLanguageMapping($apiClient, $languageCode, $languageName)
   {
-    $httpResult = $apiClient->postRequest('v1/translation/LanguageMapping/' . $languageCode);
+    $languageCodeHyphenPosition = strpos($languageCode, '-');
+    $shortLanguageCode = $languageCodeHyphenPosition > 0 ? substr($languageCode, 0, $languageCodeHyphenPosition) : $languageCode;
+   
+    $httpResult = $apiClient->postRequest('v1/translation/LanguageMapping/' . $shortLanguageCode);
 
     $json = json_decode($httpResult);
 

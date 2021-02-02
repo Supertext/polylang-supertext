@@ -92,6 +92,15 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 3.22 =
+* Fixed language mapping bug that prevented writing translations back
+
+= 3.21 =
+* Added manual write back feature
+
+= 3.20 =
+* Fixed bug that prevented ordering posts while WPML Translation Management plugin is active
+
 = 3.19 =
 * Fixed ordering multiple posts with WPML
 * Fixed bug that prevented writing back the translation for WPML orders because an invalid reference key

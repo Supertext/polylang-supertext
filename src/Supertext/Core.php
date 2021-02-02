@@ -1,36 +1,36 @@
 <?php
 
-namespace Supertext;
+namespace Supertext\Polylang;
 
-use Supertext\Backend\ContentProvider;
-use Supertext\Backend\Menu;
-use Supertext\Backend\Log;
-use Supertext\Backend\AdminExtension;
-use Supertext\Backend\AjaxRequestHandler;
-use Supertext\Backend\CallbackHandler;
-use Supertext\Helper\Library;
-use Supertext\Helper\Constant;
-use Supertext\Helper\TextProcessor;
-use Supertext\TextAccessors\AcfTextAccessor;
-use Supertext\TextAccessors\AllInOneSeoPackTextAccessor;
-use Supertext\TextAccessors\BeaverBuilderTextAccessor;
-use Supertext\TextAccessors\BePageBuilderTextAccessor;
-use Supertext\TextAccessors\CustomFieldsTextAccessor;
-use Supertext\TextAccessors\ElementorTextAccessor;
-use Supertext\TextAccessors\DiviBuilderTextAccessor;
-use Supertext\TextAccessors\ITextAccessor;
-use Supertext\TextAccessors\PostTextAccessor;
-use Supertext\TextAccessors\PostMediaTextAccessor;
-use Supertext\TextAccessors\PostTaxonomyTextAccessor;
-use Supertext\TextAccessors\SiteOriginTextAccessor;
-use Supertext\TextAccessors\VisualComposerTextAccessor;
-use Supertext\TextAccessors\YoastSeoTextAccessor;
-use Supertext\Settings\SettingsPage;
-use Supertext\Proofreading\Proofreading;
+use Supertext\Polylang\Backend\ContentProvider;
+use Supertext\Polylang\Backend\Menu;
+use Supertext\Polylang\Backend\Log;
+use Supertext\Polylang\Backend\AdminExtension;
+use Supertext\Polylang\Backend\AjaxRequestHandler;
+use Supertext\Polylang\Backend\CallbackHandler;
+use Supertext\Polylang\Helper\Library;
+use Supertext\Polylang\Helper\Constant;
+use Supertext\Polylang\Helper\TextProcessor;
+use Supertext\Polylang\TextAccessors\AcfTextAccessor;
+use Supertext\Polylang\TextAccessors\AllInOneSeoPackTextAccessor;
+use Supertext\Polylang\TextAccessors\BeaverBuilderTextAccessor;
+use Supertext\Polylang\TextAccessors\BePageBuilderTextAccessor;
+use Supertext\Polylang\TextAccessors\CustomFieldsTextAccessor;
+use Supertext\Polylang\TextAccessors\ElementorTextAccessor;
+use Supertext\Polylang\TextAccessors\DiviBuilderTextAccessor;
+use Supertext\Polylang\TextAccessors\ITextAccessor;
+use Supertext\Polylang\TextAccessors\PostTextAccessor;
+use Supertext\Polylang\TextAccessors\PostMediaTextAccessor;
+use Supertext\Polylang\TextAccessors\PostTaxonomyTextAccessor;
+use Supertext\Polylang\TextAccessors\SiteOriginTextAccessor;
+use Supertext\Polylang\TextAccessors\VisualComposerTextAccessor;
+use Supertext\Polylang\TextAccessors\YoastSeoTextAccessor;
+use Supertext\Polylang\Settings\SettingsPage;
+use Supertext\Polylang\Settings\ToolsPage;
 
 /**
  * Core Class that initializes the plugins features
- * @package Supertext
+ * @package Supertext\Polylang
  */
 class Core
 {
@@ -76,11 +76,6 @@ class Core
   private $callbackHandler = null;
 
   /**
-   * @var Proofreading the proofreading handler
-   */
-  private $proofreading = null;
-
-  /**
    * Creates the instance and saves reference
    */
   public function __construct()
@@ -106,21 +101,18 @@ class Core
       add_action('init', array($this, 'registerLocalizationScripts'));
 
       // Load translations
-      load_plugin_textdomain('supertext', false, 'supertext/resources/languages');
-      load_plugin_textdomain('supertext-langs', false, 'supertext/resources/languages');
+      load_plugin_textdomain('polylang-supertext', false, 'polylang-supertext/resources/languages');
+      load_plugin_textdomain('polylang-supertext-langs', false, 'polylang-supertext/resources/languages');
 
       // Load needed subcomponents in admin
       $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
-      $this->menu = new Menu($this->settingsPage);
+      $this->menu = new Menu($this->settingsPage, new ToolsPage($this->getLibrary(), array($this->getCallbackHandler(), "handleInternalWriteBackRequest")));
       $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
       $this->ajaxRequestHandler = new AjaxRequestHandler(
         $this->getLibrary(),
         $this->getLog(),
         $this->getContentProvider()
       );
-
-      // Load the proofreading class
-      $this->proofreading = new Proofreading();
 
       $this->checkVersion();
       $this->checkEnvironment();
@@ -148,22 +140,21 @@ class Core
   {
     $suffix = defined('WP_DEBUG') && WP_DEBUG ? '' : '.min';
 
-    wp_register_style(Constant::SETTINGS_STYLE_HANDLE, SUPERTEXT_RESOURCE_URL . '/styles/settings' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
-    wp_register_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE, SUPERTEXT_RESOURCE_URL . '/styles/admin-extension' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
-    wp_register_style(Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_RESOURCE_URL . '/scripts/jstree/themes/wordpress-dark/style' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_style(Constant::SETTINGS_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/settings' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_style(Constant::ADMIN_EXTENSION_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/styles/admin-extension' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_style(Constant::JSTREE_STYLE_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/themes/wordpress-dark/style' . $suffix . '.css', array(), SUPERTEXT_PLUGIN_REVISION);
 
-    wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_RESOURCE_URL . '/scripts/admin-extension-library' . $suffix . '.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION, true);
-    wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_RESOURCE_URL . '/scripts/settings-library' . $suffix . '.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION);
-    wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_RESOURCE_URL . '/scripts/jstree/jstree' . $suffix . '.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
-    if (@PLL_PREFIX !== 'PLL_PREFIX') {
-      $blockEditorScriptDeps = array('wp-blocks', 'wp-dom-ready', 'wp-edit-post');
+    wp_register_script(Constant::ADMIN_EXTENSION_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/admin-extension-library' . $suffix . '.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION, true);
+    wp_register_script(Constant::SETTINGS_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/settings-library' . $suffix . '.js', array('jquery', 'wp-util', 'underscore'), SUPERTEXT_PLUGIN_REVISION);
+    wp_register_script(Constant::JSTREE_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/jstree/jstree' . $suffix . '.js', array('jquery'), SUPERTEXT_PLUGIN_REVISION);
 
-      if ($this->getLibrary()->isPolylangActivated()) {
-        array_push($blockEditorScriptDeps, PLL_PREFIX . 'block-editor-plugin');
-      }
+    $blockEditorScriptDeps = array('wp-blocks', 'wp-dom-ready', 'wp-edit-post');
 
-      wp_register_script(Constant::BLOCK_EDITOR_SCRIPT_HANDLE, SUPERTEXT_RESOURCE_URL . '/scripts/block-editor-library' . $suffix . '.js', $blockEditorScriptDeps, SUPERTEXT_PLUGIN_REVISION);
+    if ($this->getLibrary()->isPolylangActivated()) {
+      array_push($blockEditorScriptDeps, 'pll_block-editor-plugin');
     }
+
+    wp_register_script(Constant::BLOCK_EDITOR_SCRIPT_HANDLE, SUPERTEXT_POLYLANG_RESOURCE_URL . '/scripts/block-editor-library' . $suffix . '.js', $blockEditorScriptDeps, SUPERTEXT_PLUGIN_REVISION);
   }
 
   /**
@@ -173,37 +164,32 @@ class Core
   {
     $translation_array = array(
       'languages' => array(),
-      'generalError' => esc_js(__('An error occurred', 'supertext')),
-      'networkError' => esc_js(__('A network error occurred', 'supertext')),
-      'validationError' => esc_js(__('Validation error', 'supertext')),
-      'offerTranslation' => esc_js(__('Order translation', 'supertext')),
-      'offerProofread' => esc_js(__('Order proofread', 'supertext')),
-      'confirmUnsavedPost' => esc_js(__('The post was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'supertext')),
-      'errorValidationNotAllPostInSameLanguage' => esc_js(__('Please only select posts in the same language.', 'supertext')),
-      'errorValidationSomePostInTranslation' => esc_js(__('Blocked posts cannot be translated.', 'supertext')),
-      'errorValidationSomePostInProofreading' => esc_js(__('Blocked posts cannot be proofreaded.', 'supertext')),
-      'errorValidationSelectContent' => esc_js(__('Please select content to be translated.', 'supertext')),
-      'errorValidationSelectContentPr' => esc_js(__('Please select content to be proofreaded.', 'supertext')),
-      'errorValidationSelectTargetLanguage' => esc_js(__('Please select the target language.', 'supertext')),
-      'errorValidationSelectQuote' => esc_js(__('Please choose a quote.', 'supertext')),
-      'orderModalTitle' => esc_js(__('Your Supertext translation order', 'supertext')),
-      'orderModalTitlePr' => esc_js(__('Your Supertext proofread order', 'supertext')),
-      'sendChangesModalTitle' => esc_js(__('Send changes to Supertext', 'supertext')),
-      'orderTranslation' => esc_js(__('Order translation', 'supertext')),
-      'cancel' => esc_js(__('Cancel', 'supertext')),
-      'back' => esc_js(__('Back', 'supertext')),
-      'next' => esc_js(__('Next', 'supertext')),
-      'close' => esc_js(__('Close window', 'supertext')),
-      'alertPleaseSelect' => esc_js(__('Please select at least one post', 'supertext')),
-      'alreadyBeingTranslatedInto' => esc_js(__('<i>{0}</i> is already being translated into {1} (order id: {2})', 'supertext')),
-      'orderProofreading' =>  esc_js(__('Order proofread', 'supertext')),
+      'generalError' => esc_js(__('An error occurred', 'polylang-supertext')),
+      'networkError' => esc_js(__('A network error occurred', 'polylang-supertext')),
+      'validationError' => esc_js(__('Validation error', 'polylang-supertext')),
+      'offerTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
+      'confirmUnsavedPost' => esc_js(__('The post was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'polylang-supertext')),
+      'errorValidationNotAllPostInSameLanguage' => esc_js(__('Please only select posts in the same language.', 'polylang-supertext')),
+      'errorValidationSomePostInTranslation' => esc_js(__('Blocked posts cannot be translated.', 'polylang-supertext')),
+      'errorValidationSelectContent' => esc_js(__('Please select content to be translated.', 'polylang-supertext')),
+      'errorValidationSelectTargetLanguage' => esc_js(__('Please select the target language.', 'polylang-supertext')),
+      'errorValidationSelectQuote' => esc_js(__('Please choose a quote.', 'polylang-supertext')),
+      'orderModalTitle' => esc_js(__('Your Supertext translation order', 'polylang-supertext')),
+      'sendChangesModalTitle' => esc_js(__('Send changes to Supertext', 'polylang-supertext')),
+      'orderTranslation' => esc_js(__('Order translation', 'polylang-supertext')),
+      'cancel' => esc_js(__('Cancel', 'polylang-supertext')),
+      'back' => esc_js(__('Back', 'polylang-supertext')),
+      'next' => esc_js(__('Next', 'polylang-supertext')),
+      'close' => esc_js(__('Close window', 'polylang-supertext')),
+      'alertPleaseSelect' => esc_js(__('Please select at least one post', 'polylang-supertext')),
+      'alreadyBeingTranslatedInto' => esc_js(__('<i>{0}</i> is already being translated into {1} (order id: {2})', 'polylang-supertext')),
     );
 
     $library = $this->getLibrary();
     if ($library->getPluginStatus()->isPluginConfiguredProperly) {
       $languages = $library->getConfiguredLanguages();
       foreach ($languages as $language) {
-        $translation_array['languages'][$language->slug] = esc_js(__($library->toSuperCode($language->slug), 'supertext-langs'));
+        $translation_array['languages'][$language->slug] = esc_js(__($library->toSuperCode($language->slug), 'polylang-supertext-langs'));
       }
     }
 

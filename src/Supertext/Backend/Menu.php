@@ -11,13 +11,15 @@ namespace Supertext\Backend;
 class Menu
 {
   private $settingsPage;
+  private $toolsPage;
 
   /**
    * Injects the registration of settings menu
    */
-  public function __construct($settingsPage)
+  public function __construct($settingsPage, $toolsPage)
   {
     $this->settingsPage = $settingsPage;
+    $this->toolsPage = $toolsPage;
 
     add_action('admin_menu', array($this, 'addBackendMenus'));
   }
@@ -34,5 +36,17 @@ class Menu
       'supertext-settings',
       array($this->settingsPage, 'display')
     );
+
+    add_submenu_page(
+      'tools.php',
+      __('Supertext - Tools', 'polylang-supertext'),
+      __('Supertext', 'polylang-supertext'),
+      'administrator',
+      'supertext-tools',
+      array($this->toolsPage, 'display')
+    );
+
+    // hide the tool for now
+    remove_submenu_page('tools.php', 'supertext-tools');
   }
 }
