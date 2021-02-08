@@ -1,13 +1,13 @@
 <?php
 
-namespace Supertext\Polylang\Settings;
+namespace Supertext\Settings;
 
-use Supertext\Polylang\Helper\Library;
-use Supertext\Polylang\Helper\View;
+use Supertext\Helper\Library;
+use Supertext\Helper\View;
 
 /**
  * The supertext tools page
- * @package Supertext\Polylang\Settings
+ * @package Supertext\Settings
  */
 class ToolsPage extends AbstractPage
 {
@@ -34,7 +34,7 @@ class ToolsPage extends AbstractPage
   {
     echo '
       <div class="wrap">
-        <h1>' . __('Tools › Supertext', 'polylang-supertext') . '</h1>
+        <h1>' . __('Tools › Supertext', 'supertext') . '</h1>
         <form method="post" action="' . $this->getPageUrl() . '">';
 
     echo $this->showSystemMessage();
@@ -42,7 +42,7 @@ class ToolsPage extends AbstractPage
     $this->view->render();
 
     echo '
-        <p><input type="submit" class="button button-primary" name="writeback" value="' . __('Write back', 'polylang-supertext') . '" /></p>
+        <p><input type="submit" class="button button-primary" name="writeback" value="' . __('Write back', 'supertext') . '" /></p>
         </form>
       </div>';
   }
@@ -84,7 +84,7 @@ class ToolsPage extends AbstractPage
     if ($_REQUEST['message'] === 'saved') {
       return '
         <div id="message" class="updated fade">
-          <p>' . __('Writeback successful', 'polylang-supertext') . '</p>
+          <p>' . __('Writeback successful', 'supertext') . '</p>
         </div>
       ';
     }
@@ -92,7 +92,7 @@ class ToolsPage extends AbstractPage
     if ($_REQUEST['message'] === 'failed') {
       return '
         <div id="message" class="error fade">
-          <p>' . __('Writeback failed', 'polylang-supertext') . '</p>
+          <p>' . __('Writeback failed', 'supertext') . '</p>
         </div>
       ';
     }
