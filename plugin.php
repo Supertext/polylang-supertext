@@ -21,7 +21,8 @@ define('SUPERTEXT_RESOURCE_URL', plugin_dir_url(__FILE__) . 'resources');
 require_once SUPERTEXT_BASE_PATH . '/autoload.php';
 
 // Load Comotive helper- and Supertext implementation namepsace
-foreach (array('Comotive', 'Supertext') as $namespace) {
+//foreach (array('Comotive', 'Supertext') as $namespace) {
+foreach (array('Supertext') as $namespace) {
   $loader = new SplClassLoader_fc082b29bf388c112fcdefde6b4fe1e7($namespace, __DIR__ . '/src');
   $loader->register();
 }
