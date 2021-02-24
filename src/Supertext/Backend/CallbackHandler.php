@@ -4,6 +4,7 @@ namespace Supertext\Backend;
 
 use Supertext\Api\WriteBack;
 use Supertext\Helper\Constant;
+use Supertext\Helper\ProofreadMeta;
 use Supertext\Helper\TranslationMeta;
 
 class CallbackHandler
@@ -108,26 +109,44 @@ class CallbackHandler
       $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
 
       if ($targetPostId == null) {
-        $errors[$sourcePostId] = 'There is no linked post for saving the translation.';
+        $errors[$sourcePostId] = 'There is no linked post for saving the translation or proofread.';
         continue;
       }
 
       // Get the translation post object
       $targetPost = get_post($targetPostId);
-      $translationMeta = TranslationMeta::of($targetPost->ID);
       $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
+      // Set translation or proofread meta
+      if($writeBack->getOrderType() === 'Proofreading'){
+        $orderMeta = ProofreadMeta::of($targetPost->ID);
+        $orderText = 'proofread';
+        $metadata = array(
+          ProofreadMeta::IN_PROOFREADING,
+          $orderMeta->get(ProofreadMeta::META_DATA),
+          ProofreadMeta::PROOFREAD_DATE
+        );
+      }else{
+        $orderMeta = TranslationMeta::of($targetPost->ID);
+        $orderText = 'translation';
+        $metadata = array(
+          TranslationMeta::IN_TRANSLATION,
+          $orderMeta->get(TranslationMeta::META_DATA),
+          TranslationMeta::TRANSLATION_DATE
+        );
+      }
+
 
       $isPostWritable =
         $targetPost->post_status == 'draft' ||
         ($targetPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
-        $translationMeta->is(TranslationMeta::IN_TRANSLATION);
+        $orderMeta->is($metadata[0]);
 
       if (!$isPostWritable) {
-        $errors[$sourcePostId] = 'The post for saving the translation is not writable.';
+        $errors[$sourcePostId] = 'The post for saving the ' . $orderText . ' is not writable.';
         continue;
       }
 
-      $this->contentProvider->saveContentMetaData($targetPost, TranslationMeta::of($targetPostId)->get(TranslationMeta::META_DATA));
+      $this->contentProvider->saveContentMetaData($targetPost, $metadata[1]);
       $this->contentProvider->saveContentData($targetPost, $contentData[$sourcePostId]);
 
       if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
@@ -138,10 +157,10 @@ class CallbackHandler
       wp_update_post($targetPost);
 
       // All good, set translation flag false
-      $translationMeta->set(TranslationMeta::IN_TRANSLATION, false);
-      $translationMeta->set(TranslationMeta::TRANSLATION_DATE, get_post_field('post_modified', $targetPost->ID));
+      $orderMeta->set($metadata[0], false);
+      $orderMeta->set($metadata[2], get_post_field('post_modified', $targetPost->ID));
 
-      $this->log->addEntry($targetPostId, __('translation saved successfully', 'supertext'));
+      $this->log->addEntry($targetPostId, __($orderText . ' saved successfully', 'supertext'));
     }
 
     if (count($errors)) {

@@ -4,6 +4,7 @@ namespace Supertext\Api;
 
 
 use Supertext\Helper\Constant;
+use Supertext\Helper\ProofreadMeta;
 use Supertext\Helper\TranslationMeta;
 
 class WriteBack
@@ -59,7 +60,11 @@ class WriteBack
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
-      $referenceHash = TranslationMeta::of($targetPostId)->get(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH);
+      if($this->getOrderType() === 'Proofreading'){
+        $referenceHash = ProofreadMeta::of($targetPostId)->get(ProofreadMeta::IN_PROOFREADING_REFERENCE_HASH);
+      }else{
+        $referenceHash = TranslationMeta::of($targetPostId)->get(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH);
+      }
       $referenceData ^= hex2bin($referenceHash);
     }
 
@@ -107,5 +112,12 @@ class WriteBack
    */
   public function getOrderId(){
     return intval($this->json->Id);
+  }
+
+  /**
+   * @return string the order type
+   */
+  public function getOrderType(){
+    return $this->json->OrderType;
   }
 }
