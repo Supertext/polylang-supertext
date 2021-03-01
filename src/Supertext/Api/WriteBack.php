@@ -139,12 +139,6 @@ class WriteBack
    * @param $id int the post id
    */
   public function getOrderTypeMeta($id){
-    /* for testing:
-    $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
-    $referenceHash = ProofreadMeta::of(438)->get(ProofreadMeta::IN_PROOFREADING_REFERENCE_HASH);
-    $referenceData ^= hex2bin($referenceHash);
-    var_dump(bin2hex($referenceData));
-     */
     if($this->getOrderType() === 'proofreading'){
       $orderMetas = ProofreadMeta::of($id);
 
