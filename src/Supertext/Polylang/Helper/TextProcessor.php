@@ -87,31 +87,11 @@ class TextProcessor
   {
     $savedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
 
-    $doc = $this->createHtmlDocument($content);
+    $doc = $this->library->createHtmlDocument($content);
 
     $childNodes = $doc->getElementsByTagName('body')->item(0)->childNodes;
 
     return $this->replaceShortcodeNodesRecursive($doc, $childNodes, $savedShortcodes);
-  }
-
-  /**
-   * @param $content
-   * @return \DOMDocument
-   */
-  private function createHtmlDocument($content)
-  {
-    $html = '<?xml version="1.0" encoding="utf-8"?>
-    <html>
-        <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        </head>
-        <body>' . $content . '</body>
-    </html>
-    ';
-
-    $doc = new \DOMDocument();
-    $doc->loadHTML($html);
-    return $doc;
   }
 
   /**

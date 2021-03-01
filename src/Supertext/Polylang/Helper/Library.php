@@ -260,4 +260,25 @@ class Library
     global $shortcode_tags;
     return $shortcode_tags;
   }
+
+    /**
+   * @param $content HTML content
+   * @return \DOMDocument
+   */
+  public function createHtmlDocument($content)
+  {
+    $html = '<?xml version="1.0" encoding="utf-8"?>
+    <html>
+        <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        </head>
+        <body>' . $content . '</body>
+    </html>
+    ';
+
+    $doc = new \DOMDocument();
+    $doc->loadHTML($html);
+    return $doc;
+  }
+
 }

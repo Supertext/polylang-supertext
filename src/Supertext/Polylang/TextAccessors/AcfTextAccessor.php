@@ -161,12 +161,30 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
         'label' => $field['label']
       );
 
-      if ($field['type'] === "flexible_content") {
+      if ($field['type'] === 'flexible_content') {
         $newElement['type'] = 'group';
         $newElement['sub_field_definitions'] = $this->getFlexibleContentFieldDefinitions($field['layouts'], $metaKey, $fieldId);
       } elseif (isset($field['sub_fields'])) {
         $newElement['type'] = 'group';
         $newElement['sub_field_definitions'] = $this->getSubFieldDefinitions($field['sub_fields'], $metaKey . self::META_KEY_DELIMITER);
+      } elseif ($field['type'] === 'link' && $field['return_format'] === 'array') {
+        $newElement['type'] = 'group';
+        $newElement['sub_field_definitions'] = array(
+          array(
+            'id' => $fieldId . '_title',
+            'label' => $field['label'] . ' title',
+            'type' => 'field',
+            'meta_key_regex' => $metaKey,
+            'serialized_key' => 'title'
+          ),
+          array(
+            'id' => $fieldId . '_url',
+            'label' => $field['label'] . ' url',
+            'type' => 'field',
+            'meta_key_regex' => $metaKey,
+            'serialized_key' => 'url'
+          )
+        );
       } else {
         $newElement['type'] = 'field';
         $newElement['meta_key_regex'] = $metaKey;
