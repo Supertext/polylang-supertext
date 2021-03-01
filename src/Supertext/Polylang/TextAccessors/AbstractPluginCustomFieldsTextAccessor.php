@@ -46,7 +46,7 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
     $postCustomFields = get_post_meta($postId);
     $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
 
-    if(!isset($savedFieldDefinitions[$this->pluginId])){
+    if (!isset($savedFieldDefinitions[$this->pluginId])) {
       return array();
     }
 
@@ -86,8 +86,8 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
 
     $postCustomFields = get_post_meta($post->ID);
 
-    foreach($postCustomFields as $metaKey => $value){
-      foreach($selectedTranslatableFields as $metaKeyRegex => $selected){
+    foreach ($postCustomFields as $metaKey => $value) {
+      foreach ($selectedTranslatableFields as $metaKeyRegex => $selected) {
         if (!preg_match('/^' . $metaKeyRegex . '$/', $metaKey)) {
           continue;
         }
@@ -120,8 +120,8 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
     $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
     $savedFieldDefinitionIds = array();
 
-    if(isset($savedFieldDefinitions[$this->pluginId])){
-      foreach($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition){
+    if (isset($savedFieldDefinitions[$this->pluginId])) {
+      foreach ($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition) {
         $savedFieldDefinitionIds[] = $savedFieldDefinition['id'];
       }
     }

@@ -14,7 +14,8 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
    * Gets the content accessors name
    * @return string
    */
-  public function getName(){
+  public function getName()
+  {
     return __('Advanced Custom Fields (Plugin)', 'polylang-supertext');
   }
 
@@ -31,12 +32,12 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     $metaKeys = array_keys($postCustomFields);
     $subParentMetaKeys = $this->getSubParentMetaKeys(array_keys($selectedTranslatableFields));
 
-    foreach($metaKeys as $metaKey){
-      if(isset($metaData[$metaKey])){
+    foreach ($metaKeys as $metaKey) {
+      if (isset($metaData[$metaKey])) {
         continue;
       }
 
-      foreach($subParentMetaKeys as $subParentMetaKey){
+      foreach ($subParentMetaKeys as $subParentMetaKey) {
         if (!preg_match('/^' . $subParentMetaKey . '$/', $metaKey)) {
           continue;
         }
@@ -54,7 +55,7 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
    */
   public function setContentMetaData($post, $translationMetaData)
   {
-    foreach($translationMetaData as $key => $value){
+    foreach ($translationMetaData as $key => $value) {
       update_post_meta($post->ID, $key, $value);
     }
   }
@@ -64,12 +65,12 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
    */
   protected function getFieldDefinitions()
   {
-    $fieldGroups = function_exists( 'acf_get_field_groups' ) ? acf_get_field_groups() : apply_filters( 'acf/get_field_groups', array() );
+    $fieldGroups = function_exists('acf_get_field_groups') ? acf_get_field_groups() : apply_filters('acf/get_field_groups', array());
     $acfFieldDefinition = array();
 
     foreach ($fieldGroups as $fieldGroup) {
       $fieldGroupId = $fieldGroup['key'];
-      $fields = function_exists( 'acf_get_fields' ) ? acf_get_fields($fieldGroup) : apply_filters('acf/field_group/get_fields', array(), $fieldGroupId);
+      $fields = function_exists('acf_get_fields') ? acf_get_fields($fieldGroup) : apply_filters('acf/field_group/get_fields', array(), $fieldGroupId);
 
       $acfFieldDefinition[] = array(
         'id' => $fieldGroupId,
@@ -90,12 +91,12 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
   {
     $subParentMetaKeys = array();
 
-    foreach($selectedMetaKeyRegexs as $selectedMetaKeyRegex){
+    foreach ($selectedMetaKeyRegexs as $selectedMetaKeyRegex) {
       $subMetaKeyParts = explode(self::META_KEY_DELIMITER, $selectedMetaKeyRegex);
 
-      for($i = 0; $i < count($subMetaKeyParts)-1; ++$i){
-        if($i > 0){
-          $subParentMetaKeys[] = $subMetaKeyParts[$i-1] . self::META_KEY_DELIMITER . $subMetaKeyParts[$i];
+      for ($i = 0; $i < count($subMetaKeyParts) - 1; ++$i) {
+        if ($i > 0) {
+          $subParentMetaKeys[] = $subMetaKeyParts[$i - 1] . self::META_KEY_DELIMITER . $subMetaKeyParts[$i];
           continue;
         }
 
@@ -124,10 +125,10 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
         'label' => $field['label']
       );
 
-      if($field['type'] === "flexible_content"){
+      if ($field['type'] === "flexible_content") {
         $newElement['type'] = 'group';
         $newElement['sub_field_definitions'] = $this->getFlexibleContentFieldDefinitions($field['layouts'], $metaKey, $fieldId);
-      } elseif(isset($field['sub_fields'])) {
+      } elseif (isset($field['sub_fields'])) {
         $newElement['type'] = 'group';
         $newElement['sub_field_definitions'] = $this->getSubFieldDefinitions($field['sub_fields'], $metaKey . self::META_KEY_DELIMITER);
       } else {
