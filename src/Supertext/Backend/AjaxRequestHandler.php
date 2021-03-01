@@ -175,18 +175,6 @@ class AjaxRequestHandler
       if($_POST['isProofreading'] == 1){
         //create needed target posts
         $targetPostIds = $sourcePostIds;
-        $check = array(
-          $this->library->getApiClient(),
-          $this->getOrderTitle($content['postTitles'], $sourcePostIds),
-          $sourceLanguage,
-          $targetLanguage,
-          $content['data'],
-          $_POST['translationType'],
-          $this->getAdditionalInformation($content['postTitles'], $sourcePostIds, $targetPostIds),
-          $referenceHashes[0],
-          admin_url( 'admin-ajax.php' ) . '?action=sttr_callback',
-          3
-        );
 
         //order
         $order = Wrapper::createOrder(
@@ -199,7 +187,7 @@ class AjaxRequestHandler
           $this->getAdditionalInformation($content['postTitles'], $sourcePostIds, $targetPostIds),
           $referenceHashes[0],
           admin_url( 'admin-ajax.php' ) . '?action=sttr_callback',
-          3
+          $this->getServiceTypePr()
         );
 
         //process posts
@@ -557,6 +545,13 @@ class AjaxRequestHandler
   {
     $apiSettings = $this->library->getSettingOption(Constant::SETTING_API);
     $serviceType = !empty($apiSettings['serviceType']) ? $apiSettings['serviceType'] : Constant::DEFAULT_SERVICE_TYPE;
+    return $serviceType;
+  }
+
+  private function getServiceTypePr()
+  {
+    $apiSettings = $this->library->getSettingOption(Constant::SETTING_API);
+    $serviceType = !empty($apiSettings['serviceTypePr']) ? $apiSettings['serviceTypePr'] : Constant::DEFAULT_SERVICE_TYPE_PR;
     return $serviceType;
   }
 }

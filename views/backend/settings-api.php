@@ -18,6 +18,7 @@ if(!isset($options[$selectedApiServer])){
 }
 
 $selectedServiceType = isset($apiSettings['serviceType']) ? $apiSettings['serviceType'] : Constant::DEFAULT_SERVICE_TYPE;
+$selectedServiceTypePr = isset($apiSettings['serviceTypePr']) ? $apiSettings['serviceTypePr'] : Constant::DEFAULT_SERVICE_TYPE_PR;
 
 ?>
 <div class="postbox postbox_admin">
@@ -36,8 +37,12 @@ $selectedServiceType = isset($apiSettings['serviceType']) ? $apiSettings['servic
       <input type="text" class="sttr-api-url" id="sttr-api-url" name="apiServerUrl" value="<?php echo $selectedApiServer; ?>">
     </p>
     <p>
-      <label for="sttr-service-type"><?php _e('Service type', 'supertext'); ?></label>
+      <label for="sttr-service-type"><?php _e('Service type for translations', 'supertext'); ?></label>
       <input type="number" min="1" max="5" id="sttr-service-type" name="serviceType" value="<?php echo $selectedServiceType; ?>">
+    </p>
+    <p>
+      <label for="sttr-service-type-pr"><?php _e('Service type for proofreading', 'supertext'); ?></label>
+      <input type="number" id="sttr-service-type-pr" name="serviceTypePr" value="<?php echo $selectedServiceTypePr; ?>">
     </p>
   </div>
 </div>

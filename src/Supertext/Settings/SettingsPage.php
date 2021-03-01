@@ -352,6 +352,7 @@ class SettingsPage extends AbstractPage
     $apiSettingsToSave = array(
       'apiServerUrl' => !empty($_POST['apiServerUrl']) ? $_POST['apiServerUrl'] : Constant::LIVE_API,
       'serviceType' => !empty($_POST['serviceType']) ? $_POST['serviceType'] : Constant::DEFAULT_SERVICE_TYPE,
+      'serviceTypePr' => !empty($_POST['serviceTypePr']) ? $_POST['serviceTypePr'] : Constant::DEFAULT_SERVICE_TYPE_PR,
     );
 
     $this->library->saveSettingOption(Constant::SETTING_WORKFLOW, $workflowSettingsToSave);

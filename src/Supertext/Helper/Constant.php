@@ -22,6 +22,10 @@ class Constant
    */
   const DEFAULT_SERVICE_TYPE = 4;
   /**
+   * @var string live api endpoints for proofread
+   */
+  const DEFAULT_SERVICE_TYPE_PR = 3;
+  /**
    * @var string the settings option
    */
   const SETTINGS_OPTION = 'supertext_settings';

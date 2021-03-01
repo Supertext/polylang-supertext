@@ -60,11 +60,8 @@ class WriteBack
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
-      if($this->getOrderType() === 'Proofreading'){
-        $referenceHash = ProofreadMeta::of($targetPostId)->get(ProofreadMeta::IN_PROOFREADING_REFERENCE_HASH);
-      }else{
-        $referenceHash = TranslationMeta::of($targetPostId)->get(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH);
-      }
+      $orderMeta = $this->getOrderTypeMeta($targetPostId);
+      $referenceHash = $orderMeta['obj']->get($orderMeta['refHash']);
       $referenceData ^= hex2bin($referenceHash);
     }
 
@@ -115,9 +112,65 @@ class WriteBack
   }
 
   /**
-   * @return string the order type
+   * Get the order type
+   * @return string the order type: "proofread" or "translation"
    */
   public function getOrderType(){
-    return $this->json->OrderType;
+    $apiSettings = $this->library->getSettingOption(Constant::SETTING_API);
+    $proofreadService = !empty($apiSettings['serviceTypePr']) ? $apiSettings['serviceTypePr'] : Constant::DEFAULT_SERVICE_TYPE_PR;
+    $type = 'translation';
+
+    if($this->getOrderServiceId() === intval($proofreadService)){
+      $type = 'proofreading';
+    }
+
+    return $type;
+  }
+
+  /**
+   * @return int the order service type id
+   */
+  public function getOrderServiceId(){
+    return intval($this->json->ServiceTypeId);
+  }
+
+  /**
+   * Get the metas based on the order type
+   * @param $id int the post id
+   */
+  public function getOrderTypeMeta($id){
+    /* for testing:
+    $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
+    $referenceHash = ProofreadMeta::of(438)->get(ProofreadMeta::IN_PROOFREADING_REFERENCE_HASH);
+    $referenceData ^= hex2bin($referenceHash);
+    var_dump(bin2hex($referenceData));
+     */
+    if($this->getOrderType() === 'proofreading'){
+      $orderMetas = ProofreadMeta::of($id);
+
+      $metaData = array(
+        'obj' => $orderMetas,
+        'type' => $orderMetas::PROOFREAD,
+        'inStatus' => $orderMetas::IN_PROOFREADING,
+        'refHash' => $orderMetas::IN_PROOFREADING_REFERENCE_HASH,
+        'sourceLang' => $orderMetas::SOURCE_LANGUAGE_CODE,
+        'date' => $orderMetas::PROOFREAD_DATE,
+        'metaData' => $orderMetas::META_DATA
+      );
+    }else{
+      $orderMetas = TranslationMeta::of($id);
+
+      $metaData = array(
+        'obj' => $orderMetas,
+        'type' => $orderMetas::TRANSLATION,
+        'inStatus' => $orderMetas::IN_TRANSLATION,
+        'refHash' => $orderMetas::IN_TRANSLATION_REFERENCE_HASH,
+        'sourceLang' => $orderMetas::SOURCE_LANGUAGE_CODE,
+        'date' => $orderMetas::TRANSLATION_DATE,
+        'metaData' => $orderMetas::META_DATA
+      );
+    }
+
+    return $metaData;
   }
 }

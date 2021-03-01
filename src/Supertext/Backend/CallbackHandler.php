@@ -117,36 +117,19 @@ class CallbackHandler
       $targetPost = get_post($targetPostId);
       $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
       // Set translation or proofread meta
-      if($writeBack->getOrderType() === 'Proofreading'){
-        $orderMeta = ProofreadMeta::of($targetPost->ID);
-        $orderText = 'proofread';
-        $metadata = array(
-          ProofreadMeta::IN_PROOFREADING,
-          $orderMeta->get(ProofreadMeta::META_DATA),
-          ProofreadMeta::PROOFREAD_DATE
-        );
-      }else{
-        $orderMeta = TranslationMeta::of($targetPost->ID);
-        $orderText = 'translation';
-        $metadata = array(
-          TranslationMeta::IN_TRANSLATION,
-          $orderMeta->get(TranslationMeta::META_DATA),
-          TranslationMeta::TRANSLATION_DATE
-        );
-      }
-
+      $ordMetas = $writeBack->getOrderTypeMeta($targetPost->ID);
 
       $isPostWritable =
         $targetPost->post_status == 'draft' ||
         ($targetPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
-        $orderMeta->is($metadata[0]);
+        $ordMetas['obj']->is($ordMetas['obj']->get($ordMetas['inStatus']));
 
       if (!$isPostWritable) {
-        $errors[$sourcePostId] = 'The post for saving the ' . $orderText . ' is not writable.';
+        $errors[$sourcePostId] = 'The post for saving the ' . $ordMetas['type'] . ' is not writable.';
         continue;
       }
 
-      $this->contentProvider->saveContentMetaData($targetPost, $metadata[1]);
+      $this->contentProvider->saveContentMetaData($targetPost, $ordMetas['metaData']);
       $this->contentProvider->saveContentData($targetPost, $contentData[$sourcePostId]);
 
       if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
@@ -157,10 +140,10 @@ class CallbackHandler
       wp_update_post($targetPost);
 
       // All good, set translation flag false
-      $orderMeta->set($metadata[0], false);
-      $orderMeta->set($metadata[2], get_post_field('post_modified', $targetPost->ID));
+      $ordMetas['obj']->set($ordMetas['inStatus'], false);
+      $ordMetas['obj']->set($ordMetas['date'], get_post_field('post_modified', $targetPost->ID));
 
-      $this->log->addEntry($targetPostId, __($orderText . ' saved successfully', 'supertext'));
+      $this->log->addEntry($targetPostId, __($ordMetas['type'] . ' saved successfully', 'supertext'));
     }
 
     if (count($errors)) {

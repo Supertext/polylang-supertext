@@ -598,7 +598,7 @@ Supertext.Interface = (function (win, doc, $) {
       if(Supertext.Interface.isProofreading){
         state.contentFormData.push(
           {name: 'orderTargetLanguage', value: $(selectors.orderSourceLanguageInput).attr('data-fallback-lang')},
-          {name: 'serviceType', value: 3}
+          {name: 'serviceType', value: Number($(selectors.orderSourceLanguageInput).attr('data-service-type'))}
         );
       }
     };
