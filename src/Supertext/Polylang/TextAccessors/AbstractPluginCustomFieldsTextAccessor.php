@@ -57,7 +57,7 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
       if (count(preg_grep('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $metaKeys)) > 0) {
         $translatableFields[] = array(
           'title' => $savedFieldDefinition['label'],
-          'name' => $savedFieldDefinition['meta_key_regex'],
+          'name' => $savedFieldDefinition['id'],
           'checkedPerDefault' => true
         );
       }
@@ -83,17 +83,45 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
-
     $postCustomFields = get_post_meta($post->ID);
+    $selectedFieldDefinitions = $this->getSelectedFieldDefinitions($selectedTranslatableFields);
 
     foreach ($postCustomFields as $metaKey => $value) {
-      foreach ($selectedTranslatableFields as $metaKeyRegex => $selected) {
+      foreach ($selectedFieldDefinitions as $selectedFieldDefinition) {
+        $metaKeyRegex = $selectedFieldDefinition['meta_key_regex'];
+
         if (!preg_match('/^' . $metaKeyRegex . '$/', $metaKey)) {
           continue;
         }
 
-        $texts[$metaKey] = $this->textProcessor->replaceShortcodes($value[0]);
+        $serializedKey = $selectedFieldDefinition['serialized_key'];
+
+        if (isset($serializedKey)) {
+          if (!isset($serializedContents[$metaKey])) {
+            $serializedContents[$metaKey] = array('value' => $value[0], 'keys' => array());
+          }
+          array_push($serializedContents[$metaKey]['keys'], $serializedKey);
+        } else {
+          $texts[$metaKey] = $this->textProcessor->replaceShortcodes($value[0]);
+        }
       }
+    }
+
+    foreach ($serializedContents as $metaKey => $serializedContent) {
+      $object = unserialize($serializedContent['value']);
+      $keys = $serializedContent['keys'];
+      $text = '';
+      foreach ($object as $key => $value) {
+
+        if (in_array($key, $keys)) {
+          $content =  $this->textProcessor->replaceShortcodes($value);
+          $text .= '<span name="' . $key . '">' . $content . '</span>';
+        } else {
+          $text .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />';
+        }
+      }
+
+      $texts[$metaKey] = $text;
     }
 
     return $texts;
@@ -106,9 +134,15 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
   public function setTexts($post, $texts)
   {
     foreach ($texts as $id => $text) {
-      $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-      $decodedContent = $this->textProcessor->replaceShortcodeNodes($decodedContent);
-      update_post_meta($post->ID, $id, $decodedContent);
+      $value = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+
+      if (preg_match('/<span\s+name=("|\')([a-z]+)("|\')\s*>([^<]+)<\/\s*span\s*>/', $value)) {
+        $value = $this->getArrayItemsFromHtmlText($value);
+      } else {
+        $value = $this->textProcessor->replaceShortcodeNodes($value);
+      }
+
+      update_post_meta($post->ID, $id, $value);
     }
   }
 
@@ -179,5 +213,50 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
   private function getPluginId()
   {
     return lcfirst(str_replace('TextAccessor', '', (new \ReflectionClass($this))->getShortName()));
+  }
+
+  private function getSelectedFieldDefinitions($selectedTranslatableFields)
+  {
+    $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
+
+    if (!isset($savedFieldDefinitions[$this->pluginId])) {
+      return array();
+    }
+
+    $selectedFieldDefinitions = array();
+
+    foreach ($selectedTranslatableFields as $fieldDefinitionId => $selected) {
+      foreach ($savedFieldDefinitions[$this->pluginId] as $fieldDefinition) {
+        if ($fieldDefinition['id'] === $fieldDefinitionId) {
+          array_push($selectedFieldDefinitions, $fieldDefinition);
+        }
+      }
+    }
+
+    return $selectedFieldDefinitions;
+  }
+
+  private function getArrayItemsFromHtmlText($htmlContent)
+  {
+    $doc = $this->library->createHtmlDocument($htmlContent);
+    $childNodes = $doc->getElementsByTagName('body')->item(0)->childNodes;
+    $items = array();
+
+    foreach ($childNodes as $childNode) {
+      switch ($childNode->nodeName) {
+        case 'span':
+          $key = $childNode->attributes->getNamedItem('name')->nodeValue;
+          $value = $this->textProcessor->replaceShortcodeNodes($childNode->nodeValue);
+          $items[$key] = $value;
+          break;
+        case 'input':
+          $key = $childNode->attributes->getNamedItem('name')->nodeValue;
+          $value = $childNode->attributes->getNamedItem('value')->nodeValue;
+          $items[$key] = $value;
+          break;
+      }
+    }
+
+    return $items;
   }
 }
