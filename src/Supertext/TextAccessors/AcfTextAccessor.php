@@ -2,7 +2,7 @@
 
 namespace Supertext\TextAccessors;
 
-use Supertext\Polylang\Helper\Constant;
+use Supertext\Helper\Constant;
 
 /**
  * Class AcfTextAccessor
