@@ -2,6 +2,8 @@
 
 namespace Supertext\TextAccessors;
 
+use Supertext\Polylang\Helper\Constant;
+
 /**
  * Class AcfTextAccessor
  * @package Supertext\TextAccessors
@@ -20,6 +22,21 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
   }
 
   /**
+   * @param $postId
+   * @return array
+   */
+  public function getTranslatableFields($postId)
+  {
+    $translatableFields = parent::getTranslatableFields($postId);
+
+    return array_merge(array(array(
+      'title' => 'Copy none-translatable',
+      'name' => 'none-translatable',
+      'checkedPerDefault' => false
+    )), $translatableFields);
+  }
+
+  /**
    * @param $post
    * @param $selectedTranslatableFields
    * @return array
@@ -27,9 +44,28 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
   public function getContentMetaData($post, $selectedTranslatableFields)
   {
     $metaData = array();
-
     $postCustomFields = get_post_meta($post->ID);
     $metaKeys = array_keys($postCustomFields);
+
+    $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
+
+    if (isset($selectedTranslatableFields['none-translatable']) && isset($savedFieldDefinitions[$this->pluginId])) {
+      foreach ($metaKeys as $metaKey) {
+
+        $isTranslatable = false;
+        foreach ($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition) {
+          if (preg_match('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $metaKey)) {
+            $isTranslatable = true;
+            break;
+          }
+        }
+
+        if (!$isTranslatable) {
+          $metaData[$metaKey] = get_post_meta($post->ID, $metaKey, true);
+        }
+      }
+    }
+
     $subParentMetaKeys = $this->getSubParentMetaKeys(array_keys($selectedTranslatableFields));
 
     foreach ($metaKeys as $metaKey) {
