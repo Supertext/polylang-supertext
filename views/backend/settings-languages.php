@@ -1,8 +1,8 @@
 <?php
-use Supertext\Polylang\Helper\Constant;
-use Supertext\Polylang\Api\Wrapper;
+use Supertext\Helper\Constant;
+use Supertext\Api\Wrapper;
 
-/** @var \Supertext\Polylang\Helper\Library $library */
+/** @var \Supertext\Helper\Library $library */
 $languageMappings = $library->getSettingOption(Constant::SETTING_LANGUAGE_MAP);
 
 // Laod Languages from Polylang to match with supertext api
@@ -35,7 +35,7 @@ foreach ($languages as $language) {
   }
   $languageDropdown = '
     <select name="sel_st_language_' . $language->slug . '" id="sel_st_language_' . $language->slug . '">
-      <option value="">' . __('Please select', 'polylang-supertext') . '...</option>
+      <option value="">' . __('Please select', 'supertext') . '...</option>
       ' . $languageDropdown . '
     </select>';
 
@@ -55,7 +55,7 @@ if (count($languages) > 0) {
   echo '
     <div class="postbox postbox_admin">
       <div class="inside">
-        <h3>' . __('Language settings', 'polylang-supertext') . '</h3>
+        <h3>' . __('Language settings', 'supertext') . '</h3>
         <table border="0" cellpadding="0" margin="0">
         <thead>
         <tr>
@@ -72,5 +72,5 @@ if (count($languages) > 0) {
   ';
 } else {
   // Error if no languages are configured
-  echo  __('Please configure the languages within the polylang plugin.', 'polylang-supertext');
+  echo  __('Please configure the languages within the translation plugin.', 'supertext');
 }

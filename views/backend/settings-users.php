@@ -1,7 +1,7 @@
 <?php
-use Supertext\Polylang\Helper\Constant;
+use Supertext\Helper\Constant;
 
-/** @var \Supertext\Polylang\Helper\Library $library */
+/** @var \Supertext\Helper\Library $library */
 $userMappings = $library->getSettingOption(Constant::SETTING_USER_MAP);
 
 // Get all users
@@ -22,7 +22,7 @@ foreach ((array) $userList as $user) {
 // Generate select template
 $selectTemplate = '' .
   '<select name=\'selStWpUsers[]\'>' .
-    '<option value=\'\'>'.__('Select user', 'polylang-supertext').'...</option>' .
+    '<option value=\'\'>'.__('Select user', 'supertext').'...</option>' .
     $userOptions .
   '</select>';
 
@@ -30,30 +30,30 @@ $selectTemplate = '' .
 
 <div class="postbox postbox_admin">
   <div id="frmSupertext" class="inside frmServiceSupertextConfig">
-    <h3><?php _e('Supertext Accounts', 'polylang-supertext'); ?></h3>
+    <h3><?php _e('Supertext Accounts', 'supertext'); ?></h3>
     <p>
       <?php
         $url = 'https://www.supertext.ch/de/signup';
-        printf( wp_kses( __('You need at least one Supertext Account. You can sign up <a href="%s">here</a>.', 'polylang-supertext'), array(  'a' => array( 'href' => array() ) ) ), esc_url( $url ) );
+        printf( wp_kses( __('You need at least one Supertext Account. You can sign up <a href="%s">here</a>.', 'supertext'), array(  'a' => array( 'href' => array() ) ) ), esc_url( $url ) );
       ?>
     </p>
     <p>
       <?php
-      _e('Please fill in a Supertext API key for every user.', 'polylang-supertext');
+      _e('Please fill in a Supertext API key for every user.', 'supertext');
       ?>
       <?php
         $url = 'https://www.supertext.ch/customer/accountsettings';
-        printf( wp_kses( __('You will find the API key on the <a href="%s">Supertext settings page</a>.', 'polylang-supertext'), array(  'a' => array( 'href' => array() ) ) ), esc_url( $url ) );
+        printf( wp_kses( __('You will find the API key on the <a href="%s">Supertext settings page</a>.', 'supertext'), array(  'a' => array( 'href' => array() ) ) ), esc_url( $url ) );
       ?><br>
-      <?php _e('Only configured users can use the translation features.', 'polylang-supertext'); ?>
+      <?php _e('Only configured users can use the translation features.', 'supertext'); ?>
     </p>
 
     <table id="tblStFields">
       <thead>
         <tr>
-          <th><?php _e('WordPress User', 'polylang-supertext'); ?></th>
-          <th><?php _e('Supertext User', 'polylang-supertext'); ?></th>
-          <th colspan="2"><?php _e('API Key', 'polylang-supertext'); ?></th>
+          <th><?php _e('WordPress User', 'supertext'); ?></th>
+          <th><?php _e('Supertext User', 'supertext'); ?></th>
+          <th colspan="2"><?php _e('API Key', 'supertext'); ?></th>
         </tr>
       </thead>
       <tbody>
@@ -61,8 +61,8 @@ $selectTemplate = '' .
 // Select correct dropdown value for WP User
 
 $selectedWpUsers = '';
-$deleteUser = __('Delete user', 'polylang-supertext');
-$addUser = __('Add user', 'polylang-supertext');
+$deleteUser = __('Delete user', 'supertext');
+$addUser = __('Add user', 'supertext');
 $additionalEmptyUserRows = 1;
 
 // Add five empty user rows, if there are no settings yet
