@@ -39,8 +39,8 @@ class Menu
 
     add_submenu_page(
       'tools.php',
-      __('Supertext - Tools', 'polylang-supertext'),
-      __('Supertext', 'polylang-supertext'),
+      __('Supertext - Tools', 'supertext'),
+      __('Supertext', 'supertext'),
       'administrator',
       'supertext-tools',
       array($this->toolsPage, 'display')

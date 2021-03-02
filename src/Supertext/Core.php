@@ -102,8 +102,8 @@ class Core
       add_action('init', array($this, 'registerLocalizationScripts'));
 
       // Load translations
-      load_plugin_textdomain('supertext', false, 'supertext/resources/languages');
-      load_plugin_textdomain('supertext-langs', false, 'supertext/resources/languages');
+      load_plugin_textdomain('supertext', false, 'polylang-supertext/resources/languages');
+      load_plugin_textdomain('supertext-langs', false, 'polylang-supertext/resources/languages');
 
       // Load needed subcomponents in admin
       $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
