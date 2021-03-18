@@ -203,9 +203,9 @@ class AjaxRequestHandler
 
         $result = array(
           'message' => '
-            ' . __('The order has been placed successfully.', 'plugin-supertext') . '<br />
-            ' . sprintf(__('Your order number is %s.', 'plugin-supertext'), $order->Id) . '<br />
-            ' . sprintf(__('The post will be proofreaded by %s.', 'plugin-supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
+            ' . __('The order has been placed successfully.', 'supertext') . '<br />
+            ' . sprintf(__('Your order number is %s.', 'supertext'), $order->Id) . '<br />
+            ' . sprintf(__('The post will be proofreaded by %s.', 'supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
         );
 
       }else{
@@ -456,7 +456,7 @@ class AjaxRequestHandler
       $proofreadPost = get_post($sourcePostId);
 
       $message = sprintf(
-        __('Proofreading order has been placed successfully. Your order number is %s.', 'plugin-supertext'),
+        __('Proofreading order has been placed successfully. Your order number is %s.', 'supertext'),
         $order->Id
       );
 
