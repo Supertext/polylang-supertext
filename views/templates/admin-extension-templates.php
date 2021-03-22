@@ -227,8 +227,8 @@
         <# }); #>
       </div>
       <div class="clearfix"></div>
-      <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post', 'plugin-supertext');?></button>
-      <button id="sttr-order-show-item-content" class="button button-secondary"><?php _e('Show content', 'plugin-supertext');?></button>
+      <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post', 'supertext');?></button>
+      <button id="sttr-order-show-item-content" class="button button-secondary"><?php _e('Show content', 'supertext');?></button>
       <div class="clearfix"></div>
       <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language"
              data-fallback-lang="<?php echo get_bloginfo('language') ?>"
