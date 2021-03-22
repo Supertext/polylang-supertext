@@ -102,8 +102,8 @@ class Core
       add_action('init', array($this, 'registerLocalizationScripts'));
 
       // Load translations
-      load_plugin_textdomain('supertext', false, 'supertext/resources/languages');
-      load_plugin_textdomain('supertext-langs', false, 'supertext/resources/languages');
+      load_plugin_textdomain('supertext', false, 'polylang-supertext/resources/languages');
+      load_plugin_textdomain('supertext-langs', false, 'polylang-supertext/resources/languages');
 
       // Load needed subcomponents in admin
       $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
@@ -172,6 +172,7 @@ class Core
       'networkError' => esc_js(__('A network error occurred', 'supertext')),
       'validationError' => esc_js(__('Validation error', 'supertext')),
       'offerTranslation' => esc_js(__('Order translation', 'supertext')),
+      'offerProofread' => esc_js(__('Order proofreading', 'supertext')),
       'confirmUnsavedPost' => esc_js(__('The post was not saved. If you proceed with the translation, the unsaved changes will be lost.', 'supertext')),
       'errorValidationNotAllPostInSameLanguage' => esc_js(__('Please only select posts in the same language.', 'supertext')),
       'errorValidationSomePostInTranslation' => esc_js(__('Blocked posts cannot be translated.', 'supertext')),
@@ -180,6 +181,7 @@ class Core
       'errorValidationSelectQuote' => esc_js(__('Please choose a quote.', 'supertext')),
       'orderModalTitle' => esc_js(__('Your Supertext translation order', 'supertext')),
       'sendChangesModalTitle' => esc_js(__('Send changes to Supertext', 'supertext')),
+      'orderProofreading' => esc_js(__('Order proofreading', 'supertext')),
       'orderTranslation' => esc_js(__('Order translation', 'supertext')),
       'cancel' => esc_js(__('Cancel', 'supertext')),
       'back' => esc_js(__('Back', 'supertext')),

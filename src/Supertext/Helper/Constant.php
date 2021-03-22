@@ -28,15 +28,15 @@ class Constant
   /**
    * @var string the settings option
    */
-  const SETTINGS_OPTION = 'supertext_settings';
+  const SETTINGS_OPTION = 'polylang_supertext_settings';
   /**
    * @var string the version option
    */
-  const ENVIRONMENT_ADJUSTED_OPTION = 'supertext_environment_adjusted';
+  const ENVIRONMENT_ADJUSTED_OPTION = 'polylang_supertext_environment_adjusted';
   /**
    * @var string the version option
    */
-  const VERSION_OPTION = 'supertext_version';
+  const VERSION_OPTION = 'polylang_supertext_version';
   /**
    * @var string the version option
    */
