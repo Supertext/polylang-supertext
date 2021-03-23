@@ -66,7 +66,7 @@ class CallbackHandler
       throw new \Exception("Invalid reference.");
     }
 
-    $this->writeBackTranslation($writeBack);
+    $this->writeBackOrder($writeBack);
   }
 
   /**
@@ -80,8 +80,7 @@ class CallbackHandler
       self::returnResponse(403, array('message' => $this->getReferenceErrorMessage($writeBack)));
     }
 
-    $this->writeBackTranslation($writeBack);
-
+    $this->writeBackOrder($writeBack);
     self::returnResponse(200, array('message' => 'The translation was saved successfully'));
   }
 
@@ -100,7 +99,7 @@ class CallbackHandler
   /**
    * @param WriteBack $writeBack
    */
-  private function writeBackTranslation($writeBack)
+  private function writeBackOrder($writeBack)
   {
     $errors = array();
     $contentData = $writeBack->getContentData();
@@ -109,7 +108,7 @@ class CallbackHandler
       $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
 
       if ($targetPostId == null) {
-        $errors[$sourcePostId] = 'There is no linked post for saving the translation or proofread.';
+        $errors[$sourcePostId] = 'There is no linked post for saving the writeback.';
         continue;
       }
 

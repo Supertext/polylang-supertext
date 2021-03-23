@@ -139,30 +139,36 @@ class WriteBack
    * @param $id int the post id
    */
   public function getOrderTypeMeta($id){
-    if($this->getOrderType() === 'proofreading'){
-      $orderMetas = ProofreadMeta::of($id);
+    $orderType = $this->getOrderType();
 
-      $metaData = array(
-        'obj' => $orderMetas,
-        'type' => $orderMetas::PROOFREAD,
-        'inStatus' => $orderMetas::IN_PROOFREADING,
-        'refHash' => $orderMetas::IN_PROOFREADING_REFERENCE_HASH,
-        'sourceLang' => $orderMetas::SOURCE_LANGUAGE_CODE,
-        'date' => $orderMetas::PROOFREAD_DATE,
-        'metaData' => $orderMetas::META_DATA
-      );
-    }else{
-      $orderMetas = TranslationMeta::of($id);
+    switch($orderType){
+      case 'proofreading':
+        $orderMetas = ProofreadMeta::of($id);
 
-      $metaData = array(
-        'obj' => $orderMetas,
-        'type' => $orderMetas::TRANSLATION,
-        'inStatus' => $orderMetas::IN_TRANSLATION,
-        'refHash' => $orderMetas::IN_TRANSLATION_REFERENCE_HASH,
-        'sourceLang' => $orderMetas::SOURCE_LANGUAGE_CODE,
-        'date' => $orderMetas::TRANSLATION_DATE,
-        'metaData' => $orderMetas::META_DATA
-      );
+        $metaData = array(
+          'obj' => $orderMetas,
+          'type' => $orderMetas::PROOFREAD,
+          'inStatus' => $orderMetas::IN_PROOFREADING,
+          'refHash' => $orderMetas::IN_PROOFREADING_REFERENCE_HASH,
+          'sourceLang' => $orderMetas::SOURCE_LANGUAGE_CODE,
+          'date' => $orderMetas::PROOFREAD_DATE,
+          'metaData' => $orderMetas::META_DATA
+        );
+        break;
+
+      case 'translation':
+        $orderMetas = TranslationMeta::of($id);
+
+        $metaData = array(
+          'obj' => $orderMetas,
+          'type' => $orderMetas::TRANSLATION,
+          'inStatus' => $orderMetas::IN_TRANSLATION,
+          'refHash' => $orderMetas::IN_TRANSLATION_REFERENCE_HASH,
+          'sourceLang' => $orderMetas::SOURCE_LANGUAGE_CODE,
+          'date' => $orderMetas::TRANSLATION_DATE,
+          'metaData' => $orderMetas::META_DATA
+        );
+        break;
     }
 
     return $metaData;

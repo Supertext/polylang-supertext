@@ -60,10 +60,6 @@ Supertext.Template = (function (win, doc, $, wp) {
        */
       quoteStep: 'sttr-quote-step',
       /**
-       * The quote step id for proofreading
-       */
-      quoteStepPr: 'sttr-quote-step-pr',
-      /**
        * The confirmation step id
        */
       confirmationStep: 'sttr-confirmation-step'
@@ -405,7 +401,12 @@ Supertext.Interface = (function (win, doc, $) {
      */
     state = {
       currentStepNumber: 0
-    };
+    },
+    /**
+     *
+     * @type {boolean}
+     */
+    isProofreading = false;
 
   /**
    * Creates a new step object of specific type
@@ -481,7 +482,7 @@ Supertext.Interface = (function (win, doc, $) {
         var isAPostInTranslation = false;
         var isAPostInProofreading = false;
 
-        if(!Supertext.Interface.isProofreading){
+        if(!isProofreading){
           $.each(state.posts, function (index, post) {
             if (index === 0) {
               languageCode = post.languageCode;
@@ -526,7 +527,7 @@ Supertext.Interface = (function (win, doc, $) {
           return;
         }
 
-        fail(Supertext.Interface.isProofreading ? l10n.errorValidationSelectContentPr : l10n.errorValidationSelectContent);
+        fail(isProofreading ? l10n.errorValidationSelectContentPr : l10n.errorValidationSelectContent);
       },
       targetLanguage: function (fail) {
         if ($(selectors.orderTargetLanguageSelect).val() === '') {
@@ -566,7 +567,7 @@ Supertext.Interface = (function (win, doc, $) {
      * @param data
      */
     self.addStepElements = function () {
-      if(Supertext.Interface.isProofreading){
+      if(isProofreading){
         $(selectors.orderStep).html(template.contentStepPr({
           posts: state.posts,
           targetLanguageCode: state.targetLanguageCode,
@@ -595,7 +596,7 @@ Supertext.Interface = (function (win, doc, $) {
     self.saveForm = function () {
       state.contentFormData = $(selectors.contentStepForm).serializeArray();
 
-      if(Supertext.Interface.isProofreading){
+      if(isProofreading){
         state.contentFormData.push(
           {name: 'orderTargetLanguage', value: $(selectors.orderSourceLanguageInput).attr('data-fallback-lang')},
           {name: 'serviceType', value: Number($(selectors.orderSourceLanguageInput).attr('data-service-type'))}
@@ -789,7 +790,7 @@ Supertext.Interface = (function (win, doc, $) {
     function setLanguages() {
       var sourceLanguageCode = state.posts[0].languageCode;
 
-      if(Supertext.Interface.isProofreading){
+      if(isProofreading){
         var getLang = $(selectors.orderSourceLanguageInput).attr('data-fallback-lang');
 
         if(sourceLanguageCode === false){
@@ -820,7 +821,7 @@ Supertext.Interface = (function (win, doc, $) {
   var quoteStep = function () {
     var self = this;
 
-    self.nextButtonName = Supertext.Interface.isProofreading ? l10n.orderProofreading : l10n.orderTranslation;
+    self.nextButtonName = isProofreading ? l10n.orderProofreading : l10n.orderTranslation;
 
     self.validationRules = {
       quote: function (fail) {
@@ -845,19 +846,11 @@ Supertext.Interface = (function (win, doc, $) {
      * @param data
      */
     self.addStepElements = function (data) {
-      if(Supertext.Interface.isProofreading){
-        $(selectors.orderStep).html(template.quoteStepPr({
-          wordCount: data.wordCount,
-          language: data.language,
-          options: data.options
-        }));
-      }else {
-        $(selectors.orderStep).html(template.quoteStep({
-          wordCount: data.wordCount,
-          language: data.language,
-          options: data.options
-        }));
-      }
+      $(selectors.orderStep).html(template.quoteStep({
+        wordCount: data.wordCount,
+        language: data.language,
+        options: data.options
+      }));
     };
 
     /**
@@ -880,7 +873,7 @@ Supertext.Interface = (function (win, doc, $) {
     self.loadData = function () {
       var postData = state.contentFormData.concat(state.quoteFormData);
 
-      if(Supertext.Interface.isProofreading){
+      if(isProofreading){
         postData.push({name: 'isProofreading', value: 1});
       }
 
@@ -888,7 +881,7 @@ Supertext.Interface = (function (win, doc, $) {
         context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
         postData)
         .then(function (createPostsData) {
-          if(!Supertext.Interface.isProofreading) {
+          if(!isProofreading) {
             var requests = [];
 
             requests = $.map(createPostsData, function (createPostData) {
@@ -1029,12 +1022,12 @@ Supertext.Interface = (function (win, doc, $) {
    */
   function onBulkActionApply(e) {
     var selectName = $(this).attr('id').substr(2);
-    Supertext.Interface.isProofreading = $('select[name="' + selectName + '"]').val() === orderProofreadBulkActionValue;
+    isProofreading = $('select[name="' + selectName + '"]').val() === orderProofreadBulkActionValue;
 
-    selectors.contentStepForm = '#sttr-content-step-form' + (Supertext.Interface.isProofreading ? '-pr' : '');
-    selectors.quoteStepForm = '#sttr-quote-step-form' + (Supertext.Interface.isProofreading ? '-pr' : '');
+    selectors.contentStepForm = '#sttr-content-step-form' + (isProofreading ? '-pr' : '');
+    selectors.quoteStepForm = '#sttr-quote-step-form' + (isProofreading ? '-pr' : '');
 
-    if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue && !Supertext.Interface.isProofreading) {
+    if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue && !isProofreading) {
       return true;
     }
 
@@ -1064,7 +1057,7 @@ Supertext.Interface = (function (win, doc, $) {
    */
   function startOrderProcess() {
     steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
-    openModal(Supertext.Interface.isProofreading ? l10n.orderModalTitlePr : l10n.orderModalTitle);
+    openModal(isProofreading ? l10n.orderModalTitlePr : l10n.orderModalTitle);
     addOrderProgressBar();
     addCancelButton();
     addBackButton();
@@ -1386,7 +1379,7 @@ Supertext.Interface = (function (win, doc, $) {
       return;
     }
 
-    if(Supertext.Interface.isProofreading) {
+    if(isProofreading) {
       selectors.contentStepForm = '#sttr-content-step-form-pr';
       selectors.quoteStepForm = '#sttr-quote-step-form-pr';
     }else{

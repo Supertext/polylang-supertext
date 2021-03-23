@@ -261,7 +261,11 @@
 <script type="text/html" id="tmpl-sttr-quote-step">
   <form id="sttr-quote-step-form">
     <h2><?php _e('Service and deadline', 'supertext'); ?></h2>
-    <p><?php _e('Select the translation service and deadline for translating <b>{{data.wordCount}} words</b> into <b>{{data.language}}</b>:', 'supertext'); ?></p>
+    <# if(data.isProofreading){ #>
+      <p><?php _e('Select the proofreading service and deadline for proofreading <b>{{data.wordCount}} words</b>:', 'supertext'); ?></p>
+    <# } else { #>
+      <p><?php _e('Select the translation service and deadline for translating <b>{{data.wordCount}} words</b> into <b>{{data.language}}</b>:', 'supertext'); ?></p>
+    <# } #>
     <div class="sttr-order-item-quote">
       <table cellspacing="0" cellpadding="2" border="0">
         <tbody>

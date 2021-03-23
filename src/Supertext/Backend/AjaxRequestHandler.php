@@ -164,88 +164,18 @@ class AjaxRequestHandler
    */
   public function createOrderAjax()
   {
-    $translatableContents = $_POST['translatableContents'];
-    $sourceLanguage = $_POST['orderSourceLanguage'];
-    $targetLanguage = $_POST['orderTargetLanguage'];
-    $content = $this->getContent($translatableContents);
-    $sourcePostIds = array_keys($translatableContents);
-    $referenceHashes = $this->createReferenceHashes($sourcePostIds);
+    $sourcePostIds = array_keys($_POST['translatableContents']);
 
     try {
-      if($_POST['isProofreading'] == 1){
-        //create needed target posts
-        $targetPostIds = $sourcePostIds;
-
-        //order
-        $order = Wrapper::createOrder(
-          $this->library->getApiClient(),
-          $this->getOrderTitle($content['postTitles'], $sourcePostIds),
-          $sourceLanguage,
-          $targetLanguage,
-          $content['data'],
-          $_POST['translationType'],
-          $this->getAdditionalInformation($content['postTitles'], $sourcePostIds, $targetPostIds),
-          $referenceHashes[0],
-          admin_url( 'admin-ajax.php' ) . '?action=sttr_callback',
-          $this->getServiceTypePr()
-        );
-
-        //process posts
-        $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
-        $this->processProofreadPosts(
-          $order,
-          $sourcePostIds,
-          $sourceLanguage,
-          $referenceHashes,
-          $content['metaData'],
-          isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']
-        );
-
-        $result = array(
-          'message' => '
-            ' . __('The order has been placed successfully.', 'supertext') . '<br />
-            ' . sprintf(__('Your order number is %s.', 'supertext'), $order->Id) . '<br />
-            ' . sprintf(__('The post will be proofreaded by %s.', 'supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
-        );
-
-      }else{
-        //create needed target posts
-        $targetPostIds = $this->getTargetPostIds($sourcePostIds, $targetLanguage);
-
-        //order
-        $order = Wrapper::createOrder(
-          $this->library->getApiClient(),
-          $this->getOrderTitle($content['postTitles'], $sourcePostIds),
-          $this->library->toSuperCode($sourceLanguage),
-          $this->library->toSuperCode($targetLanguage),
-          $content['data'],
-          $_POST['translationType'],
-          $this->getAdditionalInformation($content['postTitles'], $sourcePostIds, $targetPostIds),
-          $referenceHashes[0],
-          admin_url('admin-ajax.php') . '?action=sttr_callback',
-          $this->getServiceType()
-        );
-
-        //process posts
-        $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
-        $this->processTargetPosts(
-          $order,
-          $sourcePostIds,
-          $targetPostIds,
-          $sourceLanguage,
-          $targetLanguage,
-          $referenceHashes,
-          $content['metaData'],
-          isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']
-        );
-
-        $result = array(
-          'message' => '
-          ' . __('The order has been placed successfully.', 'supertext') . '<br />
-          ' . sprintf(__('Your order number is %s.', 'supertext'), $order->Id) . '<br />
-          ' . sprintf(__('The post will be translated by %s.', 'supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
-        );
-      }
+      $result = $this->createOrderByType(
+        $_POST['isProofreading'] == 1 ? 'proofreading' : 'translation',
+        $_POST['translatableContents'],
+        $_POST['orderSourceLanguage'],
+        $_POST['orderTargetLanguage'],
+        $this->getContent($_POST['translatableContents']),
+        $sourcePostIds,
+        $this->createReferenceHashes($sourcePostIds),
+      );
 
       self::returnResponse(200, $result);
     } catch (\Exception $e) {
@@ -255,6 +185,78 @@ class AjaxRequestHandler
 
       self::returnResponse(500, $e->getMessage());
     }
+  }
+
+  /**
+   * Create order by type
+   * @param $orderType
+   * @param $translatableContents
+   * @param $sourceLanguage
+   * @param $targetLanguage
+   * @param $content
+   * @param $sourcePostIds
+   * @param $referenceHashes
+   * @return string[]
+   * @throws \Supertext\Api\ApiConnectionException
+   * @throws \Supertext\Api\ApiDataException
+   */
+  private function createOrderByType($orderType, $translatableContents, $sourceLanguage, $targetLanguage, $content, $sourcePostIds, $referenceHashes){
+    // set data for the order based on the order type
+    switch ($orderType){
+      case 'proofreading':
+        $targetPostIds = $sourcePostIds;
+        $srcLang = $sourceLanguage;
+        $tarLang = $targetLanguage;
+        $serviceType = $this->getServiceTypePr();
+        $resultText = 'The post will be proofreaded by %s.';
+        break;
+
+      case 'translation':
+        $targetPostIds = $this->getTargetPostIds($sourcePostIds, $targetLanguage);
+        $srcLang = $this->library->toSuperCode($sourceLanguage);
+        $tarLang = $this->library->toSuperCode($targetLanguage);
+        $serviceType = $this->getServiceType();
+        $resultText = 'The post will be translated by %s.';
+        break;
+    }
+
+    //order
+    $order = Wrapper::createOrder(
+      $this->library->getApiClient(),
+      $this->getOrderTitle($content['postTitles'], $sourcePostIds),
+      $srcLang,
+      $tarLang,
+      $content['data'],
+      $_POST['translationType'],
+      $this->getAdditionalInformation($content['postTitles'], $sourcePostIds, $targetPostIds),
+      $referenceHashes[0],
+      admin_url( 'admin-ajax.php' ) . '?action=sttr_callback',
+      $serviceType
+    );
+
+    //process posts
+    $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
+    $this->processOrder(
+      $orderType,
+      $order,
+      $sourcePostIds,
+      $targetPostIds,
+      $sourceLanguage,
+      $targetLanguage,
+      $referenceHashes,
+      $content['metaData'],
+      isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']
+    );
+
+    // the result
+    $result = array(
+      'message' => '
+          ' . __('The order has been placed successfully.', 'supertext') . '<br />
+          ' . sprintf(__('Your order number is %s.', 'supertext'), $order->Id) . '<br />
+          ' . sprintf(__($resultText, 'supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
+    );
+
+    return $result;
   }
 
   /**
@@ -370,6 +372,45 @@ class AjaxRequestHandler
   }
 
   /**
+   * Process the order by type
+   * @param $orderType
+   * @param $order
+   * @param $sourcePostIds
+   * @param $targetPostIds
+   * @param $sourceLanguage
+   * @param $targetLanguage
+   * @param $referenceHashes
+   * @param $content
+   * @param $syncTranslation
+   */
+  private function processOrder($orderType, $order, $sourcePostIds, $targetPostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $metaData, $syncTranslation){
+    switch ($orderType) {
+      case 'proofreading':
+        $this->processProofreadPosts(
+          $order,
+          $sourcePostIds,
+          $sourceLanguage,
+          $referenceHashes,
+          $metaData,
+        );
+        break;
+
+      case 'translation':
+        $this->processTargetPosts(
+          $order,
+          $sourcePostIds,
+          $targetPostIds,
+          $sourceLanguage,
+          $targetLanguage,
+          $referenceHashes,
+          $metaData,
+          $syncTranslation
+        );
+        break;
+    }
+  }
+
+  /**
    * @param $order
    * @param $sourcePostIds
    * @param $sourceLanguage
@@ -451,7 +492,15 @@ class AjaxRequestHandler
     $this->log->addEntry($targetPostId, __('Post changes have been sent to Supertext.', 'supertext'));
   }
 
-  private function processProofreadPosts($order, $sourcePostIds, $sourceLanguage, $referenceHashes, $metaData, $syncTranslationChanges){
+  /**
+   * @param $order
+   * @param $sourcePostIds
+   * @param $sourceLanguage
+   * @param $referenceHashes
+   * @param $metaData
+   * @param $syncTranslationChanges
+   */
+  private function processProofreadPosts($order, $sourcePostIds, $sourceLanguage, $referenceHashes, $metaData){
     foreach ($sourcePostIds as $sourcePostId) {
       $proofreadPost = get_post($sourcePostId);
 
@@ -470,8 +519,6 @@ class AjaxRequestHandler
       $meta->set(ProofreadMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
       $meta->set(ProofreadMeta::META_DATA, $metaData[$sourcePostId]);
     }
-
-    // sendSyncRequest???
   }
 
   /**
