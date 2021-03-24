@@ -6,6 +6,7 @@ use Supertext\Proofreading\Proofreading;
 use Supertext\Helper\Constant;
 use Supertext\Helper\TranslationMeta;
 use Supertext\Helper\View;
+use LBWP\Module\General\Cms\SystemLog;
 
 /**
  * Serves as a helper for the translation inject to the user
@@ -335,11 +336,17 @@ class AdminExtension
     $data['post_status'] = Constant::TRANSLATION_POST_STATUS;
     $data['post_title'] = $sourcePost->post_title . ' [' . __('In translation', 'supertext') . '...]';
 
+    SystemLog::add('Copied Post Data', 'debug', '$data, $sourcePost', array($data, $sourcePost));
+
     return $data;
   }
 
   public function assignLanguageToNewTargetPost($targetPostId){
     $this->library->getMultilang()->assignLanguageToNewTargetPost($_GET['source_post'], $targetPostId, $_GET['target_lang']);
+    $srcPostMeta = get_post_meta($_GET['source_post']);
+    foreach($srcPostMeta as $metaKey => $metaVal){
+      update_post_meta($targetPostId, $metaKey, $metaVal);
+    }
   }
 
   private function isEditPostScreen()
