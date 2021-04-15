@@ -79,11 +79,7 @@ Supertext.Template = (function (win, doc, $, wp) {
           };
         });
       }
-    },
-    /**
-     * set to true if it's proofreading
-     */
-    isProofreading = false;
+    };
 
   function getHtml(templateId, data) {
     if (!templates.hasOwnProperty(templateId)) {
@@ -567,19 +563,17 @@ Supertext.Interface = (function (win, doc, $) {
      * @param data
      */
     self.addStepElements = function () {
+      var conStepObj = template.contentStep;
+
       if(isProofreading){
-        $(selectors.orderStep).html(template.contentStepPr({
-          posts: state.posts,
-          targetLanguageCode: state.targetLanguageCode,
-          languages: l10n.languages
-        }));
-      }else {
-        $(selectors.orderStep).html(template.contentStep({
-          posts: state.posts,
-          targetLanguageCode: state.targetLanguageCode,
-          languages: l10n.languages
-        }));
+        conStepObj = template.contentStepPr;
       }
+
+      $(selectors.orderStep).html(conStepObj({
+        posts: state.posts,
+        targetLanguageCode: state.targetLanguageCode,
+        languages: l10n.languages
+      }));
     };
 
     /**
@@ -881,6 +875,7 @@ Supertext.Interface = (function (win, doc, $) {
         context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
         postData)
         .then(function (createPostsData) {
+          // Create target post if it's a translation
           if(!isProofreading) {
             var requests = [];
 
@@ -1025,7 +1020,6 @@ Supertext.Interface = (function (win, doc, $) {
     isProofreading = $('select[name="' + selectName + '"]').val() === orderProofreadBulkActionValue;
 
     selectors.contentStepForm = '#sttr-content-step-form' + (isProofreading ? '-pr' : '');
-    selectors.quoteStepForm = '#sttr-quote-step-form' + (isProofreading ? '-pr' : '');
 
     if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue && !isProofreading) {
       return true;
@@ -1372,8 +1366,8 @@ Supertext.Interface = (function (win, doc, $) {
    * Opens the order form in a thickbox
    * @param targetLanguageCode
    */
-  function openOrderForm(targetLanguageCode, isProofreading) {
-    this.isProofreading = isProofreading !== undefined;
+  function openOrderForm(targetLanguageCode, isPr) {
+    isProofreading = isPr !== undefined;
 
     if (hasUnsavedChanges() && !confirm(l10n.confirmUnsavedPost)) {
       return;
@@ -1381,10 +1375,8 @@ Supertext.Interface = (function (win, doc, $) {
 
     if(isProofreading) {
       selectors.contentStepForm = '#sttr-content-step-form-pr';
-      selectors.quoteStepForm = '#sttr-quote-step-form-pr';
     }else{
       selectors.contentStepForm = '#sttr-content-step-form';
-      selectors.quoteStepForm = '#sttr-quote-step-form';
     }
 
     state.postIds = [context.currentPostId];

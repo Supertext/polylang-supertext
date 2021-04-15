@@ -305,49 +305,6 @@
   </form>
 </script>
 
-<script type="text/html" id="tmpl-sttr-quote-step-pr">
-  <form id="sttr-quote-step-form-pr">
-    <h2><?php _e('Service and deadline', 'supertext'); ?></h2>
-    <p><?php _e('Select the proofreading service and deadline for proofreading <b>{{data.wordCount}} words</b>:', 'supertext'); ?></p>
-    <div class="sttr-order-item-quote">
-      <table cellspacing="0" cellpadding="2" border="0">
-        <tbody>
-        <# _.each(data.options, function(option) { #>
-        <tr class="first-group-row">
-          <td class="quality-group-cell" rowspan="{{option.items.length+1}}">
-            <b>{{option.name}}</b>
-          </td>
-          <td class="selection-cell">&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>
-        <# _.each(option.items, function(item) { #>
-        <tr>
-          <td class="selection-cell">
-            <input type="radio" value="{{option.id}}:{{item.id}}" id="sttr-rad-translation-type-{{option.id}}-{{item.id}}" name="translationType">
-          </td>
-          <td>
-            <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.name}}</label>
-          </td>
-          <td align="right" class="ti-deadline">
-            <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.date}}</label>
-          </td>
-          <td align="right" class="ti-deadline">
-            <label for="sttr-rad-translation-type-{{option.id}}-{{item.id}}">{{item.price}}</label>
-          </td>
-        </tr>
-        <# }); #>
-        <tr class="last-group-row"></tr>
-        <# }); #>
-        </tbody>
-      </table>
-    </div>
-    <h2><?php _e('Your comment to Supertext', 'supertext'); ?></h2>
-    <p><textarea name="orderComment" id="sttr-order-comment"></textarea></p>
-  </form>
-</script>
-
 <script type="text/html" id="tmpl-sttr-confirmation-step">
   <div id="sttr-confirmation-step">
     <h2><?php _e('Confirmation', 'supertext'); ?></h2>
