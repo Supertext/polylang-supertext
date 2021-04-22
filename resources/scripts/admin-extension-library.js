@@ -858,7 +858,7 @@ Supertext.Interface = (function (win, doc, $) {
   /**
    * confirmation step
    */
-  var confirmationStep = function () {
+   var confirmationStep = function () {
     var self = this;
 
     /**
@@ -868,30 +868,37 @@ Supertext.Interface = (function (win, doc, $) {
       var postData = state.contentFormData.concat(state.quoteFormData);
       var postCreationPromise = Promise.resolve();
 
-      if(!isProofreading){ // post creation/preperation only needed for translation
-        postCreationPromise = doPostRequest(postData).then(
-          function (createPostsData) {
-            var requests = [];
+      if (!isProofreading) {
+        // post creation/preperation only needed for translation
+        postCreationPromise = doPostRequest(
+          context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
+          postData
+        ).then(function (createPostsData) {
+          var requests = [];
 
-            requests = $.map(createPostsData, function (createPostData) {
-              var autoSaveQueryParam = {};
-              autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
-              autoSaveQueryParam.source_post = createPostData.fromPost;
-              autoSaveQueryParam.target_lang = createPostData.newLang;
-              return doGetRequest(context.newPostUrls[createPostData.fromPost][createPostData.newLang], autoSaveQueryParam);
-            });
+          requests = $.map(createPostsData, function (createPostData) {
+            var autoSaveQueryParam = {};
+            autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
+            autoSaveQueryParam.source_post = createPostData.fromPost;
+            autoSaveQueryParam.target_lang = createPostData.newLang;
+            return doGetRequest(
+              context.newPostUrls[createPostData.fromPost][
+                createPostData.newLang
+              ],
+              autoSaveQueryParam
+            );
+          });
 
-            return $.when.apply($, requests);
-          }
-        )
+          return $.when.apply($, requests);
+        });
       }
 
       return postCreationPromise.then(function () {
-          return doPostRequest(
-            context.ajaxUrl + '?action=sttr_createOrder',
-            postData
-          );
-        });
+        return doPostRequest(
+          context.ajaxUrl + '?action=sttr_createOrder',
+          postData
+        );
+      });
     };
 
     /**
