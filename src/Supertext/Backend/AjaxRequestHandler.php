@@ -138,9 +138,6 @@ class AjaxRequestHandler
 
     $result = array();
     foreach($sourcePostIds as $sourcePostId){
-      if($_POST['isProofreading'] == 1){
-        $targetPostId = get_post($sourcePostId)->ID;
-      }else {
         $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $targetLanguage);
 
         if ($targetPostId != null) {
@@ -168,7 +165,7 @@ class AjaxRequestHandler
 
     try {
       $result = $this->createOrderByType(
-        $_POST['isProofreading'] == 1 ? 'proofreading' : 'translation',
+        $_POST['orderType'],
         $_POST['translatableContents'],
         $_POST['orderSourceLanguage'],
         $_POST['orderTargetLanguage'],

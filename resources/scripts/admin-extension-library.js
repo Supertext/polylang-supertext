@@ -866,17 +866,11 @@ Supertext.Interface = (function (win, doc, $) {
      */
     self.loadData = function () {
       var postData = state.contentFormData.concat(state.quoteFormData);
+      var postCreationPromise = Promise.resolve();
 
-      if(isProofreading){
-        postData.push({name: 'isProofreading', value: 1});
-      }
-
-      return doPostRequest(
-        context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
-        postData)
-        .then(function (createPostsData) {
-          // Create target post if it's a translation
-          if(!isProofreading) {
+      if(!isProofreading){ // post creation/preperation only needed for translation
+        postCreationPromise = doPostRequest(postData).then(
+          function (createPostsData) {
             var requests = [];
 
             requests = $.map(createPostsData, function (createPostData) {
@@ -889,8 +883,10 @@ Supertext.Interface = (function (win, doc, $) {
 
             return $.when.apply($, requests);
           }
-        })
-        .then(function () {
+        )
+      }
+
+      return postCreationPromise.then(function () {
           return doPostRequest(
             context.ajaxUrl + '?action=sttr_createOrder',
             postData

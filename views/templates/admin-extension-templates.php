@@ -164,6 +164,7 @@
         <# }); #>
       </select>
     </p>
+    <input type="hidden" name="orderType" value="translation" />
   </form>
 </script>
 
@@ -239,6 +240,7 @@
              ?>"
       />
     </div>
+    <input type="hidden" name="orderType" value="proofreading" />
   </form>
 </script>
 
