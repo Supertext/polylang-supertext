@@ -96,6 +96,7 @@ Did you translate the site title but it is still displayed in only one language?
 * Enhanced proofreading feature
 * Added missing translations
 * Restructured folders and namespaces
+* Fixed saving of meta data to target post when writing back
 * Various code improvements
 
 = 3.22 =
