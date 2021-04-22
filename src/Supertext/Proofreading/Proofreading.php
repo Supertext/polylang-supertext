@@ -2,7 +2,6 @@
 
 namespace Supertext\Proofreading;
 
-use Supertext\Helper\PostMeta;
 use Supertext\Helper\ProofreadMeta;
 
 class Proofreading{
@@ -10,11 +9,13 @@ class Proofreading{
 
   const METABOX_ID = 'proofreading-metabox';
 
-  public function __construct(){
-    self::$instance = $this;
-  }
+  private function __construct(){}
 
   public static function getInstance(){
+    if(self::$instance === null){
+      self::$instance = new Proofreading();
+    }
+
     return self::$instance;
   }
 
