@@ -105,24 +105,29 @@ class Core
       load_plugin_textdomain('supertext', false, 'polylang-supertext/resources/languages');
       load_plugin_textdomain('supertext-langs', false, 'polylang-supertext/resources/languages');
 
-      // Load needed subcomponents in admin
-      $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
-      $this->menu = new Menu($this->settingsPage, new ToolsPage($this->getLibrary(), array($this->getCallbackHandler(), "handleInternalWriteBackRequest")));
-      $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
-      $this->ajaxRequestHandler = new AjaxRequestHandler(
-        $this->getLibrary(),
-        $this->getLog(),
-        $this->getContentProvider()
-      );
-
-      // Load the proofreading class
-      $this->proofreading = new Proofreading();
-
-      $this->checkVersion();
-      $this->checkEnvironment();
+       // Load needed subcomponents in admin after the theme is setup
+       add_action('after_setup_theme', array($this, 'initializeAfterThemeSetup'));
     }
 
     add_action('wp_ajax_nopriv_sttr_callback', array($this, 'handleCallback'));
+  }
+
+  /**
+   * Initalization after the theme is setup
+   */
+  public function initializeAfterThemeSetup()
+  {
+    $this->settingsPage = new SettingsPage($this->getLibrary(), $this->getTextAccessors());
+    $this->menu = new Menu($this->settingsPage, new ToolsPage($this->getLibrary(), array($this->getCallbackHandler(), "handleInternalWriteBackRequest")));
+    $this->adminExtension = new AdminExtension($this->getLibrary(), $this->getLog());
+    $this->ajaxRequestHandler = new AjaxRequestHandler(
+      $this->getLibrary(),
+      $this->getLog(),
+      $this->getContentProvider()
+    );
+
+    $this->checkVersion();
+    $this->checkEnvironment();
   }
 
   /**
@@ -315,7 +320,7 @@ class Core
       $textAccessors['all_in_one_seo'] = new AllInOneSeoPackTextAccessor($textProcessor, $library);
     }
 
-    if ($library->isPluginActive('advanced-custom-fields/acf.php') || $library->isPluginActive('advanced-custom-fields-pro/acf.php')) {
+    if ($library->isPluginActive('advanced-custom-fields/acf.php') || $library->isPluginActive('advanced-custom-fields-pro/acf.php') || class_exists('ACF')) {
       $textAccessors['acf'] = new AcfTextAccessor($textProcessor, $library);
     }
 
