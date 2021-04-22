@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2021-04-22 10:27+0200\n"
-"PO-Revision-Date: 2021-04-22 10:27+0200\n"
+"POT-Creation-Date: 2021-04-22 18:05+0200\n"
+"PO-Revision-Date: 2021-04-22 18:06+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: fr_CH\n"
@@ -56,7 +56,7 @@ msgstr "Offre manquante (%s -> %s). Veuillez contacter Supertext."
 msgid "Could not create an order with Supertext."
 msgstr "Aucune commande pour Supertext n’a pu être créée."
 
-#: src/Supertext/Backend/AdminExtension.php:145
+#: src/Supertext/Backend/AdminExtension.php:144
 msgid ""
 "The PHP function <em>curl_exec</em> is disabled. Please enable it in order "
 "to be able to send requests to Supertext."
@@ -64,7 +64,7 @@ msgstr ""
 "La fonction PHP <em>curl_exec</em> est désactivée. Veuillez activer cette "
 "fonction afin de pouvoir envoyer une demande à Supertext."
 
-#: src/Supertext/Backend/AdminExtension.php:157
+#: src/Supertext/Backend/AdminExtension.php:156
 msgid ""
 "The Supertext Translation plugin cannot be used. Polylang or WPML is not "
 "installed or hasn't been activated."
@@ -72,7 +72,7 @@ msgstr ""
 "Impossible d’utiliser le plug-in de traduction de Supertext. Polylang ou "
 "WPML n’est pas installé ou n’a pas été activé."
 
-#: src/Supertext/Backend/AdminExtension.php:165
+#: src/Supertext/Backend/AdminExtension.php:164
 msgid ""
 "The Supertext Translation plugin cannot be used. It hasn't been configured "
 "correctly."
@@ -80,7 +80,7 @@ msgstr ""
 "Le plug-in de traduction de Supertext n’a pas été configuré correctement et "
 "il est donc impossible de l’utiliser."
 
-#: src/Supertext/Backend/AdminExtension.php:186
+#: src/Supertext/Backend/AdminExtension.php:185
 #, php-format
 msgid ""
 "The post was sent to Supertext and is now being translated. Your order "
@@ -89,7 +89,7 @@ msgstr ""
 "Votre texte a été envoyé à Supertext pour être traduit. Votre numéro de "
 "commande est le suivant: %s."
 
-#: src/Supertext/Backend/AdminExtension.php:247
+#: src/Supertext/Backend/AdminExtension.php:246
 #: src/Supertext/Backend/Menu.php:34 src/Supertext/Backend/Menu.php:43
 msgid "Supertext"
 msgstr "Supertext"
@@ -139,10 +139,6 @@ msgid ""
 msgstr ""
 "Votre commande pour la relecture a été passée avec succès. Votre numéro de "
 "commande est le suivant: %s."
-
-#: src/Supertext/Backend/CallbackHandler.php:145
-msgid " saved successfully"
-msgstr " a été enregistré."
 
 #: src/Supertext/Backend/Menu.php:33
 msgid "Supertext - Settings"
@@ -234,15 +230,23 @@ msgid "<i>{0}</i> is already being translated into {1} (order id: {2})"
 msgstr ""
 "<i>{0}</i> est déjà en cours de traduction en {1} (numéro de commande: {2})"
 
-#: src/Supertext/Proofreading/Proofreading.php:22
+#: src/Supertext/Helper/ProofreadMeta.php:42
+msgid "proofreading saved successfully"
+msgstr "La relecture de Supertext a été importée avec succès"
+
+#: src/Supertext/Helper/TranslationMeta.php:42
+msgid "translation saved successfully"
+msgstr "La traduction de Supertext a été importée avec succès"
+
+#: src/Supertext/Proofreading/Proofreading.php:23
 msgid "Proofreading"
 msgstr "Relecture"
 
-#: src/Supertext/Proofreading/Proofreading.php:27
+#: src/Supertext/Proofreading/Proofreading.php:28
 msgid "Order proofread"
 msgstr "Commander une relecture"
 
-#: src/Supertext/Proofreading/Proofreading.php:32
+#: src/Supertext/Proofreading/Proofreading.php:33
 msgid "Post is still in the proofread process"
 msgstr "Le texte est encore en phase de relecture"
 
@@ -754,6 +758,9 @@ msgstr "Supprimer le réglage"
 msgid "Attribute name..."
 msgstr "Nom de l’attribut…"
 
+#~ msgid " saved successfully"
+#~ msgstr " a été enregistré."
+
 #, php-format
 #~ msgid "The post will be proofread by %s."
 #~ msgstr "Le texte sera relu par %s."
@@ -771,9 +778,6 @@ msgstr "Nom de l’attribut…"
 
 #~ msgid "Supertext Translation"
 #~ msgstr "Supertext Translation"
-
-#~ msgid "translation saved successfully"
-#~ msgstr "La traduction de Supertext a été importée avec succès."
 
 #~ msgid "User"
 #~ msgstr "Utilisateur"

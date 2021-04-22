@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2021-04-22 10:33+0200\n"
-"PO-Revision-Date: 2021-04-22 10:34+0200\n"
+"POT-Creation-Date: 2021-04-22 18:07+0200\n"
+"PO-Revision-Date: 2021-04-22 18:08+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: it_IT\n"
@@ -56,7 +56,7 @@ msgstr "Offerta mancante (%s -> %s). La preghiamo di contattare Supertext."
 msgid "Could not create an order with Supertext."
 msgstr "Non è stato possibile creare un ordine con Supertext."
 
-#: src/Supertext/Backend/AdminExtension.php:145
+#: src/Supertext/Backend/AdminExtension.php:144
 msgid ""
 "The PHP function <em>curl_exec</em> is disabled. Please enable it in order "
 "to be able to send requests to Supertext."
@@ -64,7 +64,7 @@ msgstr ""
 "La funzione PHP <em>curl_exec</em> è disattivata. È necessario attivarla per "
 "poter inviare una richiesta a Supertext."
 
-#: src/Supertext/Backend/AdminExtension.php:157
+#: src/Supertext/Backend/AdminExtension.php:156
 msgid ""
 "The Supertext Translation plugin cannot be used. Polylang or WPML is not "
 "installed or hasn't been activated."
@@ -72,7 +72,7 @@ msgstr ""
 "Impossibile utilizzare il plugin Supertext Translation. Polylang o WPML non "
 "è installato o non è stato attivato."
 
-#: src/Supertext/Backend/AdminExtension.php:165
+#: src/Supertext/Backend/AdminExtension.php:164
 msgid ""
 "The Supertext Translation plugin cannot be used. It hasn't been configured "
 "correctly."
@@ -80,7 +80,7 @@ msgstr ""
 "Impossibile utilizzare il plugin Supertext Translation poiché non è stato "
 "configurato correttamente."
 
-#: src/Supertext/Backend/AdminExtension.php:186
+#: src/Supertext/Backend/AdminExtension.php:185
 #, php-format
 msgid ""
 "The post was sent to Supertext and is now being translated. Your order "
@@ -89,7 +89,7 @@ msgstr ""
 "L’articolo è stato inviato a Supertext e verrà tradotto. Il numero d’ordine "
 "è %s."
 
-#: src/Supertext/Backend/AdminExtension.php:247
+#: src/Supertext/Backend/AdminExtension.php:246
 #: src/Supertext/Backend/Menu.php:34 src/Supertext/Backend/Menu.php:43
 msgid "Supertext"
 msgstr "Supertext"
@@ -139,10 +139,6 @@ msgid ""
 msgstr ""
 "L’ordine di revisione è stato registrato correttamente. Il numero d’ordine è "
 "%s."
-
-#: src/Supertext/Backend/CallbackHandler.php:145
-msgid " saved successfully"
-msgstr " salvato correttamente"
 
 #: src/Supertext/Backend/Menu.php:33
 msgid "Supertext - Settings"
@@ -235,15 +231,23 @@ msgstr ""
 "<i>{0}</i> è già in traduzione verso la lingua {1} (numero dell’incarico: "
 "{2})"
 
-#: src/Supertext/Proofreading/Proofreading.php:22
+#: src/Supertext/Helper/ProofreadMeta.php:42
+msgid "proofreading saved successfully"
+msgstr "La revisione di Supertext è stata importata con successo."
+
+#: src/Supertext/Helper/TranslationMeta.php:42
+msgid "translation saved successfully"
+msgstr "La traduzione di Supertext è stata importata con successo."
+
+#: src/Supertext/Proofreading/Proofreading.php:23
 msgid "Proofreading"
 msgstr "Revisione"
 
-#: src/Supertext/Proofreading/Proofreading.php:27
+#: src/Supertext/Proofreading/Proofreading.php:28
 msgid "Order proofread"
 msgstr "Ordine di revisione"
 
-#: src/Supertext/Proofreading/Proofreading.php:32
+#: src/Supertext/Proofreading/Proofreading.php:33
 msgid "Post is still in the proofread process"
 msgstr "L’articolo è ancora in fase di revisione"
 
@@ -750,6 +754,9 @@ msgstr "rimuovi impostazione"
 msgid "Attribute name..."
 msgstr "Nome attributo..."
 
+#~ msgid " saved successfully"
+#~ msgstr " salvato correttamente"
+
 #, php-format
 #~ msgid "The post will be proofread by %s."
 #~ msgstr "L’articolo verrà corretto entro le ore %s."
@@ -767,9 +774,6 @@ msgstr "Nome attributo..."
 
 #~ msgid "Supertext Translation"
 #~ msgstr "Supertext Translation"
-
-#~ msgid "translation saved successfully"
-#~ msgstr "La traduzione di Supertext è stata importata con successo."
 
 #~ msgid "User"
 #~ msgstr "Utente"
