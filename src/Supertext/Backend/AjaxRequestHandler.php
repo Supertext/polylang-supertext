@@ -138,17 +138,14 @@ class AjaxRequestHandler
 
     $result = array();
     foreach($sourcePostIds as $sourcePostId){
-        $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $targetLanguage);
+      $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $targetLanguage);
 
-        if ($targetPostId != null) {
-          continue;
-        }
+      if ($targetPostId != null) {
+        continue;
       }
 
-      $sourcePost = get_post($sourcePostId);
-
       array_push($result, array(
-        'fromPost' => $sourcePost->ID,
+        'fromPost' => $sourcePostId,
         'newLang' => $targetLanguage
       ));
     }
