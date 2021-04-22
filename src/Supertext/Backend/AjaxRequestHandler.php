@@ -202,7 +202,7 @@ class AjaxRequestHandler
         $srcLang = $sourceLanguage;
         $tarLang = $targetLanguage;
         $serviceType = $this->getServiceTypePr();
-        $resultText = 'The post will be proofreaded by %s.';
+        $resultText = 'The post will be proofread by %s.';
         break;
 
       case 'translation':

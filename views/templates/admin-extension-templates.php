@@ -170,7 +170,7 @@
 
 <script type="text/html" id="tmpl-sttr-content-step-pr">
   <form id="sttr-content-step-form-pr">
-    <h2><?php _e('Content to be proofreaded', 'supertext'); ?></h2>
+    <h2><?php _e('Content to be proofread', 'supertext'); ?></h2>
 
     <div class="sttr-order-list">
       <div class="sttr-order-items">
@@ -191,7 +191,7 @@
           <h3>{{post.title}}</h3>
           <# if(post.meta.inProofreading){ #>
           <p class="notice notice-error">
-            <span class="error-message"><?php _e('The post cannot be proofreaded. It is blocked by a proofread order in progress.', 'supertext');?></span>
+            <span class="error-message"><?php _e('The post cannot be proofread. It is blocked by a proofread order in progress.', 'supertext');?></span>
           </p>
           <# }else if(post.isDraft){ #>
           <p class="notice notice-warning">
@@ -199,7 +199,7 @@
           </p>
           <# } #>
           <p>
-            <?php _e('Please select the content to be proofreaded.', 'supertext');?>
+            <?php _e('Please select the content to be proofread.', 'supertext');?>
           </p>
           <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
           <h2>{{translatableFieldGroup.name}}</h2>
