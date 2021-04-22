@@ -4,7 +4,7 @@ namespace Supertext\Helper;
 
 abstract class PostMeta
 {
-  private $postId;
+  protected $postId;
   private $metaKey;
   private $fields = null;
 

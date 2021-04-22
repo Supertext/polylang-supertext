@@ -47,21 +47,11 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     $postCustomFields = get_post_meta($post->ID);
     $metaKeys = array_keys($postCustomFields);
 
-    $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
-
-    if (isset($selectedTranslatableFields['none-translatable']) && isset($savedFieldDefinitions[$this->pluginId])) {
-      foreach ($metaKeys as $metaKey) {
-
-        $isTranslatable = false;
-        foreach ($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition) {
-          if (preg_match('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $metaKey)) {
-            $isTranslatable = true;
-            break;
-          }
-        }
-
-        if (!$isTranslatable) {
-          $metaData[$metaKey] = get_post_meta($post->ID, $metaKey, true);
+    if (isset($selectedTranslatableFields['none-translatable'])) {
+      $fields = get_fields($post->ID);
+      foreach($fields as $fieldKey => $fieldValue){
+        if(array_key_exists($fieldKey, $postCustomFields)){
+          $metaData[$fieldKey] = get_post_meta($post->ID, $fieldKey, true);
         }
       }
     }
