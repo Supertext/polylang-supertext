@@ -875,7 +875,7 @@ Supertext.Interface = (function (win, doc, $) {
         );
       }
 
-      postCreationPromise = doPostRequest(
+      return doPostRequest(
         context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
         postData
       ).then(function (createPostsData) {
