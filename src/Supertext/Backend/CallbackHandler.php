@@ -4,8 +4,6 @@ namespace Supertext\Backend;
 
 use Supertext\Api\WriteBack;
 use Supertext\Helper\Constant;
-use Supertext\Helper\ProofreadMeta;
-use Supertext\Helper\TranslationMeta;
 
 class CallbackHandler
 {
