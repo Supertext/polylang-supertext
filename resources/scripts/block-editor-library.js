@@ -17,7 +17,7 @@ function customizePolylangSidebar(settings, name) {
     return el(settings.render);
   };
   CustomScript.prototype.componentDidUpdate = function() {
-    window.setTimeout(Supertext.Polylang.injectOrderLinks, 10);
+    window.setTimeout(Supertext.Interface.injectOrderLinks, 10);
   };
 
   return lodash.assign({}, settings, {

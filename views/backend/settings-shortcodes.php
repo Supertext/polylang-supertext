@@ -1,22 +1,22 @@
 <?php
-use Supertext\Polylang\Helper\Constant;
+use Supertext\Helper\Constant;
 
-/** @var \Supertext\Polylang\Helper\Library $library */
+/** @var \Supertext\Helper\Library $library */
 $shortcodeTags = $library->getShortcodeTags();
 $savedShortcodes = $library->getSettingOption(Constant::SETTING_SHORTCODES);
 
 ?>
 <div class="postbox postbox_admin">
   <div class="inside">
-    <h3><?php _e('Shortcodes', 'polylang-supertext'); ?></h3>
+    <h3><?php _e('Shortcodes', 'supertext'); ?></h3>
     <p>
-      <?php _e('Please define any shortcode attributes you want to have translated.', 'polylang-supertext'); ?>
+      <?php _e('Please define any shortcode attributes you want to have translated.', 'supertext'); ?>
     </p>
     <p>
-      <?php _e('Please define the encoding process for all encoded and enclosed content. Available encoding functions are: rawurl, url and base64', 'polylang-supertext'); ?>
+      <?php _e('Please define the encoding process for all encoded and enclosed content. Available encoding functions are: rawurl, url and base64', 'supertext'); ?>
     </p>
     <div id="shortcode-settings"></div>
-    <button type="button" class="button button-highlighted button-add shortcode-add-setting"><?php _e('Add setting', 'polylang-supertext'); ?></button>
+    <button type="button" class="button button-highlighted button-add shortcode-add-setting"><?php _e('Add setting', 'supertext'); ?></button>
   </div>
 </div>
 

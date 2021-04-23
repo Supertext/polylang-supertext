@@ -48,6 +48,10 @@ Supertext.Template = (function (win, doc, $, wp) {
        */
       contentStep: 'sttr-content-step',
       /**
+       * The content step id for proofreading
+       */
+      contentStepPr: 'sttr-content-step-pr',
+      /**
        * The item content id
        */
       itemContent: 'sttr-item-content',
@@ -330,7 +334,7 @@ Supertext.Validation = (function ($) {
 /**
  * Polylang translation plugin to inject translation options
  */
-Supertext.Polylang = (function (win, doc, $) {
+Supertext.Interface = (function (win, doc, $) {
   'use strict';
 
   var
@@ -339,6 +343,11 @@ Supertext.Polylang = (function (win, doc, $) {
      * @type {string}
      */
     orderTranslationBulkActionValue = 'orderTranslation',
+    /**
+     * Order proofread bulk action option value
+     * @type {string}
+     */
+    orderProofreadBulkActionValue = 'orderProofread',
     /**
      * The selectors of different html elements
      */
@@ -388,7 +397,12 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     state = {
       currentStepNumber: 0
-    };
+    },
+    /**
+     *
+     * @type {boolean}
+     */
+    isProofreading = false;
 
   /**
    * Creates a new step object of specific type
@@ -462,22 +476,38 @@ Supertext.Polylang = (function (win, doc, $) {
         var languageCode = null;
         var isEachPostInSameLanguage = true;
         var isAPostInTranslation = false;
-        $.each(state.posts, function (index, post) {
-          if (index === 0) {
-            languageCode = post.languageCode;
-          } else {
-            isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
+        var isAPostInProofreading = false;
+
+        if(!isProofreading){
+          $.each(state.posts, function (index, post) {
+            if (index === 0) {
+              languageCode = post.languageCode;
+            } else {
+              isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
+            }
+
+            isAPostInTranslation = isAPostInTranslation || post.meta.inTranslation;
+          });
+
+          if (isAPostInTranslation) {
+            fail(l10n.errorValidationSomePostInTranslation);
           }
 
-          isAPostInTranslation = isAPostInTranslation || post.meta.inTranslation;
-        });
+          if (!isEachPostInSameLanguage) {
+            fail(l10n.errorValidationNotAllPostInSameLanguage);
+          }
+        }else{
+          $.each(state.posts, function (index, post) {
+            if (index === 0) {
+              languageCode = post.languageCode === false ? $(selectors.orderSourceLanguageInput).attr('data-fallback-lang') : post.languageCode;
+            }
 
-        if (isAPostInTranslation) {
-          fail(l10n.errorValidationSomePostInTranslation);
-        }
+            isAPostInProofreading = isAPostInProofreading || post.meta.inProofreading;
+          });
 
-        if (!isEachPostInSameLanguage) {
-          fail(l10n.errorValidationNotAllPostInSameLanguage);
+          if (isAPostInProofreading) {
+            fail(l10n.errorValidationSomePostInProofreading);
+          }
         }
       },
       content: function (fail) {
@@ -493,7 +523,7 @@ Supertext.Polylang = (function (win, doc, $) {
           return;
         }
 
-        fail(l10n.errorValidationSelectContent);
+        fail(isProofreading ? l10n.errorValidationSelectContentPr : l10n.errorValidationSelectContent);
       },
       targetLanguage: function (fail) {
         if ($(selectors.orderTargetLanguageSelect).val() === '') {
@@ -533,7 +563,13 @@ Supertext.Polylang = (function (win, doc, $) {
      * @param data
      */
     self.addStepElements = function () {
-      $(selectors.orderStep).html(template.contentStep({
+      var conStepObj = template.contentStep;
+
+      if(isProofreading){
+        conStepObj = template.contentStepPr;
+      }
+
+      $(selectors.orderStep).html(conStepObj({
         posts: state.posts,
         targetLanguageCode: state.targetLanguageCode,
         languages: l10n.languages
@@ -553,6 +589,13 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     self.saveForm = function () {
       state.contentFormData = $(selectors.contentStepForm).serializeArray();
+
+      if(isProofreading){
+        state.contentFormData.push(
+          {name: 'orderTargetLanguage', value: $(selectors.orderSourceLanguageInput).attr('data-fallback-lang')},
+          {name: 'serviceType', value: Number($(selectors.orderSourceLanguageInput).attr('data-service-type'))}
+        );
+      }
     };
 
     /**
@@ -740,6 +783,17 @@ Supertext.Polylang = (function (win, doc, $) {
      */
     function setLanguages() {
       var sourceLanguageCode = state.posts[0].languageCode;
+
+      if(isProofreading){
+        var getLang = $(selectors.orderSourceLanguageInput).attr('data-fallback-lang');
+
+        if(sourceLanguageCode === false){
+          state.posts[0].languageCode = getLang;
+        }
+
+        sourceLanguageCode = getLang;
+      }
+
       $(selectors.orderSourceLanguageLabel).html(l10n.languages[sourceLanguageCode]);
       $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
 
@@ -761,7 +815,7 @@ Supertext.Polylang = (function (win, doc, $) {
   var quoteStep = function () {
     var self = this;
 
-    self.nextButtonName = l10n.orderTranslation;
+    self.nextButtonName = isProofreading ? l10n.orderProofreading : l10n.orderTranslation;
 
     self.validationRules = {
       quote: function (fail) {
@@ -804,7 +858,7 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * confirmation step
    */
-  var confirmationStep = function () {
+   var confirmationStep = function () {
     var self = this;
 
     /**
@@ -813,28 +867,40 @@ Supertext.Polylang = (function (win, doc, $) {
     self.loadData = function () {
       var postData = state.contentFormData.concat(state.quoteFormData);
 
+      // post creation/preperation not needed for proofreading
+      if (isProofreading) {
+        return doPostRequest(
+          context.ajaxUrl + '?action=sttr_createOrder',
+          postData
+        );
+      }
+
       return doPostRequest(
         context.ajaxUrl + '?action=sttr_getNewPostQueryParams',
-        postData)
-        .then(function (createPostsData) {
-          var requests = [];
-  
-          requests = $.map(createPostsData, function (createPostData) {
-            var autoSaveQueryParam = {};
-            autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
-            autoSaveQueryParam.source_post = createPostData.fromPost;
-            autoSaveQueryParam.target_lang = createPostData.newLang;
-            return doGetRequest(context.newPostUrls[createPostData.fromPost][createPostData.newLang], autoSaveQueryParam);
-          });
+        postData
+      ).then(function (createPostsData) {
+        var requests = [];
 
-          return $.when.apply($, requests);
-        })
-        .then(function () {
-          return doPostRequest(
-            context.ajaxUrl + '?action=sttr_createOrder',
-            postData
+        requests = $.map(createPostsData, function (createPostData) {
+          var autoSaveQueryParam = {};
+          autoSaveQueryParam[context.newPostAutoSaveFlag] = 1;
+          autoSaveQueryParam.source_post = createPostData.fromPost;
+          autoSaveQueryParam.target_lang = createPostData.newLang;
+          return doGetRequest(
+            context.newPostUrls[createPostData.fromPost][
+              createPostData.newLang
+            ],
+            autoSaveQueryParam
           );
         });
+
+        return $.when.apply($, requests);
+      }).then(function () {
+        return doPostRequest(
+          context.ajaxUrl + '?action=sttr_createOrder',
+          postData
+        );
+      });
     };
 
     /**
@@ -935,9 +1001,16 @@ Supertext.Polylang = (function (win, doc, $) {
   /**
    * Initialize on edit screen
    */
-  function initializeEditScreen() {
-    $('<option>').val(orderTranslationBulkActionValue).text(l10n.offerTranslation).appendTo("select[name='action']");
-    $('<option>').val(orderTranslationBulkActionValue).text(l10n.offerTranslation).appendTo("select[name='action2']");
+  function initializeEditScreen(onlyProofread) {
+    if(onlyProofread){
+      $('<option>').val(orderProofreadBulkActionValue).text(l10n.offerProofread).appendTo("select[name='action']");
+      $('<option>').val(orderProofreadBulkActionValue).text(l10n.offerProofread).appendTo("select[name='action2']");
+    }else {
+      $('<option>').val(orderTranslationBulkActionValue).text(l10n.offerTranslation).appendTo("select[name='action']");
+      $('<option>').val(orderTranslationBulkActionValue).text(l10n.offerTranslation).appendTo("select[name='action2']");
+      $('<option>').val(orderProofreadBulkActionValue).text(l10n.offerProofread).appendTo("select[name='action']");
+      $('<option>').val(orderProofreadBulkActionValue).text(l10n.offerProofread).appendTo("select[name='action2']");
+    }
 
     $('#doaction, #doaction2').click(onBulkActionApply);
   }
@@ -949,7 +1022,11 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function onBulkActionApply(e) {
     var selectName = $(this).attr('id').substr(2);
-    if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue) {
+    isProofreading = $('select[name="' + selectName + '"]').val() === orderProofreadBulkActionValue;
+
+    selectors.contentStepForm = '#sttr-content-step-form' + (isProofreading ? '-pr' : '');
+
+    if ($('select[name="' + selectName + '"]').val() !== orderTranslationBulkActionValue && !isProofreading) {
       return true;
     }
 
@@ -979,7 +1056,7 @@ Supertext.Polylang = (function (win, doc, $) {
    */
   function startOrderProcess() {
     steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
-    openModal(l10n.orderModalTitle);
+    openModal(isProofreading ? l10n.orderModalTitlePr : l10n.orderModalTitle);
     addOrderProgressBar();
     addCancelButton();
     addBackButton();
@@ -1294,9 +1371,17 @@ Supertext.Polylang = (function (win, doc, $) {
    * Opens the order form in a thickbox
    * @param targetLanguageCode
    */
-  function openOrderForm(targetLanguageCode) {
+  function openOrderForm(targetLanguageCode, isPr) {
+    isProofreading = isPr !== undefined;
+
     if (hasUnsavedChanges() && !confirm(l10n.confirmUnsavedPost)) {
       return;
+    }
+
+    if(isProofreading) {
+      selectors.contentStepForm = '#sttr-content-step-form-pr';
+    }else{
+      selectors.contentStepForm = '#sttr-content-step-form';
     }
 
     state.postIds = [context.currentPostId];
@@ -1355,6 +1440,7 @@ Supertext.Polylang = (function (win, doc, $) {
       l10n = externals.l10n;
 
       if (!context.enable) {
+        initializeEditScreen(true);
         return;
       }
 
@@ -1379,7 +1465,7 @@ jQuery(document).ready(function () {
     template: Supertext.Template
   });
 
-  Supertext.Polylang.initialize({
+  Supertext.Interface.initialize({
     context: Supertext.Context || {
       enable: false
     },
