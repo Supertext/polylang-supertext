@@ -92,6 +92,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.01 =
+* Fixed JavaScript bug in minified admin extension script
+
 = 4.00 =
 * Enhanced proofreading feature
 * Added missing translations
