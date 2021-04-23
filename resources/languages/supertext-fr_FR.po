@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2021-04-22 18:07+0200\n"
-"PO-Revision-Date: 2021-04-22 18:07+0200\n"
+"POT-Creation-Date: 2021-04-23 09:23+0200\n"
+"PO-Revision-Date: 2021-04-23 09:38+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: fr_FR\n"
@@ -98,20 +98,30 @@ msgstr "Supertext"
 msgid "In translation"
 msgstr "En cours de traduction"
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:248
+#: src/Supertext/Backend/AjaxRequestHandler.php:203
+#, php-format
+msgid "The post will be proofread by %s."
+msgstr "Le texte sera relu avant le %s."
+
+#: src/Supertext/Backend/AjaxRequestHandler.php:211
+#, php-format
+msgid "The post will be translated by %s."
+msgstr "Le texte sera traduit avant le %s."
+
+#: src/Supertext/Backend/AjaxRequestHandler.php:246
 msgid "The order has been placed successfully."
 msgstr "La commande a été passée avec succès."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:249
+#: src/Supertext/Backend/AjaxRequestHandler.php:247
 #, php-format
 msgid "Your order number is %s."
 msgstr "Votre numéro de commande est le suivant : %s."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:264
+#: src/Supertext/Backend/AjaxRequestHandler.php:262
 msgid "The changes have been sent successfully."
 msgstr "Les modifications de l’article ont été envoyées avec succès."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:422
+#: src/Supertext/Backend/AjaxRequestHandler.php:420
 #, php-format
 msgid ""
 "Translation order into %s has been placed successfully. Your order number is "
@@ -120,19 +130,19 @@ msgstr ""
 "Votre commande pour la traduction en %s a été passée avec succès. Votre "
 "numéro de commande est le suivant : %s."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:443
+#: src/Supertext/Backend/AjaxRequestHandler.php:441
 msgid "Post changes could not be sent to Supertext."
 msgstr "Les modifications du texte n’ont pas pu être envoyées à Supertext."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:473
+#: src/Supertext/Backend/AjaxRequestHandler.php:471
 msgid "Could not retrieve old version"
 msgstr "L’ancienne version n’a pas pu être récupérée."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:486
+#: src/Supertext/Backend/AjaxRequestHandler.php:484
 msgid "Post changes have been sent to Supertext."
 msgstr "Les modifications de l’article ont été envoyées à Supertext."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:502
+#: src/Supertext/Backend/AjaxRequestHandler.php:499
 #, php-format
 msgid ""
 "Proofreading order has been placed successfully. Your order number is %s."
@@ -760,14 +770,6 @@ msgstr "Nom de l’attribut…"
 
 #~ msgid " saved successfully"
 #~ msgstr "a été enregistré."
-
-#, php-format
-#~ msgid "The post will be proofread by %s."
-#~ msgstr "Le texte sera relu par %s."
-
-#, php-format
-#~ msgid "The post will be translated by %s."
-#~ msgstr "Le texte sera traduit par %s."
 
 #~ msgid ""
 #~ "The Supertext Translation plugin cannot be used. Polylang is not "
