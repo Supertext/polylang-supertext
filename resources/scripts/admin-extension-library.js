@@ -499,7 +499,9 @@ Supertext.Interface = (function (win, doc, $) {
         }else{
           $.each(state.posts, function (index, post) {
             if (index === 0) {
-              languageCode = post.languageCode === false ? $(selectors.orderSourceLanguageInput).attr('data-fallback-lang') : post.languageCode;
+              languageCode = post.languageCode;
+            }else {
+              isEachPostInSameLanguage = isEachPostInSameLanguage && post.languageCode == languageCode;
             }
 
             isAPostInProofreading = isAPostInProofreading || post.meta.inProofreading;
@@ -526,6 +528,10 @@ Supertext.Interface = (function (win, doc, $) {
         fail(isProofreading ? l10n.errorValidationSelectContentPr : l10n.errorValidationSelectContent);
       },
       targetLanguage: function (fail) {
+        if(isProofreading){
+          return;
+        }
+        
         if ($(selectors.orderTargetLanguageSelect).val() === '') {
           fail(l10n.errorValidationSelectTargetLanguage);
           return;
@@ -589,13 +595,6 @@ Supertext.Interface = (function (win, doc, $) {
      */
     self.saveForm = function () {
       state.contentFormData = $(selectors.contentStepForm).serializeArray();
-
-      if(isProofreading){
-        state.contentFormData.push(
-          {name: 'orderTargetLanguage', value: $(selectors.orderSourceLanguageInput).attr('data-fallback-lang')},
-          {name: 'serviceType', value: Number($(selectors.orderSourceLanguageInput).attr('data-service-type'))}
-        );
-      }
     };
 
     /**
@@ -784,28 +783,22 @@ Supertext.Interface = (function (win, doc, $) {
     function setLanguages() {
       var sourceLanguageCode = state.posts[0].languageCode;
 
-      if(isProofreading){
-        var getLang = $(selectors.orderSourceLanguageInput).attr('data-fallback-lang');
-
-        if(sourceLanguageCode === false){
-          state.posts[0].languageCode = getLang;
-        }
-
-        sourceLanguageCode = getLang;
-      }
-
       $(selectors.orderSourceLanguageLabel).html(l10n.languages[sourceLanguageCode]);
       $(selectors.orderSourceLanguageInput).val(sourceLanguageCode);
 
-      $(selectors.orderTargetLanguageOptions).each(function (index, option) {
-        var $options = $(option);
-        if ($options.val() === sourceLanguageCode) {
-          $options.remove();
-          return;
-        }
-
-        $(option).show();
-      });
+      if(isProofreading){
+        $(selectors.orderTargetLanguageSelect).val(sourceLanguageCode);
+      }else{
+        $(selectors.orderTargetLanguageOptions).each(function (index, option) {
+          var $options = $(option);
+          if ($options.val() === sourceLanguageCode) {
+            $options.remove();
+            return;
+          }
+  
+          $(option).show();
+        });
+      }
     }
   };
 
@@ -843,7 +836,8 @@ Supertext.Interface = (function (win, doc, $) {
       $(selectors.orderStep).html(template.quoteStep({
         wordCount: data.wordCount,
         language: data.language,
-        options: data.options
+        options: data.options,
+        isProofreading: isProofreading
       }));
     };
 

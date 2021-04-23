@@ -112,17 +112,14 @@ class AjaxRequestHandler
     $content = $this->getContent($_POST['translatableContents']);
 
     try {
-      $laguageCodes = array(
-        'source' => $this->library->toSuperCode($_POST['orderSourceLanguage']),
-        'target' => $this->library->toSuperCode($_POST['orderTargetLanguage'])
-      );
+      $supertextLanguages = $this->getSupertextLanguages($_POST['orderSourceLanguage'], $_POST['orderTargetLanguage']);
 
       $quote = Wrapper::getQuote(
         $this->library->getApiClient(),
-        $laguageCodes['source'] === null ? $_POST['orderSourceLanguage'] : $laguageCodes['source'],
-        $laguageCodes['target'] === null ? $_POST['orderTargetLanguage'] : $laguageCodes['target'],
+        $supertextLanguages['source'],
+        $supertextLanguages['target'],
         $content['data'],
-        isset($_POST['serviceType']) ? $_POST['serviceType'] : $this->getServiceType()
+        $_POST['orderType'] === "proofreading" ? $this->getServiceTypeProofreading() : $this->getServiceType()
       );
 
       self::returnResponse(200, $quote);
@@ -159,6 +156,7 @@ class AjaxRequestHandler
   public function createOrderAjax()
   {
     $sourcePostIds = array_keys($_POST['translatableContents']);
+   
 
     try {
       $result = $this->createOrderByType(
@@ -181,6 +179,19 @@ class AjaxRequestHandler
   }
 
   /**
+   * Gets the ordered languages as Supertext codes
+   */
+  private function getSupertextLanguages($sourceLanguage, $targetLanguage){
+    $sourceLanguage = $this->library->toSuperCode($sourceLanguage);
+    $targetLanguage =  $this->library->toSuperCode($targetLanguage);
+
+    return array(
+      'source' => $sourceLanguage === null ? $_POST['orderSourceLanguage'] : $sourceLanguage,
+      'target' => $targetLanguage === null ? $_POST['orderTargetLanguage'] : $targetLanguage,
+    );
+  }
+
+  /**
    * Create order by type
    * @param $orderType
    * @param $sourceLanguage
@@ -197,27 +208,25 @@ class AjaxRequestHandler
     switch ($orderType){
       case 'proofreading':
         $targetPostIds = $sourcePostIds;
-        $srcLang = $sourceLanguage;
-        $tarLang = $targetLanguage;
         $serviceType = $this->getServiceTypeProofreading();
         $resultText = __('The post will be proofread by %s.', 'supertext');
         break;
 
       case 'translation':
         $targetPostIds = $this->getTargetPostIds($sourcePostIds, $targetLanguage);
-        $srcLang = $this->library->toSuperCode($sourceLanguage);
-        $tarLang = $this->library->toSuperCode($targetLanguage);
         $serviceType = $this->getServiceType();
         $resultText = __('The post will be translated by %s.', 'supertext');
         break;
     }
 
+    $supertextLanguages = $this->getSupertextLanguages($sourceLanguage, $targetLanguage);
+
     //order
     $order = Wrapper::createOrder(
       $this->library->getApiClient(),
       $this->getOrderTitle($content['postTitles'], $sourcePostIds),
-      $srcLang,
-      $tarLang,
+      $supertextLanguages['source'],
+      $supertextLanguages['target'],
       $content['data'],
       $_POST['translationType'],
       $this->getAdditionalInformation($content['postTitles'], $sourcePostIds, $targetPostIds),

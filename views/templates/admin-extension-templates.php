@@ -231,14 +231,8 @@
       <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post', 'supertext');?></button>
       <button id="sttr-order-show-item-content" class="button button-secondary"><?php _e('Show content', 'supertext');?></button>
       <div class="clearfix"></div>
-      <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language"
-             data-fallback-lang="<?php echo get_bloginfo('language') ?>"
-             data-service-type="<?php
-             $lib = new Supertext\Helper\Library();
-             $settings = $lib->getSettingOption(Supertext\Helper\Constant::SETTING_API);
-             echo !empty($settings['serviceTypePr']) ? $settings['serviceTypePr'] : Supertext\Helper\Constant::DEFAULT_SERVICE_TYPE_PR
-             ?>"
-      />
+      <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language" />
+      <input type="hidden" name="orderTargetLanguage" id="sttr-order-target-language" />
     </div>
     <input type="hidden" name="orderType" value="proofreading" />
   </form>
