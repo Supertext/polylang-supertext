@@ -1,14 +1,16 @@
-# Supertext Translation
+# Supertext Translation and Proofreading
 
 ## Description
 
-This plugin allows the user to send a WordPress post or page to Supertext for translation.
+This plugin allows the user to send a WordPress post or page to Supertext for translation or proofreading.
 Once completed, the translation will be automatically inserted into a new page or post in your WordPress installation.
 This works for every post type that is translatable by Polylang or WPML.
 
 Supertext can translate content, titles, excerpts, image captions, shortcode arguments and custom fields.
 Simply order a translation instead of creating a new page.
-You will be presented with services, prices and deadlines. Select the right one for you and you'll be notified by email once your translated page or post has been uploaded to your website.
+For proofreading your existing page or post, select the service proofreading.
+The proofread text will automatically be inserted into your post or page in your WordPress installation
+You will be presented with services, prices and deadlines. Select the right one for you and you'll be notified by email once your translated/proofread page or post has been uploaded to your website.
 
 **Please note**
 
@@ -44,8 +46,8 @@ Get the API key from the Settings page: [Account Settings](https://www.supertext
 
 **How do I order a translation?**
 
-1. Go to the post you would like to be translated by Supertext.
-2. Click on _Order translation_ underneath the target language. ![Order translation](https://ps.w.org/polylang-supertext/assets/screenshot-1.png)
+1. Go to the post you would like to be translated or proofread by Supertext.
+2. Click on _Order translation_ underneath the target language. Or on _Order proofread_ in the Proofreading section ![Order translation](https://ps.w.org/polylang-supertext/assets/screenshot-1.png)
 3. Select the content you want to be translated.
 4. Select the service you want from the prices and deadlines presented. Supertext will translate your post and notify you once the translation has been uploaded to your website.
 
