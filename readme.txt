@@ -10,13 +10,20 @@ This plugin allows you to order human translations for your pages and posts usin
 
 == Description ==
 
-This plugin allows the user to send a WordPress post or page to Supertext for translation.
-Once completed, the translation will be automatically inserted into a new page or post in your WordPress installation.
+This plugin allows the user to send a WordPress post or page to Supertext for translation or proofreading.
+
+**Process for translation**
+
+Supertext can translate content, titles, excerpts, image captions, shortcode arguments and custom fields. Simply order a translation instead of creating a new page.
+You will be presented with services, prices and deadlines. Select the right one for you. 
+Once completed, the translation will be automatically inserted into a new page or post in your WordPress installation. 
+You’ll be notified by email once your translated content has been uploaded to your website.
 This works for every post type that is translatable by Polylang or WPML.
 
-Supertext can translate content, titles, excerpts, image captions, shortcode arguments and custom fields.
-Simply order a translation instead of creating a new page.
-You will be presented with services, prices and deadlines. Select the right one for you and you'll be notified by email once your translated page or post has been uploaded to your website.
+**Process for proofreading**
+
+For proofreading your existing page or post, select the option “order proofread”. You will be presented with services, prices and deadlines. 
+Select the right one for you. Once completed, the proofread text will automatically be inserted into your post or page in your WordPress installation. 
 
 **Please note**
 
@@ -58,6 +65,13 @@ Get the API key from the Settings page: [Account Settings](https://www.supertext
 2. Click on _Order translation_ underneath the target language. ![Order translation](https://ps.w.org/polylang-supertext/assets/screenshot-1.png)
 3. Select the content you want to be translated.
 4. Select the service you want from the prices and deadlines presented. Supertext will translate your post and notify you once the translation has been uploaded to your website.
+
+= How do I order a proofreading? =
+
+1. Go to the post you would like to be proofread by Supertext.
+2. Click on _Order proofread_ underneath the section Proofreading.![Order proofreading](https://ps.w.org/polylang-supertext/assets/screenshot-7.png)
+3. Select the content you want to be proofread.
+4. Select the service you want from the prices and deadlines presented. Supertext will proofread your post and notify you once the proofreading has been uploaded to your website.
 
 = How do I order multiple translation? =
 
