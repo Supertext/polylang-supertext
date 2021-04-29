@@ -1,4 +1,4 @@
-=== Supertext Translation ===
+=== Supertext Translation and Proofreading ===
 Contributors: supertext, msebel, comotive
 Tags: internationalization, polylang, WPML, translation, service, supertext
 Requires at least: 4.0
