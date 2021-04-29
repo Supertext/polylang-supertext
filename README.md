@@ -59,7 +59,7 @@ Get the API key from the Settings page: [Account Settings](https://www.supertext
 **How do I order a proofreading?**
 
 1. Go to the post you would like to be proofread by Supertext.
-2. Click on _Order proofread_ underneath the section Proofreading.![to proofread](https://user-images.githubusercontent.com/83220532/116524677-f2ceb480-a8d7-11eb-903d-ce99b9fd8a0d.png)
+2. Click on _Order proofread_ underneath the section Proofreading.![to proofread](https://ps.w.org/polylang-supertext/assets/screenshot-7.png)
 3. Select the content you want to be proofread.
 4. Select the service you want from the prices and deadlines presented. Supertext will proofread your post and notify you once the proofreading has been uploaded to your website.
 
