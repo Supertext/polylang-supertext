@@ -66,4 +66,10 @@ interface IMultilang
     $targetLanguage,
     $taxonomy
   );
+
+  /**
+   * Handle the meta field to copy into the translation post
+   * @param $targetPostId int the id of the translation post
+   */
+  public function copyMetaData($targetPostId);
 }

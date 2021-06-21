@@ -2,6 +2,7 @@
 
 namespace Supertext\Backend;
 
+use Supertext\Helper\Library;
 use Supertext\Proofreading\Proofreading;
 use Supertext\Helper\Constant;
 use Supertext\Helper\TranslationMeta;
@@ -87,6 +88,7 @@ class AdminExtension
     if (isset($_GET[Constant::NEW_POST_AUTO_SAVE_FLAG]) && isset($_GET['source_post'])) {
       add_filter('wp_insert_post_data', array($this, 'setNewTargetPostData'), 1000, 1);
       add_action('save_post', array($this, 'assignLanguageToNewTargetPost'), 10, 1);
+      add_action('save_post', array($this, 'addMetadataToNewTargetPost'), 1000, 1);
     }
   }
 
@@ -341,6 +343,12 @@ class AdminExtension
 
   public function assignLanguageToNewTargetPost($targetPostId){
     $this->library->getMultilang()->assignLanguageToNewTargetPost($_GET['source_post'], $targetPostId, $_GET['target_lang']);
+  }
+
+  public function addMetadataToNewTargetPost($targetPostId){
+    $lib = new Library();
+    $wpmlAW = $lib->getMultilang();
+    $wpmlAW->copyMetaData($targetPostId);
   }
 
   private function isEditPostScreen()
