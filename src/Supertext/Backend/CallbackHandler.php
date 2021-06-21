@@ -4,8 +4,6 @@ namespace Supertext\Backend;
 
 use Supertext\Api\WriteBack;
 use Supertext\Helper\Constant;
-use Supertext\Helper\ProofreadMeta;
-use Supertext\Helper\TranslationMeta;
 
 class CallbackHandler
 {
@@ -115,20 +113,21 @@ class CallbackHandler
       // Get the translation post object
       $targetPost = get_post($targetPostId);
       $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
-      // Set translation or proofread meta
-      $ordMetas = $writeBack->getOrderTypeMeta($targetPost->ID);
+
+      // Get translation or proofread meta
+      $writeBackMeta = $writeBack->getWriteBackMeta($targetPost->ID);
 
       $isPostWritable =
         $targetPost->post_status == 'draft' ||
         ($targetPost->post_status == 'publish' && isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts']) ||
-        $ordMetas['obj']->is($ordMetas['obj']->get($ordMetas['inStatus']));
+        $writeBackMeta->isInProgress();
 
       if (!$isPostWritable) {
-        $errors[$sourcePostId] = 'The post for saving the ' . $ordMetas['type'] . ' is not writable.';
+        $errors[$sourcePostId] = 'The post for saving the ' . $writeBackMeta->getOrderType() . ' is not writable.';
         continue;
       }
 
-      $this->contentProvider->saveContentMetaData($targetPost, $ordMetas['metaData']);
+      $this->contentProvider->saveContentMetaData($targetPost, $writeBackMeta->getContentMetaData());
       $this->contentProvider->saveContentData($targetPost, $contentData[$sourcePostId]);
 
       if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
@@ -139,10 +138,9 @@ class CallbackHandler
       wp_update_post($targetPost);
 
       // All good, set translation flag false
-      $ordMetas['obj']->set($ordMetas['inStatus'], false);
-      $ordMetas['obj']->set($ordMetas['date'], get_post_field('post_modified', $targetPost->ID));
+      $writeBackMeta->markAsComplete();
 
-      $this->log->addEntry($targetPostId, __($ordMetas['type'] . ' saved successfully', 'supertext'));
+      $this->log->addEntry($targetPostId, $writeBackMeta->getSuccessLogEntry());
     }
 
     if (count($errors)) {

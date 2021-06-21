@@ -7,7 +7,6 @@ use Supertext\Proofreading\Proofreading;
 use Supertext\Helper\Constant;
 use Supertext\Helper\TranslationMeta;
 use Supertext\Helper\View;
-use LBWP\Module\General\Cms\SystemLog;
 
 /**
  * Serves as a helper for the translation inject to the user
@@ -247,6 +246,7 @@ class AdminExtension
     }
 
     add_meta_box(self::META_BOX, __('Supertext', 'supertext'), array($this, 'displayMetaBoxView'), null, 'side');
+    
     Proofreading::getInstance()->setupMetabox();
   }
 

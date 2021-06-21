@@ -164,12 +164,13 @@
         <# }); #>
       </select>
     </p>
+    <input type="hidden" name="orderType" value="translation" />
   </form>
 </script>
 
 <script type="text/html" id="tmpl-sttr-content-step-pr">
   <form id="sttr-content-step-form-pr">
-    <h2><?php _e('Content to be proofreaded', 'supertext'); ?></h2>
+    <h2><?php _e('Content to be proofread', 'supertext'); ?></h2>
 
     <div class="sttr-order-list">
       <div class="sttr-order-items">
@@ -190,7 +191,7 @@
           <h3>{{post.title}}</h3>
           <# if(post.meta.inProofreading){ #>
           <p class="notice notice-error">
-            <span class="error-message"><?php _e('The post cannot be proofreaded. It is blocked by a proofread order in progress.', 'supertext');?></span>
+            <span class="error-message"><?php _e('The post cannot be proofread. It is blocked by a proofread order in progress.', 'supertext');?></span>
           </p>
           <# }else if(post.isDraft){ #>
           <p class="notice notice-warning">
@@ -198,7 +199,7 @@
           </p>
           <# } #>
           <p>
-            <?php _e('Please select the content to be proofreaded.', 'supertext');?>
+            <?php _e('Please select the content to be proofread.', 'supertext');?>
           </p>
           <# _.each(post.translatableFieldGroups, function(translatableFieldGroup, groupId) { #>
           <h2>{{translatableFieldGroup.name}}</h2>
@@ -230,15 +231,10 @@
       <button id="sttr-order-remove-item" class="button button-secondary button-remove remove-item"><span class="dashicons dashicons-no-alt"></span> <?php _e('Remove this post', 'supertext');?></button>
       <button id="sttr-order-show-item-content" class="button button-secondary"><?php _e('Show content', 'supertext');?></button>
       <div class="clearfix"></div>
-      <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language"
-             data-fallback-lang="<?php echo get_bloginfo('language') ?>"
-             data-service-type="<?php
-             $lib = new Supertext\Helper\Library();
-             $settings = $lib->getSettingOption(Supertext\Helper\Constant::SETTING_API);
-             echo !empty($settings['serviceTypePr']) ? $settings['serviceTypePr'] : Supertext\Helper\Constant::DEFAULT_SERVICE_TYPE_PR
-             ?>"
-      />
+      <input type="hidden" name="orderSourceLanguage" id="sttr-order-source-language" />
+      <input type="hidden" name="orderTargetLanguage" id="sttr-order-target-language" />
     </div>
+    <input type="hidden" name="orderType" value="proofreading" />
   </form>
 </script>
 

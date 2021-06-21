@@ -6,12 +6,13 @@ namespace Supertext\Api;
 use Supertext\Helper\Constant;
 use Supertext\Helper\ProofreadMeta;
 use Supertext\Helper\TranslationMeta;
+use Supertext\Helper\IWriteBackMeta;
 
 class WriteBack
 {
   /**
    * JSON request data
-   * @var array
+   * @var object
    */
   private $json = null;
 
@@ -60,8 +61,8 @@ class WriteBack
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
-      $orderMeta = $this->getOrderTypeMeta($targetPostId);
-      $referenceHash = $orderMeta['obj']->get($orderMeta['refHash']);
+      $writeBackMeta = $this->getWriteBackMeta($targetPostId);
+      $referenceHash = $writeBackMeta->getReferenceHash();
       $referenceData ^= hex2bin($referenceHash);
     }
 
@@ -136,41 +137,17 @@ class WriteBack
 
   /**
    * Get the metas based on the order type
-   * @param $id int the post id
+   * @param int $id the post id
+   * @return IWriteBackMeta
    */
-  public function getOrderTypeMeta($id){
+  public function getWriteBackMeta($id){
     $orderType = $this->getOrderType();
 
     switch($orderType){
       case 'proofreading':
-        $orderMetas = ProofreadMeta::of($id);
-
-        $metaData = array(
-          'obj' => $orderMetas,
-          'type' => $orderMetas::PROOFREAD,
-          'inStatus' => $orderMetas::IN_PROOFREADING,
-          'refHash' => $orderMetas::IN_PROOFREADING_REFERENCE_HASH,
-          'sourceLang' => $orderMetas::SOURCE_LANGUAGE_CODE,
-          'date' => $orderMetas::PROOFREAD_DATE,
-          'metaData' => $orderMetas::META_DATA
-        );
-        break;
-
+        return ProofreadMeta::of($id);
       case 'translation':
-        $orderMetas = TranslationMeta::of($id);
-
-        $metaData = array(
-          'obj' => $orderMetas,
-          'type' => $orderMetas::TRANSLATION,
-          'inStatus' => $orderMetas::IN_TRANSLATION,
-          'refHash' => $orderMetas::IN_TRANSLATION_REFERENCE_HASH,
-          'sourceLang' => $orderMetas::SOURCE_LANGUAGE_CODE,
-          'date' => $orderMetas::TRANSLATION_DATE,
-          'metaData' => $orderMetas::META_DATA
-        );
-        break;
+        return TranslationMeta::of($id);
     }
-
-    return $metaData;
   }
 }

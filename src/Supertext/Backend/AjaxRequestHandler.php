@@ -112,17 +112,14 @@ class AjaxRequestHandler
     $content = $this->getContent($_POST['translatableContents']);
 
     try {
-      $laguageCodes = array(
-        'source' => $this->library->toSuperCode($_POST['orderSourceLanguage']),
-        'target' => $this->library->toSuperCode($_POST['orderTargetLanguage'])
-      );
+      $supertextLanguages = $this->getSupertextLanguages($_POST['orderSourceLanguage'], $_POST['orderTargetLanguage']);
 
       $quote = Wrapper::getQuote(
         $this->library->getApiClient(),
-        $laguageCodes['source'] === null ? $_POST['orderSourceLanguage'] : $laguageCodes['source'],
-        $laguageCodes['target'] === null ? $_POST['orderTargetLanguage'] : $laguageCodes['target'],
+        $supertextLanguages['source'],
+        $supertextLanguages['target'],
         $content['data'],
-        isset($_POST['serviceType']) ? $_POST['serviceType'] : $this->getServiceType()
+        $_POST['orderType'] === "proofreading" ? $this->getServiceTypeProofreading() : $this->getServiceType()
       );
 
       self::returnResponse(200, $quote);
@@ -138,20 +135,14 @@ class AjaxRequestHandler
 
     $result = array();
     foreach($sourcePostIds as $sourcePostId){
-      if($_POST['isProofreading'] == 1){
-        $targetPostId = get_post($sourcePostId)->ID;
-      }else {
-        $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $targetLanguage);
+      $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $targetLanguage);
 
-        if ($targetPostId != null) {
-          continue;
-        }
+      if ($targetPostId != null) {
+        continue;
       }
 
-      $sourcePost = get_post($sourcePostId);
-
       array_push($result, array(
-        'fromPost' => $sourcePost->ID,
+        'fromPost' => $sourcePostId,
         'newLang' => $targetLanguage
       ));
     }
@@ -165,16 +156,16 @@ class AjaxRequestHandler
   public function createOrderAjax()
   {
     $sourcePostIds = array_keys($_POST['translatableContents']);
+   
 
     try {
       $result = $this->createOrderByType(
-        $_POST['isProofreading'] == 1 ? 'proofreading' : 'translation',
-        $_POST['translatableContents'],
+        $_POST['orderType'],
         $_POST['orderSourceLanguage'],
         $_POST['orderTargetLanguage'],
         $this->getContent($_POST['translatableContents']),
         $sourcePostIds,
-        $this->createReferenceHashes($sourcePostIds),
+        $this->createReferenceHashes($sourcePostIds)
       );
 
       self::returnResponse(200, $result);
@@ -188,9 +179,21 @@ class AjaxRequestHandler
   }
 
   /**
+   * Gets the ordered languages as Supertext codes
+   */
+  private function getSupertextLanguages($sourceLanguage, $targetLanguage){
+    $sourceLanguage = $this->library->toSuperCode($sourceLanguage);
+    $targetLanguage =  $this->library->toSuperCode($targetLanguage);
+
+    return array(
+      'source' => $sourceLanguage === null ? $_POST['orderSourceLanguage'] : $sourceLanguage,
+      'target' => $targetLanguage === null ? $_POST['orderTargetLanguage'] : $targetLanguage,
+    );
+  }
+
+  /**
    * Create order by type
    * @param $orderType
-   * @param $translatableContents
    * @param $sourceLanguage
    * @param $targetLanguage
    * @param $content
@@ -200,32 +203,30 @@ class AjaxRequestHandler
    * @throws \Supertext\Api\ApiConnectionException
    * @throws \Supertext\Api\ApiDataException
    */
-  private function createOrderByType($orderType, $translatableContents, $sourceLanguage, $targetLanguage, $content, $sourcePostIds, $referenceHashes){
+  private function createOrderByType($orderType, $sourceLanguage, $targetLanguage, $content, $sourcePostIds, $referenceHashes){
     // set data for the order based on the order type
     switch ($orderType){
       case 'proofreading':
         $targetPostIds = $sourcePostIds;
-        $srcLang = $sourceLanguage;
-        $tarLang = $targetLanguage;
-        $serviceType = $this->getServiceTypePr();
-        $resultText = 'The post will be proofreaded by %s.';
+        $serviceType = $this->getServiceTypeProofreading();
+        $resultText = __('The post will be proofread by %s.', 'supertext');
         break;
 
       case 'translation':
         $targetPostIds = $this->getTargetPostIds($sourcePostIds, $targetLanguage);
-        $srcLang = $this->library->toSuperCode($sourceLanguage);
-        $tarLang = $this->library->toSuperCode($targetLanguage);
         $serviceType = $this->getServiceType();
-        $resultText = 'The post will be translated by %s.';
+        $resultText = __('The post will be translated by %s.', 'supertext');
         break;
     }
+
+    $supertextLanguages = $this->getSupertextLanguages($sourceLanguage, $targetLanguage);
 
     //order
     $order = Wrapper::createOrder(
       $this->library->getApiClient(),
       $this->getOrderTitle($content['postTitles'], $sourcePostIds),
-      $srcLang,
-      $tarLang,
+      $supertextLanguages['source'],
+      $supertextLanguages['target'],
       $content['data'],
       $_POST['translationType'],
       $this->getAdditionalInformation($content['postTitles'], $sourcePostIds, $targetPostIds),
@@ -253,7 +254,7 @@ class AjaxRequestHandler
       'message' => '
           ' . __('The order has been placed successfully.', 'supertext') . '<br />
           ' . sprintf(__('Your order number is %s.', 'supertext'), $order->Id) . '<br />
-          ' . sprintf(__($resultText, 'supertext'), date_i18n('D, d. F H:i', strtotime($order->Deadline)))
+          ' . sprintf($resultText, date_i18n('D, d. F H:i', strtotime($order->Deadline)))
     );
 
     return $result;
@@ -391,7 +392,7 @@ class AjaxRequestHandler
           $sourcePostIds,
           $sourceLanguage,
           $referenceHashes,
-          $metaData,
+          $metaData
         );
         break;
 
@@ -498,7 +499,6 @@ class AjaxRequestHandler
    * @param $sourceLanguage
    * @param $referenceHashes
    * @param $metaData
-   * @param $syncTranslationChanges
    */
   private function processProofreadPosts($order, $sourcePostIds, $sourceLanguage, $referenceHashes, $metaData){
     foreach ($sourcePostIds as $sourcePostId) {
@@ -595,7 +595,7 @@ class AjaxRequestHandler
     return $serviceType;
   }
 
-  private function getServiceTypePr()
+  private function getServiceTypeProofreading()
   {
     $apiSettings = $this->library->getSettingOption(Constant::SETTING_API);
     $serviceType = !empty($apiSettings['serviceTypePr']) ? $apiSettings['serviceTypePr'] : Constant::DEFAULT_SERVICE_TYPE_PR;
