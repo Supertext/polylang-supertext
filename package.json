@@ -20,9 +20,10 @@
     "gulp-header": "^2.0.9",
     "gulp-jshint": "^2.1.0",
     "gulp-rename": "^1.4.0",
-    "gulp-sass": "^4.0.2",
+    "gulp-sass": "^5.0.0",
     "gulp-uglify": "^3.0.2",
-    "jshint": "^2.11.0"
+    "jshint": "^2.11.0",
+    "sass": "^1.35.2"
   },
   "dependencies": {
     "gulp": "^4.0.2"
