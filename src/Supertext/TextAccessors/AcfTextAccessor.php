@@ -2,8 +2,6 @@
 
 namespace Supertext\TextAccessors;
 
-use Supertext\Helper\Constant;
-
 /**
  * Class AcfTextAccessor
  * @package Supertext\TextAccessors
@@ -22,21 +20,6 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
   }
 
   /**
-   * @param $postId
-   * @return array
-   */
-  public function getTranslatableFields($postId)
-  {
-    $translatableFields = parent::getTranslatableFields($postId);
-
-    return array_merge(array(array(
-      'title' => 'Copy none-translatable',
-      'name' => 'none-translatable',
-      'checkedPerDefault' => false
-    )), $translatableFields);
-  }
-
-  /**
    * @param $post
    * @param $selectedTranslatableFields
    * @return array
@@ -46,15 +29,6 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     $metaData = array();
     $postCustomFields = get_post_meta($post->ID);
     $metaKeys = array_keys($postCustomFields);
-
-    if (isset($selectedTranslatableFields['none-translatable'])) {
-      $fields = get_fields($post->ID);
-      foreach($fields as $fieldKey => $fieldValue){
-        if(array_key_exists($fieldKey, $postCustomFields)){
-          $metaData[$fieldKey] = get_post_meta($post->ID, $fieldKey, true);
-        }
-      }
-    }
 
     $subParentMetaKeys = $this->getSubParentMetaKeys(array_keys($selectedTranslatableFields));
 
