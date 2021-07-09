@@ -185,4 +185,18 @@ class WPMLApiWrapper implements IMultilang
         ));
         // for args explanation visit: https://wpml.org/wpml-hook/wpml_set_element_language_details/
     }
+
+  /**
+   * Copy the meta data if the wpml translation management plugin is not active
+   * @param int $targetPostId the translate post id
+   */
+    public function copyMetaData($targetPostId){
+        $metas = get_post_meta($_GET['source_post']);
+
+        if(!is_plugin_active('wpml-translation-management/plugin.php')){
+            foreach($metas as $metaKey => $metaValue){
+                update_post_meta($targetPostId, $metaKey, $metaValue[0]);
+            }
+        }
+    }
 }
