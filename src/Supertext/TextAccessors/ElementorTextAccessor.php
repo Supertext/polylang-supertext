@@ -153,7 +153,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware, ISettingsA
    */
   public function saveSettings($postData)
   {
-    $this->library->saveSettingOption(Constant::SETTING_ELEMENTOR_TEXT_PROPERTIES, array_filter($postData['elementor-text-keys']));
+    $this->library->saveSettingOption(Constant::SETTING_ELEMENTOR_TEXT_PROPERTIES, array_filter($postData['elementor-text-properties']));
   }
 
   /**
