@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2021-04-23 09:22+0200\n"
-"PO-Revision-Date: 2021-04-23 09:22+0200\n"
+"POT-Creation-Date: 2021-07-15 13:12+0200\n"
+"PO-Revision-Date: 2021-07-15 13:13+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_CH\n"
@@ -55,7 +55,7 @@ msgstr "Die Angebote fehlen (%s -> %s). Bitte kontaktieren Sie Supertext."
 msgid "Could not create an order with Supertext."
 msgstr "Konnte keine Bestellung bei Supertext erstellen."
 
-#: src/Supertext/Backend/AdminExtension.php:144
+#: src/Supertext/Backend/AdminExtension.php:146
 msgid ""
 "The PHP function <em>curl_exec</em> is disabled. Please enable it in order "
 "to be able to send requests to Supertext."
@@ -63,7 +63,7 @@ msgstr ""
 "Die PHP Funktion <em>curl_exec</em> ist deaktiviert. Diese Funktion muss "
 "aktiviert sein, damit eine Anfrage an Supertext gesendet werden kann."
 
-#: src/Supertext/Backend/AdminExtension.php:156
+#: src/Supertext/Backend/AdminExtension.php:158
 msgid ""
 "The Supertext Translation plugin cannot be used. Polylang or WPML is not "
 "installed or hasn't been activated."
@@ -71,7 +71,7 @@ msgstr ""
 "Das Supertext Translation Plugin kann nicht verwendet werden. Polylang oder "
 "WPML ist nicht installiert oder nicht aktiviert."
 
-#: src/Supertext/Backend/AdminExtension.php:164
+#: src/Supertext/Backend/AdminExtension.php:166
 msgid ""
 "The Supertext Translation plugin cannot be used. It hasn't been configured "
 "correctly."
@@ -79,7 +79,7 @@ msgstr ""
 "Das Supertext Translation Plugin kann nicht verwendet werden, da es nicht "
 "korrekt konfiguriert wurde."
 
-#: src/Supertext/Backend/AdminExtension.php:185
+#: src/Supertext/Backend/AdminExtension.php:187
 #, php-format
 msgid ""
 "The post was sent to Supertext and is now being translated. Your order "
@@ -88,39 +88,39 @@ msgstr ""
 "Ihr Beitrag wurde an Supertext gesendet und wird übersetzt. Ihre "
 "Bestellnummer lautet %s."
 
-#: src/Supertext/Backend/AdminExtension.php:246
+#: src/Supertext/Backend/AdminExtension.php:248
 #: src/Supertext/Backend/Menu.php:34 src/Supertext/Backend/Menu.php:43
 msgid "Supertext"
 msgstr "Supertext"
 
-#: src/Supertext/Backend/AdminExtension.php:337
+#: src/Supertext/Backend/AdminExtension.php:339
 msgid "In translation"
 msgstr "In der Übersetzung"
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:203
+#: src/Supertext/Backend/AjaxRequestHandler.php:212
 #, php-format
 msgid "The post will be proofread by %s."
 msgstr "Der Beitrag wird bis am %s korrigiert."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:211
+#: src/Supertext/Backend/AjaxRequestHandler.php:218
 #, php-format
 msgid "The post will be translated by %s."
 msgstr "Der Beitrag wird bis am %s Uhr übersetzt."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:246
+#: src/Supertext/Backend/AjaxRequestHandler.php:255
 msgid "The order has been placed successfully."
 msgstr "Die Bestellung wurde erfolgreich abgeschlossen."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:247
+#: src/Supertext/Backend/AjaxRequestHandler.php:256
 #, php-format
 msgid "Your order number is %s."
 msgstr "Ihre Bestellnummer lautet %s."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:262
+#: src/Supertext/Backend/AjaxRequestHandler.php:271
 msgid "The changes have been sent successfully."
 msgstr "Die Änderungen wurden erfolgreich gesendet."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:420
+#: src/Supertext/Backend/AjaxRequestHandler.php:429
 #, php-format
 msgid ""
 "Translation order into %s has been placed successfully. Your order number is "
@@ -129,19 +129,19 @@ msgstr ""
 "Bestellung für Beitragsübersetzung nach %s erfolgreich. Ihre Bestellnummer "
 "lautet %s."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:441
+#: src/Supertext/Backend/AjaxRequestHandler.php:450
 msgid "Post changes could not be sent to Supertext."
 msgstr "Änderungen konnten nicht an Supertext gesendet werden."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:471
+#: src/Supertext/Backend/AjaxRequestHandler.php:480
 msgid "Could not retrieve old version"
 msgstr "Alte Beitr"
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:484
+#: src/Supertext/Backend/AjaxRequestHandler.php:493
 msgid "Post changes have been sent to Supertext."
 msgstr "Die Beitragsänderungen wurden erfolgreich an Supertext gesendet."
 
-#: src/Supertext/Backend/AjaxRequestHandler.php:499
+#: src/Supertext/Backend/AjaxRequestHandler.php:508
 #, php-format
 msgid ""
 "Proofreading order has been placed successfully. Your order number is %s."
@@ -302,7 +302,7 @@ msgstr "Write Back erfolgreich"
 msgid "Writeback failed"
 msgstr "Write Back fehlgeschlagen"
 
-#: src/Supertext/TextAccessors/AcfTextAccessor.php:21
+#: src/Supertext/TextAccessors/AcfTextAccessor.php:19
 msgid "Advanced Custom Fields (Plugin)"
 msgstr "Advanced Custom Fields (Plugin)"
 
@@ -344,11 +344,12 @@ msgstr "Beaver Builder Inhalt"
 msgid "General custom fields"
 msgstr "Allgemeine benutzerdefinierte Felder"
 
-#: src/Supertext/TextAccessors/ElementorTextAccessor.php:38
+#: src/Supertext/TextAccessors/ElementorTextAccessor.php:47
+#: views/backend/settings-elementor.php:20
 msgid "Elementor (Plugin)"
 msgstr "Elementor (Plugin)"
 
-#: src/Supertext/TextAccessors/ElementorTextAccessor.php:50
+#: src/Supertext/TextAccessors/ElementorTextAccessor.php:59
 msgid "Elementor content"
 msgstr "Elementor Inhalt"
 
@@ -488,6 +489,18 @@ msgstr ""
 msgid "Add field"
 msgstr "Feld hinzufügen"
 
+#: views/backend/settings-elementor.php:6
+msgid "Property name..."
+msgstr "Name der Eigenschaft..."
+
+#: views/backend/settings-elementor.php:22
+msgid "Please add the text properties of the Elementor elements."
+msgstr "Bitte fügen Sie die Texteigenschaften der Elementor-Elemente hinzu."
+
+#: views/backend/settings-elementor.php:26
+msgid "Add text property"
+msgstr "Texteigenschaft hinzufügen"
+
 #: views/backend/settings-languages.php:38
 #: views/templates/admin-extension-templates.php:157
 msgid "Please select"
@@ -609,7 +622,7 @@ msgid "Select service and deadline"
 msgstr "Dienst und Deadline auswählen"
 
 #: views/templates/admin-extension-templates.php:71
-#: views/templates/admin-extension-templates.php:312
+#: views/templates/admin-extension-templates.php:306
 msgid "Confirmation"
 msgstr "Bestätigung"
 
@@ -702,11 +715,11 @@ msgstr ""
 msgid "Please select the content to be proofread."
 msgstr "Bitte wählen Sie den zu korrigierenden Inhalt aus."
 
-#: views/templates/admin-extension-templates.php:265
+#: views/templates/admin-extension-templates.php:259
 msgid "Service and deadline"
 msgstr "Qualität und Termin"
 
-#: views/templates/admin-extension-templates.php:267
+#: views/templates/admin-extension-templates.php:261
 msgid ""
 "Select the proofreading service and deadline for proofreading <b>{{data."
 "wordCount}} words</b>:"
@@ -714,7 +727,7 @@ msgstr ""
 "Wählen Sie den Service Korrekturlesen und die Deadline für die Korrektur von "
 "<b>{{data.wordCount}} Wörtern</b>:"
 
-#: views/templates/admin-extension-templates.php:269
+#: views/templates/admin-extension-templates.php:263
 msgid ""
 "Select the translation service and deadline for translating <b>{{data."
 "wordCount}} words</b> into <b>{{data.language}}</b>:"
@@ -722,7 +735,7 @@ msgstr ""
 "Wählen Sie den Übersetzungsdienst und die Deadline für die Übersetzung von "
 "<b>{{data.wordCount}} Wörtern</b> nach <b>{{data.language}}</b>:"
 
-#: views/templates/admin-extension-templates.php:305
+#: views/templates/admin-extension-templates.php:299
 msgid "Your comment to Supertext"
 msgstr "Ihr Kommentar an Supertext"
 
