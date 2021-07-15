@@ -54,6 +54,10 @@ class Constant
    */
   const SETTING_CUSTOM_FIELDS = 'customFields';
   /**
+   * $var string name of the subsetting for elementor text keys
+   */
+  const SETTING_ELEMENTOR_TEXT_KEYS = 'elementorTextKeys';
+  /**
    * $var string name of the subsetting for acf field definitions
    */
   const SETTING_PLUGIN_CUSTOM_FIELDS = 'pluginCustomFields';

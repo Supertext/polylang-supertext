@@ -3,18 +3,20 @@
 namespace Supertext\TextAccessors;
 
 use Supertext\Helper\TextProcessor;
-use \Elementor\Plugin;
+use Supertext\Helper\Library;
+use Supertext\Helper\Constant;
+use Supertext\Helper\View;
 
 /**
  * Class ElementorTextAccessor
  * @package Supertext\TextAccessors
  */
-class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
+class ElementorTextAccessor implements ITextAccessor, IMetaDataAware, ISettingsAware, IAddDefaultSettings
 {
   /**
    * @var Array the text keys of the settings array
    */
-  private static $textKeys = array('editor', 'caption', 'title', 'text', 'html');
+  private static $defaultTextKeys = array('editor', 'caption', 'title', 'text', 'html');
 
   /**
    * @var TextProcessor the text processor
@@ -22,11 +24,18 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
   private $textProcessor;
 
   /**
-   * @param TextProcessor $textProcessor
+   * @var Library library
    */
-  public function __construct($textProcessor)
+  private $library;
+
+  /**
+   * @param TextProcessor $textProcessor
+   * @param Library $library
+   */
+  public function __construct($textProcessor, $library)
   {
     $this->textProcessor = $textProcessor;
+    $this->library = $library;
   }
 
   /**
@@ -124,6 +133,47 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
     update_post_meta($post->ID, '_elementor_css', $translationMetaData['_elementor_css']);
   }
 
+  /**
+   * @return array
+   */
+  public function getSettingsViewBundle()
+  {
+    $savedTextKeys = $this->library->getSettingOption(Constant::SETTING_ELEMENTOR_TEXT_KEYS);
+
+    return array(
+      'view' => new View('backend/settings-elementor'),
+      'context' => array(
+        'savedTextKeys' => $savedTextKeys
+      )
+    );
+  }
+
+  /**
+   * @param $postData
+   */
+  public function saveSettings($postData)
+  {
+    $this->library->saveSettingOption(Constant::SETTING_ELEMENTOR_TEXT_KEYS, array_filter($postData['elementor-text-keys']));
+  }
+
+  /**
+   * Adds default settings
+   */
+  public function addDefaultSettings()
+  {
+    $savedTextKeys = $this->library->getSettingOption(Constant::SETTING_ELEMENTOR_TEXT_KEYS);
+
+    foreach (ElementorTextAccessor::$defaultTextKeys as $textKey) {
+      if (in_array($textKey, $savedTextKeys)) {
+        continue;
+      }
+
+      array_push($savedTextKeys, $textKey);
+    }
+
+    $this->library->saveSettingOption(Constant::SETTING_ELEMENTOR_TEXT_KEYS, $savedTextKeys);
+  }
+
   private function getElementorData($postId)
   {
     return  json_decode(get_post_meta($postId, '_elementor_data', true), true);
@@ -142,7 +192,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
         $texts[$index]['elements'] = $this->getTextProperties($element['elements']);
       }
 
-      if(!isset($element['settings'])){
+      if (!isset($element['settings'])) {
         continue;
       }
 
@@ -161,6 +211,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
   private function getSettingsTextProperties($settings)
   {
     $texts = array();
+    $textKeys = $this->library->getSettingOption(Constant::SETTING_ELEMENTOR_TEXT_KEYS);
 
     foreach (array_keys($settings) as $settingsKey) {
       $value = $settings[$settingsKey];
@@ -175,7 +226,7 @@ class ElementorTextAccessor implements ITextAccessor, IMetaDataAware
         continue;
       }
 
-      if (in_array($settingsKey, ElementorTextAccessor::$textKeys)) {
+      if (in_array($settingsKey, $textKeys)) {
         $texts[$settingsKey] = $this->textProcessor->replaceShortcodes($value);
       }
     }

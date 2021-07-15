@@ -347,7 +347,7 @@ class Core
 
     if ($library->isPluginActive('elementor/elementor.php')) {
       $textAccessors['post']->uncheckPostContentPerDefault();
-      $textAccessors['elementor'] = new ElementorTextAccessor($textProcessor);
+      $textAccessors['elementor'] = new ElementorTextAccessor($textProcessor, $library);
     }
 
     return $textAccessors;
