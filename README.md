@@ -26,12 +26,15 @@ Translatable custom fields must be defined in the settings. Supported plugins at
 
 If the field is not available in one of the lists, you can define it by adding self defined custom fields.
 
-The plugin has been tested with following page builders:
+The plugin supports following page builders:
 - Visual Composer
 - Beaver Builder
 - BE page builder
 - Divi page builder
 - SiteOrigin page builder
+- Elementor
+
+We highly recommend to test the translation process for the page builders mentioned above and for any other that you may use.
 
 ## Installation
 
