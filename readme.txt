@@ -2,7 +2,7 @@
 Contributors: supertext, msebel, comotive
 Tags: internationalization, polylang, WPML, translation, service, supertext
 Requires at least: 4.0
-Tested up to: 5.5.3
+Tested up to: 5.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,9 @@ Did you translate the site title but it is still displayed in only one language?
 6. Order confirmation
 
 == Changelog ==
+
+= 4.03 =
+* Extended Elementor extention to also support custom element settings and not only the ones from the free plugin version
 
 = 4.02 =
 * Introduced blind copy feature for post meta data when WPML is used
