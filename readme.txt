@@ -106,6 +106,10 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.02 =
+* Introduced blind copy feature for post meta data when WPML is used
+* Removed workaround for copying none translatable ACF fields since this is not needed with the WPML translation management feature and its meta data copying settings/feature
+
 = 4.01 =
 * Fixed JavaScript bug in minified admin extension script
 
