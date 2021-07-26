@@ -1036,8 +1036,7 @@ Supertext.Interface = (function (win, doc, $) {
     });
 
     if (postIds.length > 0) {
-      state.postIds = postIds;
-      startOrderProcess();
+      startOrderProcess(postIds);
     } else {
       alert(l10n.alertPleaseSelect);
     }
@@ -1048,7 +1047,8 @@ Supertext.Interface = (function (win, doc, $) {
   /**
    * Starts the order process
    */
-  function startOrderProcess() {
+  function startOrderProcess(postIds) {
+    state.postIds = postIds;
     steps = [createStep(contentStep), createStep(quoteStep), createStep(confirmationStep)];
     openModal(isProofreading ? l10n.orderModalTitlePr : l10n.orderModalTitle);
     addOrderProgressBar();
@@ -1378,10 +1378,9 @@ Supertext.Interface = (function (win, doc, $) {
       selectors.contentStepForm = '#sttr-content-step-form';
     }
 
-    state.postIds = [context.currentPostId];
     state.targetLanguageCode = targetLanguageCode;
 
-    startOrderProcess();
+    startOrderProcess([context.currentPostId]);
   }
 
   /**
@@ -1445,6 +1444,7 @@ Supertext.Interface = (function (win, doc, $) {
       }
     },
     openOrderForm: openOrderForm,
+    startOrderProcess: startOrderProcess,
     sendSyncRequest: sendSyncRequest,
     injectOrderLinks: injectOrderLinks
   };
