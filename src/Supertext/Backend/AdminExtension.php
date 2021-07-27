@@ -201,12 +201,14 @@ class AdminExtension
 
     $pluginStatus = $this->library->getPluginStatus();
     $newPostUrls = $this->library->getMultilang()->getNewPostUrls();
+    $enable =
+      $pluginStatus->isCurlActivated &&
+      $pluginStatus->isPluginConfiguredProperly &&
+      $pluginStatus->isCurrentUserConfigured;
 
     $context = array(
-      'enable' => $pluginStatus->isMultilangActivated &&
-        $pluginStatus->isCurlActivated &&
-        $pluginStatus->isPluginConfiguredProperly &&
-        $pluginStatus->isCurrentUserConfigured,
+      'enable' => $enable,
+      'isMultilangActivated' => $pluginStatus->isMultilangActivated,
       'screen' => $this->screenBase,
       'currentPostId' => $this->currentPostId,
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,
@@ -246,7 +248,7 @@ class AdminExtension
     }
 
     add_meta_box(self::META_BOX, __('Supertext', 'supertext'), array($this, 'displayMetaBoxView'), null, 'side');
-    
+
     Proofreading::getInstance()->setupMetabox();
   }
 
@@ -278,8 +280,8 @@ class AdminExtension
 
   public function addNewPostUrl($link, $language, $post_id)
   {
-    if(!isset($this->newPostUrls[$post_id])){
-      $this->newPostUrls[$post_id] = Array();
+    if (!isset($this->newPostUrls[$post_id])) {
+      $this->newPostUrls[$post_id] = array();
     }
 
     $this->newPostUrls[$post_id][$language->slug] = urldecode(html_entity_decode($link));
@@ -341,11 +343,13 @@ class AdminExtension
     return $data;
   }
 
-  public function assignLanguageToNewTargetPost($targetPostId){
+  public function assignLanguageToNewTargetPost($targetPostId)
+  {
     $this->library->getMultilang()->assignLanguageToNewTargetPost($_GET['source_post'], $targetPostId, $_GET['target_lang']);
   }
 
-  public function addMetadataToNewTargetPost($targetPostId){
+  public function addMetadataToNewTargetPost($targetPostId)
+  {
     $lib = new Library();
     $wpmlAW = $lib->getMultilang();
     $wpmlAW->copyMetaData($targetPostId);
