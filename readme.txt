@@ -109,6 +109,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.05 =
+* Expose startTranslationOrderProcess and startProofreadOrderProcess on Supertext.Interface to be able to start either of the two order processes
+
 = 4.04 =
 * Expose startOrderProcess on Supertext.Interface so that it can be called outside the JS module with the post IDs (e.g. Supertext.Interface.startOrderProcess([1005, 1032]))
 
