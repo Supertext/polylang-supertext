@@ -109,6 +109,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.04 =
+* Expose startOrderProcess on Supertext.Interface so that it can be called outside the JS module with the post IDs (e.g. Supertext.Interface.startOrderProcess([1005, 1032]))
+
 = 4.03 =
 * Extended Elementor extention to also support custom element settings and not only the ones from the free plugin version
 
