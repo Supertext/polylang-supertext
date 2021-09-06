@@ -6,8 +6,7 @@ Supertext.Settings = {};
 Supertext.Settings.Users = (function ($) {
   'use strict';
 
-  var $tableBody,
-    $rowTemplate;
+  var $tableBody, $rowTemplate;
 
   function addUserField() {
     var $newRow = $rowTemplate.clone();
@@ -27,7 +26,7 @@ Supertext.Settings.Users = (function ($) {
     initialize: function (options) {
       options = options || {};
 
-      $tableBody = $("#tblStFields tbody");
+      $tableBody = $('#tblStFields tbody');
       $tableBody.find('tr .saved-user-id-hidden');
       $tableBody.find('tr .remove-user-button').click(removeUserField);
       //select users in wp dropdown
@@ -48,14 +47,15 @@ Supertext.Settings.Users = (function ($) {
 Supertext.Settings.TranslatableFields = (function ($) {
   'use strict';
   var customFieldsSettings = (function () {
-    var $customFieldInputCopy;
+    var inputListsInputElements = {};
 
     function addCustomFieldInput() {
       var $this = $(this);
-      var $newCustomFieldInput = $customFieldInputCopy.clone();
 
-      $newCustomFieldInput.children('.custom-field-remove-input')
-        .click(removeCustomFieldInput);
+      var $newCustomFieldInput = inputListsInputElements[$this.data('input-name')].clone();
+      $newCustomFieldInput.children('.field-remove-input').click(removeCustomFieldInput);
+
+      $newCustomFieldInput.children('.custom-field-remove-input').click(removeCustomFieldInput);
 
       $newCustomFieldInput.insertBefore($this).show();
     }
@@ -66,27 +66,28 @@ Supertext.Settings.TranslatableFields = (function ($) {
 
     return {
       initialize: function (options) {
+        $('#translatablefieldsSettingsForm .field-remove-input').click(removeCustomFieldInput);
+        $('#translatablefieldsSettingsForm .field-add-input').click(addCustomFieldInput);
 
-        $customFieldInputCopy = $('#translatablefieldsSettingsForm .custom-field-input').last().clone();
+        var $inputLists = $('#translatablefieldsSettingsForm .settings-input-list');
 
-        $('#translatablefieldsSettingsForm .custom-field-remove-input')
-          .click(removeCustomFieldInput);
-
-        $('#translatablefieldsSettingsForm .custom-field-add-input')
-          .click(addCustomFieldInput);
+        $inputLists.each(function (_index, inputList) {
+          var $inputList = $(inputList);
+          var $inputElement = $inputList.children('.settings-input-element').last().clone();
+          var inputListName = $inputList.children('.field-add-input').first().data('input-name');
+          inputListsInputElements[inputListName] = $inputElement;
+        });
       }
     };
-
-  }());
+  })();
 
   var pluginCustomFieldsSettings = (function () {
-    var
-      fieldDefinitionsTrees = {},
+    var fieldDefinitionsTrees = {},
       checkedFieldsInputs = {};
 
     function setCheckedFields() {
-      $.each(fieldDefinitionsTrees, function(pluginId, tree){
-        var checkedNodes = tree.jstree("get_checked", false);
+      $.each(fieldDefinitionsTrees, function (pluginId, tree) {
+        var checkedNodes = tree.jstree('get_checked', false);
         checkedFieldsInputs[pluginId].val(checkedNodes.join(','));
       });
     }
@@ -95,23 +96,23 @@ Supertext.Settings.TranslatableFields = (function ($) {
       initialize: function (options) {
         options = options || {};
 
-        for(var pluginId in savedFieldDefinitionIds){
+        for (var pluginId in savedFieldDefinitionIds) {
           if (!savedFieldDefinitionIds.hasOwnProperty(pluginId)) {
             continue;
           }
 
-          fieldDefinitionsTrees[pluginId] = $('#fieldDefinitionsTree'+pluginId);
-          checkedFieldsInputs[pluginId] = $('#checkedFieldsInput'+pluginId);
+          fieldDefinitionsTrees[pluginId] = $('#fieldDefinitionsTree' + pluginId);
+          checkedFieldsInputs[pluginId] = $('#checkedFieldsInput' + pluginId);
 
           fieldDefinitionsTrees[pluginId].jstree({
-            'core': {
-              'themes': {
-                'name': 'wordpress-dark'
+            core: {
+              themes: {
+                name: 'wordpress-dark'
               }
             },
-            'plugins': ['checkbox'],
-            'checkbox': {
-              'keep_selected_style': false
+            plugins: ['checkbox'],
+            checkbox: {
+              keep_selected_style: false
             }
           });
 
@@ -121,7 +122,7 @@ Supertext.Settings.TranslatableFields = (function ($) {
         $('#translatablefieldsSettingsForm').submit(setCheckedFields);
       }
     };
-  }());
+  })();
 
   return {
     initialize: function (options) {
@@ -137,12 +138,11 @@ Supertext.Settings.TranslatableFields = (function ($) {
 Supertext.Settings.Shortcodes = (function ($) {
   'use strict';
 
-  var shortcodeSettingTemplate,
-      shortcodeAttributeTemplate;
+  var shortcodeSettingTemplate, shortcodeAttributeTemplate;
 
-  function addShortcodeSetting($container, name, contentEncoding){
+  function addShortcodeSetting($container, name, contentEncoding) {
     var lastIndex = $container.data('lastIndex');
-    var newIndex =  lastIndex === undefined ? 0 : lastIndex + 1;
+    var newIndex = lastIndex === undefined ? 0 : lastIndex + 1;
 
     var html = shortcodeSettingTemplate({
       shortcodeIndex: newIndex,
@@ -154,15 +154,13 @@ Supertext.Settings.Shortcodes = (function ($) {
     $container.append($shortcodeSetting);
     $container.data('lastIndex', newIndex);
 
-    $shortcodeSetting.children('.shortcode-remove-setting')
-      .click(function(){
-        $shortcodeSetting.remove();
-      });
+    $shortcodeSetting.children('.shortcode-remove-setting').click(function () {
+      $shortcodeSetting.remove();
+    });
 
-    $shortcodeSetting.find('.shortcode-attribute-add-input')
-      .click(function(){
-        addAttributeInput($shortcodeSetting.find('.shortcode-setting-attributes'), newIndex);
-      });
+    $shortcodeSetting.find('.shortcode-attribute-add-input').click(function () {
+      addAttributeInput($shortcodeSetting.find('.shortcode-setting-attributes'), newIndex);
+    });
 
     initEncodingAutoComplete($shortcodeSetting);
     initShortcodeAutoComplete($shortcodeSetting);
@@ -170,22 +168,23 @@ Supertext.Settings.Shortcodes = (function ($) {
 
   function addAttributeInput($container, shortcodeIndex, name, encoding) {
     var lastIndex = $container.data('lastIndex');
-    var newIndex =  lastIndex === undefined ? 0 : lastIndex + 1;
+    var newIndex = lastIndex === undefined ? 0 : lastIndex + 1;
 
-    var $shortcodeAttribute = $(shortcodeAttributeTemplate({
-      shortcodeIndex: shortcodeIndex,
-      attributeIndex: newIndex,
-      name: name,
-      encoding: encoding
-    }));
+    var $shortcodeAttribute = $(
+      shortcodeAttributeTemplate({
+        shortcodeIndex: shortcodeIndex,
+        attributeIndex: newIndex,
+        name: name,
+        encoding: encoding
+      })
+    );
 
     $container.append($shortcodeAttribute);
     $container.data('lastIndex', newIndex);
 
-    $shortcodeAttribute.children('.shortcode-attribute-remove-input')
-      .click(function(){
-        $shortcodeAttribute.remove();
-      });
+    $shortcodeAttribute.children('.shortcode-attribute-remove-input').click(function () {
+      $shortcodeAttribute.remove();
+    });
 
     initEncodingAutoComplete($shortcodeAttribute);
   }
@@ -198,11 +197,11 @@ Supertext.Settings.Shortcodes = (function ($) {
     return split(term).pop();
   }
 
-  function initShortcodeAutoComplete($element){
-    $element.find('.shortcode-input-name')
-      .bind("keydown", function (event) {
-        if (event.keyCode === $.ui.keyCode.TAB &&
-          $(this).autocomplete("instance").menu.active) {
+  function initShortcodeAutoComplete($element) {
+    $element
+      .find('.shortcode-input-name')
+      .bind('keydown', function (event) {
+        if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete('instance').menu.active) {
           event.preventDefault();
         }
       })
@@ -212,15 +211,14 @@ Supertext.Settings.Shortcodes = (function ($) {
           // delegate back to autocomplete, but extract the last term
           response($.ui.autocomplete.filter(registeredShortcodes, request.term));
         }
-      }
-    );
+      });
   }
 
-  function initEncodingAutoComplete($element){
-    $element.find('.shortcode-input-encoding')
-      .bind("keydown", function (event) {
-        if (event.keyCode === $.ui.keyCode.TAB &&
-          $(this).autocomplete("instance").menu.active) {
+  function initEncodingAutoComplete($element) {
+    $element
+      .find('.shortcode-input-encoding')
+      .bind('keydown', function (event) {
+        if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete('instance').menu.active) {
           event.preventDefault();
         }
       })
@@ -241,37 +239,35 @@ Supertext.Settings.Shortcodes = (function ($) {
           // add the selected item
           terms.push(ui.item.value);
           // add placeholder to get the comma-and-space at the end
-          terms.push("");
-          this.value = terms.join(", ");
+          terms.push('');
+          this.value = terms.join(', ');
           return false;
         }
-      }
-    );
+      });
   }
 
   return {
     initialize: function (options) {
       options = options || {};
 
-      shortcodeSettingTemplate = options.template("sttr-shortcode-setting");
-      shortcodeAttributeTemplate = options.template("sttr-shortcode-attribute");
+      shortcodeSettingTemplate = options.template('sttr-shortcode-setting');
+      shortcodeAttributeTemplate = options.template('sttr-shortcode-attribute');
 
-      var $shortcodeSettings = $("#shortcode-settings");
+      var $shortcodeSettings = $('#shortcode-settings');
 
-      $.each(savedShortcodes, function(name, shortcode){
+      $.each(savedShortcodes, function (name, shortcode) {
         addShortcodeSetting($shortcodeSettings, name, shortcode.content_encoding);
         var $container = $shortcodeSettings.find('.shortcode-setting-container:last .shortcode-setting-attributes');
         var shortcodeIndex = $shortcodeSettings.data('lastIndex');
 
-        $.each(shortcode.attributes, function(index, attribute){
+        $.each(shortcode.attributes, function (index, attribute) {
           addAttributeInput($container, shortcodeIndex, attribute.name, attribute.encoding);
         });
       });
-      
-      $('#shortcodesSettingsForm .shortcode-add-setting')
-        .click(function(){
-          addShortcodeSetting($shortcodeSettings);
-        });
+
+      $('#shortcodesSettingsForm .shortcode-add-setting').click(function () {
+        addShortcodeSetting($shortcodeSettings);
+      });
     }
   };
 })(jQuery);
@@ -279,16 +275,14 @@ Supertext.Settings.Shortcodes = (function ($) {
 Supertext.Settings.Workflow = (function ($) {
   'use strict';
 
-  var
-    $apiUrl,
-    $apiSelection;
+  var $apiUrl, $apiSelection;
 
-  function updateAlternativeApiUrlInput(){
+  function updateAlternativeApiUrlInput() {
     $apiUrl.val($apiSelection.val());
 
-    if($apiSelection.children('option:last').is(':selected')){
+    if ($apiSelection.children('option:last').is(':selected')) {
       $apiUrl.removeProp('readonly');
-    }else{
+    } else {
       $apiUrl.prop('readonly', true);
     }
   }
@@ -324,11 +318,11 @@ jQuery(document).ready(function () {
       break;
 
     case 'shortcodes':
-      Supertext.Settings.Shortcodes.initialize({ template: wp.template});
+      Supertext.Settings.Shortcodes.initialize({ template: wp.template });
       break;
 
     case 'workflow':
-    Supertext.Settings.Workflow.initialize();
-    break;
+      Supertext.Settings.Workflow.initialize();
+      break;
   }
 });
