@@ -109,6 +109,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.06 =
+* Fix bug with Custom vs. Elementor settings that saved the entered custom fields as Elementor field
+
 = 4.05 =
 * Expose startTranslationOrderProcess and startProofreadOrderProcess on Supertext.Interface to be able to start either of the two order processes
 
