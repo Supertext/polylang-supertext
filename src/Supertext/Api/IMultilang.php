@@ -69,7 +69,8 @@ interface IMultilang
 
   /**
    * Handle the meta field to copy into the translation post
+   * @param $sourcePostId int the id of the source post
    * @param $targetPostId int the id of the translation post
    */
-  public function copyMetaData($targetPostId);
+  public function copyMetaData($sourcePostId, $targetPostId);
 }

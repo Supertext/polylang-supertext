@@ -350,9 +350,8 @@ class AdminExtension
 
   public function addMetadataToNewTargetPost($targetPostId)
   {
-    $lib = new Library();
-    $wpmlAW = $lib->getMultilang();
-    $wpmlAW->copyMetaData($targetPostId);
+    $wpmlAW = $this->library->getMultilang();
+    $wpmlAW->copyMetaData($_GET['source_post'], $targetPostId);
   }
 
   private function isEditPostScreen()

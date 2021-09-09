@@ -209,8 +209,10 @@ class PolylangApiWrapper implements IMultilang
         }
     }
 
-  /**
-   * Polylang handles the copying of the metadata by itself
-   */
-    public function copyMetaData($targetPostId){}
+    /**
+     * Polylang handles the copying of the metadata by itself
+     */
+    public function copyMetaData($sourcePostId, $targetPostId)
+    {
+    }
 }
