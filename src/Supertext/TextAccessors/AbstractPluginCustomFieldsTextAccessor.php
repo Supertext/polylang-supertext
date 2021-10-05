@@ -83,6 +83,7 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
   public function getTexts($post, $selectedTranslatableFields)
   {
     $texts = array();
+    $serializedContents = array();
     $postCustomFields = get_post_meta($post->ID);
     $selectedFieldDefinitions = $this->getSelectedFieldDefinitions($selectedTranslatableFields);
 
@@ -94,9 +95,8 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
           continue;
         }
 
-        $serializedKey = $selectedFieldDefinition['serialized_key'];
-
-        if (isset($serializedKey)) {
+        if (isset($selectedFieldDefinition['serialized_key'])) {
+          $serializedKey = $selectedFieldDefinition['serialized_key'];
           if (!isset($serializedContents[$metaKey])) {
             $serializedContents[$metaKey] = array('value' => $value[0], 'keys' => array());
           }
