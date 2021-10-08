@@ -52,30 +52,6 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     return $this->getMetaData($post->ID, "", $fields);
   }
 
-  public function getMetaData($postId, $parentKey, $fields)
-  {
-    $metaData = array();
-
-    foreach ($fields as $fieldKey => $fieldValue) {
-      if (!is_array($fieldValue)) {
-        continue;
-      }
-
-      $currentKey = $parentKey . $fieldKey;
-      $currentMetaValue = get_post_meta($postId, $currentKey, true);
-
-      if (!empty($currentMetaValue)) {
-        $metaData[$currentKey] = $currentMetaValue;
-      }
-
-      $subMetaData = $this->getMetaData($postId, $currentKey . '_', $fieldValue);
-
-      $metaData = array_merge($metaData, $subMetaData);
-    }
-
-    return $metaData;
-  }
-
   /**
    * @param $post
    * @param $translationMetaData
@@ -182,5 +158,29 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     }
 
     return $subFieldDefinitions;
+  }
+
+  private function getMetaData($postId, $parentKey, $fields)
+  {
+    $metaData = array();
+
+    foreach ($fields as $fieldKey => $fieldValue) {
+      if (!is_array($fieldValue)) {
+        continue;
+      }
+
+      $currentKey = $parentKey . $fieldKey;
+      $currentMetaValue = get_post_meta($postId, $currentKey, true);
+
+      if (!empty($currentMetaValue)) {
+        $metaData[$currentKey] = $currentMetaValue;
+      }
+
+      $subMetaData = $this->getMetaData($postId, $currentKey . '_', $fieldValue);
+
+      $metaData = array_merge($metaData, $subMetaData);
+    }
+
+    return $metaData;
   }
 }
