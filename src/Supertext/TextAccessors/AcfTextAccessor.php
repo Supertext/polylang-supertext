@@ -2,6 +2,8 @@
 
 namespace Supertext\TextAccessors;
 
+use Supertext\Helper\Constant;
+
 /**
  * Class AcfTextAccessor
  * @package Supertext\TextAccessors
@@ -20,30 +22,55 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
   }
 
   /**
+   * @param $postId
+   * @return array
+   */
+  public function getTranslatableFields($postId)
+  {
+    $translatableFields = parent::getTranslatableFields($postId);
+
+    return array_merge(array(array(
+      'title' => __('Copy structural meta data', 'supertext'),
+      'name' => 'sttr-structural-meta-data',
+      'checkedPerDefault' => true
+    )), $translatableFields);
+  }
+
+  /**
    * @param $post
    * @param $selectedTranslatableFields
    * @return array
    */
   public function getContentMetaData($post, $selectedTranslatableFields)
   {
+    if (isset($selectedTranslatableFields['sttr-structural-meta-data'])) {
+      $fields = get_fields($post->ID);
+
+      return $this->getMetaData($post->ID, "", $fields);
+    }
+
+    return array();
+  }
+
+  public function getMetaData($postId, $parentKey, $fields)
+  {
     $metaData = array();
-    $postCustomFields = get_post_meta($post->ID);
-    $metaKeys = array_keys($postCustomFields);
 
-    $subParentMetaKeys = $this->getSubParentMetaKeys(array_keys($selectedTranslatableFields));
-
-    foreach ($metaKeys as $metaKey) {
-      if (isset($metaData[$metaKey])) {
+    foreach ($fields as $fieldKey => $fieldValue) {
+      if (!is_array($fieldValue)) {
         continue;
       }
 
-      foreach ($subParentMetaKeys as $subParentMetaKey) {
-        if (!preg_match('/^' . $subParentMetaKey . '$/', $metaKey)) {
-          continue;
-        }
+      $currentKey = $parentKey . $fieldKey;
+      $currentMetaValue = get_post_meta($postId, $currentKey, true);
 
-        $metaData[$metaKey] = get_post_meta($post->ID, $metaKey, true);
+      if (!empty($currentMetaValue)) {
+        $metaData[$currentKey] = $currentMetaValue;
       }
+
+      $subMetaData = $this->getMetaData($postId, $currentKey . '_', $fieldValue);
+
+      $metaData = array_merge($metaData, $subMetaData);
     }
 
     return $metaData;
@@ -81,30 +108,6 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     }
 
     return $acfFieldDefinition;
-  }
-
-  /**
-   * @param $metaKeyRegex
-   * @return array
-   */
-  private function getSubParentMetaKeys($selectedMetaKeyRegexs)
-  {
-    $subParentMetaKeys = array();
-
-    foreach ($selectedMetaKeyRegexs as $selectedMetaKeyRegex) {
-      $subMetaKeyParts = explode(self::META_KEY_DELIMITER, $selectedMetaKeyRegex);
-
-      for ($i = 0; $i < count($subMetaKeyParts) - 1; ++$i) {
-        if ($i > 0) {
-          $subParentMetaKeys[] = $subMetaKeyParts[$i - 1] . self::META_KEY_DELIMITER . $subMetaKeyParts[$i];
-          continue;
-        }
-
-        $subParentMetaKeys[] = $subMetaKeyParts[$i];
-      }
-    }
-
-    return $subParentMetaKeys;
   }
 
   /**
