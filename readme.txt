@@ -109,6 +109,10 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.07 =
+* Fixed fallback copy logic of post meta data when WPML is used but the translation management plugin is not activated
+* Extended ACF support with possibility to copy ACF structural meta data like flexible content structure over to the translation post
+
 = 4.06 =
 * Fix bug with Custom vs. Elementor settings that saved the entered custom fields as Elementor field
 
