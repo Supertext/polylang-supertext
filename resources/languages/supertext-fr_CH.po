@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2021-07-15 13:16+0200\n"
-"PO-Revision-Date: 2021-07-15 13:20+0200\n"
+"POT-Creation-Date: 2021-10-08 16:45+0200\n"
+"PO-Revision-Date: 2021-10-08 16:47+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: fr_CH\n"
@@ -89,12 +89,12 @@ msgstr ""
 "Votre texte a été envoyé à Supertext pour être traduit. Votre numéro de "
 "commande est le suivant: %s."
 
-#: src/Supertext/Backend/AdminExtension.php:248
+#: src/Supertext/Backend/AdminExtension.php:250
 #: src/Supertext/Backend/Menu.php:34 src/Supertext/Backend/Menu.php:43
 msgid "Supertext"
 msgstr "Supertext"
 
-#: src/Supertext/Backend/AdminExtension.php:339
+#: src/Supertext/Backend/AdminExtension.php:341
 msgid "In translation"
 msgstr "En cours de traduction"
 
@@ -306,9 +306,13 @@ msgid "Writeback failed"
 msgstr ""
 "La traduction ou la relecture n’a pas pu être réimportée (échec du writeback)"
 
-#: src/Supertext/TextAccessors/AcfTextAccessor.php:19
+#: src/Supertext/TextAccessors/AcfTextAccessor.php:21
 msgid "Advanced Custom Fields (Plugin)"
 msgstr "Plug-in Advanced Custom Fields"
+
+#: src/Supertext/TextAccessors/AcfTextAccessor.php:33
+msgid "Copy structural meta data"
+msgstr "Copier les métadonnées structurelles"
 
 #: src/Supertext/TextAccessors/AllInOneSeoPackTextAccessor.php:15
 msgid "All In One SEO Pack (Plugin)"
@@ -344,7 +348,7 @@ msgid "Beaver Builder content"
 msgstr "Contenu de Beaver Builder"
 
 #: src/Supertext/TextAccessors/CustomFieldsTextAccessor.php:42
-#: views/backend/settings-custom-fields.php:19
+#: views/backend/settings-custom-fields.php:20
 msgid "General custom fields"
 msgstr "Champs personnalisables généraux"
 
@@ -478,17 +482,17 @@ msgstr "Type de service pour les traductions"
 msgid "Service type for proofreading"
 msgstr "Type de service pour les relectures"
 
-#: views/backend/settings-custom-fields.php:5
+#: views/backend/settings-custom-fields.php:6
 msgid "Custom field name..."
 msgstr "Nom de champ personnalisable…"
 
-#: views/backend/settings-custom-fields.php:21
+#: views/backend/settings-custom-fields.php:22
 msgid "Please add the custom fields that can be used for translations."
 msgstr ""
 "Veuillez ajouter les champs personnalisables pouvant être utilisés lors des "
 "traductions."
 
-#: views/backend/settings-custom-fields.php:25
+#: views/backend/settings-custom-fields.php:26
 msgid "Add field"
 msgstr "Ajouter un champ"
 

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2021-07-15 13:13+0200\n"
-"PO-Revision-Date: 2021-07-15 13:13+0200\n"
+"POT-Creation-Date: 2021-10-08 16:42+0200\n"
+"PO-Revision-Date: 2021-10-08 16:43+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: de_CH\n"
@@ -88,12 +88,12 @@ msgstr ""
 "Ihr Beitrag wurde an Supertext gesendet und wird übersetzt. Ihre "
 "Bestellnummer lautet %s."
 
-#: src/Supertext/Backend/AdminExtension.php:248
+#: src/Supertext/Backend/AdminExtension.php:250
 #: src/Supertext/Backend/Menu.php:34 src/Supertext/Backend/Menu.php:43
 msgid "Supertext"
 msgstr "Supertext"
 
-#: src/Supertext/Backend/AdminExtension.php:339
+#: src/Supertext/Backend/AdminExtension.php:341
 msgid "In translation"
 msgstr "In der Übersetzung"
 
@@ -302,9 +302,13 @@ msgstr "Write Back erfolgreich"
 msgid "Writeback failed"
 msgstr "Write Back fehlgeschlagen"
 
-#: src/Supertext/TextAccessors/AcfTextAccessor.php:19
+#: src/Supertext/TextAccessors/AcfTextAccessor.php:21
 msgid "Advanced Custom Fields (Plugin)"
 msgstr "Advanced Custom Fields (Plugin)"
+
+#: src/Supertext/TextAccessors/AcfTextAccessor.php:33
+msgid "Copy structural meta data"
+msgstr "Strukturelle Metadaten kopieren"
 
 #: src/Supertext/TextAccessors/AllInOneSeoPackTextAccessor.php:15
 msgid "All In One SEO Pack (Plugin)"
@@ -340,7 +344,7 @@ msgid "Beaver Builder content"
 msgstr "Beaver Builder Inhalt"
 
 #: src/Supertext/TextAccessors/CustomFieldsTextAccessor.php:42
-#: views/backend/settings-custom-fields.php:19
+#: views/backend/settings-custom-fields.php:20
 msgid "General custom fields"
 msgstr "Allgemeine benutzerdefinierte Felder"
 
@@ -475,17 +479,17 @@ msgstr "Serviceart für Übersetzungen"
 msgid "Service type for proofreading"
 msgstr "Serviceart für Korrekturlesen"
 
-#: views/backend/settings-custom-fields.php:5
+#: views/backend/settings-custom-fields.php:6
 msgid "Custom field name..."
 msgstr "Name benutzerdefiniertes Feld..."
 
-#: views/backend/settings-custom-fields.php:21
+#: views/backend/settings-custom-fields.php:22
 msgid "Please add the custom fields that can be used for translations."
 msgstr ""
 "Bitte fügen Sie die benutzerdefinierten Felder hinzu, welche übersetzt "
 "werden können."
 
-#: views/backend/settings-custom-fields.php:25
+#: views/backend/settings-custom-fields.php:26
 msgid "Add field"
 msgstr "Feld hinzufügen"
 
