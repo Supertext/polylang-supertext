@@ -43,13 +43,13 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
    */
   public function getContentMetaData($post, $selectedTranslatableFields)
   {
-    if (isset($selectedTranslatableFields['sttr-structural-meta-data'])) {
-      $fields = get_fields($post->ID);
-
-      return $this->getMetaData($post->ID, "", $fields);
+    if (!isset($selectedTranslatableFields['sttr-structural-meta-data'])) {
+      return array();
     }
 
-    return array();
+    $fields = get_fields($post->ID);
+
+    return $this->getMetaData($post->ID, "", $fields);
   }
 
   public function getMetaData($postId, $parentKey, $fields)
