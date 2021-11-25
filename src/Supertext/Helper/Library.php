@@ -276,8 +276,12 @@ class Library
     </html>
     ';
 
+    $libxml_use_internal_errors = libxml_use_internal_errors(true);
     $doc = new \DOMDocument();
     $doc->loadHTML($html);
+    libxml_clear_errors();
+    libxml_use_internal_errors($libxml_use_internal_errors);
+
     return $doc;
   }
 
