@@ -16,7 +16,11 @@ class Constant
   /**
    * @var string live api endpoints
    */
-  const LIVE_API = 'https://www.supertext.ch/api/';
+  const LIVE_API = 'https://www.supertext.ch/api/'; 
+  /**
+   * @var int max system name length for the order referrer data
+   */
+  const MAX_SYSTEM_NAME_LENGTH = 50;
   /**
    * @var string live api endpoints
    */

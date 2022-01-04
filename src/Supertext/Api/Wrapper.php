@@ -2,6 +2,8 @@
 
 namespace Supertext\Api;
 
+use Supertext\Helper\Constant;
+
 /**
  * Wrapper class for external api calls to supertext
  * @package Supertext\Api
@@ -134,6 +136,8 @@ class Wrapper
   public static function createOrder($apiClient, $title, $sourceLanguage, $targetLanguage, $data, $translationType, $additionalInformation, $referenceData, $callback, $serviceType)
   {
     $product = explode(':', $translationType);
+    $blogName = get_bloginfo('name');
+    $systemName = substr($blogName, 0, min(Constant::MAX_SYSTEM_NAME_LENGTH, strlen($blogName)));
 
     $json = array(
       'CallbackUrl' => $callback,
@@ -144,7 +148,7 @@ class Wrapper
       'OrderTypeConfigurationId' => $product[0],
       'ReferenceData' => $referenceData,
       'Referrer' => 'WordPress Supertext Plugin',
-      'SystemName' => get_bloginfo('name'),
+      'SystemName' => $systemName,
       'SystemVersion' => get_bloginfo('version'),
       'ComponentName' => 'supertext',
       'ComponentVersion' => SUPERTEXT_PLUGIN_VERSION,
