@@ -11,6 +11,9 @@ use Supertext\Helper\Constant;
 class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements IMetaDataAware
 {
   const META_KEY_DELIMITER = '_(\\d+_)?';
+  const ACF_BLOCK_NAME_PREFIX = 'acf/';
+  const ACF_BLOCK_ID_PREFIX = 'block_';
+  const ACF_BLOCK_TEXT_ID_REGEX = '/(block_[^_]+)_(.*)/';
 
   /**
    * Gets the content accessors name
@@ -49,7 +52,7 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
 
     $fields = get_fields($post->ID);
 
-    return $this->getMetaData($post->ID, "", $fields);
+    return $this->getMetaData($post->ID, '', $fields);
   }
 
   /**
@@ -61,6 +64,106 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     foreach ($translationMetaData as $key => $value) {
       update_post_meta($post->ID, $key, $value);
     }
+  }
+
+  /**
+   * Handle special case when ACF blocks are being used.
+   * @param $post
+   * @param $selectedTranslatableFields
+   * @return array
+   */
+  public function getTexts($post, $selectedTranslatableFields)
+  {
+    $texts = parent::getTexts($post, $selectedTranslatableFields);
+
+    if (!function_exists('acf_register_block_type') || !function_exists('parse_blocks') || !function_exists('has_blocks') || !has_blocks($post)) {
+      return $texts;
+    }
+
+    $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
+
+    if (!isset($savedFieldDefinitions[$this->pluginId])) {
+      return $texts;
+    }
+
+    $blocks = parse_blocks($post->post_content);
+
+    foreach ($blocks as $block) {
+      if (strpos($block['blockName'], self::ACF_BLOCK_NAME_PREFIX) !== 0) {
+        continue;
+      }
+
+      if (!isset($block['attrs']) || !isset($block['attrs']['id']) || !isset($block['attrs']['data'])) {
+        continue;
+      }
+
+      $blockId = $block['attrs']['id'];
+      $data = $block['attrs']['data'];
+      $metaKeys = array_keys($data);
+
+      foreach ($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition) {
+        $metaKeyMatches = preg_grep('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $metaKeys);
+
+        foreach ($metaKeyMatches as $metaKeyMatch) {
+          $textKey =  $blockId . '_' . $metaKeyMatch;
+          $texts[$textKey] = $this->textProcessor->replaceShortcodes($data[$metaKeyMatch]);
+        }
+      }
+    }
+
+    return $texts;
+  }
+
+  /**
+   * Handle special case when ACF blocks are being used.
+   * @param $post
+   * @param $texts
+   */
+  public function setTexts($post, $texts)
+  {
+    if (!function_exists('acf_register_block_type') || !function_exists('parse_blocks') || !function_exists('serialize_blocks') || !function_exists('has_blocks') || !has_blocks($post)) {
+      parent::setTexts($post, $texts);
+      return;
+    }
+
+    $metaTexts = array();
+    $blocks = parse_blocks($post->post_content);
+
+    foreach ($texts as $id => $text) {
+      if (strpos($id, self::ACF_BLOCK_ID_PREFIX) !== 0) {
+        $metaTexts[$id] = $text;
+        continue;
+      }
+
+      preg_match(self::ACF_BLOCK_TEXT_ID_REGEX, $id, $idRegexMatches);
+      
+      $blockId = $idRegexMatches[1];
+      $metaKey = $idRegexMatches[2];
+      $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+      $value = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+
+      foreach ($blocks as &$block) {
+        if (strpos($block['blockName'], self::ACF_BLOCK_NAME_PREFIX) !== 0) {
+          continue;
+        }
+
+        if (!isset($block['attrs']) || !isset($block['attrs']['id']) || !isset($block['attrs']['data'])) {
+          continue;
+        }
+
+        $currentBlockId = $block['attrs']['id'];
+
+        if ($currentBlockId !== $blockId) {
+          continue;
+        }
+
+        $block['attrs']['data'][$metaKey] = $value;
+      }
+    }
+
+    $post->post_content = serialize_blocks($blocks);
+
+    parent::setTexts($post, $metaTexts);
   }
 
   /**
