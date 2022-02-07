@@ -76,42 +76,11 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
   {
     $texts = parent::getTexts($post, $selectedTranslatableFields);
 
-    if (!function_exists('acf_register_block_type') || !function_exists('parse_blocks') || !function_exists('has_blocks') || !has_blocks($post)) {
+    if (!$this->hasAcfBlocks($post)) {
       return $texts;
     }
 
-    $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
-
-    if (!isset($savedFieldDefinitions[$this->pluginId])) {
-      return $texts;
-    }
-
-    $blocks = parse_blocks($post->post_content);
-
-    foreach ($blocks as $block) {
-      if (strpos($block['blockName'], self::ACF_BLOCK_NAME_PREFIX) !== 0) {
-        continue;
-      }
-
-      if (!isset($block['attrs']) || !isset($block['attrs']['id']) || !isset($block['attrs']['data'])) {
-        continue;
-      }
-
-      $blockId = $block['attrs']['id'];
-      $data = $block['attrs']['data'];
-      $metaKeys = array_keys($data);
-
-      foreach ($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition) {
-        $metaKeyMatches = preg_grep('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $metaKeys);
-
-        foreach ($metaKeyMatches as $metaKeyMatch) {
-          $textKey =  $blockId . '_' . $metaKeyMatch;
-          $texts[$textKey] = $this->textProcessor->replaceShortcodes($data[$metaKeyMatch]);
-        }
-      }
-    }
-
-    return $texts;
+    return $this->addAcfBlockTexts($post, $texts);
   }
 
   /**
@@ -121,47 +90,23 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
    */
   public function setTexts($post, $texts)
   {
-    if (!function_exists('acf_register_block_type') || !function_exists('parse_blocks') || !function_exists('serialize_blocks') || !function_exists('has_blocks') || !has_blocks($post)) {
+    if (!$this->hasAcfBlocks($post)) {
       parent::setTexts($post, $texts);
       return;
     }
 
     $metaTexts = array();
-    $blocks = parse_blocks($post->post_content);
+    $acfBlockTexts = array();
 
     foreach ($texts as $id => $text) {
-      if (strpos($id, self::ACF_BLOCK_ID_PREFIX) !== 0) {
+      if (strpos($id, self::ACF_BLOCK_ID_PREFIX) === 0) {
+        $acfBlockTexts[$id] = $text;
+      } else {
         $metaTexts[$id] = $text;
-        continue;
-      }
-
-      preg_match(self::ACF_BLOCK_TEXT_ID_REGEX, $id, $idRegexMatches);
-      
-      $blockId = $idRegexMatches[1];
-      $metaKey = $idRegexMatches[2];
-      $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-      $value = $this->textProcessor->replaceShortcodeNodes($decodedContent);
-
-      foreach ($blocks as &$block) {
-        if (strpos($block['blockName'], self::ACF_BLOCK_NAME_PREFIX) !== 0) {
-          continue;
-        }
-
-        if (!isset($block['attrs']) || !isset($block['attrs']['id']) || !isset($block['attrs']['data'])) {
-          continue;
-        }
-
-        $currentBlockId = $block['attrs']['id'];
-
-        if ($currentBlockId !== $blockId) {
-          continue;
-        }
-
-        $block['attrs']['data'][$metaKey] = $value;
       }
     }
 
-    $post->post_content = serialize_blocks($blocks);
+    $this->setAcfBlockTexts($post, $acfBlockTexts);
 
     parent::setTexts($post, $metaTexts);
   }
@@ -285,5 +230,78 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     }
 
     return $metaData;
+  }
+
+  private function hasAcfBlocks($post)
+  {
+    $necessaryBlockFunctionsExist = function_exists('acf_register_block_type') && function_exists('parse_blocks') && function_exists('serialize_blocks') && function_exists('has_blocks');
+
+    return $necessaryBlockFunctionsExist && has_blocks($post) && strpos($post->post_content, '<!-- wp:' . self::ACF_BLOCK_NAME_PREFIX) !== false;
+  }
+
+  private function addAcfBlockTexts($post, $texts)
+  {
+    $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
+
+    if (!isset($savedFieldDefinitions[$this->pluginId])) {
+      return $texts;
+    }
+
+    $blocks = parse_blocks($post->post_content);
+
+    foreach ($blocks as $block) {
+      if (!$this->isAcfBlock($block)) {
+        continue;
+      }
+
+      $blockId = $block['attrs']['id'];
+      $data = $block['attrs']['data'];
+      $metaKeys = array_keys($data);
+
+      foreach ($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition) {
+        $metaKeyMatches = preg_grep('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $metaKeys);
+
+        foreach ($metaKeyMatches as $metaKeyMatch) {
+          $textKey =  $blockId . '_' . $metaKeyMatch;
+          $texts[$textKey] = $this->textProcessor->replaceShortcodes($data[$metaKeyMatch]);
+        }
+      }
+    }
+
+    return $texts;
+  }
+
+  private function setAcfBlockTexts($post, $acfBlockTexts){
+    $blocks = parse_blocks($post->post_content);
+
+    foreach ($acfBlockTexts as $id => $text) {
+      preg_match(self::ACF_BLOCK_TEXT_ID_REGEX, $id, $idRegexMatches);
+
+      $blockId = $idRegexMatches[1];
+      $metaKey = $idRegexMatches[2];
+      $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+      $value = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+
+      foreach ($blocks as &$block) {
+        if (!$this->isAcfBlock($block)) {
+          continue;
+        }
+
+        $currentBlockId = $block['attrs']['id'];
+
+        if ($currentBlockId !== $blockId) {
+          continue;
+        }
+
+        $block['attrs']['data'][$metaKey] = $value;
+      }
+    }
+
+    $post->post_content = serialize_blocks($blocks);
+  }
+
+  private function isAcfBlock($block)
+  {
+    return strpos($block['blockName'], self::ACF_BLOCK_NAME_PREFIX) === 0 && isset($block['attrs']) && isset($block['attrs']['id']) && isset($block['attrs']['data']);
   }
 }
