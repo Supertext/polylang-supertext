@@ -31,12 +31,22 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
   public function getTranslatableFields($postId)
   {
     $translatableFields = parent::getTranslatableFields($postId);
-
-    return array_merge(array(array(
+    $structuralData = array(
       'title' => __('Copy structural meta data', 'supertext'),
       'name' => 'sttr-structural-meta-data',
-      'checkedPerDefault' => true
-    )), $translatableFields);
+      'checkedPerDefault' => false
+    );
+    $additionalFields = array($structuralData);
+
+    if ($this->hasAcfBlocks(get_post($postId)->post_content)) {
+      array_push($additionalFields, array(
+        'title' => __('Blocks', 'supertext'),
+        'name' => 'sttr-blocks-meta-data',
+        'checkedPerDefault' => true
+      ));
+    }
+
+    return array_merge($additionalFields, $translatableFields);
   }
 
   /**
@@ -76,7 +86,7 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
   {
     $texts = parent::getTexts($post, $selectedTranslatableFields);
 
-    if (!$this->hasAcfBlocks($post)) {
+    if (!$this->hasAcfBlocks($post->post_content) || !isset($selectedTranslatableFields['sttr-blocks-meta-data'])) {
       return $texts;
     }
 
@@ -90,7 +100,7 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
    */
   public function setTexts($post, $texts)
   {
-    if (!$this->hasAcfBlocks($post)) {
+    if (!$this->hasAcfBlocks($post->post_content)) {
       parent::setTexts($post, $texts);
       return;
     }
@@ -232,11 +242,11 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     return $metaData;
   }
 
-  private function hasAcfBlocks($post)
+  private function hasAcfBlocks($post_content)
   {
     $necessaryBlockFunctionsExist = function_exists('acf_register_block_type') && function_exists('parse_blocks') && function_exists('serialize_blocks') && function_exists('has_blocks');
 
-    return $necessaryBlockFunctionsExist && has_blocks($post) && strpos($post->post_content, '<!-- wp:' . self::ACF_BLOCK_NAME_PREFIX) !== false;
+    return $necessaryBlockFunctionsExist && has_blocks($post_content) && strpos($post_content, '<!-- wp:' . self::ACF_BLOCK_NAME_PREFIX) !== false;
   }
 
   private function addAcfBlockTexts($post, $texts)
@@ -271,7 +281,8 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
     return $texts;
   }
 
-  private function setAcfBlockTexts($post, $acfBlockTexts){
+  private function setAcfBlockTexts($post, $acfBlockTexts)
+  {
     $blocks = parse_blocks($post->post_content);
 
     foreach ($acfBlockTexts as $id => $text) {
