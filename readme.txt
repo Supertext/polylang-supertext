@@ -109,6 +109,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.10 =
+* Use Wordpress standard functions to serialize Gutenberg blocks.
+
 = 4.09 =
 * Add basic support for ACF Gutenberg blocks that contain text in the data object.
 
