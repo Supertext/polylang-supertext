@@ -121,9 +121,9 @@ class PostTextAccessor implements ITextAccessor
       $decodedContent = html_entity_decode($texts['post_content'], ENT_COMPAT | ENT_HTML401, 'UTF-8');
 
       if (isset($texts['post_content_block_attributes'])) {
-        $decodedContent = $this->setTranslatableBlockAttributes($texts['post_content_block_attributes'], parse_blocks($decodedContent), $decodedContent);
+        $newBlocks = $this->setTranslatableBlockAttributes($texts['post_content_block_attributes'], parse_blocks($decodedContent));
+        $decodedContent = serialize_blocks($newBlocks);
       }
-
       $post->post_content = $this->textProcessor->replaceShortcodeNodes($decodedContent);
     }
 
@@ -179,34 +179,33 @@ class PostTextAccessor implements ITextAccessor
         continue;
       }
 
-      $blockAttributesTexts[$key] = $value;
+      $blockAttributesTexts[$key] = $this->textProcessor->replaceShortcodes($value);
     }
 
     return $blockAttributesTexts;
   }
 
-  private function setTranslatableBlockAttributes($blockAttributes, $blocks, $content)
+  private function setTranslatableBlockAttributes($blockAttributes, $blocks)
   {
-    $newContent = $content;
+    $newBlocks = array();
 
     foreach ($blocks as $index => $block) {
       if (!isset($blockAttributes[$index])) {
+        array_push($newBlocks, $block);
         continue;
       }
 
-      $blockName = str_replace('/', '\/', str_replace('core/', '', $block['blockName']));
-
       if (isset($blockAttributes[$index]['inner-blocks'])) {
-        $newContent = $this->setTranslatableBlockAttributes($blockAttributes[$index]['inner-blocks'], $block['innerBlocks'], $newContent);
+        $block['innerBlocks'] = $this->setTranslatableBlockAttributes($blockAttributes[$index]['inner-blocks'], $block['innerBlocks']);
       }
 
       foreach ($blockAttributes[$index]['attrs'] as $key => $value) {
-        $oldValue = $block['attrs'][$key];
-        $regex = "/(<!--\s*wp:$blockName\s*{.*\"$key\"\s*:\s*)\"$oldValue\"/";
-        $newContent = preg_replace($regex, "$1\"$value\"", $newContent);
+        $block['attrs'][$key] = $this->textProcessor->replaceShortcodeNodes($value);
       }
+
+      array_push($newBlocks, $block);
     }
 
-    return $newContent;
+    return $newBlocks;
   }
 }
