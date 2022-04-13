@@ -57,10 +57,15 @@ class WriteBack
   public function isReferenceValid()
   {
     $sourcePostIds = $this->getSourcePostIds();
+    $orderType = $this->getOrderType();
 
     $referenceData = hex2bin(Constant::REFERENCE_BITMASK);
     foreach ($sourcePostIds as $sourcePostId) {
-      $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
+      if('translation' == $orderType) {
+        $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $this->getTargetLanguageCode());
+      } else {
+        $targetPostId = $sourcePostId;
+      }
       $writeBackMeta = $this->getWriteBackMeta($targetPostId);
       $referenceHash = $writeBackMeta->getReferenceHash();
       $referenceData ^= hex2bin($referenceHash);

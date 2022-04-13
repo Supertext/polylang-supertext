@@ -101,9 +101,14 @@ class CallbackHandler
   {
     $errors = array();
     $contentData = $writeBack->getContentData();
+    $orderType = $writeBack->getOrderType();
 
     foreach ($writeBack->getSourcePostIds() as $sourcePostId) {
-      $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
+      if('translation' == $orderType) {
+        $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
+      } else {
+        $targetPostId = $sourcePostId;
+      }
 
       if ($targetPostId == null) {
         $errors[$sourcePostId] = 'There is no linked post for saving the writeback.';
