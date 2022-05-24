@@ -155,7 +155,15 @@ class AdminExtension
     if (!$pluginStatus->isUserMappingConfiguredProperly) {
       echo '
         <div class="notice notice-warning is-dismissible">
-          <p>' . __('The Supertext Translation plugin cannot be used. Please configure at least one Supertext account.', 'supertext') . '</p>
+          <p>' . __('The Supertext Translation plugin cannot be used. Please configure at least one Supertext account in the Supertext settings.', 'supertext') . '</p>
+        </div>
+      ';
+    }
+
+    if ($pluginStatus->isMultilangActivated && !$pluginStatus->isLanguageMappingConfiguredProperly) {
+      echo '
+        <div class="notice notice-warning is-dismissible">
+          <p>' .  __('The Supertext translation feature cannot be used. Please configure the language mapping in the Supertext settings.', 'supertext') . '</p>
         </div>
       ';
     }
