@@ -109,6 +109,10 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.12 =
+* Enable bulk action for proofreading when no multilang plugin is installed or activated
+* Improved warning/error messages
+
 = 4.11 =
 * Skip checking for translated post IDs for proofreading orders
 
