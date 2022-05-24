@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2021-10-08 16:43+0200\n"
-"PO-Revision-Date: 2021-10-08 16:43+0200\n"
+"POT-Creation-Date: 2022-05-24 10:44+0200\n"
+"PO-Revision-Date: 2022-05-24 10:45+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n;_x\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -38,21 +38,21 @@ msgstr "Supertext API connection failed."
 msgid "Supertext API returned unsupported data."
 msgstr "Supertext API returned unsupported data."
 
-#: src/Supertext/Api/Wrapper.php:36
+#: src/Supertext/Api/Wrapper.php:38
 #, php-format
 msgid "Supertext doesn't support <b>%s</b>."
 msgstr "Supertext doesn't support <b>%s</b>."
 
-#: src/Supertext/Api/Wrapper.php:79
+#: src/Supertext/Api/Wrapper.php:81
 msgid "There is no content to be translated."
 msgstr "There is no content to be translated."
 
-#: src/Supertext/Api/Wrapper.php:85
+#: src/Supertext/Api/Wrapper.php:87
 #, php-format
 msgid "The quotes are missing (%s -> %s). Please contact Supertext."
 msgstr "The quotes are missing (%s -> %s). Please contact Supertext."
 
-#: src/Supertext/Api/Wrapper.php:163
+#: src/Supertext/Api/Wrapper.php:167
 msgid "Could not create an order with Supertext."
 msgstr "Could not create an order with Supertext."
 
@@ -66,19 +66,22 @@ msgstr ""
 
 #: src/Supertext/Backend/AdminExtension.php:158
 msgid ""
-"The Supertext Translation plugin cannot be used. Polylang or WPML is not "
-"installed or hasn't been activated."
+"The Supertext plugin cannot be used. Please configure at least one Supertext "
+"account in the Supertext settings."
 msgstr ""
-"The Supertext Translation plugin cannot be used. Polylang or WPML is not "
-"installed or hasn't been activated."
+"The Supertext plugin cannot be used. Please configure at least one Supertext "
+"account in the Supertext settings."
 
 #: src/Supertext/Backend/AdminExtension.php:166
+#| msgid ""
+#| "The Supertext Translation plugin cannot be used. It hasn't been "
+#| "configured correctly."
 msgid ""
-"The Supertext Translation plugin cannot be used. It hasn't been configured "
-"correctly."
+"The Supertext translation feature cannot be used. Please configure the "
+"language mapping in the Supertext settings."
 msgstr ""
-"The Supertext Translation plugin cannot be used. It hasn't been configured "
-"correctly."
+"The Supertext translation feature cannot be used. Please configure the "
+"language mapping in the Supertext settings."
 
 #: src/Supertext/Backend/AdminExtension.php:187
 #, php-format
@@ -175,6 +178,7 @@ msgid "Order translation"
 msgstr "Order translation"
 
 #: src/Supertext/Core.php:180 src/Supertext/Core.php:189
+#: src/Supertext/Proofreading/Proofreading.php:28
 msgid "Order proofreading"
 msgstr "Order proofreading"
 
@@ -250,13 +254,10 @@ msgstr "Translation from Supertext successfully imported."
 msgid "Proofreading"
 msgstr "Proofreading"
 
-#: src/Supertext/Proofreading/Proofreading.php:28
-msgid "Order proofread"
-msgstr "Order proofread"
-
 #: src/Supertext/Proofreading/Proofreading.php:33
-msgid "Post is still in the proofread process"
-msgstr "Post is still in the proofread process"
+#| msgid "This post is currently being modified by Supertext."
+msgid "This post is currently being proofread."
+msgstr "This post is currently being proofread."
 
 #: src/Supertext/Settings/SettingsPage.php:50
 msgid "User and languages"
@@ -303,13 +304,18 @@ msgstr "Writeback successful"
 msgid "Writeback failed"
 msgstr "Writeback failed"
 
-#: src/Supertext/TextAccessors/AcfTextAccessor.php:21
+#: src/Supertext/TextAccessors/AcfTextAccessor.php:24
 msgid "Advanced Custom Fields (Plugin)"
 msgstr "Advanced Custom Fields (Plugin)"
 
-#: src/Supertext/TextAccessors/AcfTextAccessor.php:33
+#: src/Supertext/TextAccessors/AcfTextAccessor.php:35
 msgid "Copy structural meta data"
 msgstr "Copy structural meta data"
+
+#: src/Supertext/TextAccessors/AcfTextAccessor.php:43
+#| msgid "blocked"
+msgid "Blocks"
+msgstr "Blocks"
 
 #: src/Supertext/TextAccessors/AllInOneSeoPackTextAccessor.php:15
 msgid "All In One SEO Pack (Plugin)"
@@ -504,18 +510,37 @@ msgstr "Please add the text properties of the Elementor elements."
 msgid "Add text property"
 msgstr "Add text property"
 
-#: views/backend/settings-languages.php:38
+#: views/backend/settings-languages.php:39
 #: views/templates/admin-extension-templates.php:157
 msgid "Please select"
 msgstr "Please select"
 
-#: views/backend/settings-languages.php:58
+#: views/backend/settings-languages.php:53
+#| msgid ""
+#| "The Supertext Translation plugin cannot be used. Polylang or WPML is not "
+#| "installed or hasn't been activated."
+msgid ""
+"The Supertext translation feature cannot be used. Polylang or WPML is not "
+"installed or hasn't been activated."
+msgstr ""
+"The Supertext translation feature cannot be used. Polylang or WPML is not "
+"installed or hasn't been activated."
+
+#: views/backend/settings-languages.php:66
 msgid "Language settings"
 msgstr "Language settings"
 
-#: views/backend/settings-languages.php:75
-msgid "Please configure the languages within the translation plugin."
-msgstr "Please configure the languages within the translation plugin."
+#: views/backend/settings-languages.php:86
+#, php-format
+#| msgid ""
+#| "The Supertext Translation plugin cannot be used. It hasn't been "
+#| "configured correctly."
+msgid ""
+"The Supertext translation feature cannot be used. Please configure the "
+"languages within %s."
+msgstr ""
+"The Supertext translation feature cannot be used. Please configure the "
+"languages within %s."
 
 #: views/backend/settings-plugin-custom-fields.php:10
 msgid "Please select the custom fields that can be used for translations."
@@ -770,6 +795,15 @@ msgstr "remove setting"
 #: views/templates/settings-templates.php:32
 msgid "Attribute name..."
 msgstr "Attribute name..."
+
+#~ msgid "Order proofread"
+#~ msgstr "Order proofread"
+
+#~ msgid "Post is still in the proofread process"
+#~ msgstr "Post is still in the proofread process"
+
+#~ msgid "Please configure the languages within the translation plugin."
+#~ msgstr "Please configure the languages within the translation plugin."
 
 #~ msgid ""
 #~ "The Supertext Translation plugin cannot be used. Polylang is not "
