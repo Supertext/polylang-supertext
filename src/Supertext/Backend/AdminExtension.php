@@ -152,18 +152,10 @@ class AdminExtension
       return;
     }
 
-    if (!$pluginStatus->isMultilangActivated) {
+    if (!$pluginStatus->isUserMappingConfiguredProperly) {
       echo '
         <div class="notice notice-warning is-dismissible">
-          <p>' . __('The Supertext Translation plugin cannot be used. Polylang or WPML is not installed or hasn\'t been activated.', 'supertext') . '</p>
-        </div>
-      ';
-    }
-
-    if (!$pluginStatus->isPluginConfiguredProperly) {
-      echo '
-        <div class="notice notice-warning is-dismissible">
-          <p>' . __('The Supertext Translation plugin cannot be used. It hasn\'t been configured correctly.', 'supertext') . '</p>
+          <p>' . __('The Supertext Translation plugin cannot be used. Please configure at least one Supertext account.', 'supertext') . '</p>
         </div>
       ';
     }
@@ -203,12 +195,12 @@ class AdminExtension
     $newPostUrls = $this->library->getMultilang()->getNewPostUrls();
     $enable =
       $pluginStatus->isCurlActivated &&
-      $pluginStatus->isPluginConfiguredProperly &&
+      $pluginStatus->isUserMappingConfiguredProperly &&
       $pluginStatus->isCurrentUserConfigured;
 
     $context = array(
       'enable' => $enable,
-      'isMultilangActivated' => $pluginStatus->isMultilangActivated,
+      'isMultilangReady' => $pluginStatus->isMultilangActivated && $pluginStatus->isLanguageMappingConfiguredProperly,
       'screen' => $this->screenBase,
       'currentPostId' => $this->currentPostId,
       'isCurrentPostInTranslation' => $this->isCurrentPostInTranslation,

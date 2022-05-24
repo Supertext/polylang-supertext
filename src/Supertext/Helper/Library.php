@@ -159,13 +159,23 @@ class Library
   /**
    * @return bool
    */
-  public function isPluginConfiguredProperly()
+  public function isUserMappingConfiguredProperly()
   {
     $options = $this->getSettingOption();
 
     return
       isset($options[Constant::SETTING_USER_MAP]) &&
-      count($options[Constant::SETTING_USER_MAP]) > 0 &&
+      count($options[Constant::SETTING_USER_MAP]) > 0;
+  }
+
+  /**
+   * @return bool
+   */
+  public function isLanguageMappingConfiguredProperly()
+  {
+    $options = $this->getSettingOption();
+
+    return
       isset($options[Constant::SETTING_LANGUAGE_MAP]) &&
       count($options[Constant::SETTING_LANGUAGE_MAP]) > 0;
   }
@@ -216,7 +226,8 @@ class Library
       $this->pluginStatus->isMultilangActivated = $this->isMultilangActivated();
       $this->pluginStatus->isWPMLActivated = $this->isWPMLActivated();
       $this->pluginStatus->isCurlActivated = $this->isCurlActivated();
-      $this->pluginStatus->isPluginConfiguredProperly = $this->isPluginConfiguredProperly();
+      $this->pluginStatus->isUserMappingConfiguredProperly = $this->isUserMappingConfiguredProperly();
+      $this->pluginStatus->isLanguageMappingConfiguredProperly = $this->isLanguageMappingConfiguredProperly();
       $this->pluginStatus->isCurrentUserConfigured = $this->isCurrentUserConfigured();
     };
 
@@ -261,7 +272,7 @@ class Library
     return $shortcode_tags;
   }
 
-    /**
+  /**
    * @param $content HTML content
    * @return \DOMDocument
    */
@@ -284,5 +295,4 @@ class Library
 
     return $doc;
   }
-
 }

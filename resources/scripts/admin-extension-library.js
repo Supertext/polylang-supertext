@@ -979,8 +979,8 @@ Supertext.Interface = (function (win, doc, $) {
   /**
    * Initialize on edit screen
    */
-  function initializeEditScreen(isMultilangActivated) {
-    if (isMultilangActivated) {
+  function initializeEditScreen(isMultilangReady) {
+    if (isMultilangReady) {
       addTranslationBulkAction();
     }
 
@@ -1427,7 +1427,7 @@ Supertext.Interface = (function (win, doc, $) {
       if (context.screen == 'post') {
         initializePostScreen();
       } else if (context.screen == 'edit' || context.screen == 'upload') {
-        initializeEditScreen(context.isMultilangActivated);
+        initializeEditScreen(context.isMultilangReady);
       }
     },
     openOrderForm: openOrderForm,

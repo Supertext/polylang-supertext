@@ -1,4 +1,5 @@
 <?php
+
 use Supertext\Helper\Constant;
 use Supertext\Api\Wrapper;
 
@@ -46,31 +47,46 @@ foreach ($languages as $language) {
   </tr>';
 }
 
-// Wenn gar keine Mehrsprachigkeit vorhanden ist melden
-if (count($languages) > 0) {
+if (!$library->isMultilangActivated()) {
+  echo '
+        <div class="notice notice-warning">
+          <p>' .  __('The Supertext translation feature cannot be used. Polylang or WPML is not installed or hasn\'t been activated.', 'supertext') . '</p>
+        </div>
+      ';
+} else {
   $translateTool = 'Polylang';
   if ($library->isWPMLActivated()) {
     $translateTool = 'WPML';
   }
-  echo '
-    <div class="postbox postbox_admin">
-      <div class="inside">
-        <h3>' . __('Language settings', 'supertext') . '</h3>
-        <table border="0" cellpadding="0" margin="0">
-        <thead>
-        <tr>
-            <th width="200">' . $translateTool . '</th>
-            <th>Supertext</th>
-          </tr>
-        </thead>
-        <tbody>
-        ' . $htmlLanguageDropdown . '
-        </tbody>
-      </table>
+
+  if (count($languages) > 0) {
+    echo '
+      <div class="postbox postbox_admin">
+        <div class="inside">
+          <h3>' . __('Language settings', 'supertext') . '</h3>
+          <table border="0" cellpadding="0" margin="0">
+          <thead>
+          <tr>
+              <th width="200">' . $translateTool . '</th>
+              <th>Supertext</th>
+            </tr>
+          </thead>
+          <tbody>
+          ' . $htmlLanguageDropdown . '
+          </tbody>
+        </table>
+        </div>
       </div>
-    </div>
-  ';
-} else {
-  // Error if no languages are configured
-  echo  __('Please configure the languages within the translation plugin.', 'supertext');
+    ';
+  } else {
+    // Error if no languages are configured
+    echo '
+        <div class="notice notice-warning">
+          <p>' . sprintf(
+      __('The Supertext translation feature cannot be used. Please configure the languages within %s.', 'supertext'),
+      $translateTool
+    ) . '</p>
+        </div>
+      ';
+  }
 }

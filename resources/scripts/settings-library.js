@@ -281,7 +281,7 @@ Supertext.Settings.Workflow = (function ($) {
     $apiUrl.val($apiSelection.val());
 
     if ($apiSelection.children('option:last').is(':selected')) {
-      $apiUrl.removeProp('readonly');
+      $apiUrl.prop('readonly', false);
     } else {
       $apiUrl.prop('readonly', true);
     }
