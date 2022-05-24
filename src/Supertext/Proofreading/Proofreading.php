@@ -25,12 +25,12 @@ class Proofreading{
 
   public function addMetaBox(){
     $curLang = substr(get_locale(), 0, 2);
-    $btnHtml = '<a href="#" onclick="Supertext.Interface.openOrderForm(\'' . $curLang . '\', true)">' . __('Order proofread', 'supertext') . '</a>';
+    $btnHtml = '<a href="#" onclick="Supertext.Interface.openOrderForm(\'' . $curLang . '\', true)">' . __('Order proofreading', 'supertext') . '</a>';
 
     global $post;
     $meta = ProofreadMeta::of($post->ID);
     if($meta->is(ProofreadMeta::IN_PROOFREADING)){
-      echo __('Post is still in the proofread process', 'supertext');
+      echo __('This post is currently being proofread.', 'supertext');
     }else {
       echo $btnHtml;
     }
