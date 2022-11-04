@@ -264,21 +264,39 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
         continue;
       }
 
-      $blockId = $block['attrs']['id'];
+      $blockId = $this->createAcfBlockId($block);
       $data = $block['attrs']['data'];
       $metaKeys = array_keys($data);
 
       foreach ($savedFieldDefinitions[$this->pluginId] as $savedFieldDefinition) {
         $metaKeyMatches = preg_grep('/^' . $savedFieldDefinition['meta_key_regex'] . '$/', $metaKeys);
+        $serializedKey = isset($savedFieldDefinition['serialized_key']) ? $savedFieldDefinition['serialized_key'] : null;
 
         foreach ($metaKeyMatches as $metaKeyMatch) {
           $textKey =  $blockId . '_' . $metaKeyMatch;
-          $texts[$textKey] = $this->textProcessor->replaceShortcodes($data[$metaKeyMatch]);
+          $text = $data[$metaKeyMatch];
+
+          $texts[$textKey] = $this->getAcfBlockAttributeTextValue($text, $serializedKey, $texts[$textKey]);
         }
       }
     }
 
     return $texts;
+  }
+
+  private function getAcfBlockAttributeTextValue($text, $serializedKey, $currentTextValue)
+  {
+    if (!is_array($text)) {
+      return $this->textProcessor->replaceShortcodes($text);
+    }
+
+    if ($serializedKey === null) {
+      return $text;
+    }
+
+    $value = isset($currentTextValue) ? $currentTextValue : array();
+    $value[$serializedKey] = $this->textProcessor->replaceShortcodes($text[$serializedKey]);
+    return $value;
   }
 
   private function setAcfBlockTexts($post, $acfBlockTexts)
@@ -290,29 +308,54 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
 
       $blockId = $idRegexMatches[1];
       $metaKey = $idRegexMatches[2];
-      $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-      $value = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+
+      $value = is_array($text) ? $this->getTextValuesFromArray($text) : $this->getTextValue($text);
 
       foreach ($blocks as &$block) {
         if (!$this->isAcfBlock($block)) {
           continue;
         }
 
-        $currentBlockId = $block['attrs']['id'];
+        $currentBlockId = $this->createAcfBlockId($block);
 
         if ($currentBlockId !== $blockId) {
           continue;
         }
 
-        $block['attrs']['data'][$metaKey] = $value;
+        $block['attrs']['data'][$metaKey] = is_array($value) ? array_merge($block['attrs']['data'][$metaKey], $value) : $value;
       }
     }
 
     $post->post_content = serialize_blocks($blocks);
   }
 
+  private function getTextValuesFromArray($text)
+  {
+    $value = array();
+
+    foreach ($text as $serializedKey => $content) {
+      $value[$serializedKey] = $this->getTextValue($content);
+    }
+
+    return $value;
+  }
+
+  private function getTextValue($text)
+  {
+    $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+    $value = $this->textProcessor->replaceShortcodeNodes($decodedContent);
+    return $value;
+  }
+
   private function isAcfBlock($block)
   {
-    return strpos($block['blockName'], self::ACF_BLOCK_NAME_PREFIX) === 0 && isset($block['attrs']) && isset($block['attrs']['id']) && isset($block['attrs']['data']);
+    return strpos($block['blockName'], self::ACF_BLOCK_NAME_PREFIX) === 0 && isset($block['attrs']) && isset($block['attrs']['data']);
+  }
+
+  private function createAcfBlockId($block)
+  {
+    $data = ksort($block['attrs']['data']);
+    $dataId = md5($block['blockName'] . json_encode($data));
+    return 'block_' .  $dataId;
   }
 }
