@@ -636,7 +636,7 @@ Supertext.Interface = (function (win, doc, $) {
             }
             var dependencyInfoText = String.format(l10n.fieldDependentOn, fieldGroup.name + ' -> ' + field.title);
             var checkboxSelector = selectors.postContentCheckbox(postId, fieldGroupId, field.name);
-            const $checkbox = $(checkboxSelector);
+            var $checkbox = $(checkboxSelector);
             $checkbox.change(function (event) {
               syncDependentTranslatableFields(postId, field.dependencies, event.target.checked, dependencyInfoText);
             });
