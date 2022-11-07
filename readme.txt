@@ -109,6 +109,10 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.14 =
+* Fix bug when ACF block attributes contained Shortcodes
+* Enhance content selection to make sure the post content is sent for translation when ACF blocks are selected for translation
+
 = 4.13 =
 * Add support for ACF 6 (Blocks)
 
