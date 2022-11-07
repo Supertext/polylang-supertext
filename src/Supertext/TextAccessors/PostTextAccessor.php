@@ -98,7 +98,7 @@ class PostTextAccessor implements ITextAccessor
       $texts['post_content'] = $this->textProcessor->replaceShortcodes($post->post_content);
     }
 
-    if ($selectedTranslatableFields['post_content'] && use_block_editor_for_post($post)) {
+    if ($selectedTranslatableFields['post_content'] && has_blocks($post)) {
       $blocks = parse_blocks($post->post_content);
       $translatableBlockAttributes = apply_filters(Constant::FILTER_TRANSLATABLE_BLOCK_ATTRIBUTES, array());
       $texts['post_content_block_attributes'] = $this->getBlockAttributes($blocks, $translatableBlockAttributes);

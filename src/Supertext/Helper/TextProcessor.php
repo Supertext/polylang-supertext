@@ -40,8 +40,11 @@ class TextProcessor
   {
     $this->cachedSavedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
     $regex = $this->getExtendedShortcodeRegex();
+    $excludedPositions = $this->getExcludedPositions($content);
 
-    return preg_replace_callback("/$regex/s", array(&$this, 'replaceShortcode'), $content);
+    return preg_replace_callback("/$regex/s", function ($matches) use ($excludedPositions) {
+      return $this->replaceShortcode($matches, $excludedPositions);
+    }, $content, -1, $count, PREG_OFFSET_CAPTURE);
   }
 
   /**
@@ -50,8 +53,18 @@ class TextProcessor
    * @param $savedShortcodes saved shortcodes
    * @return string replacement string
    */
-  public function replaceShortcode($match)
+  public function replaceShortcode($matchWithOffset, $excludedPositions)
   {
+    $matchOffset = $matchWithOffset[0][1];
+
+    if ($this->isExcluded($matchOffset, $excludedPositions)) {
+      return $matchWithOffset[0][0];
+    }
+  
+    $match = array_map(function($match) {
+      return $match[0];
+    }, $matchWithOffset);
+
     //return escaped shortcodes, do not replace
     if ($match[1] == '[' && $match[6] == ']') {
       return $match[0];
@@ -95,6 +108,35 @@ class TextProcessor
   }
 
   /**
+   * Returns positions in the content where shortcodes should not be replaced. In this case the positions of Gutenberg block attributes.
+   */
+  private function getExcludedPositions($content)
+  {
+    $excludedPositions = array();
+
+    if (preg_match_all('/<!-- wp:.*-->/', $content, $matches, PREG_OFFSET_CAPTURE)) {
+      foreach ($matches[0] as $match) {
+        $excludedPositions[] = array('start' => $match[1], 'end' => $match[1] + strlen($match[0]));
+      }
+    }
+
+    return $excludedPositions;
+  }
+
+  /**
+   * Checks if match should is excluded by its position.
+   */
+  private function isExcluded($matchOffset, $excludedPositions){
+    foreach ($excludedPositions as $excludedPosition) {
+      if ($matchOffset >= $excludedPosition['start'] && $matchOffset <= $excludedPosition['end']) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Parses the child nodes and returns the new content with replaced shortcode nodes
    * @param \DOMDocument $doc the dom document
    * @param \DOMNodeList $childNodes the child nodes to process
@@ -107,7 +149,8 @@ class TextProcessor
 
     foreach ($childNodes as $childNode) {
 
-      if ($childNode->nodeType === XML_ELEMENT_NODE
+      if (
+        $childNode->nodeType === XML_ELEMENT_NODE
         && $childNode->nodeName === self::SHORTCODE_TAG
         && $childNode->hasAttribute('class')
         && ($childNode->attributes->getNamedItem('class')->nodeValue === self::SHORTCODE_TAG_CLASS
@@ -151,16 +194,16 @@ class TextProcessor
         $shortcodeEnd = empty($enclosedContent) && !$forceEnclosingForm ? '' : $enclosedContent . '[/' . $shortcodeName . ']';
 
         $newContent .= $shortcodeStart . $shortcodeEnd;
-      } else if($childNode->nodeType === XML_ELEMENT_NODE && $childNode->hasChildNodes()){
+      } else if ($childNode->nodeType === XML_ELEMENT_NODE && $childNode->hasChildNodes()) {
         //Extract childnode tags and replace inner html
-        $tagPattern = '/^(<'.$childNode->nodeName.'[^<>]*>)(.*)(<\/'.$childNode->nodeName.'>)$/s';
+        $tagPattern = '/^(<' . $childNode->nodeName . '[^<>]*>)(.*)(<\/' . $childNode->nodeName . '>)$/s';
         $html = $doc->saveHTML($childNode);
-        $hasMatch = preg_match ($tagPattern, $html, $matches);
+        $hasMatch = preg_match($tagPattern, $html, $matches);
 
-        if($hasMatch){
+        if ($hasMatch) {
           $innerContent = $this->replaceShortcodeNodesRecursive($doc, $childNode->childNodes, $savedShortcodes);
           $newContent .= $matches[1] . $innerContent . $matches[3];
-        }else{
+        } else {
           $newContent .= $doc->saveHTML($childNode);
         }
       } else {
@@ -178,7 +221,7 @@ class TextProcessor
    */
   private function getAttributeNodes($attributes, $translatableShortcodeAttributes)
   {
-    if(!is_array($attributes)){
+    if (!is_array($attributes)) {
       return '';
     }
 
@@ -292,8 +335,8 @@ class TextProcessor
   {
     $shortcodeSetting = array('attributes' => array());
 
-    foreach($this->cachedSavedShortcodes as $name => $savedShortcodeSetting){
-      if(preg_match('/' . $name . '/', $tagName)){
+    foreach ($this->cachedSavedShortcodes as $name => $savedShortcodeSetting) {
+      if (preg_match('/' . $name . '/', $tagName)) {
         $shortcodeSetting = $savedShortcodeSetting;
       }
     }
