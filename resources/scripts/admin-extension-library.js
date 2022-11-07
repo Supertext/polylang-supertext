@@ -634,20 +634,20 @@ Supertext.Interface = (function (win, doc, $) {
             if (field.dependencies === undefined) {
               return;
             }
-
+            var dependencyInfoText = String.format(l10n.fieldDependentOn, fieldGroup.name + ' -> ' + field.title);
             var checkboxSelector = selectors.postContentCheckbox(postId, fieldGroupId, field.name);
             const $checkbox = $(checkboxSelector);
             $checkbox.change(function (event) {
-              syncDependentTranslatableFields(postId, field.dependencies, event.target.checked);
+              syncDependentTranslatableFields(postId, field.dependencies, event.target.checked, dependencyInfoText);
             });
 
-            syncDependentTranslatableFields(postId, field.dependencies, $checkbox.prop('checked'));
+            syncDependentTranslatableFields(postId, field.dependencies, $checkbox.prop('checked'), dependencyInfoText);
           });
         });
       });
     }
 
-    function syncDependentTranslatableFields(postId, dependencies, isChecked) {
+    function syncDependentTranslatableFields(postId, dependencies, isChecked, dependencyInfoText) {
       $.each(dependencies, function (dependentFieldGroupId, dependentFieldName) {
         var dependentCheckboxSelector = selectors.postContentCheckbox(
           postId,
@@ -657,9 +657,15 @@ Supertext.Interface = (function (win, doc, $) {
 
         if (isChecked) {
           $(dependentCheckboxSelector).prop('checked', true);
-          $(dependentCheckboxSelector).prop('disabled', true);
+          $(dependentCheckboxSelector).click(function (event) {
+            event.preventDefault();
+            return false;
+          });
+          $(dependentCheckboxSelector).prop('title', dependencyInfoText);
         } else {
           $(dependentCheckboxSelector).prop('disabled', false);
+          $(dependentCheckboxSelector).off('click');
+          $(dependentCheckboxSelector).prop('title', '');
         }
       });
     }

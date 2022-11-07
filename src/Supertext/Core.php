@@ -194,6 +194,7 @@ class Core
       'close' => esc_js(__('Close window', 'supertext')),
       'alertPleaseSelect' => esc_js(__('Please select at least one post', 'supertext')),
       'alreadyBeingTranslatedInto' => esc_js(__('<i>{0}</i> is already being translated into {1} (order id: {2})', 'supertext')),
+      'fieldDependentOn' => esc_js(__("This field cannot be deselected. Another field ({0}) depends on it.", 'supertext')),
     );
 
     $library = $this->getLibrary();
