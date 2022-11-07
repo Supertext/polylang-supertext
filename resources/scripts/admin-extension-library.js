@@ -358,6 +358,9 @@ Supertext.Interface = (function (win, doc, $) {
       orderTargetLanguageSelect: '#sttr-order-target-language',
       orderTargetLanguageOptions: '#sttr-order-target-language option',
       contentCheckboxes: '.sttr-order-item-details input[type="checkbox"]',
+      postContentCheckbox: function (postId, fieldGroupId, fieldName) {
+        return '#sttr-' + postId + '-' + fieldGroupId + '-' + fieldName;
+      },
       checkedQuote: 'input[name="translationType"]:checked',
       quoteStepForm: '#sttr-quote-step-form'
     },
@@ -581,6 +584,7 @@ Supertext.Interface = (function (win, doc, $) {
     self.init = function () {
       initializeOrderItemList();
       checkOrderItems();
+      addTranslatableFieldDependencies();
     };
 
     /**
@@ -616,6 +620,48 @@ Supertext.Interface = (function (win, doc, $) {
       if (state.posts.length == 1) {
         $(selectors.orderItemRemoveButton).hide();
       }
+    }
+
+    /**
+     * Adds dependency logic between translatable fields
+     */
+    function addTranslatableFieldDependencies() {
+      $.each(state.posts, function (_index, post) {
+        var postId = post.id;
+
+        $.each(post.translatableFieldGroups, function (fieldGroupId, fieldGroup) {
+          $.each(fieldGroup.fields, function (_index, field) {
+            if (field.dependencies === undefined) {
+              return;
+            }
+
+            var checkboxSelector = selectors.postContentCheckbox(postId, fieldGroupId, field.name);
+            const $checkbox = $(checkboxSelector);
+            $checkbox.change(function (event) {
+              syncDependentTranslatableFields(postId, field.dependencies, event.target.checked);
+            });
+
+            syncDependentTranslatableFields(postId, field.dependencies, $checkbox.prop('checked'));
+          });
+        });
+      });
+    }
+
+    function syncDependentTranslatableFields(postId, dependencies, isChecked) {
+      $.each(dependencies, function (dependentFieldGroupId, dependentFieldName) {
+        var dependentCheckboxSelector = selectors.postContentCheckbox(
+          postId,
+          dependentFieldGroupId,
+          dependentFieldName
+        );
+
+        if (isChecked) {
+          $(dependentCheckboxSelector).prop('checked', true);
+          $(dependentCheckboxSelector).prop('disabled', true);
+        } else {
+          $(dependentCheckboxSelector).prop('disabled', false);
+        }
+      });
     }
 
     /**

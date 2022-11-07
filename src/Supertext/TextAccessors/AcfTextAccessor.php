@@ -42,7 +42,8 @@ class AcfTextAccessor extends AbstractPluginCustomFieldsTextAccessor implements 
       array_push($additionalFields, array(
         'title' => __('Blocks', 'supertext'),
         'name' => 'sttr-blocks-meta-data',
-        'checkedPerDefault' => true
+        'checkedPerDefault' => true,
+        'dependencies' => array('post' => 'post_content')
       ));
     }
 
