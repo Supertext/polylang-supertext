@@ -42,9 +42,11 @@ class TextProcessor
     $regex = $this->getExtendedShortcodeRegex();
     $excludedPositions = $this->getExcludedPositions($content);
 
-    return preg_replace_callback("/$regex/s", function ($matches) use ($excludedPositions) {
+    $result = preg_replace_callback("/$regex/s", function ($matches) use ($excludedPositions) {
       return $this->replaceShortcode($matches, $excludedPositions);
     }, $content, -1, $count, PREG_OFFSET_CAPTURE);
+
+    return $result === null ? $content : $result; //just return content if preg_replace_callback fails
   }
 
   /**
