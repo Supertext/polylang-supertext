@@ -41,12 +41,13 @@ class TextProcessor
     $this->cachedSavedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
     $regex = $this->getExtendedShortcodeRegex();
     $excludedPositions = $this->getExcludedPositions($content);
+    $callback = function ($match) use ($excludedPositions) {
+      return $this->replaceShortcode($match, $excludedPositions);
+    };
 
-    $result = preg_replace_callback("/$regex/s", function ($matches) use ($excludedPositions) {
-      return $this->replaceShortcode($matches, $excludedPositions);
-    }, $content, -1, $count, PREG_OFFSET_CAPTURE);
+    $result = preg_replace_callback("/$regex/s", $callback, $content, -1, $count, PREG_OFFSET_CAPTURE);
 
-    return $result === null ? $content : $result; //just return content if preg_replace_callback fails
+    return $result === null ? $content : $result; //just return content if preg_replace_callback fails, shortcode replacement is not critical
   }
 
   /**
