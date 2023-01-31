@@ -38,16 +38,20 @@ class TextProcessor
    */
   public function replaceShortcodes($content)
   {
-    $this->cachedSavedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
-    $regex = $this->getExtendedShortcodeRegex();
-    $excludedPositions = $this->getExcludedPositions($content);
-    $callback = function ($match) use ($excludedPositions) {
-      return $this->replaceShortcode($match, $excludedPositions);
-    };
+    try {
+      $this->cachedSavedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+      $regex = $this->getExtendedShortcodeRegex();
+      $excludedPositions = $this->getExcludedPositions($content);
+      $callback = function ($match) use ($excludedPositions) {
+        return $this->replaceShortcode($match, $excludedPositions);
+      };
 
-    $result = preg_replace_callback("/$regex/s", $callback, $content, -1, $count, PREG_OFFSET_CAPTURE);
+      $result = preg_replace_callback("/$regex/s", $callback, $content, -1, $count, PREG_OFFSET_CAPTURE);
 
-    return $result === null ? $content : $result; //just return content if preg_replace_callback fails, shortcode replacement is not critical
+      return $result === null ? $content : $result; //just return content if preg_replace_callback fails, shortcode replacement is not critical
+    } catch (\Exception $e) {
+      return $content;
+    }
   }
 
   /**
@@ -63,8 +67,8 @@ class TextProcessor
     if ($this->isExcluded($matchOffset, $excludedPositions)) {
       return $matchWithOffset[0][0];
     }
-  
-    $match = array_map(function($match) {
+
+    $match = array_map(function ($match) {
       return $match[0];
     }, $matchWithOffset);
 
@@ -129,7 +133,8 @@ class TextProcessor
   /**
    * Checks if match should is excluded by its position.
    */
-  private function isExcluded($matchOffset, $excludedPositions){
+  private function isExcluded($matchOffset, $excludedPositions)
+  {
     foreach ($excludedPositions as $excludedPosition) {
       if ($matchOffset >= $excludedPosition['start'] && $matchOffset <= $excludedPosition['end']) {
         return true;
