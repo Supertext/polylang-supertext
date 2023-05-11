@@ -109,6 +109,10 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.16 =
+* Fix issue that prevented the write back of media texts
+* Use staging environment for testing
+
 = 4.15 =
 * Fix shortcode replacement bug when no shortcodes are present
 
