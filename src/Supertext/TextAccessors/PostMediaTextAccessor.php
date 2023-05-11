@@ -102,7 +102,10 @@ class PostMediaTextAccessor implements ITextAccessor
     }
 
     foreach ($texts as $sourceAttachmentId => $text) {
-
+      if(empty($sourceAttachmentId)) {
+        continue;
+      }
+      
       $sourceLanguage = $this->library->getMultilang()->getPostLanguage($sourceAttachmentId);
       $targetLanguage = $this->library->getMultilang()->getPostLanguage($post->ID);
       $targetAttachmentId = $this->library->getMultilang()->getPostInLanguage($sourceAttachmentId, $targetLanguage);
