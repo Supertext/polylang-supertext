@@ -109,6 +109,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.18 =
+* Check for Divi Builder using ET_CORE_VERSION so that it works for Divi from theme
+
 = 4.17 =
 * Fix version issue
 
