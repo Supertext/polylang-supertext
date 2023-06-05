@@ -342,7 +342,7 @@ class Core
       $textAccessors['post'] = new VisualComposerTextAccessor($textProcessor, $library);
     }
 
-    if ($library->isPluginActive('divi-builder/divi-builder.php')) {
+    if ($library->isPluginActive('divi-builder/divi-builder.php') || defined('ET_CORE_VERSION') ) {
       $textAccessors['post'] = new DiviBuilderTextAccessor($textProcessor, $library);
     }
 
