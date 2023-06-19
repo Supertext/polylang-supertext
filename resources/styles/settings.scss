@@ -42,7 +42,6 @@
 
 #shortcodesSettingsForm {
   .shortcode-setting-container {
-    max-width: 780px;
     margin: 10px 0;
     background: #ddd;
   }
@@ -53,6 +52,10 @@
 
     input {
       width: 154px;
+    }
+
+    input[type="checkbox"] {
+      width: unset;
     }
   }
 
