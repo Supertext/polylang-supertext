@@ -121,7 +121,7 @@ class TextProcessor
   {
     $excludedPositions = array();
 
-    if (preg_match_all('/<!-- (wp:.*)|(\[[^\]]+\]([^\[]+\[[^\]]+\])?)(\s+)?-->/', $content, $matches, PREG_OFFSET_CAPTURE)) {
+    if (preg_match_all('/<!--\s+((wp:.*)|(\[[^\]]+\]([^\[]+\[[^\]]+\])?)(\s+)?)-->/', $content, $matches, PREG_OFFSET_CAPTURE)) {
       foreach ($matches[0] as $match) {
         $excludedPositions[] = array('start' => $match[1], 'end' => $match[1] + strlen($match[0]));
       }
