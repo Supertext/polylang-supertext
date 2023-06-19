@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2022-05-24 10:44+0200\n"
-"PO-Revision-Date: 2022-05-24 10:45+0200\n"
+"POT-Creation-Date: 2023-06-19 12:03+0200\n"
+"PO-Revision-Date: 2023-06-19 12:03+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.3.1\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n;_x\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -73,9 +73,6 @@ msgstr ""
 "account in the Supertext settings."
 
 #: src/Supertext/Backend/AdminExtension.php:166
-#| msgid ""
-#| "The Supertext Translation plugin cannot be used. It hasn't been "
-#| "configured correctly."
 msgid ""
 "The Supertext translation feature cannot be used. Please configure the "
 "language mapping in the Supertext settings."
@@ -242,6 +239,10 @@ msgstr "Please select at least one post"
 msgid "<i>{0}</i> is already being translated into {1} (order id: {2})"
 msgstr "<i>{0}</i> is already being translated into {1} (order id: {2})"
 
+#: src/Supertext/Core.php:197
+msgid "This field cannot be deselected. Another field ({0}) depends on it."
+msgstr ""
+
 #: src/Supertext/Helper/ProofreadMeta.php:42
 msgid "proofreading saved successfully"
 msgstr "proofreading saved successfully"
@@ -255,7 +256,6 @@ msgid "Proofreading"
 msgstr "Proofreading"
 
 #: src/Supertext/Proofreading/Proofreading.php:33
-#| msgid "This post is currently being modified by Supertext."
 msgid "This post is currently being proofread."
 msgstr "This post is currently being proofread."
 
@@ -313,7 +313,6 @@ msgid "Copy structural meta data"
 msgstr "Copy structural meta data"
 
 #: src/Supertext/TextAccessors/AcfTextAccessor.php:43
-#| msgid "blocked"
 msgid "Blocks"
 msgstr "Blocks"
 
@@ -516,9 +515,6 @@ msgid "Please select"
 msgstr "Please select"
 
 #: views/backend/settings-languages.php:53
-#| msgid ""
-#| "The Supertext Translation plugin cannot be used. Polylang or WPML is not "
-#| "installed or hasn't been activated."
 msgid ""
 "The Supertext translation feature cannot be used. Polylang or WPML is not "
 "installed or hasn't been activated."
@@ -532,9 +528,6 @@ msgstr "Language settings"
 
 #: views/backend/settings-languages.php:86
 #, php-format
-#| msgid ""
-#| "The Supertext Translation plugin cannot be used. It hasn't been "
-#| "configured correctly."
 msgid ""
 "The Supertext translation feature cannot be used. Please configure the "
 "languages within %s."
@@ -573,11 +566,11 @@ msgstr "Supertext Accounts"
 #: views/backend/settings-users.php:37
 #, php-format
 msgid ""
-"You need at least one Supertext Account. You can sign up <a href=\"%s"
-"\">here</a>."
+"You need at least one Supertext Account. You can sign up <a "
+"href=\"%s\">here</a>."
 msgstr ""
-"You need at least one Supertext Account. You can sign up <a href=\"%s"
-"\">here</a>."
+"You need at least one Supertext Account. You can sign up <a "
+"href=\"%s\">here</a>."
 
 #: views/backend/settings-users.php:42
 msgid "Please fill in a Supertext API key for every user."
@@ -658,11 +651,11 @@ msgstr "Content to be translated"
 #: views/templates/admin-extension-templates.php:86
 #, php-format
 msgid ""
-"Translatable custom fields can be defined in the <a target=\"_parent\" href="
-"\"%s\">settings</a>."
+"Translatable custom fields can be defined in the <a target=\"_parent\" "
+"href=\"%s\">settings</a>."
 msgstr ""
-"Translatable custom fields can be defined in the <a target=\"_parent\" href="
-"\"%s\">settings</a>."
+"Translatable custom fields can be defined in the <a target=\"_parent\" "
+"href=\"%s\">settings</a>."
 
 #: views/templates/admin-extension-templates.php:99
 #: views/templates/admin-extension-templates.php:182
@@ -771,28 +764,32 @@ msgstr "Shortcode"
 msgid "Shortcode..."
 msgstr "Shortcode..."
 
-#: views/templates/settings-templates.php:10
+#: views/templates/settings-templates.php:11
 msgid "Encoding for enclosed content"
 msgstr "Encoding for enclosed content"
 
-#: views/templates/settings-templates.php:13
-#: views/templates/settings-templates.php:33
+#: views/templates/settings-templates.php:14
+#: views/templates/settings-templates.php:46
 msgid "Functions..."
 msgstr "Functions..."
 
-#: views/templates/settings-templates.php:18
+#: views/templates/settings-templates.php:19
+msgid "Invert encoding"
+msgstr "Invert encoding"
+
+#: views/templates/settings-templates.php:31
 msgid "Translatable attributes"
 msgstr "Translatable attributes"
 
-#: views/templates/settings-templates.php:23
+#: views/templates/settings-templates.php:36
 msgid "Add attribute"
 msgstr "Add attribute"
 
-#: views/templates/settings-templates.php:26
+#: views/templates/settings-templates.php:39
 msgid "remove setting"
 msgstr "remove setting"
 
-#: views/templates/settings-templates.php:32
+#: views/templates/settings-templates.php:45
 msgid "Attribute name..."
 msgstr "Attribute name..."
 

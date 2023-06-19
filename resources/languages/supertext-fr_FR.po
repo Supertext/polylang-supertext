@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2022-05-24 16:18+0200\n"
-"PO-Revision-Date: 2022-05-24 16:21+0200\n"
+"POT-Creation-Date: 2023-06-19 12:04+0200\n"
+"PO-Revision-Date: 2023-06-19 12:04+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.3.1\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n;_x\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -241,6 +241,10 @@ msgstr "Veuillez sélectionner au moins un texte"
 msgid "<i>{0}</i> is already being translated into {1} (order id: {2})"
 msgstr ""
 "<i>{0}</i> est déjà en cours de traduction en {1} (numéro de commande : {2})"
+
+#: src/Supertext/Core.php:197
+msgid "This field cannot be deselected. Another field ({0}) depends on it."
+msgstr ""
 
 #: src/Supertext/Helper/ProofreadMeta.php:42
 msgid "proofreading saved successfully"
@@ -573,8 +577,8 @@ msgstr "Comptes Supertext"
 #: views/backend/settings-users.php:37
 #, php-format
 msgid ""
-"You need at least one Supertext Account. You can sign up <a href=\"%s"
-"\">here</a>."
+"You need at least one Supertext Account. You can sign up <a "
+"href=\"%s\">here</a>."
 msgstr ""
 "Un compte Supertext est nécessaire. Vous pouvez vous inscrire directement <a "
 "href=\"%s\">ici</a>."
@@ -660,8 +664,8 @@ msgstr "Contenu à traduire"
 #: views/templates/admin-extension-templates.php:86
 #, php-format
 msgid ""
-"Translatable custom fields can be defined in the <a target=\"_parent\" href="
-"\"%s\">settings</a>."
+"Translatable custom fields can be defined in the <a target=\"_parent\" "
+"href=\"%s\">settings</a>."
 msgstr ""
 "Les champs personnalisables à traduire peuvent être indiqués dans les <a "
 "target=\"_parent\" href=\"%s\">réglages</a>."
@@ -776,28 +780,32 @@ msgstr "Short code"
 msgid "Shortcode..."
 msgstr "Short code…"
 
-#: views/templates/settings-templates.php:10
+#: views/templates/settings-templates.php:11
 msgid "Encoding for enclosed content"
 msgstr "Codage du contenu"
 
-#: views/templates/settings-templates.php:13
-#: views/templates/settings-templates.php:33
+#: views/templates/settings-templates.php:14
+#: views/templates/settings-templates.php:46
 msgid "Functions..."
 msgstr "Fonctions…"
 
-#: views/templates/settings-templates.php:18
+#: views/templates/settings-templates.php:19
+msgid "Invert encoding"
+msgstr "Inverser le codage"
+
+#: views/templates/settings-templates.php:31
 msgid "Translatable attributes"
 msgstr "Attributs traduisibles"
 
-#: views/templates/settings-templates.php:23
+#: views/templates/settings-templates.php:36
 msgid "Add attribute"
 msgstr "Ajouter un attribut"
 
-#: views/templates/settings-templates.php:26
+#: views/templates/settings-templates.php:39
 msgid "remove setting"
 msgstr "Supprimer le réglage"
 
-#: views/templates/settings-templates.php:32
+#: views/templates/settings-templates.php:45
 msgid "Attribute name..."
 msgstr "Nom de l’attribut…"
 
