@@ -299,6 +299,7 @@ class SettingsPage extends AbstractPage
 
       $settings = array(
         'content_encoding' => null,
+        'content_encoding_inverted' => isset($shortcode['content_encoding_inverted']),
         'attributes' => array()
       );
 

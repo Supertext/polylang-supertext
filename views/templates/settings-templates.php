@@ -4,13 +4,26 @@
       <div class="shortcode-setting-title">
         <?php _e('Shortcode', 'supertext'); ?>
       </div>
-      <input class="shortcode-input-name" type="text" value="{{data.name}}" name="shortcodes[{{data.shortcodeIndex}}][name]" placeholder="<?php _e('Shortcode...', 'supertext'); ?>"></div>
+      <input class="shortcode-input-name" type="text" value="{{data.name}}" name="shortcodes[{{data.shortcodeIndex}}][name]" placeholder="<?php _e('Shortcode...', 'supertext'); ?>">
+    </div>
     <div class="shortcode-setting-part">
       <div class="shortcode-setting-title">
         <?php _e('Encoding for enclosed content', 'supertext'); ?>
       </div>
       <div class="shortcode-content-encoding">
-        <input class="shortcode-input-encoding" type="text" name="shortcodes[{{data.shortcodeIndex}}][content_encoding]" value="{{data.contentEncoding}}" placeholder="<?php _e('Functions...', 'supertext'); ?>"/>
+        <input class="shortcode-input-encoding" type="text" name="shortcodes[{{data.shortcodeIndex}}][content_encoding]" value="{{data.contentEncoding}}" placeholder="<?php _e('Functions...', 'supertext'); ?>" />
+      </div>
+    </div>
+    <div class="shortcode-setting-part">
+      <div class="shortcode-setting-title">
+        <?php _e('Invert encoding', 'supertext'); ?>
+      </div>
+      <div class="shortcode-content-encoding-inverted">
+        <# if(data.contentEncodingInverted){ #>
+          <input class="shortcode-checkbox-encoding-inverted" type="checkbox" name="shortcodes[{{data.shortcodeIndex}}][content_encoding_inverted]" checked />
+        <# } else { #>
+            <input class="shortcode-checkbox-encoding-inverted" type="checkbox" name="shortcodes[{{data.shortcodeIndex}}][content_encoding_inverted]" />
+        <# } #>
       </div>
     </div>
     <div class="shortcode-setting-part shortcode-setting-part-attributes">
@@ -29,8 +42,8 @@
 
 <script type="text/html" id="tmpl-sttr-shortcode-attribute">
   <div class="shortcode-attribute-input">
-    <input type="text" name="shortcodes[{{data.shortcodeIndex}}][attributes][{{data.attributeIndex}}][name]" value="{{data.name}}" placeholder="<?php _e('Attribute name...', 'supertext'); ?>"/>
-    <input class="shortcode-input-encoding" type="text" name="shortcodes[{{data.shortcodeIndex}}][attributes][{{data.attributeIndex}}][encoding]" value="{{data.encoding}}" placeholder="<?php _e('Functions...', 'supertext'); ?>"/>
+    <input type="text" name="shortcodes[{{data.shortcodeIndex}}][attributes][{{data.attributeIndex}}][name]" value="{{data.name}}" placeholder="<?php _e('Attribute name...', 'supertext'); ?>" />
+    <input class="shortcode-input-encoding" type="text" name="shortcodes[{{data.shortcodeIndex}}][attributes][{{data.attributeIndex}}][encoding]" value="{{data.encoding}}" placeholder="<?php _e('Functions...', 'supertext'); ?>" />
     <button type="button" class="button button-highlighted button-remove shortcode-attribute-remove-input"><span class="dashicons dashicons-trash"></span></button>
   </div>
 </script>

@@ -89,7 +89,10 @@ class TextProcessor
     if (!empty($match[5])) {
       $content = $match[5];
       if (!empty($shortcodeSetting['content_encoding'])) {
-        $content = $this->decodeEnclosedContent($content, $shortcodeSetting['content_encoding']);
+        $encoding = $shortcodeSetting['content_encoding'];
+        $content = isset($shortcodeSetting['content_encoding_inverted']) && $shortcodeSetting['content_encoding_inverted'] ?
+          $this->encodeEnclosedContent($content, $encoding) :
+          $this->decodeEnclosedContent($content, $encoding);
       }
       $enclosedContent = $this->replaceShortcodes($content);
       $attributeNodes .= '<div class="' . self::SHORTCODE_ENCLOSED_CONTENT_CLASS . '">' . $enclosedContent . '</div>';
@@ -190,7 +193,10 @@ class TextProcessor
               $enclosedContent = $this->replaceShortcodeNodesRecursive($doc, $shortcodeChildNode->childNodes, $savedShortcodes);
 
               if (isset($savedShortcodes[$shortcodeName]) && !empty($savedShortcodes[$shortcodeName]['content_encoding'])) {
-                $enclosedContent = $this->encodeEnclosedContent($enclosedContent, $savedShortcodes[$shortcodeName]['content_encoding']);
+                $encoding = $savedShortcodes[$shortcodeName]['content_encoding'];
+                $enclosedContent = isset($savedShortcodes[$shortcodeName]['content_encoding_inverted']) && $savedShortcodes[$shortcodeName]['content_encoding_inverted'] ?
+                  $this->decodeEnclosedContent($enclosedContent, $encoding) :
+                  $this->encodeEnclosedContent($enclosedContent, $encoding);
               }
 
               break;

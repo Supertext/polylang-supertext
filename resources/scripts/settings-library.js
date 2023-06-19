@@ -140,14 +140,15 @@ Supertext.Settings.Shortcodes = (function ($) {
 
   var shortcodeSettingTemplate, shortcodeAttributeTemplate;
 
-  function addShortcodeSetting($container, name, contentEncoding) {
+  function addShortcodeSetting($container, name, contentEncoding, contentEncodingInverted) {
     var lastIndex = $container.data('lastIndex');
     var newIndex = lastIndex === undefined ? 0 : lastIndex + 1;
 
     var html = shortcodeSettingTemplate({
       shortcodeIndex: newIndex,
       name: name,
-      contentEncoding: contentEncoding
+      contentEncoding: contentEncoding,
+      contentEncodingInverted: !!contentEncodingInverted
     });
 
     var $shortcodeSetting = $(html);
@@ -256,7 +257,7 @@ Supertext.Settings.Shortcodes = (function ($) {
       var $shortcodeSettings = $('#shortcode-settings');
 
       $.each(savedShortcodes, function (name, shortcode) {
-        addShortcodeSetting($shortcodeSettings, name, shortcode.content_encoding);
+        addShortcodeSetting($shortcodeSettings, name, shortcode.content_encoding, shortcode.content_encoding_inverted);
         var $container = $shortcodeSettings.find('.shortcode-setting-container:last .shortcode-setting-attributes');
         var shortcodeIndex = $shortcodeSettings.data('lastIndex');
 
