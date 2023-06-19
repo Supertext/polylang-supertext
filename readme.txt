@@ -108,6 +108,8 @@ Did you translate the site title but it is still displayed in only one language?
 6. Order confirmation
 
 == Changelog ==
+= 4.19 =
+* Exclude shortcode replacement in html comments
 
 = 4.18 =
 * Check for Divi Builder using ET_CORE_VERSION so that it works for Divi from theme
