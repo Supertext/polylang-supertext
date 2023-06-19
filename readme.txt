@@ -108,6 +108,10 @@ Did you translate the site title but it is still displayed in only one language?
 6. Order confirmation
 
 == Changelog ==
+
+= 4.20 =
+* Enhance shortcode settings to allow inversion of encoding/decoding enclosed content
+
 = 4.19 =
 * Exclude shortcode replacement in html comments
 
