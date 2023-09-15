@@ -255,6 +255,8 @@ Supertext.Settings.Shortcodes = (function ($) {
       shortcodeAttributeTemplate = options.template('sttr-shortcode-attribute');
 
       var $shortcodeSettings = $('#shortcode-settings');
+      var $disabledCheckbox = $('#disable-shortcode-replacement');
+      var $shortcodeAddButton = $('#shortcodesSettingsForm .shortcode-add-setting');
 
       $.each(savedShortcodes, function (name, shortcode) {
         addShortcodeSetting($shortcodeSettings, name, shortcode.content_encoding, shortcode.content_encoding_inverted);
@@ -266,9 +268,24 @@ Supertext.Settings.Shortcodes = (function ($) {
         });
       });
 
-      $('#shortcodesSettingsForm .shortcode-add-setting').click(function () {
+      $shortcodeAddButton.click(function () {
         addShortcodeSetting($shortcodeSettings);
       });
+
+      $disabledCheckbox.click(function () {
+        if ($disabledCheckbox.prop('checked')) {
+          $shortcodeSettings.hide();
+          $shortcodeAddButton.hide();
+        } else {
+          $shortcodeSettings.show();
+          $shortcodeAddButton.show();
+        }
+      });
+
+      if ($disabledCheckbox.prop('checked')) {
+        $shortcodeSettings.hide();
+        $shortcodeAddButton.hide();
+      }
     }
   };
 })(jQuery);

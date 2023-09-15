@@ -272,6 +272,15 @@ class Library
     return $shortcode_tags;
   }
 
+  public function addShortcodeSetting($name, $shortcodeSetting) {
+    $shortcodeSettings = $this->getSettingOption(Constant::SETTING_SHORTCODES);
+    if(!isset($shortcodeSettings['shortcodes'])) {
+      $shortcodeSettings['shortcodes'] = array();
+    }
+    $shortcodeSettings['shortcodes'][$name] = $shortcodeSetting;
+    $this->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettings);
+  }
+
   /**
    * @param $content HTML content
    * @return \DOMDocument

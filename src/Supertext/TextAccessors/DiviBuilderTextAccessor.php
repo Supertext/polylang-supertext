@@ -30,9 +30,7 @@ class DiviBuilderTextAccessor extends PostTextAccessor implements IMetaDataAware
    */
   public function addDefaultSettings()
   {
-    $shortcodeSettings = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
-
-    $shortcodeSettings['et_pb_[^\s|\]]+'] = array(
+    $this->library->addShortcodeSetting('et_pb_[^\s|\]]+', array(
       'content_encoding' => null,
       'attributes' => array(
         array('name' => 'more_text', 'encoding' => ''),
@@ -52,9 +50,7 @@ class DiviBuilderTextAccessor extends PostTextAccessor implements IMetaDataAware
         array('name' => 'title1_overlay', 'encoding' => ''),
         array('name' => 'title2_overlay', 'encoding' => '')
       )
-    );
-
-    $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettings);
+    ));
   }
 
   /**
@@ -83,7 +79,7 @@ class DiviBuilderTextAccessor extends PostTextAccessor implements IMetaDataAware
    */
   public function setContentMetaData($post, $translationMetaData)
   {
-    foreach($translationMetaData as $key => $value){
+    foreach ($translationMetaData as $key => $value) {
       update_post_meta($post->ID, $key, $value);
     }
   }

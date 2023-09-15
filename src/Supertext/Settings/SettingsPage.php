@@ -44,7 +44,8 @@ class SettingsPage extends AbstractPage
     $this->viewTemplates = new View("templates/settings-templates");
   }
 
-  public function initTabs(){
+  public function initTabs()
+  {
     // User and language settings tab
     $this->tabs[self::USERS_TAB] = array(
       'name' => __('User and languages', 'supertext'),
@@ -134,8 +135,8 @@ class SettingsPage extends AbstractPage
    */
   public function addDefaultSettings()
   {
-    foreach($this->textAccessors as $textAccessor){
-      if($textAccessor instanceof IAddDefaultSettings){
+    foreach ($this->textAccessors as $textAccessor) {
+      if ($textAccessor instanceof IAddDefaultSettings) {
         $textAccessor->addDefaultSettings();
       }
     }
@@ -148,9 +149,8 @@ class SettingsPage extends AbstractPage
   {
     $viewBundle = array();
 
-    foreach($this->textAccessors as $textAccessor)
-    {
-      if($textAccessor instanceof ISettingsAware){
+    foreach ($this->textAccessors as $textAccessor) {
+      if ($textAccessor instanceof ISettingsAware) {
         $viewBundle[] = $textAccessor->getSettingsViewBundle();
       }
     }
@@ -189,7 +189,7 @@ class SettingsPage extends AbstractPage
     }
 
     $addDefaultSettingsUrl = get_admin_url(null, 'options-general.php?page=supertext-settings&addDefaultSettings=on');
-    $html .= '<a class="button button-highlighted button-tab-nav" href="'.$addDefaultSettingsUrl.'">Add default settings</a><div class="clearfix"></div>';
+    $html .= '<a class="button button-highlighted button-tab-nav" href="' . $addDefaultSettingsUrl . '">Add default settings</a><div class="clearfix"></div>';
 
     $html .= '</div>';
 
@@ -263,11 +263,11 @@ class SettingsPage extends AbstractPage
 
     $languageMap = array();
     foreach ($this->library->getMultilang()->getLanguages() as $language) {
-      if(empty($_POST['sel_st_language_'.$language->slug])){
+      if (empty($_POST['sel_st_language_' . $language->slug])) {
         continue;
       }
 
-      $languageMap[$language->slug] = $_POST['sel_st_language_'.$language->slug];
+      $languageMap[$language->slug] = $_POST['sel_st_language_' . $language->slug];
     }
 
     // Put into the options
@@ -277,9 +277,8 @@ class SettingsPage extends AbstractPage
 
   private function saveTranslatableFieldsSettings()
   {
-    foreach($this->textAccessors as $textAccessor)
-    {
-      if($textAccessor instanceof ISettingsAware){
+    foreach ($this->textAccessors as $textAccessor) {
+      if ($textAccessor instanceof ISettingsAware) {
         $textAccessor->saveSettings($_POST);
       }
     }
@@ -290,10 +289,10 @@ class SettingsPage extends AbstractPage
    */
   private function saveShortcodesSettings()
   {
-    $shortcodeSettingsToSave = array();
+    $shortcodeSettings = array();
 
     foreach ($_POST['shortcodes'] as $shortcode) {
-      if(empty($shortcode['name'])){
+      if (empty($shortcode['name'])) {
         continue;
       }
 
@@ -303,22 +302,24 @@ class SettingsPage extends AbstractPage
         'attributes' => array()
       );
 
-      if(isset($shortcode['attributes'])){
+      if (isset($shortcode['attributes'])) {
         $settings['attributes'] = $this->removeEmptyFields($shortcode['attributes']);
       }
 
-      if(isset($shortcode['content_encoding'])){
+      if (isset($shortcode['content_encoding'])) {
         $settings['content_encoding'] = $shortcode['content_encoding'];
       }
 
       $name = stripslashes($shortcode['name']);
 
-      if(!isset($shortcodeSettingsToSave[$name])){
-        $shortcodeSettingsToSave[$name] = $settings;
-      }else{
-        $shortcodeSettingsToSave[$name] =  array_merge_recursive($shortcodeSettingsToSave[$name], $settings);
+      if (!isset($shortcodeSettings[$name])) {
+        $shortcodeSettings[$name] = $settings;
+      } else {
+        $shortcodeSettings[$name] =  array_merge_recursive($shortcodeSettings[$name], $settings);
       }
     }
+
+    $shortcodeSettingsToSave = array("shortcodes" => $shortcodeSettings, "isShortcodeReplacementDisabled" => !empty($_POST['disable-shortcode-replacement']));
 
     $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettingsToSave);
   }
@@ -331,7 +332,7 @@ class SettingsPage extends AbstractPage
     $cleanedAttributes = array();
 
     foreach ($attributes as $attribute) {
-      if(!empty($attribute['name'])){
+      if (!empty($attribute['name'])) {
         $cleanedAttributes[] = $attribute;
       }
     }
@@ -365,12 +366,12 @@ class SettingsPage extends AbstractPage
    */
   private function runHiddenFunctions()
   {
-    if(!empty($_GET['setInTranslationFlagFalse'])){
+    if (!empty($_GET['setInTranslationFlagFalse'])) {
       TranslationMeta::of($_GET['setInTranslationFlagFalse'])->set(TranslationMeta::IN_TRANSLATION, false);
     }
 
-    if(!empty($_GET['addDefaultSettings'])){
+    if (!empty($_GET['addDefaultSettings'])) {
       $this->addDefaultSettings();
     }
   }
-} 
+}

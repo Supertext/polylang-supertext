@@ -20,23 +20,19 @@ class BePageBuilderTextAccessor extends AbstractPluginCustomFieldsTextAccessor i
    */
   public function addDefaultSettings()
   {
-    $shortcodeSettings = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
-
-    $shortcodeSettings['special_heading\d?'] = array(
+    $this->library->addShortcodeSetting('special_heading\d?'], array(
       'content_encoding' => null,
       'attributes' => array(
         array('name' => 'title_content', 'encoding' => '')
       )
-    );
+    ));
 
-    $shortcodeSettings['button'] = array(
+    $this->library->addShortcodeSetting('button'], array(
       'content_encoding' => null,
       'attributes' => array(
         array('name' => 'button_text', 'encoding' => '')
       )
-    );
-
-    $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettings);
+    ));
 
     $savedFieldDefinitions = $this->library->getSettingOption(Constant::SETTING_PLUGIN_CUSTOM_FIELDS);
     $savedFieldDefinitions[$this->pluginId] = $this->getFieldDefinitions()[0]['sub_field_definitions'];

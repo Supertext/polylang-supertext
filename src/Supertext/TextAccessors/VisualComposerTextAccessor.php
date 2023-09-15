@@ -30,21 +30,17 @@ class VisualComposerTextAccessor extends PostTextAccessor implements IAddDefault
    */
   public function addDefaultSettings()
   {
-    $shortcodeSettings = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
-
-    $shortcodeSettings['vc_[^\s|\]]+'] = array(
+    $this->library->addShortcodeSetting('vc_[^\s|\]]+', array(
       'content_encoding' => null,
       'attributes' => array(
         array('name' => 'text', 'encoding' => ''),
         array('name' => 'title', 'encoding' => ''),
       )
-    );
+    ));
 
-    $shortcodeSettings['vc_raw_html'] = array(
+    $this->library->addShortcodeSetting('vc_raw_html', array(
       'content_encoding' => 'rawurl,base64',
       'attributes' => array()
-    );
-
-    $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $shortcodeSettings);
+    ));
   }
 }

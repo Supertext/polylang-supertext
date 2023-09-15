@@ -40,6 +40,10 @@ class VersionMigration
       $this->migrateAcfIds();
     }
 
+    if ($previousVersion < 4.21) {
+      $this->migrateShortcodeSettings();
+    }
+
     $this->migrateOldTranslationDataToTranslationMeta();
 
     $this->updateApiServerUrl();
@@ -126,5 +130,22 @@ class VersionMigration
       $apiSettings['apiServerUrl'] = substr($apiServerUrl, 0, strlen($apiServerUrl) - strlen($version));
       $this->library->saveSettingOption(Constant::SETTING_API, $apiSettings);
     }
+  }
+
+  private function migrateShortcodeSettings()
+  {
+    $shortcodeSettings = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+
+    if (isset($shortcodeSettings['shortcodes'])) {
+      return;
+    }
+
+    $newShortcodeSettings = array(
+      'shortcodes' => $shortcodeSettings,
+      'isShortcodeReplacementDisabled' => false
+    );
+
+
+    $this->library->saveSettingOption(Constant::SETTING_SHORTCODES, $newShortcodeSettings);
   }
 }

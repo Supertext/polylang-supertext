@@ -39,7 +39,13 @@ class TextProcessor
   public function replaceShortcodes($content)
   {
     try {
-      $this->cachedSavedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+      $shortcodeSettings = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+
+      if (isset($shortcodeSettings['isShortcodeReplacementDisabled']) && $shortcodeSettings['isShortcodeReplacementDisabled']) {
+        return $content;
+      }
+
+      $this->cachedSavedShortcodes = $shortcodeSettings['shortcodes'];
       $regex = $this->getExtendedShortcodeRegex();
       $excludedPositions = $this->getExcludedPositions($content);
       $callback = function ($match) use ($excludedPositions) {
@@ -108,7 +114,8 @@ class TextProcessor
    */
   public function replaceShortcodeNodes($content)
   {
-    $savedShortcodes = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+    $shortcodeSettings = $this->library->getSettingOption(Constant::SETTING_SHORTCODES);
+    $savedShortcodes = $shortcodeSettings['shortcodes'];
 
     $doc = $this->library->createHtmlDocument($content);
 
