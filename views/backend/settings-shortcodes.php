@@ -17,7 +17,7 @@ $shortcodeSettings = $library->getSettingOption(Constant::SETTING_SHORTCODES);
       <?php _e('Please define the encoding process for all encoded and enclosed content. Available encoding functions are: rawurl, url and base64', 'supertext'); ?>
     </p>
     <div>
-      <label>
+      <label title="<?php _e('When deactivated, shortcodes will be sent as is (not rendered) to Supertext.', 'supertext'); ?>">
         <input type="checkbox" id="disable-shortcode-replacement" name="disable-shortcode-replacement" <?php echo $shortcodeSettings['isShortcodeReplacementDisabled'] ?  "checked" : "" ?> />
         <?php _e('Deactivate shortcode processing', 'supertext'); ?>
       </label>

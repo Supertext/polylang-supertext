@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Supertext Polylang\n"
-"POT-Creation-Date: 2023-06-19 12:03+0200\n"
-"PO-Revision-Date: 2023-06-19 12:04+0200\n"
+"POT-Creation-Date: 2023-09-15 11:27+0200\n"
+"PO-Revision-Date: 2023-09-15 11:28+0200\n"
 "Last-Translator: Heinrich Muralt <heinrich@supertext.ch>\n"
 "Language-Team: Supertext AG <wordpress@supertext.ch>\n"
 "Language: fr_CH\n"
@@ -262,24 +262,24 @@ msgstr "Relecture"
 msgid "This post is currently being proofread."
 msgstr "Ce texte est en cours de relecture."
 
-#: src/Supertext/Settings/SettingsPage.php:50
+#: src/Supertext/Settings/SettingsPage.php:51
 msgid "User and languages"
 msgstr "Utilisateur et langues"
 
-#: src/Supertext/Settings/SettingsPage.php:60
+#: src/Supertext/Settings/SettingsPage.php:61
 msgid "Translatable fields"
 msgstr "Champs traduisibles"
 
-#: src/Supertext/Settings/SettingsPage.php:67
-#: views/backend/settings-shortcodes.php:11
+#: src/Supertext/Settings/SettingsPage.php:68
+#: views/backend/settings-shortcodes.php:12
 msgid "Shortcodes"
 msgstr "Short codes"
 
-#: src/Supertext/Settings/SettingsPage.php:76
+#: src/Supertext/Settings/SettingsPage.php:77
 msgid "Workflow and API"
 msgstr "Processus de travail et API"
 
-#: src/Supertext/Settings/SettingsPage.php:97
+#: src/Supertext/Settings/SettingsPage.php:98
 msgid "Settings › Supertext"
 msgstr "Paramètres › Supertext"
 
@@ -342,7 +342,7 @@ msgstr "Mots-clés SEO"
 msgid "BE page builder (Plugin)"
 msgstr "Plug-in BE page builder"
 
-#: src/Supertext/TextAccessors/BePageBuilderTextAccessor.php:59
+#: src/Supertext/TextAccessors/BePageBuilderTextAccessor.php:55
 #: src/Supertext/TextAccessors/PostTextAccessor.php:61
 msgid "Content"
 msgstr "Contenu"
@@ -548,13 +548,13 @@ msgstr ""
 "Veuillez sélectionner les champs personnalisables pouvant être utilisés lors "
 "des traductions."
 
-#: views/backend/settings-shortcodes.php:13
+#: views/backend/settings-shortcodes.php:14
 msgid "Please define any shortcode attributes you want to have translated."
 msgstr ""
 "Veuillez indiquer tous les attributs des short codes pour lesquels vous "
 "souhaitez une traduction."
 
-#: views/backend/settings-shortcodes.php:16
+#: views/backend/settings-shortcodes.php:17
 msgid ""
 "Please define the encoding process for all encoded and enclosed content. "
 "Available encoding functions are: rawurl, url and base64"
@@ -562,7 +562,18 @@ msgstr ""
 "Veuillez indiquer le processus de codage pour l’intégralité du contenu codé. "
 "Fonctions disponibles: rawurl, url et base64"
 
-#: views/backend/settings-shortcodes.php:19
+#: views/backend/settings-shortcodes.php:20
+msgid ""
+"When deactivated, shortcodes will be sent as is (not rendered) to Supertext."
+msgstr ""
+"Lorsque cette option est désactivée, les shortcodes sont envoyés tels quels "
+"à Supertext."
+
+#: views/backend/settings-shortcodes.php:22
+msgid "Deactivate shortcode processing"
+msgstr "Désactiver le traitement des shortcodes"
+
+#: views/backend/settings-shortcodes.php:26
 msgid "Add setting"
 msgstr "Ajouter un réglage"
 
