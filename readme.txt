@@ -109,6 +109,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.22 =
+* Allow service type IDs greater than 5 in the settings
+
 = 4.21 =
 * Extend shortcode settings with option to deactivate shortcode replacement
 
