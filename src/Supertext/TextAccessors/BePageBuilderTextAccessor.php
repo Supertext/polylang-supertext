@@ -27,7 +27,7 @@ class BePageBuilderTextAccessor extends AbstractPluginCustomFieldsTextAccessor i
       )
     ));
 
-    $this->library->addShortcodeSetting('button'], array(
+    $this->library->addShortcodeSetting('button', array(
       'content_encoding' => null,
       'attributes' => array(
         array('name' => 'button_text', 'encoding' => '')
