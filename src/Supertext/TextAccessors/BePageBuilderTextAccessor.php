@@ -20,7 +20,7 @@ class BePageBuilderTextAccessor extends AbstractPluginCustomFieldsTextAccessor i
    */
   public function addDefaultSettings()
   {
-    $this->library->addShortcodeSetting('special_heading\d?'], array(
+    $this->library->addShortcodeSetting('special_heading\d?', array(
       'content_encoding' => null,
       'attributes' => array(
         array('name' => 'title_content', 'encoding' => '')
