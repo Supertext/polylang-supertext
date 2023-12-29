@@ -142,7 +142,9 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
         $value = $this->textProcessor->replaceShortcodeNodes($value);
       }
 
-      update_post_meta($post->ID, $id, $value);
+      $filteredValue = apply_filters(Constant::FILTER_POST_META_TRANSLATION, $value, $id);
+
+      update_post_meta($post->ID, $id, $filteredValue);
     }
   }
 

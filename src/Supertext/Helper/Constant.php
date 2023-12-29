@@ -129,4 +129,8 @@ class Constant
    * @var string tag filter for translatable block attributes.
    */
   const FILTER_TRANSLATABLE_BLOCK_ATTRIBUTES = 'sttr_translatable_block_attributes';
+  /**
+   * @var string tag filter for custom fields / post meta translation.
+   */
+  const FILTER_POST_META_TRANSLATION = 'sttr_post_meta_translation';
 }
