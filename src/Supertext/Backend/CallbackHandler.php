@@ -104,7 +104,7 @@ class CallbackHandler
     $orderType = $writeBack->getOrderType();
 
     foreach ($writeBack->getSourcePostIds() as $sourcePostId) {
-      if('translation' == $orderType) {
+      if ('translation' == $orderType) {
         $targetPostId = $this->library->getMultilang()->getPostInLanguage($sourcePostId, $writeBack->getTargetLanguageCode());
       } else {
         $targetPostId = $sourcePostId;
@@ -133,7 +133,10 @@ class CallbackHandler
       }
 
       $this->contentProvider->saveContentMetaData($targetPost, $writeBackMeta->getContentMetaData());
-      $this->contentProvider->saveContentData($targetPost, $contentData[$sourcePostId]);
+
+      $targetContent = apply_filters(Constant::FILTER_WRITEBACK_TARGET_CONTENT, $contentData[$sourcePostId], $sourcePostId, $targetPostId, $this->library->getMultilang());
+
+      $this->contentProvider->saveContentData($targetPost, $targetContent);
 
       if (isset($workflowSettings['publishOnCallback'])  && $workflowSettings['publishOnCallback']) {
         $targetPost->post_status = 'publish';
@@ -141,6 +144,9 @@ class CallbackHandler
 
       // Now finally save that post and flush cache
       wp_update_post($targetPost);
+
+      // Let other plugins finish any additional writeback work needed on the target post
+      do_action(Constant::ACTION_FINISH_TARGET_POST_WRITEBACK, $targetContent, $targetPostId, $sourcePostId, $this->library->getMultilang());
 
       // All good, set translation flag false
       $writeBackMeta->markAsComplete();

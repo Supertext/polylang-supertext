@@ -133,4 +133,12 @@ class Constant
    * @var string tag filter for custom fields / post meta translation.
    */
   const FILTER_POST_META_TRANSLATION = 'sttr_post_meta_translation';
+  /**
+   * @var string tag filter for target texts.
+   */
+  const FILTER_WRITEBACK_TARGET_CONTENT = 'sttr_writeback_target_content';
+  /**
+   * @var string tag action when finishing writing back translation into target post.
+   */
+  const ACTION_FINISH_TARGET_POST_WRITEBACK = 'sttr_finish_target_post_writeback';
 }
