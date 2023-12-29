@@ -109,6 +109,9 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.23 =
+* Add additional filters and actions to allow other plugins to hook into when the translation is written back (sttr_post_meta_translation for applying filter on translated post meta value, sttr_writeback_target_content for applying filter on target content, sttr_finish_target_post_writeback for running action after the target post write back)
+
 = 4.22 =
 * Allow service type IDs greater than 5 in the settings
 
