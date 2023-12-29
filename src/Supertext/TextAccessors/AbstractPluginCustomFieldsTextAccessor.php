@@ -142,7 +142,9 @@ abstract class AbstractPluginCustomFieldsTextAccessor implements ITextAccessor, 
         $value = $this->textProcessor->replaceShortcodeNodes($value);
       }
 
-      $filteredValue = apply_filters(Constant::FILTER_POST_META_TRANSLATION, $value, $id);
+      $multiLang = $this->library->getMultilang();
+      $targetLanguage = $multiLang->getPostLanguage($post->ID);
+      $filteredValue = apply_filters(Constant::FILTER_POST_META_TRANSLATION, $value, $id, $targetLanguage, $multiLang);
 
       update_post_meta($post->ID, $id, $filteredValue);
     }

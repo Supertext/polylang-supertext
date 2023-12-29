@@ -102,7 +102,12 @@ class CustomFieldsTextAccessor implements ITextAccessor, ISettingsAware
     foreach($texts as $id => $text){
       $decodedContent = html_entity_decode($text, ENT_COMPAT | ENT_HTML401, 'UTF-8');
       $decodedContent = $this->textProcessor->replaceShortcodeNodes($decodedContent);
-      update_post_meta($post->ID, $id, $decodedContent);
+
+      $multiLang = $this->library->getMultilang();
+      $targetLanguage = $multiLang->getPostLanguage($post->ID);
+      $filteredValue = apply_filters(Constant::FILTER_POST_META_TRANSLATION, $value, $id, $targetLanguage, $multiLang);
+
+      update_post_meta($post->ID, $id, $filteredValue);
     }
   }
 
