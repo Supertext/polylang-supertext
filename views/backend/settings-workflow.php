@@ -6,7 +6,6 @@ $workflowSettings = $library->getSettingOption(Constant::SETTING_WORKFLOW);
 
 $publishOnCallbackChecked = isset($workflowSettings['publishOnCallback']) && $workflowSettings['publishOnCallback'] ? 'checked="checked"' : '';
 $overridePublishedPostsChecked = isset($workflowSettings['overridePublishedPosts']) && $workflowSettings['overridePublishedPosts'] ? 'checked="checked"' : '';
-$syncTranslationChangesChecked = isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges'] ? 'checked="checked"' : '';
 
 ?>
 <div class="postbox postbox_admin">
