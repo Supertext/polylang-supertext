@@ -20,9 +20,5 @@ $syncTranslationChangesChecked = isset($workflowSettings['syncTranslationChanges
       <input type="checkbox" id="sttr-override-published-posts" name="overridePublishedPosts"  <?php echo $overridePublishedPostsChecked; ?>/>
       <label for="sttr-override-published-posts"><?php _e('Allow Supertext to overwrite published posts', 'supertext'); ?></label>
     </p>
-    <p>
-      <input type="checkbox" id="sttr-sync-translation-changes" name="syncTranslationChanges"  <?php echo $syncTranslationChangesChecked; ?>/>
-      <label for="sttr-sync-translation-changes"><?php _e('Synchronize translation changes', 'supertext'); ?></label>
-    </p>
   </div>
 </div>
