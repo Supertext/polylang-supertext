@@ -1,0 +1,38 @@
+version: '3'
+services:
+  wpdb:
+    image: mysql:5.7
+    restart: on-failure
+    volumes:
+      - dbvolume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+  wpdba:
+    image: phpmyadmin/phpmyadmin
+    restart: on-failure
+    ports:
+      - '8081:80'
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      PMA_HOST: wpdb
+    depends_on:
+      - wpdb
+  wp:
+    build: .
+    restart: on-failure
+    volumes:
+      - htmlvolume:/var/www/html
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - .:/var/www/html/wp-content/plugins/polylang-supertext
+    ports:
+      - '8080:80'
+    depends_on:
+      - wpdb
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+volumes:
+  dbvolume:
+  htmlvolume:
