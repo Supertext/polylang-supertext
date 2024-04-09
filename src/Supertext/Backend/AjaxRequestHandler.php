@@ -236,7 +236,6 @@ class AjaxRequestHandler
     );
 
     //process posts
-    $workflowSettings = $this->library->getSettingOption(Constant::SETTING_WORKFLOW);
     $this->processOrder(
       $orderType,
       $order,
@@ -245,8 +244,7 @@ class AjaxRequestHandler
       $sourceLanguage,
       $targetLanguage,
       $referenceHashes,
-      $content['metaData'],
-      isset($workflowSettings['syncTranslationChanges']) && $workflowSettings['syncTranslationChanges']
+      $content['metaData']
     );
 
     // the result
@@ -384,7 +382,7 @@ class AjaxRequestHandler
    * @param $content
    * @param $syncTranslation
    */
-  private function processOrder($orderType, $order, $sourcePostIds, $targetPostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $metaData, $syncTranslation){
+  private function processOrder($orderType, $order, $sourcePostIds, $targetPostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $metaData){
     switch ($orderType) {
       case 'proofreading':
         $this->processProofreadPosts(
@@ -404,8 +402,7 @@ class AjaxRequestHandler
           $sourceLanguage,
           $targetLanguage,
           $referenceHashes,
-          $metaData,
-          $syncTranslation
+          $metaData
         );
         break;
     }
@@ -420,7 +417,7 @@ class AjaxRequestHandler
    * @param $metaData
    * @param $syncTranslationChanges
    */
-  private function processTargetPosts($order, $sourcePostIds, $targetPostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $metaData, $syncTranslationChanges)
+  private function processTargetPosts($order, $sourcePostIds, $targetPostIds, $sourceLanguage, $targetLanguage, $referenceHashes, $metaData)
   {
     foreach ($sourcePostIds as $sourcePostId) {
       $targetPost = get_post($targetPostIds[$sourcePostId]);
@@ -441,15 +438,6 @@ class AjaxRequestHandler
       $meta->set(TranslationMeta::IN_TRANSLATION_REFERENCE_HASH, $referenceHashes[$sourcePostId]);
       $meta->set(TranslationMeta::SOURCE_LANGUAGE_CODE, $sourceLanguage);
       $meta->set(TranslationMeta::META_DATA, $metaData[$sourcePostId]);
-
-      $translationDate = $meta->get(TranslationMeta::TRANSLATION_DATE);
-      if($syncTranslationChanges && $translationDate !== null && strtotime($translationDate) < strtotime($targetPost->post_modified)){
-        try{
-          $this->sendSyncRequest($targetPost);
-        }catch (\Exception $e) {
-          $this->log->addEntry($targetPost->ID, __('Post changes could not be sent to Supertext.', 'supertext'));
-        }
-      }
     }
   }
 
