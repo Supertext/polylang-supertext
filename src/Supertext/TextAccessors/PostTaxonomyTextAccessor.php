@@ -16,6 +16,11 @@ class PostTaxonomyTextAccessor implements ITextAccessor
   protected $library;
 
   /**
+   * @var array Translatable taxonomies
+   */
+  protected $knownTranslatableTaxonomies;
+
+  /**
    * @param Library $library
    */
   public function __construct($library)
