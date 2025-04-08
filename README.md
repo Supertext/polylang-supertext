@@ -49,8 +49,8 @@ How to install the plugin
 **What do I require to use this plugin?**
 
 A valid Supertext customer account for every WordPress user and the corresponding API key.
-You can create an account at [Supertext](https://www.supertext.ch/en/signup) if you don't already have one.
-Get the API key from the Settings page: [Account Settings](https://www.supertext.ch/customer/accountsettings)
+You can create an account at [Supertext](https://www.supertext.com/person/en/account/signin) if you don't already have one.
+Get the API key from the Settings page: [Account Settings](https://www.supertext.com/services/customer/accountsettings)
 
 **How do I order a translation?**
 
