@@ -109,6 +109,10 @@ Did you translate the site title but it is still displayed in only one language?
 
 == Changelog ==
 
+= 4.25 =
+* Fix links/URLs to Supertext website
+* Fix deprecated dynamic property creation
+
 = 4.24 =
 * Remove unused sync feature
 
