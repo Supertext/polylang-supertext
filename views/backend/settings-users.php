@@ -33,7 +33,7 @@ $selectTemplate = '' .
     <h3><?php _e('Supertext Accounts', 'supertext'); ?></h3>
     <p>
       <?php
-        $url = 'https://www.supertext.ch/de/signup';
+        $url = 'https://www.supertext.com/person/de/account/signin';
         printf( wp_kses( __('You need at least one Supertext Account. You can sign up <a href="%s">here</a>.', 'supertext'), array(  'a' => array( 'href' => array() ) ) ), esc_url( $url ) );
       ?>
     </p>
@@ -42,7 +42,7 @@ $selectTemplate = '' .
       _e('Please fill in a Supertext API key for every user.', 'supertext');
       ?>
       <?php
-        $url = 'https://www.supertext.ch/customer/accountsettings';
+        $url = 'https://www.supertext.com/services/customer/accountsettings';
         printf( wp_kses( __('You will find the API key on the <a href="%s">Supertext settings page</a>.', 'supertext'), array(  'a' => array( 'href' => array() ) ) ), esc_url( $url ) );
       ?><br>
       <?php _e('Only configured users can use the translation features.', 'supertext'); ?>

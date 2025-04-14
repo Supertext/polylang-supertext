@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: Supertext Translation
-Plugin URI: http://www.supertext.ch
+Plugin URI: http://www.supertext.com
 Description: This plugin allows you to order human translations for your pages and posts using Supertexts professional translation services.
 Text Domain: supertext
 Domain Path: /resources/languages
 Author: Supertext AG
 Version: 4.24
-Author URI: http://www.supertext.ch
+Author URI: http://www.supertext.com
 License: GPLv2 or later
 */
 

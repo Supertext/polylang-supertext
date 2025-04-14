@@ -105,8 +105,8 @@ class Core
       load_plugin_textdomain('supertext', false, 'polylang-supertext/resources/languages');
       load_plugin_textdomain('supertext-langs', false, 'polylang-supertext/resources/languages');
 
-       // Load needed subcomponents in admin after the theme is setup
-       add_action('after_setup_theme', array($this, 'initializeAfterThemeSetup'));
+      // Load needed subcomponents in admin after the theme is setup
+      add_action('after_setup_theme', array($this, 'initializeAfterThemeSetup'));
     }
 
     add_action('wp_ajax_nopriv_sttr_callback', array($this, 'handleCallback'));
