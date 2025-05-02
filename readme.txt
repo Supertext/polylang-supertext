@@ -5,6 +5,7 @@ Requires at least: 4.0
 Tested up to: 6.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Stable tag: 4.25
 
 This plugin allows you to order human translations for your pages and posts using Supertexts professional translation services.
 
@@ -108,6 +109,9 @@ Did you translate the site title but it is still displayed in only one language?
 6. Order confirmation
 
 == Changelog ==
+
+= 4.26 =
+* Logo update
 
 = 4.25 =
 * Fix links/URLs to Supertext website
