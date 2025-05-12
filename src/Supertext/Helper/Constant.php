@@ -24,7 +24,7 @@ class Constant
   /**
    * @var string live api endpoints
    */
-  const DEFAULT_SERVICE_TYPE = 4;
+  const DEFAULT_SERVICE_TYPE = 46;
   /**
    * @var string live api endpoints for proofread
    */
